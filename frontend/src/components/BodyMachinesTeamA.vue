@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid border text-left">
-    <h4>Machines Team A</h4>
+    <h6 class="text-center">Machines Team A</h6>
     <div class="machines-container row">
       <div class="base-station col-md-12 mb-1">
         <div>
@@ -74,7 +74,7 @@
         </div>
       </div>
 
-      <div class="cap-station-2 col-md-12 mb-1"> 
+      <div class="cap-station-2 col-md-12"> 
         <div>
           <div class="cap2-image-container">
             <figure>

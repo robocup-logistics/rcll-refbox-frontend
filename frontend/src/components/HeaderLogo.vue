@@ -11,7 +11,7 @@ export default {
     // eslint-disable-next-line no-unused-labels
     return {
       // Placeholder for logo
-      logoUrl: 'http://via.placeholder.com/150x30'
+      logoUrl: 'http://via.placeholder.com/150x20'
     }
   }
 }

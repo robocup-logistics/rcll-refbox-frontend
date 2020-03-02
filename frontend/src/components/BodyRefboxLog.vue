@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid border p-0 text-left">
+  <div class="container-fluid border p-0 refbox-log">
     <h1>Logger</h1>
   </div>
 </template>
@@ -11,5 +11,7 @@ export default {
 </script>
 
 <style >
-
+.refbox-log {
+  min-height: 30vh;
+}
 </style>

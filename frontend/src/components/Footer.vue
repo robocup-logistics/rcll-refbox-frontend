@@ -1,12 +1,16 @@
 <template>
-  <div>
-    <h1>Footer</h1>
+  <div class="container-fluid border">
+    <FooterOrders />
   </div>
 </template>
 
 <script>
+import FooterOrders from './FooterOrders'
 export default {
-  name: 'Footer'
+  name: 'Footer',
+  components: {
+    FooterOrders
+  }
 }
 </script>
 
