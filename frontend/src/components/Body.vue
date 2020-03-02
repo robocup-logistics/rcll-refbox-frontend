@@ -3,11 +3,11 @@
     <div class="row ">
       <div class="team-a-body col-md-6 border">
         <div class="row">
-          <div class="col-md-6 machines-container">
+          <div class="col-md-4 machines-container p-0">
             <BodyMachinesTeamA/>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-8 p-0">
             <div class="row">
               <div class="score-container col-md-12">
                 <BodyScoreTeamA />
@@ -21,7 +21,7 @@
         </div>
       </div>
 
-      <div class="team-b-body col-md-6">
+      <div class="team-b-body col-md-6 border">
         <h1>Body B</h1>
       </div>
     </div>

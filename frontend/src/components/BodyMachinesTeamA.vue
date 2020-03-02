@@ -7,7 +7,7 @@
           <div class="base-image-container ">
             <figure>
                 <img :src="imageUrl" alt="">
-                <figcaption>C_Z21 </figcaption>
+                <figcaption >C_Z21 </figcaption>
             </figure>
           </div>
         </div>
@@ -18,7 +18,7 @@
           <div class="delivery-image-container mr-1">
               <figure>
                 <img :src="imageUrl" alt="">
-                <figcaption>C_Z22 </figcaption>
+                <figcaption class="text-center">C_Z22 </figcaption>
               </figure>
           </div>
           <div class="machine-state">
@@ -35,7 +35,7 @@
           <div class="storage-image-container">
             <figure>
               <img :src="imageUrl" alt="">
-              <figcaption>C_Z23 </figcaption>
+              <figcaption >C_Z23 </figcaption>
             </figure>
           </div>
         </div>
@@ -46,7 +46,7 @@
           <div class="ring1-image-container ">
             <figure>
               <img :src="imageUrl" alt="">
-              <figcaption>C_Z24 </figcaption>
+              <figcaption >C_Z24 </figcaption>
             </figure>
           </div>
         </div>
@@ -57,7 +57,7 @@
           <div class="ring2-image-container">
             <figure>
               <img :src="imageUrl" alt="">
-              <figcaption>C_Z25 </figcaption>
+              <figcaption >C_Z25 </figcaption>
             </figure>
           </div>
         </div>
@@ -68,7 +68,7 @@
           <div class="cap1-image-container">
             <figure>
               <img :src="imageUrl" alt="">
-              <figcaption>C_Z26 </figcaption>
+              <figcaption> C_Z26 </figcaption>
             </figure>
           </div>
         </div>

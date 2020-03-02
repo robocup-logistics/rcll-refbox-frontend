@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="border ">
     <h1>Score</h1>
   </div>
 </template>
