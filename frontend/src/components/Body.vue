@@ -25,6 +25,11 @@
         <h1>Body B</h1>
       </div>
     </div>
+
+    <div class="row">
+      <BodyRefboxLog />
+    </div>
+    
   </div>
 </template>
 
@@ -32,13 +37,15 @@
 import BodyMachinesTeamA from './BodyMachinesTeamA'
 import BodyScoreTeamA from './BodyScoreTeamA'
 import BodyRobotsTeamA from './BodyRobotsTeamA'
+import BodyRefboxLog from './BodyRefboxLog'
 
 export default {
   name: 'Body',
   components: {
     BodyMachinesTeamA,
     BodyScoreTeamA,
-    BodyRobotsTeamA
+    BodyRobotsTeamA,
+    BodyRefboxLog
   }
 }
 </script>
