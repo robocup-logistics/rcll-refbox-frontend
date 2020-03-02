@@ -1,5 +1,5 @@
 <template>
-  <div class="justify-content-center border bg-info">
+  <div class="justify-content-center border">
     <img :src=logoUrl alt="Refbox Logo">
   </div>
 </template>
