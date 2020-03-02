@@ -1,12 +1,17 @@
 <template>
   <div>
+    <HeaderLogo />
     <h1>Header</h1>
   </div>
 </template>
 
 <script>
+import HeaderLogo from './HeaderLogo'
 export default {
-  name: 'Header'
+  name: 'Header',
+  components: {
+    HeaderLogo
+  }
 }
 </script>
 
