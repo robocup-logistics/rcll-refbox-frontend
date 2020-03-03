@@ -1,6 +1,8 @@
 <template>
-  <div class="container-fluid border p-0 refbox-log">
-    <h1>Logger</h1>
+  <div class="container-fluid border p-0 refbox-log overflow-auto text-left">
+    <div class="m-2">
+      
+    </div>
   </div>
 </template>
 
@@ -12,6 +14,7 @@ export default {
 
 <style >
 .refbox-log {
-  min-height: 30vh;
+  min-height: 29vh;
+  max-height: 40vh;
 }
 </style>
