@@ -2,10 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 
 
-// Bootstrap imports
+// Bootswatch import
 import "bootswatch/dist/superhero/bootstrap.min.css"; 
-// import 'bootstrap'
-// import 'bootstrap/dist/css/bootstrap.min.css'
+
 
 // Import Vuex Store to have global access in every Component
 import store from '@/store/index'

@@ -3,9 +3,9 @@
     <HeaderLogo />
     <div class="container-fluid">
       <div class="general-info row">
-        <HeaderTeamAInfo />
+        <HeaderTeam color="cyan" />
         <HeaderCentralInformation />
-        <HeaderTeamBInfo />
+        <HeaderTeam color="magenta"/>
       </div>
     </div>
   </div>
@@ -13,16 +13,14 @@
 
 <script>
 import HeaderLogo from './HeaderLogo'
-import HeaderTeamAInfo from './HeaderTeamAInfo'
-import HeaderTeamBInfo from './HeaderTeamBInfo'
+import HeaderTeam from './HeaderTeam'
 import HeaderCentralInformation from './HeaderCentralInformation'
 
 export default {
   name: 'Header',
   components: {
     HeaderLogo,
-    HeaderTeamAInfo,
-    HeaderTeamBInfo,
+    HeaderTeam,
     HeaderCentralInformation
   }
 }
