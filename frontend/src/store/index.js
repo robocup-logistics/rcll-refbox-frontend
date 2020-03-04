@@ -11,12 +11,17 @@ export default new Vuex.Store({
     machines,
     orders
   },
-  state: {
-    nameTeamCyan: '',
-    showFormCyan: true,
 
+  state: {
+    // Teamnames
+    nameTeamCyan: '',
     nameTeamMagenta: '',
-    showFormMagenta: true
+    // Togglers on header
+    showFormCyan: true,
+    showFormMagenta: true,
+
+    // Gamephase
+    phase: 'Pre-Game'
   },
 
   getters: {
@@ -31,6 +36,28 @@ export default new Vuex.Store({
     setNameMagenta({commit, state}) {
       commit('setMagentaName', state.nameTeamMagenta);
       commit('toggleShowFormMagenta');
+    },
+    setNextPhase({commit, state}) {
+      if (state.phase === 'Pre-Game') {
+        commit('nextPhase', 'Setup');
+      } else if(state.phase === 'Setup') {
+        commit('nextPhase', 'Exploration');
+      } else if(state.phase === 'Exploration') {
+        commit('nextPhase', 'Production');
+      } else if(state.phase === 'Production') {
+        commit('nextPhase', 'Post-Game');
+    }
+  },
+    setPreviousPhase({commit, state}) {
+      if (state.phase === 'Post-Game') {
+        commit('previousPhase', 'Production');
+      } else if(state.phase === 'Production') {
+        commit('previousPhase', 'Exploration');
+      } else if(state.phase === 'Exploration') {
+        commit('previousPhase', 'Setup');
+      } else if(state.phase === 'Setup') {
+        commit('previousPhase', 'Pre-Game');
+    }
     }
   },
   
@@ -46,6 +73,12 @@ export default new Vuex.Store({
     },
     toggleShowFormMagenta(state) {
       state.showFormMagenta = !state.showFormMagenta;
+    },
+    previousPhase(state, phase) {
+      state.phase = phase;
+    },
+    nextPhase(state, phase) {
+      state.phase = phase;
     }
   }
 })

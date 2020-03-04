@@ -17,11 +17,11 @@
     </div>
 
     <div class="phase row justify-content-center mt-1">
-      <a class="btn p-0">
+      <a class="btn p-0" @click.prevent="setPreviousPhase">
         <i class="fas fa-chevron-left fa-2x"></i>
       </a>
-      <h3 >Production</h3>
-      <a class="btn p-0">
+      <h3 >{{getPhase}}</h3>
+      <a class="btn p-0" @click.prevent="setNextPhase">
         <i class="fas fa-chevron-right fa-2x"></i>
       </a>
     </div>
@@ -29,8 +29,18 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex' 
+
 export default {
-  name: 'HeaderCentralInformation'
+  name: 'HeaderCentralInformation',
+  computed: {
+    ...mapState({
+      getPhase: state => state.phase
+    })
+  },
+  methods: {
+    ...mapActions(['setNextPhase', 'setPreviousPhase'])
+  }
 }
 </script>
 
