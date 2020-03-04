@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row ">
       <div class="team-cyan-body-container col-md-6 border">
-        <div class="row" v-if="phase !== 'Pre-Game'">
+        <div class="row" v-if="phase !== 'Pre-Game' && !showFormCyan">
           <div class="col-md-4 body-machines-container p-0">
             <BodyMachinesTeamCyan />
           </div>
@@ -48,7 +48,7 @@ export default {
     BodyRobotsTeamA,
     BodyRefboxLog
   }, computed: {
-    ...mapState(['phase'])
+    ...mapState(['phase', 'showFormCyan'])
   }
 }
 </script>

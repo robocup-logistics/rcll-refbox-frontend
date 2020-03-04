@@ -41,15 +41,19 @@ export default new Vuex.Store({
       commit('toggleShowFormMagenta');
     },
     setNextPhase({commit, state}) {
-      if (state.phase === 'Pre-Game') {
-        commit('nextPhase', 'Setup');
-      } else if(state.phase === 'Setup') {
-        commit('nextPhase', 'Exploration');
-      } else if(state.phase === 'Exploration') {
-        commit('nextPhase', 'Production');
-      } else if(state.phase === 'Production') {
-        commit('nextPhase', 'Post-Game');
-    }
+      if(state.nameTeamCyan || state.nameTeamMagenta){
+        if (state.phase === 'Pre-Game') {
+          commit('nextPhase', 'Setup');
+        } else if(state.phase === 'Setup') {
+          commit('nextPhase', 'Exploration');
+        } else if(state.phase === 'Exploration') {
+          commit('nextPhase', 'Production');
+        } else if(state.phase === 'Production') {
+          commit('nextPhase', 'Post-Game');
+        }
+      }else {
+        alert('First Set Team Name!');
+      }
   },
     setPreviousPhase({commit, state}) {
       if (state.phase === 'Post-Game') {
