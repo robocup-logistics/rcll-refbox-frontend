@@ -16,7 +16,7 @@ export default{
   actions: {
     async fetchCyanRobots({commit, rootState}) {
       try {
-        const response = await get('/robots', {team: rootState.nameTeamCyan});
+        const response = await get('/robots', {team:rootState.nameTeamCyan});
         const data = response.data;
         commit('setCyanRobots', data);
       } catch(error) {

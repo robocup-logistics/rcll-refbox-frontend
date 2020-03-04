@@ -1,15 +1,18 @@
 // Main Store for Vuex
-import Vuex from 'vuex'
-import Vue from 'vue'
+import Vuex from 'vuex';
+import Vue from 'vue';
+// Modules Import
+import machines from './modules/machines';
+import orders from './modules/orders';
+import robots from './modules/robots';
 
-import machines from './modules/machines'
-import orders from './modules/orders'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
     machines,
-    orders
+    orders,
+    robots
   },
 
   state: {
