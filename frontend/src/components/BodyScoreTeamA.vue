@@ -1,12 +1,16 @@
 <template>
   <div class="border ">
-    <h1>Score</h1>
+    <h1>Points: {{scoreCyan}}</h1>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
-  name: 'BodyScoreTeamA'
+  name: 'BodyScoreTeamA',
+  computed: {
+    ...mapState(['scoreCyan'])
+  }
 }
 </script>
 

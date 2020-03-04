@@ -1,10 +1,10 @@
 <template>
   <div class="container-fluid">
     <div class="row ">
-      <div class="team-a-body col-md-6 border">
-        <div class="row">
-          <div class="col-md-4 machines-container p-0">
-            <BodyMachinesTeamA/>
+      <div class="team-cyan-body-container col-md-6 border">
+        <div class="row" v-if="phase !== 'Pre-Game'">
+          <div class="col-md-4 body-machines-container p-0">
+            <BodyMachinesTeamCyan />
           </div>
 
           <div class="col-md-8 p-0">
@@ -34,22 +34,27 @@
 </template>
 
 <script>
-import BodyMachinesTeamA from './BodyMachinesTeamA'
+import BodyMachinesTeamCyan from './BodyMachinesTeamCyan'
 import BodyScoreTeamA from './BodyScoreTeamA'
 import BodyRobotsTeamA from './BodyRobotsTeamA'
 import BodyRefboxLog from './BodyRefboxLog'
+import { mapState } from 'vuex';
 
 export default {
   name: 'Body',
   components: {
-    BodyMachinesTeamA,
+    BodyMachinesTeamCyan,
     BodyScoreTeamA,
     BodyRobotsTeamA,
     BodyRefboxLog
+  }, computed: {
+    ...mapState(['phase'])
   }
 }
 </script>
 
-<style>
-
+<style scoped>
+.team-cyan-body-container {
+  min-height: 40vh !important;
+}
 </style>

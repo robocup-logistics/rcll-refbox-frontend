@@ -3,19 +3,29 @@ import { get, post } from '@/api/api'
 
 export default{
   state: {
-    machines: []
+    machinesCyan: [],
+    machinesMagenta: []
   },
   getters: {
 
   },
   mutations: {
-
+    setMachinesCyan(state,data) {
+      state.machinesCyan = data;
+    }
   },
   actions: {
     // eslint-disable-next-line no-unused-vars
-    fetchAllMachines({commit}) {
-      //commit('setMachines', api.get('/machines'));
-      get('/machines', {team:'CYAN'}, 2000).then(res => console.log(res.data));
+    // Get params: 1: url, 2:params, 3:timeout, 4:data
+    async fetchMachinesCyan({commit}) {
+      try {
+        const response = await get('/machines', {team:'CYAN'});
+        const data = response.data;
+        commit('setMachinesCyan', data);
+      } catch(error){
+        console.log(error);
+      }
     }
   }
+   
 }

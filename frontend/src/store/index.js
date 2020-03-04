@@ -19,6 +19,9 @@ export default new Vuex.Store({
     // Togglers on header
     showFormCyan: true,
     showFormMagenta: true,
+    //Points
+    scoreCyan: 0,
+    scoreMagenta: 0,
 
     // Gamephase
     phase: 'Pre-Game'
