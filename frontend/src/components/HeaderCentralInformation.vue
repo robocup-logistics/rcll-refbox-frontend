@@ -20,7 +20,7 @@
       <a class="btn p-0" @click.prevent="setPreviousPhase">
         <i class="fas fa-chevron-left fa-2x"></i>
       </a>
-      <h3 >{{getPhase}}</h3>
+      <h3 @click="fetchAllMachines">{{getPhase}}</h3>
       <a class="btn p-0" @click.prevent="setNextPhase">
         <i class="fas fa-chevron-right fa-2x"></i>
       </a>
@@ -39,7 +39,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['setNextPhase', 'setPreviousPhase'])
+    ...mapActions(['setNextPhase', 'setPreviousPhase','fetchAllMachines' ])
   }
 }
 </script>
