@@ -53,7 +53,7 @@ export default {
     }),
     pollMachineInfo() {
       // Polls Information every 3 seconds
-      setInterval(this.fetchMachinesCyan, 3000)
+      setInterval(this.fetchMachinesCyan, 1500)
     },
     setStateClass(state) {
       let classList = ''
