@@ -22,9 +22,6 @@ export default{
         const response = await get('/machines', {team:'CYAN'});
         const data = response.data;
         commit('setMachinesCyan', data);
-
-        // Update Machine Info by polling every 1 second
-        
       } catch(error){
         console.log(error);
       }

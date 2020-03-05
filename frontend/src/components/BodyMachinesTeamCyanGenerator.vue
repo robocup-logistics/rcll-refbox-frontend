@@ -44,13 +44,17 @@ export default {
   },
 
   mounted() {
-    this.fetchMachinesCyan();
+    this.pollMachineInfo();
   },
 
   methods: {
     ...mapActions({
       fetchMachinesCyan: 'fetchMachinesCyan'
     }),
+    pollMachineInfo() {
+      // Polls Information every 3 seconds
+      setInterval(this.fetchMachinesCyan, 3000)
+    },
     setStateClass(state) {
       let classList = ''
       // IDLE
