@@ -1,7 +1,30 @@
 <template>
   <div>
     <div v-if="currentPhase !== 'Pre-Game'">
-      <h1 v-for="robot in allCyanRobots" :key="robot.number">{{robot.number}}.{{robot.name}} of {{ robot.team}}</h1>
+      <div v-for="(robot,index) in allCyanRobots" 
+           :key="robot.number"
+           >
+        <div class="robot-col">
+          <span class="robot-number mr-2 ">{{robot.number}}</span>
+          <span class="robot-name mr-3 ">
+            <strong> {{robot.name}} </strong>
+          </span>
+          <span class="robot-team">
+            <strong> ({{robot.team}}) </strong>
+          </span>
+        </div>
+        <div class="robot-info d-flex justify-content-between">
+          <div class="robot-host">
+            <span class="robot-host-ip">
+              {{robot.host}}
+            </span>
+          </div>
+          <div class="robot-state">
+            <span class="robot-current-state mr-2">{{robotState(index)}}</span>
+            <span class="robot-maintnance-cycles" >{{robot['maintenance-cycles']}}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -23,11 +46,17 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchCyanRobots'])
+    ...mapActions(['fetchCyanRobots']),
+    robotState(index) {
+      return this.allCyanRobots[index].state.toLowerCase()
+    }
   }
 }
 </script>
 
 <style>
 
+.robot-number, .robot-team, .robot-name {
+  color: var(--main-cyan-color) !important;
+}
 </style>

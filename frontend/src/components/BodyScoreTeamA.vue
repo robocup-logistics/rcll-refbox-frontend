@@ -1,5 +1,5 @@
 <template>
-  <div class="border ">
+  <div >
     <h1>Points: {{scoreCyan}}</h1>
   </div>
 </template>

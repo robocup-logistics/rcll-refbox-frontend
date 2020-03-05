@@ -25,6 +25,9 @@ export default {
 
 <style>
 #app {
+  /* main-cyan-color */
+  --main-cyan-color: #0FF;
+
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -3,7 +3,7 @@
     <div class="row"         >
         <div class="mb-1"
              :class="[index != 6 ? 
-             'col-md-6' : 'col-md-12',
+             'col-xl-6 col-md-3' : 'col-xl-12 col-md-3',
              machine.mtype+'-station']"
              v-for="(machine,index) in machinesCyan" 
              :key="index" 

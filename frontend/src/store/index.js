@@ -16,7 +16,7 @@ export default new Vuex.Store({
   },
 
   state: {
-    // Teamnames
+  // Teamnames
     nameTeamCyan: '',
     nameTeamMagenta: '',
     // Togglers on header

@@ -1,18 +1,18 @@
 <template>
-  <div class="container-fluid">
-    <div class="row ">
-      <div class="team-cyan-body-container col-md-6 border">
+  <div >
+    <div class="row m-0">
+      <div class="team-cyan-body-container col-xl-6 border">
         <div class="row" v-if="phase !== 'Pre-Game' && !showFormCyan">
-          <div class="col-md-4 body-machines-container p-0">
+          <div class="col-xl-4 body-machines-container p-0">
             <BodyMachinesTeamCyan />
           </div>
 
-          <div class="col-md-8 p-0">
-            <div class="row">
-              <div class="score-container col-md-12">
+          <div class="col-xl-8 p-0 mt-3">
+            <div class="row m-0">
+              <div class="score-container col-xl-12 p-0 border-bottom ">
                 <BodyScoreTeamA />
               </div>
-              <div class="robots-container col-md-12">
+              <div class="robots-container col-xl-12 mt-4 ">
                 <BodyRobotsTeamA />
               </div>
             </div>
@@ -21,12 +21,12 @@
         </div>
       </div>
 
-      <div class="team-b-body col-md-6 border">
+      <div class="team-b-body col-xl-6 border">
         <h1>Body B</h1>
       </div>
     </div>
 
-    <div class="row">
+    <div class="">
       <BodyRefboxLog />
     </div>
     
