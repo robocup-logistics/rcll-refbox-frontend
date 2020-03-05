@@ -58,9 +58,11 @@ export default {
     setStateClass(state) {
       let classList = ''
       // IDLE
-      if (state.length < 5) {
+      if (state === 'IDLE' || state ==='WAIT-IDLE') {
         classList += 'machine-state-large text-light lead'
-      } else {
+      } else if (state === 'BROKEN' || state === 'DOWN'){
+        classList += 'machine-state-small text-danger lead'
+      }else {
         classList += 'machine-state-small text-warning lead'
       }
       return classList;
