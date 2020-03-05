@@ -25,9 +25,10 @@ export default {
 
 <style>
 #app {
-  /* main-cyan-color */
+  /* Css Primary color Variables */
   --main-cyan-color: #0FF;
-
+  --main-magenta-color: #F0F;
+  
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

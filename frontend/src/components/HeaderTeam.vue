@@ -112,8 +112,8 @@ export default {
   min-width: 200px;
 }
 .btn-magenta-header {
-  color: #FF00FF !important;
-  border-color: #FF00FF !important;
+  color: var(--main-magenta-color) !important;
+  border-color: var(--main-magenta-color) !important;
   transition-duration: 0.4s !important
 }
 
@@ -122,8 +122,8 @@ export default {
 }
 
 .btn-cyan-header {
-  color: #00FFFF !important;
-  border-color: #00FFFF !important;
+  color:  var(--main-cyan-color) !important;
+  border-color: var(--main-cyan-color) !important;
   transition-duration: 0.4s !important
 }
 
@@ -132,11 +132,11 @@ export default {
 }
 
 .cyan-name-header  {
-  color: #0ff !important;
+  color: var(--main-cyan-color) !important;
 }
 
 .magenta-name-header {
-  color: #F0F !important;
+  color: var(--main-magenta-color) !important;
 }
 
 </style>
