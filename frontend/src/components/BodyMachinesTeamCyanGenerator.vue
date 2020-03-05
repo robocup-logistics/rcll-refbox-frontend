@@ -12,11 +12,12 @@
             <div class="base-image-container mr-1">
                     <figure>
                       <img :src="imageUrl" alt="">
-                      <figcaption class="text-center">{{machine.zone}} </figcaption>
+                      <figcaption class="text-center machine-zone">{{machine.zone}} </figcaption>
                     </figure>
             </div>
             <div class="machine-info d-flex flex-column">
-                  <span>{{machine.state}}</span>
+                  <span :class="setStateClass(machine.state)"
+                  >{{machine.state}}</span>
                   <span>#boxes</span>
                   <span>{{machine.name}}</span>
             </div>
@@ -49,7 +50,17 @@ export default {
   methods: {
     ...mapActions({
       fetchMachinesCyan: 'fetchMachinesCyan'
-    })
+    }),
+    setStateClass(state) {
+      let classList = ''
+      // IDLE
+      if (state.length < 5) {
+        classList += 'machine-state-large text-light lead'
+      } else {
+        classList += 'machine-state-small text-warning lead'
+      }
+      return classList;
+    }
   }
 }
 </script>
@@ -58,6 +69,17 @@ export default {
 
 figcaption {
   font-size: 12px;
+}
+
+.machine-zone{
+  color: var(--main-cyan-color)
+}
+.machine-state-small {
+  font-size: 12px;
+}
+
+.machine-state-large {
+  font-size: 15px;
 }
 
 .machine-info {
