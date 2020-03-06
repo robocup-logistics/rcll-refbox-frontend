@@ -10,16 +10,18 @@
           >Add Team Cyan</button>
         </div>
         <div class="mb-2" v-if="isClicked">
-          <form @submit.prevent="setNameCyan">
+          <form @submit.prevent="setNameCyan"
+                class="form-cyan"
+          >
             <input type="text" 
             placeholder="add teamname"
-            class="bg-light" required
+            class="input-cyan"
+            required
+            autofocus
             v-model="cyanName"
             >
-            <button type="submit" 
-            class="btn btn-sm btn-success"
-            >
-              Submit
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-arrow-right"></i>
             </button>
           </form>
         </div>
@@ -41,15 +43,18 @@
           >Add Team Magenta</button>
         </div>
         <div class="mb-2" v-if="isClicked">
-          <form @submit.prevent="setNameMagenta">
-            <input type="text" 
-            placeholder="add teamname"
-            class="bg-light" required
-            v-model="magentaName"
-            >
-            <button type="submit" 
-            class="btn btn-sm btn-success"
-            >Submit</button>
+          <form @submit.prevent="setNameMagenta"
+                class="form-magenta"
+          >
+              <input type="text" 
+              placeholder="add teamname"
+              class="input-magenta"
+              required  
+              v-model="magentaName"
+              >
+              <button type="submit" class="submit-btn">
+                <i class="fas fa-arrow-right"></i>
+              </button>
             </form>
         </div>
       </div>
@@ -137,6 +142,62 @@ export default {
 
 .magenta-name-header {
   color: var(--main-magenta-color) !important;
+}
+
+.submit-btn {
+  padding: 0; 
+  background: none; 
+  border: none; 
+  outline: none;
+  color: rgb(105, 109, 112);
+}
+
+.input-cyan {
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  border-bottom: 0;
+  border-color: var(--main-cyan-color);
+  border-radius: 2px;
+  outline: 0;
+  background-color: #2B3E50;
+  color: var(--main-cyan-color);
+  text-align: center;
+}
+
+.form-cyan {
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  border-bottom: 1px solid;
+  border-color: var(--main-cyan-color);
+  border-radius: 2px;
+  outline: 0;
+  background-color: #2B3E50;
+}
+
+.input-magenta {
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  border-bottom: 0;
+  border-color: var(--main-magenta-color);
+  border-radius: 2px;
+  outline: 0;
+  background-color: #2B3E50;
+  color: var(--main-magenta-color);
+  text-align: center;
+}
+
+.form-magenta {
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  border-bottom: 1px solid;
+  border-color: var(--main-magenta-color);
+  border-radius: 2px;
+  outline: 0;
+  background-color: #2B3E50;
 }
 
 </style>
