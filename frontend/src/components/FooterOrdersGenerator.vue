@@ -9,9 +9,12 @@
            v-if="order.active === true"
       >
         <div class="image-container">
-          <img src="http://via.placeholder.com/45x90" alt=""> 
+          <img src="http://via.placeholder.com/37x90" alt=""> 
         </div>  
-        <div class="order-info-container ml-2 d-flex flex-column text-left justify-content-around">
+        <div 
+            class="order-info-container ml-2 d-flex    flex-column text-left justify-content-around"
+            style="font-size:14px"
+            >
           <div class="order-infos ">
             <div>
               <span class="order-quantity">
@@ -24,7 +27,7 @@
                 Delivered: [
                 <span class="quantity-delivered-cyan">{{order ['quantity-delivered'][0]}}</span>,
               </span>
-              
+
               <span class="quantity-delivered-magenta">
                 {{order ['quantity-delivered'][1]}}
               </span>
@@ -58,9 +61,13 @@ export default {
   },
   mounted() {
     this.fetchAllOrders()
+    this.pollAllOrders()
   },
   methods: {
-    ...mapActions(['fetchAllOrders'])
+    ...mapActions(['fetchAllOrders']),
+    pollAllOrders() {
+      setInterval(this.fetchAllOrders, 1500);
+    }
   }
 }
 

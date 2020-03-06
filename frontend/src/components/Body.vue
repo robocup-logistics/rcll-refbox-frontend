@@ -3,11 +3,11 @@
     <div class="row m-0">
       <div class="team-cyan-body-container col-xl-6 border">
         <div class="row" v-if="phase !== 'Pre-Game' && !showFormCyan">
-          <div class="col-xl-4 body-machines-container p-0">
+          <div class="col-xl-6 body-machines-container p-0">
             <BodyMachinesTeamCyan />
           </div>
 
-          <div class="col-xl-8 p-0 mt-3">
+          <div class="col-xl-6 p-0 mt-3">
             <div class="row m-0">
               <div class="score-container col-xl-12 p-0 border-bottom ">
                 <BodyScoreTeamA />

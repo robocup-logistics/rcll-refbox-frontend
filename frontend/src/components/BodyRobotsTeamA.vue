@@ -48,6 +48,7 @@ export default {
   },
 
   mounted(){
+    this.fetchCyanRobots()
     this.pollRobotInfo()
   },
 

@@ -44,6 +44,7 @@ export default {
   },
 
   mounted() {
+    this.fetchMachinesCyan()
     this.pollMachineInfo();
   },
 

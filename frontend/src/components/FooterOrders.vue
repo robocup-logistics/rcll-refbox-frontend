@@ -2,6 +2,7 @@
   <div >
     <div >
       <FootersOrdersGenerator 
+        v-if="currentPhase === 'Production'"
         class="d-flex justify-content-around p-4"/>
     </div>
   </div>
@@ -21,7 +22,7 @@ export default {
     })
   }
 }
-// v-if="currentPhase === 'production'"
+
 </script>
 
 <style>
