@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid border">
+  <div class="border">
     <FooterOrders />
   </div>
 </template>

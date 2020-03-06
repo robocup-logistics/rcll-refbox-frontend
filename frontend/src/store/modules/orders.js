@@ -17,7 +17,7 @@ export default{
     async fetchAllOrders({commit}) {
       try{
         // Fetch all orders from api
-        const response = await get('/orders', {complexity: 'C0'});
+        const response = await get('/orders')
         const data = response.data 
         // Commit mutations to change allOrders array
         commit('setAllOrders', data);
