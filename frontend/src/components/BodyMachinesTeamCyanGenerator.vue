@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="row"         >
+    <div class="row m-0"         >
         <div class="mb-1"
-             :class="[index != 6 ? 
+             :class="[index !== 6 ? 
              'col-xl-6 col-md-3' : 'col-xl-12 col-md-3',
              machine.mtype+'-station']"
              v-for="(machine,index) in machinesCyan" 
@@ -62,7 +62,7 @@ export default {
       if (state === 'IDLE' || state ==='WAIT-IDLE') {
         classList += 'machine-state-large text-light lead'
       } else if (state === 'BROKEN' || state === 'DOWN'){
-        classList += 'machine-state-small text-danger lead'
+        classList += 'machine-state-small text-danger lead '
       }else {
         classList += 'machine-state-small text-warning lead'
       }
