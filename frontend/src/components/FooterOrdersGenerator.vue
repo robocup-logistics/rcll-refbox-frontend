@@ -24,14 +24,12 @@
 
             <div>
               <span>
-                Delivered: [
-                <span class="quantity-delivered-cyan">{{order ['quantity-delivered'][0]}}</span>,
+                Delivered:
+                [<span class="quantity-delivered-cyan">{{order ['quantity-delivered'][0]}}</span>,
               </span>
 
               <span class="quantity-delivered-magenta">
-                {{order ['quantity-delivered'][1]}}
-              </span>
-                ]
+                {{order ['quantity-delivered'][1]}}</span>]
             </div>
 
             <div class="order-complexity">
@@ -40,7 +38,7 @@
               </span>
             </div>
             <div class="delivery-time">
-              <span>{{order['delivery-period'][0]}}-{{order['delivery-period'][1]}}</span>
+              <span>{{formatSeconds(order['delivery-period'][0])}}-{{formatSeconds(order['delivery-period'][1])}}</span>
             </div>
           </div>
         </div>
@@ -67,6 +65,20 @@ export default {
     ...mapActions(['fetchAllOrders']),
     pollAllOrders() {
       setInterval(this.fetchAllOrders, 1500);
+    },
+    formatSeconds(seconds) {
+      // 328 seconds => 
+      seconds = parseInt(seconds)
+      let minutes = parseInt(seconds / 60)
+      if(minutes < 10) {
+        minutes = `0${minutes}`
+      }
+      let _seconds = parseInt(seconds % 60)
+      if(_seconds < 10) {
+        _seconds = `0${_seconds}`
+      }
+      const result = `${minutes}:${_seconds}`
+      return result
     }
   }
 }
