@@ -1,6 +1,6 @@
 <template>
   <div >
-    <h1>Points: {{scoreCyan}}</h1>
+    <h1 v-if="phase !== 'Pre_Game'">Points: {{scoreCyan}}</h1>
   </div>
 </template>
 
@@ -9,7 +9,7 @@ import { mapState } from 'vuex';
 export default {
   name: 'BodyScoreTeamA',
   computed: {
-    ...mapState(['scoreCyan'])
+    ...mapState(['scoreCyan', 'phase'])
   }
 }
 </script>

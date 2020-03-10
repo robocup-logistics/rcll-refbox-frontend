@@ -66,6 +66,7 @@ export default {
     pollAllOrders() {
       setInterval(this.fetchAllOrders, 1500);
     },
+    // To format fetched seconds
     formatSeconds(seconds) {
       // 328 seconds => 
       seconds = parseInt(seconds)

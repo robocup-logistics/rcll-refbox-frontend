@@ -5,6 +5,8 @@ import Vue from 'vue';
 import machines from './modules/machines';
 import orders from './modules/orders';
 import robots from './modules/robots';
+// Axios 
+import { get } from '@/api/api' 
 
 Vue.use(Vuex)
 
@@ -25,9 +27,9 @@ export default new Vuex.Store({
     //Points
     scoreCyan: 0,
     scoreMagenta: 0,
-
-    // Gamephase
-    phase: 'Pre-Game'
+    // Gamestate
+    phase: 'Pre_Game',
+    gametime: 0
   },
 
   getters: {
@@ -35,38 +37,57 @@ export default new Vuex.Store({
   },
 
   actions: {
+    async fetchGameState({commit}) {
+      try {
+        const response = await get('/game-state');
+        const data = await response.data;
+        data.forEach(gamestate => {
+          console.log(gamestate);
+          commit('setCurrentPhase', gamestate.phase);
+          commit('setCurrentCyanScore', gamestate.points[0]);
+          commit('setGametime', gamestate ["game-time"]);
+          //console.log(gamestate["'game-time'"]);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     setNameCyan({commit, state}) {
       commit('setCyanName', state.nameTeamCyan);
       commit('toggleShowFormCyan');
     },
+
     setNameMagenta({commit, state}) {
       commit('setMagentaName', state.nameTeamMagenta);
       commit('toggleShowFormMagenta');
     },
+
     setNextPhase({commit, state}) {
       if(state.nameTeamCyan || state.nameTeamMagenta){
-        if (state.phase === 'Pre-Game') {
+        if (state.phase === 'Pre_Game') {
           commit('nextPhase', 'Setup');
         } else if(state.phase === 'Setup') {
           commit('nextPhase', 'Exploration');
         } else if(state.phase === 'Exploration') {
           commit('nextPhase', 'Production');
         } else if(state.phase === 'Production') {
-          commit('nextPhase', 'Post-Game');
+          commit('nextPhase', 'Post_Game');
         }
       }else {
         alert('First Set Team Name!');
       }
   },
+
     setPreviousPhase({commit, state}) {
-      if (state.phase === 'Post-Game') {
+      if (state.phase === 'Post_game') {
         commit('previousPhase', 'Production');
       } else if(state.phase === 'Production') {
         commit('previousPhase', 'Exploration');
       } else if(state.phase === 'Exploration') {
         commit('previousPhase', 'Setup');
       } else if(state.phase === 'Setup') {
-        commit('previousPhase', 'Pre-Game');
+        commit('previousPhase', 'Pre_Game');
     }
     }
   },
@@ -89,6 +110,18 @@ export default new Vuex.Store({
     },
     nextPhase(state, phase) {
       state.phase = phase;
+    },
+    setCurrentPhase(state, phase) {
+      // So it's in format Production instead of PRODUCTION
+      phase = phase.charAt(0).toUpperCase() + phase.slice(1).toLowerCase();
+      state.phase = phase;
+    },
+    setCurrentCyanScore(state, score) {
+      state.scoreCyan = score;
+    },
+    setGametime(state, gametime) {
+      // console.log(gametime);
+      state.gametime = gametime;
     }
   }
 })

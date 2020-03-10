@@ -2,7 +2,7 @@
   <div >
     <div class="row m-0">
       <div class="team-cyan-body-container col-xl-6 border">
-        <div class="row" v-if="phase !== 'Pre-Game' && !showFormCyan">
+        <div class="row" v-if="phase !== 'Pre_Game' && !showFormCyan">
           <div class="col-xl-6 body-machines-container p-0">
             <BodyMachinesTeamCyan />
           </div>
