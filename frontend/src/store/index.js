@@ -29,7 +29,8 @@ export default new Vuex.Store({
     scoreMagenta: 0,
     // Gamestate
     phase: 'Pre_Game',
-    gametime: 0
+    gametime: 0,
+    awardedPoints: []
   },
 
   getters: {
@@ -58,6 +59,16 @@ export default new Vuex.Store({
           commit('setGametime', gamestate ["game-time"]);
           //console.log(gamestate["'game-time'"]);
         });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    
+    async fetchAwardedPoints({commit}) {
+      try {
+        const response = await get('/points');
+        const data = response.data;
+        commit('setAwardedPoints', data)
       } catch (error) {
         console.log(error);
       }
@@ -132,6 +143,9 @@ export default new Vuex.Store({
     setGametime(state, gametime) {
       // console.log(gametime);
       state.gametime = gametime;
+    },
+    setAwardedPoints(state, pointsArray) {
+      state.awardedPoints = pointsArray;
     }
   }
 })

@@ -56,30 +56,32 @@
                 <div 
                   v-else-if="order['quantity-requested'] === 2 "
                   class="form-group m-0 ml-2 d-flex">
-                  <div class= "d-flex">
-                    <div class="custom-control custom-checkbox">
-                      <!-- Checked only if the order was delivered -->
-                      <input 
-                        type="checkbox" class="custom-control-input"       id="customCheck1"  disabled
-                        :checked="isDelivered(order['quantity-delivered'][0], 
-                        order['quantity-requested'])"
-                      >
-                      <label class="custom-control-label" for="customCheck1">
-                      </label>
-                    </div>
-                    <div 
-                      class="custom-control custom-checkbox custom-checkbox-magenta">
-                      <input type="checkbox" 
-                          class="custom-control-input custom-control-input-magenta" 
-                          id="customCheck2" disabled>
-                      <label 
-                        class="custom-control-label custom-control-label-magenta" 
-                        for="customCheck2">
-                      </label>
+                  <div>
+                    <div class= "d-flex">
+                      <div class="custom-control custom-checkbox">
+                        <!-- Checked only if the order was delivered -->
+                        <input 
+                          type="checkbox" class="custom-control-input"       id="customCheck1"  disabled
+                          :checked="isDelivered(order['quantity-delivered'][0], 
+                          order['quantity-requested'])"
+                        >
+                        <label class="custom-control-label" for="customCheck1">
+                        </label>
+                      </div>
+                      <div 
+                        class="custom-control custom-checkbox custom-checkbox-magenta">
+                        <input type="checkbox" 
+                            class="custom-control-input custom-control-input-magenta" 
+                            id="customCheck2" disabled>
+                        <label 
+                          class="custom-control-label custom-control-label-magenta" 
+                          for="customCheck2">
+                        </label>
+                      </div>
                     </div>
                   </div>
                   <!-- If the first was  delivered -->
-                  <div v-if="order['quantity-delivered'] >= '1' ">
+                  <div v-if="order['quantity-delivered'] >= '1'" class="d-flex">
                     <div class="custom-control custom-checkbox">
                       <!-- Checked only if the order was delivered -->
                       <input 
@@ -156,7 +158,7 @@ export default {
     },
     // Checks if the order was delivered
     isDelivered(currDelivered, requested) {
-      if (parseInt(currDelivered) >= requested || currDelivered === 1){
+      if (parseInt(currDelivered) >= requested || parseInt(currDelivered) === 1){
         return true;
       } else {
         return false;

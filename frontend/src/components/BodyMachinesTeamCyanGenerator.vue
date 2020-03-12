@@ -1,10 +1,8 @@
 <template>
   <div>
     <div class="row m-0 pt-3">
-        <div class="mb-1"
-             :class="[index !== 6 ? 
-             'col-xl-12 col-md-3' : 'col-xl-12 col-md-3',
-             machine.mtype+'-station']"
+        <div class="mb-1 col-xl-12 col-md-3"
+             :class="[machine.mtype+'-station']"
              v-for="(machine,index) in machinesCyan" 
              :key="index" 
         >
@@ -22,7 +20,7 @@
                   <span :class="setStateClass(machine.state)">
                     {{machine.state}}
                   </span>
-                  <div v-if="machine.mtype === 'RS'" class="d-flex mt-1">
+                  <div v-if="machine.mtype === 'RS'" class="d-flex my-1">
                     <span>{{machine['bases-added'] - machine['bases-used']}}</span>
                     <div class="ml-2 d-flex">
                       <div 
@@ -87,7 +85,6 @@ export default {
       return classList;
     },
     showPreparedColorInfo(ringColor) {
-      console.log(ringColor);
       let reqBases = 0;
       this.ringspecs.forEach((ringspec) => {
         if(ringspec.color === ringColor) {
