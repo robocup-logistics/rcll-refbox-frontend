@@ -8,11 +8,13 @@
           v-for="(award,index) in awardedPoints" 
           :key='index'>
           <div v-if="award.team === 'CYAN'">
-              <h6 class="text-success" style="font-size: 15px;">
+              <h6 style="font-size: 15px;">
                 {{index + 1}}.
-                {{award.phase.substring(0,3)}}
                 [{{formatSeconds(award['game-time'])}}]
-                {{award.points}} point(s): {{award.reason}} 
+                {{award.phase.substring(0,4)}}
+                <span class="text-light">{{award.points}}</span> point(s)
+                <br>
+                <span class="text-success" style="font-weight:300">{{award.reason.split(':')[0]}}</span>
                 </h6>
           </div>
         </div>

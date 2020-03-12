@@ -100,7 +100,7 @@ export default {
         return 'bg-primary'
       } else if (ringcolor === 'RING_GREEN') {
         return 'bg-success'
-      } else if (ringcolor === 'RING-YELLOW') {
+      } else if (ringcolor === 'RING_YELLOW') {
         return 'bg-yellow'
       }
     }
