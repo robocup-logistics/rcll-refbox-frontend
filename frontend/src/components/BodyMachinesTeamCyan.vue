@@ -1,7 +1,7 @@
 <template>
-  <div  class="machines-container  border-right text-left">
+  <div  class="machines-container text-left">
     <div v-if="getPhase !== 'Pre_game'">
-      <BodyMachinesTeamCyanGenerator />
+      <BodyMachinesTeamCyanGenerator  />
     </div>
   </div>
 </template>

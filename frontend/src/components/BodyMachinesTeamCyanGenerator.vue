@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="row m-0 pt-3">
+    <div class="row m-0 pt-3 ">
         <div class="mb-1 col-xl-12 col-md-3"
              :class="[machine.mtype+'-station']"
              v-for="(machine,index) in machinesCyan" 
              :key="index" 
         >
-          <div class="d-flex align-content-center ml-3">
+          <div class="d-flex align-content-center ml-3" >
             <div class="base-image-container mr-1">
                     <figure>
                       <img :src="imageUrl" alt="">
