@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row m-0"         >
+    <div class="row m-0">
         <div class="mb-1"
              :class="[index !== 6 ? 
              'col-xl-12 col-md-3' : 'col-xl-12 col-md-3',

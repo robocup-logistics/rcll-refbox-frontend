@@ -1,6 +1,6 @@
 <template>
   <div >
-    <h1 v-if="phase !== 'Pre_Game'">Points: {{scoreCyan}}</h1>
+    <h1 v-if="phase !== 'Pre_game'">Points: {{scoreCyan}}</h1>
   </div>
 </template>
 

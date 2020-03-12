@@ -20,7 +20,20 @@ export default{
     async fetchMachinesCyan({commit}) {
       try {
         const response = await get('/machines', {team:'CYAN'});
-        const data = response.data;
+        let data = response.data;
+        // Sort machines alphabetically
+        data = data.sort((machineA, machineB) => {
+          let nameA = machineA.name
+          let nameB = machineB.name
+          if (nameA < nameB) {
+            return -1;
+          } 
+          if (nameA > nameB) {
+            return 1;
+          }
+          // names must be equal
+          return 0;
+        })
         commit('setMachinesCyan', data);
       } catch(error){
         console.log(error);
