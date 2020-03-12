@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row m-0">
+    <div class="row m-0 pt-3">
         <div class="mb-1"
              :class="[index !== 6 ? 
              'col-xl-12 col-md-3' : 'col-xl-12 col-md-3',
@@ -16,8 +16,9 @@
                     </figure>
             </div>
             <div class="machine-info d-flex flex-column">
-                  <span :class="setStateClass(machine.state)"
-                  >{{machine.state}}</span>
+                  <span :class="setStateClass(machine.state)">
+                    {{machine.state}}
+                  </span>
                   <span>#boxes</span>
                   <span>{{machine.name}}</span>
             </div>

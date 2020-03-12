@@ -6,10 +6,10 @@
     >
       <div 
            class="d-flex"
-           v-if="order.active === true"
       >
-        <div class="image-container">
+        <div class="image-container d-flex flex-column">
           <img src="http://via.placeholder.com/37x90" alt=""> 
+          
         </div>  
         <div 
             class="order-info-container ml-2 d-flex    flex-column text-left justify-content-around"
@@ -23,13 +23,68 @@
             </div>
 
             <div>
-              <span>
-                Delivered:
-                [<span class="quantity-delivered-cyan">{{order ['quantity-delivered'][0]}}</span>,
-              </span>
+            <div class="d-flex justify-items-center align-items-center ">
+              <div pt-5>
+                <span>{{order.id}}</span>
+              </div>
+              <form >
+                <!-- If requested amount is 1 -->
+                <div 
+                  v-if="order['quantity-requested'] === 1"
+                  class="form-group m-0 ml-2 d-flex">
+                  <div class="custom-control custom-checkbox">
+                    <!-- Checked only if the order was delivered -->
+                    <input 
+                      type="checkbox" class="custom-control-input"
+                      :id="cyanCheckboxId(order.id)"  
+                      disabled
+                      :checked="isDelivered(order['quantity-delivered'][0], 
+                      order['quantity-requested'])"
+                    >
+                    <label class="custom-control-label" :for="cyanCheckboxId(order.id)"></label>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck2" disabled>
+                    <label class="custom-control-label" for="customCheck2"></label>
+                  </div>
+                </div>
+                <!-- If requested amount is 2 and 1 was already delivered -->
+                <div 
+                  v-if="order['quantity-requested'] === 2 "
+                  class="form-group m-0 ml-2 d-flex">
+                  <div class= "d-flex">
+                    <div class="custom-control custom-checkbox">
+                      <!-- Checked only if the order was delivered -->
+                      <input 
+                        type="checkbox" class="custom-control-input"       id="customCheck1"  disabled
+                        :checked="isDelivered(order['quantity-delivered'][0], 
+                        order['quantity-requested'])"
+                      >
+                      <label class="custom-control-label" for="customCheck1"></label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="customCheck2" disabled>
+                      <label class="custom-control-label" for="customCheck2"></label>
+                    </div>
+                  </div>
 
-              <span class="quantity-delivered-magenta">
-                {{order ['quantity-delivered'][1]}}</span>]
+                  <div v-if="order['quantity-delivered'] >= '1' ">
+                    <div class="custom-control custom-checkbox">
+                      <!-- Checked only if the order was delivered -->
+                      <input 
+                        type="checkbox" class="custom-control-input"       id="customCheck1"  disabled
+                        :checked="isDeliveredSecond(order['quantity-delivered'][0])"
+                      >
+                      <label class="custom-control-label" for="customCheck1"></label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="customCheck2" disabled>
+                      <label class="custom-control-label" for="customCheck2"></label>
+                    </div>
+                  </div>
+                </div>
+            </form>
+          </div>  
             </div>
 
             <div class="order-complexity">
@@ -69,17 +124,35 @@ export default {
     // To format fetched seconds
     formatSeconds(seconds) {
       // 328 seconds => 
-      seconds = parseInt(seconds)
-      let minutes = parseInt(seconds / 60)
+      seconds = parseInt(seconds);
+      let minutes = parseInt(seconds / 60);
       if(minutes < 10) {
-        minutes = `0${minutes}`
+        minutes = `0${minutes}`;
       }
-      let _seconds = parseInt(seconds % 60)
+      let _seconds = parseInt(seconds % 60);
       if(_seconds < 10) {
-        _seconds = `0${_seconds}`
+        _seconds = `0${_seconds}`;
       }
-      const result = `${minutes}:${_seconds}`
-      return result
+      const result = `${minutes}:${_seconds}`;
+      return result;
+    },
+    // Checks if the order was delivered
+    isDelivered(currDelivered, requested) {
+      if (parseInt(currDelivered) >= requested || currDelivered === 1){
+        return true;
+      } else {
+        return false;
+      }
+    },
+    isDeliveredSecond(currDelivered) {
+      if (parseInt(currDelivered) === 2){
+        return true;
+      } else {
+        return false;
+      }
+    },
+    cyanCheckboxId(orderId) {
+      return `cyanCheckbox-${orderId}`;
     }
   }
 }
@@ -94,4 +167,18 @@ export default {
   color: var(--main-magenta-color)
 }
 
+/* Remove Bootsrap defaults */
+.custom-checkbox .custom-control-label::before {
+  border-radius: 50% !important;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+    color: #fff;
+    border-color: var(--main-cyan-color) !important;
+    background-color: var(--main-cyan-color)  !important;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+    background-image: url('../assets/checkedMark.png') !important;
+}
 </style>
