@@ -41,11 +41,15 @@
                       :checked="isDelivered(order['quantity-delivered'][0], 
                       order['quantity-requested'])"
                     >
-                    <label class="custom-control-label" :for="cyanCheckboxId(order.id)"></label>
+                    <label class="custom-control-label" 
+                    :for="cyanCheckboxId(order.id)"
+                    ></label>
                   </div>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="customCheck2" disabled>
-                    <label class="custom-control-label" for="customCheck2"></label>
+                  <div class="custom-control custom-checkbox custom-checkbox-magenta">
+                    <input type="checkbox" 
+                      class="custom-control-input custom-control-input-magenta" 
+                      id="customCheck2" disabled>
+                    <label class="custom-control-label custom-control-label-magenta" for="customCheck2"></label>
                   </div>
                 </div>
                 <!-- If requested amount is 2 and 1 was already delivered -->
@@ -62,9 +66,13 @@
                       >
                       <label class="custom-control-label" for="customCheck1"></label>
                     </div>
-                    <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" id="customCheck2" disabled>
-                      <label class="custom-control-label" for="customCheck2"></label>
+                    <div class="custom-control custom-checkbox custom-checkbox-magenta">
+                      <input type="checkbox" 
+                          class="custom-control-input custom-control-input-magenta" 
+                          id="customCheck2" disabled>
+                      <label class="custom-control-label custom-control-label-magenta" 
+                      for="customCheck2">
+                      </label>
                     </div>
                   </div>
 
@@ -77,9 +85,10 @@
                       >
                       <label class="custom-control-label" for="customCheck1"></label>
                     </div>
-                    <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" id="customCheck2" disabled>
-                      <label class="custom-control-label" for="customCheck2"></label>
+                    <div class="custom-control custom-checkbox custom-checkbox-magenta">
+                      <input type="checkbox" class="custom-control-input custom-control-input-magenta" 
+                      id="customCheck2" disabled>
+                      <label class="custom-control-label custom-control-label-magenta" for="customCheck2"></label>
                     </div>
                   </div>
                 </div>
@@ -169,7 +178,9 @@ export default {
 
 /* Remove Bootsrap defaults */
 .custom-checkbox .custom-control-label::before {
+  border: 1px solid var(--main-cyan-color) !important;
   border-radius: 50% !important;
+  background-color: #2B3E50 !important;
 }
 
 .custom-control-input:checked ~ .custom-control-label::before {
@@ -181,4 +192,19 @@ export default {
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
     background-image: url('../assets/checkedMark.png') !important;
 }
+
+.custom-checkbox-magenta .custom-control-label-magenta::before {
+  border: 1px solid var(--main-magenta-color) !important;
+  border-radius: 50% !important;
+  background-color: #2B3E50 !important;
+}
+
+.custom-control-input-magenta:checked ~ .custom-control-label-magenta::before {
+    color: #fff;
+    border-color: var(--main-magenta-color) !important;
+    background-color: var(--main-magenta-color)  !important;
+}
+
+
+
 </style>
