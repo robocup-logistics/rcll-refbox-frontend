@@ -22,7 +22,17 @@
                   <span :class="setStateClass(machine.state)">
                     {{machine.state}}
                   </span>
-                  <span>#boxes</span>
+                  <div v-if="machine.mtype === 'RS'" class="d-flex mt-1">
+                    <span>{{machine['bases-added'] - machine['bases-used']}}</span>
+                    <div class="ml-2 d-flex">
+                      <div 
+                        class="rs-color-container mr-1"
+                        :class="setRsColor(machine['rs-ring-color'])">
+                        <span class="invisible">color</span>
+                      </div>
+                      <span>{{showPreparedColorInfo(machine['rs-ring-color'])}}</span>
+                    </div>
+                  </div>
                   <span>{{machine.name}}</span>
             </div>
           </div>
@@ -38,7 +48,8 @@ export default {
   computed: {
     ...mapState({
       machinesCyan: state => state.machines.machinesCyan,
-      currPhase: state => state.phase
+      currPhase: state => state.phase,
+      ringspecs: state => state.machines.ringspecs
     })
   },
 
@@ -50,12 +61,14 @@ export default {
 
   mounted() {
     this.fetchMachinesCyan()
+    this.fetchRingSpec()
     this.pollMachineInfo();
   },
 
   methods: {
     ...mapActions({
-      fetchMachinesCyan: 'fetchMachinesCyan'
+      fetchMachinesCyan: 'fetchMachinesCyan',
+      fetchRingSpec: 'fetchRingSpec'
     }),
     pollMachineInfo() {
       // Polls Information every 3 seconds
@@ -72,6 +85,27 @@ export default {
         classList += 'machine-state-small text-warning lead'
       }
       return classList;
+    },
+    showPreparedColorInfo(ringColor) {
+      console.log(ringColor);
+      let reqBases = 0;
+      this.ringspecs.forEach((ringspec) => {
+        if(ringspec.color === ringColor) {
+          reqBases = ringspec['req-bases'];
+        }
+      });
+      return `: ${reqBases}`;
+    },
+    setRsColor(ringcolor) {
+      if (ringcolor === 'RING_BLUE') {
+        return 'bg-info'
+      } else if (ringcolor === 'RING_ORANGE') {
+        return 'bg-primary'
+      } else if (ringcolor === 'RING_GREEN') {
+        return 'bg-success'
+      } else if (ringcolor === 'RING-YELLOW') {
+        return 'bg-yellow'
+      }
     }
   }
 }
@@ -97,5 +131,15 @@ figcaption {
 .machine-info {
   line-height: 1 !important;
 }
+
+.bg-yellow {
+  background-color: yellow !important;
+}
+
+.rs-color-container {
+  width: 40px;
+}
+
+
 </style>
 

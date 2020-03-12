@@ -4,7 +4,8 @@ import { get, post } from '@/api/api'
 export default{
   state: {
     machinesCyan: [],
-    machinesMagenta: []
+    machinesMagenta: [],
+    ringspecs: []
   },
   getters: {
 
@@ -12,6 +13,9 @@ export default{
   mutations: {
     setMachinesCyan(state,data) {
       state.machinesCyan = data;
+    },
+    setRingSpecs(state,data){
+      state.ringspecs = data
     }
   },
   actions: {
@@ -23,8 +27,8 @@ export default{
         let data = response.data;
         // Sort machines alphabetically
         data = data.sort((machineA, machineB) => {
-          let nameA = machineA.name
-          let nameB = machineB.name
+          let nameA = machineA.name;
+          let nameB = machineB.name;
           if (nameA < nameB) {
             return -1;
           } 
@@ -36,6 +40,15 @@ export default{
         })
         commit('setMachinesCyan', data);
       } catch(error){
+        console.log(error);
+      }
+    },
+    async fetchRingSpec({commit}) {
+      try {
+        const response = await get('/ring-spec');
+        const data = response.data;
+        commit('setRingSpecs', data);
+      } catch (error) {
         console.log(error);
       }
     }
