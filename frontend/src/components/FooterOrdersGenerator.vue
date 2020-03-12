@@ -4,15 +4,12 @@
     <div v-for="order in allOrders" 
          :key=order.id
     >
-      <div 
-           class="d-flex"
-      >
+      <div class="d-flex" >
         <div class="image-container d-flex flex-column">
           <img src="http://via.placeholder.com/37x90" alt=""> 
-          
         </div>  
         <div 
-            class="order-info-container ml-2 d-flex    flex-column text-left justify-content-around"
+            class="order-info-container ml-2 d-flex flex-column text-left justify-content-around"
             style="font-size:14px"
             >
           <div class="order-infos ">
@@ -42,19 +39,22 @@
                       order['quantity-requested'])"
                     >
                     <label class="custom-control-label" 
-                    :for="cyanCheckboxId(order.id)"
+                      :for="cyanCheckboxId(order.id)"
                     ></label>
                   </div>
-                  <div class="custom-control custom-checkbox custom-checkbox-magenta">
+                  <div 
+                    class="custom-control custom-checkbox  custom-checkbox-magenta">
                     <input type="checkbox" 
                       class="custom-control-input custom-control-input-magenta" 
                       id="customCheck2" disabled>
-                    <label class="custom-control-label custom-control-label-magenta" for="customCheck2"></label>
+                    <label 
+                      class="custom-control-label custom-control-label-magenta" for="customCheck2">
+                    </label>
                   </div>
                 </div>
-                <!-- If requested amount is 2 and 1 was already delivered -->
+                <!-- If requested amount is 2  -->
                 <div 
-                  v-if="order['quantity-requested'] === 2 "
+                  v-else-if="order['quantity-requested'] === 2 "
                   class="form-group m-0 ml-2 d-flex">
                   <div class= "d-flex">
                     <div class="custom-control custom-checkbox">
@@ -64,18 +64,21 @@
                         :checked="isDelivered(order['quantity-delivered'][0], 
                         order['quantity-requested'])"
                       >
-                      <label class="custom-control-label" for="customCheck1"></label>
+                      <label class="custom-control-label" for="customCheck1">
+                      </label>
                     </div>
-                    <div class="custom-control custom-checkbox custom-checkbox-magenta">
+                    <div 
+                      class="custom-control custom-checkbox custom-checkbox-magenta">
                       <input type="checkbox" 
                           class="custom-control-input custom-control-input-magenta" 
                           id="customCheck2" disabled>
-                      <label class="custom-control-label custom-control-label-magenta" 
-                      for="customCheck2">
+                      <label 
+                        class="custom-control-label custom-control-label-magenta" 
+                        for="customCheck2">
                       </label>
                     </div>
                   </div>
-
+                  <!-- If the first was  delivered -->
                   <div v-if="order['quantity-delivered'] >= '1' ">
                     <div class="custom-control custom-checkbox">
                       <!-- Checked only if the order was delivered -->
@@ -85,14 +88,20 @@
                       >
                       <label class="custom-control-label" for="customCheck1"></label>
                     </div>
-                    <div class="custom-control custom-checkbox custom-checkbox-magenta">
-                      <input type="checkbox" class="custom-control-input custom-control-input-magenta" 
-                      id="customCheck2" disabled>
-                      <label class="custom-control-label custom-control-label-magenta" for="customCheck2"></label>
+                    <div 
+                      class="custom-control custom-checkbox custom-checkbox-magenta">
+                      <input type="checkbox" 
+                        class="custom-control-input custom-control-input-magenta" 
+                        id="customCheck2" disabled>
+                      <label class="custom-control-label custom-control-label-magenta" for="customCheck2">
+                      </label>
                     </div>
                   </div>
                 </div>
-            </form>
+              </form>
+              <div class="text-center">
+                      <span v-if="order.competitive" class="text-warning ">C</span>
+              </div>
           </div>  
             </div>
 

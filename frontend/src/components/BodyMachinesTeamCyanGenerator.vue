@@ -12,7 +12,10 @@
             <div class="base-image-container mr-1">
                     <figure>
                       <img :src="imageUrl" alt="">
-                      <figcaption class="text-center machine-zone">{{machine.zone}} </figcaption>
+                      <figcaption class="text-center machine-zone">{{machine.zone}}
+                        <br>
+                        <span v-if="currPhase === 'Setup'">{{machine.rotation}}°</span>
+                      </figcaption>
                     </figure>
             </div>
             <div class="machine-info d-flex flex-column">
@@ -34,7 +37,8 @@ export default {
   name: 'BodyMachinesTeamCyanGenerator',
   computed: {
     ...mapState({
-      machinesCyan: state => state.machines.machinesCyan
+      machinesCyan: state => state.machines.machinesCyan,
+      currPhase: state => state.phase
     })
   },
 
