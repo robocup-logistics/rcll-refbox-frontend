@@ -40,26 +40,10 @@
                       "
                     >
                     <!-- Confirm Delivery Popup modal -->
-                      <div v-if="isDelivered(order['quantity-delivered'][0], 
-                      order['quantity-requested']) === true" class="modal">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title">Modal title</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <p>Modal body text goes here.</p>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-primary">Save changes</button>
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                    <div v-once v-if="isDelivered(order['quantity-delivered'][0], 
+                      order['quantity-requested']) === true">
+                      <ConfirmDeliveryModal  :order = 'order' :team="nameTeamCyan"/>
+                    </div>
                     <!-- End of modal -->
                     <label class="custom-control-label" 
                       :for="cyanCheckboxId(order.id)"
@@ -147,12 +131,16 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-
+import ConfirmDeliveryModal from './ConfirmDeliveryModal'
 export default {
   name: 'FootersOrdersGenerator',
+  components: {
+    ConfirmDeliveryModal
+  },
   computed: {
     ...mapState({
-      allOrders: state => state.orders.allOrders
+      allOrders: state => state.orders.allOrders,
+      nameTeamCyan: state => state.nameTeamCyan
     })
   },
   mounted() {
