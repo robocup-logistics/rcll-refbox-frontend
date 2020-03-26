@@ -36,6 +36,10 @@ export default {
     this.fetchAwardedPoints();
     this.pollAwardedPoints();
   },
+  updated(){
+    // Scroll to bottom of awarded points on each added reason
+    this.scrollToEnd('.awarded-points-container');
+  },
   methods: {
     ...mapActions(['fetchAwardedPoints']),
     pollAwardedPoints() {
@@ -55,6 +59,11 @@ export default {
       }
       const result = `${minutes}:${_seconds}`;
       return result;
+    },
+    // Scroll to end of scrollable div
+    scrollToEnd(className){
+      let container = document.querySelector(className);
+      container.scrollTop = container.scrollHeight;
     }
   }
 }
