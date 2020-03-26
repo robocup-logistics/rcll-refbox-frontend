@@ -40,7 +40,8 @@
                       "
                     >
                     <!-- Confirm Delivery Popup modal -->
-                      <div class="modal">
+                      <div v-if="isDelivered(order['quantity-delivered'][0], 
+                      order['quantity-requested']) === true" class="modal">
                         <div class="modal-dialog" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
