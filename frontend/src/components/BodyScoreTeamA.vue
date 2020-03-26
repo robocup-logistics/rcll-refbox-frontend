@@ -14,7 +14,9 @@
                 {{award.phase.substring(0,4)}}
                 <span class="text-light">{{award.points}}</span> point(s)
                 <br>
-                <span class="text-success" style="font-weight:300">{{award.reason.split(':')[0]}}</span>
+                <span class="text-success" style="font-weight:300">{{award.reason}}</span>
+                <!-- If the rest of the reason isn`t needed -->
+                <!-- <span class="text-success" style="font-weight:300">{{award.reason.split(':')[0]}}</span> -->
                 </h6>
           </div>
         </div>

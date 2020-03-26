@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row m-0 pt-3 ">
+    <div class="row m-0 pt-3 h-100 w-100">
         <div class="mb-1 col-xl-12 col-md-3"
              :class="[machine.mtype+'-station']"
              v-for="(machine,index) in machinesCyan" 

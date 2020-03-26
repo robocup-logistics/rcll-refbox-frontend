@@ -29,7 +29,7 @@ export default {
   --main-cyan-color: #0FF;
   --main-magenta-color: #F0F;
   
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Roboto Slab, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

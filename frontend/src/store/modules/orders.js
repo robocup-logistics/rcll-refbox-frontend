@@ -2,19 +2,22 @@ import { get } from '@/api/api'
 
 export default{
   state: {
-    allOrders: [],
+    allOrders: []
   },
+
   getters: {
 
   },
+
   mutations: {
     setAllOrders(state, data) {
       state.allOrders = data;
     }
   },
+
   actions: {
     // eslint-disable-next-line no-unused-vars
-    async fetchAllOrders({commit}) {
+    async fetchAllOrders({commit,state}) {
       try{
         // Fetch all orders from api
         const response = await get('/orders')
