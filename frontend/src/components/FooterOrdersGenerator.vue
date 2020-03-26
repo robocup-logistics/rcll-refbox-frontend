@@ -13,11 +13,11 @@
             style="font-size:14px"
             >
           <div class="order-infos ">
-            <div>
+            <!-- <div>
               <span class="order-quantity">
                 Requested: {{order['quantity-requested']}}
               </span>
-            </div>
+            </div> -->
 
             <div>
             <div class="d-flex justify-items-center align-items-center ">
@@ -62,7 +62,7 @@
                 <!-- If requested amount is 2  -->
                 <div 
                   v-else-if="order['quantity-requested'] === 2 "
-                  class="form-group m-0 ml-2 d-flex">
+                  class="form-group m-0 ml-2 d-flex flex-column">
                   <div>
                     <div class= "d-flex">
                       <div class="custom-control custom-checkbox">
@@ -88,7 +88,7 @@
                     </div>
                   </div>
                   <!-- If the first was  delivered -->
-                  <div v-if="order['quantity-delivered'] >= '1'" class="d-flex">
+                  <div  class="d-flex">
                     <div class="custom-control custom-checkbox">
                       <!-- Checked only if the order was delivered -->
                       <input 
