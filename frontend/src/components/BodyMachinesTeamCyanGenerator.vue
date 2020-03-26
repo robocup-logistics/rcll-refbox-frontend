@@ -91,7 +91,7 @@ export default {
           reqBases = ringspec['req-bases'];
         }
       });
-      return `: ${reqBases}`;
+      return `- ${reqBases}`;
     },
     setRsColor(ringcolor) {
       if (ringcolor === 'RING_BLUE') {
@@ -134,7 +134,8 @@ figcaption {
 }
 
 .rs-color-container {
-  width: 40px;
+  width: 20px;
+  border-radius: 5px;
 }
 
 
