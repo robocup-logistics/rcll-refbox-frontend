@@ -3,22 +3,20 @@
   <div>
     <div v-for="order in allOrders" 
          :key=order.id
+         class="max-height-81"
     >
-      <div class="d-flex" >
-        <div class="image-container d-flex flex-column">
-          <img src="http://via.placeholder.com/37x90" alt=""> 
+      <div class="d-flex " >
+        <div class="max-height-81 pb-0 mb-0 d-flex">
+          <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
+               class="max-height-81 max-width-65 img-fluid" 
+          > 
+          <!-- c0_black__black.svg -->
         </div>  
         <div 
             class="order-info-container ml-2 d-flex flex-column text-left justify-content-around"
             style="font-size:14px"
             >
           <div class="order-infos ">
-            <!-- <div>
-              <span class="order-quantity">
-                Requested: {{order['quantity-requested']}}
-              </span>
-            </div> -->
-
             <div>
             <div class="d-flex justify-items-center align-items-center ">
               <div pt-5>
@@ -132,26 +130,32 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import ConfirmDeliveryModal from './ConfirmDeliveryModal'
+
 export default {
   name: 'FootersOrdersGenerator',
   components: {
-    ConfirmDeliveryModal
+    ConfirmDeliveryModal,
   },
   computed: {
     ...mapState({
       allOrders: state => state.orders.allOrders,
+      products: state => state.orders.products,
+      populated: state => state.orders.populated,
       nameTeamCyan: state => state.nameTeamCyan
     })
   },
   mounted() {
-    this.fetchAllOrders()
-    this.pollAllOrders()
+    this.fetchAllOrders();
+    this.pollAllOrders();
   },
-
   methods: {
-    ...mapActions(['fetchAllOrders']),
+    ...mapActions(['fetchAllOrders', 'populateProductsArray']),
     pollAllOrders() {
       setInterval(this.fetchAllOrders, 1500);
+    },
+    // Returns the img url responding to order ID
+    getProductsImg(orderID) {
+      return this.products.find(({id}) => id === orderID)['product-img-url'];
     },
     // To format fetched seconds
     formatSeconds(seconds) {
@@ -192,6 +196,7 @@ export default {
 </script>
 
 <style >
+
 .quantity-delivered-cyan {
   color: var(--main-cyan-color)
 }
@@ -228,6 +233,12 @@ export default {
     background-color: var(--main-magenta-color)  !important;
 }
 
+.max-height-81{
+  max-height: 91px !important;
+}
 
+.max-width-65{
+  max-width: 65px !important;
+}
 
 </style>

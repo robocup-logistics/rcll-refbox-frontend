@@ -3,7 +3,7 @@
     <div >
       <FootersOrdersGenerator 
         v-if="currentPhase === 'Production' || currentPhase === 'Post_game'"
-        class="d-flex justify-content-around p-4"/>
+        class="d-flex justify-content-around align-items-center p-4"/>
     </div>
   </div>
 </template>
