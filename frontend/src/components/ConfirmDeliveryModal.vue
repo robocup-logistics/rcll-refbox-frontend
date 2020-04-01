@@ -4,20 +4,25 @@
       <div class="overlay">
         <div class="modal-container">
           <h6 class="font-weight-bold modal-title-h6">OrderId {{order.id}}: Confirm delivery for {{team}}? </h6>
-          <p class="delivery-infos">
-            <span>Complexity: {{order.complexity}}</span>
-            <span>base-color: {{order['base-color']}}</span>
-            <span v-if="order['ring-colors']">
-              ring colors: {{order['ring-colors']}}
-            </span>
-            <span>cap-color: {{order['cap-color']}}</span>
-            <span>
-              delivery period: 
-              {{formatSeconds(order['delivery-period'][0])}}
-              -
-              {{formatSeconds(order['delivery-period'][1])}}
-            </span>
-          </p>
+          <div class="d-flex align-items-center justify-content-between">
+            <p class="delivery-infos">
+              <span>Complexity: {{order.complexity}}</span>
+              <span>base-color: {{order['base-color']}}</span>
+              <span v-if="order['ring-colors']">
+                ring colors: {{order['ring-colors']}}
+              </span>
+              <span>cap-color: {{order['cap-color']}}</span>
+              <span>
+                delivery period: 
+                {{formatSeconds(order['delivery-period'][0])}}
+                -
+                {{formatSeconds(order['delivery-period'][1])}}
+              </span>
+            </p>
+            <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
+               class="img-fluid" 
+            > 
+          </div>
           <div class="modal-buttons">
             <button @click.prevent='closeModal' >Yes</button>
             <button @click.prevent='closeModal' >No</button>
@@ -29,6 +34,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 export default {
   name: 'ConfirmDeliveryModal',
   props: ['order', 'team'],
@@ -37,10 +44,20 @@ export default {
       isOpen: true
     }
   },
+  computed: {
+    ...mapState({
+      products: state => state.orders.products,
+    })
+  },
   methods: {
+    ...mapActions(['populateProductsArray']),
     closeModal() {
       this.isOpen = !this.isOpen;
     },
+    getProductsImg(orderID) {
+      return this.products.find(({id}) => id === orderID)['product-img-url'];
+    },
+
     formatSeconds(seconds) {
       // 328 seconds => 
       seconds = parseInt(seconds);
