@@ -47,7 +47,7 @@ export default {
       setInterval(this.fetchAwardedPoints, 1500);
     },
     formatSeconds(seconds) {
-      // 328 seconds => 
+      // 328 seconds => 5:48
       seconds = parseInt(seconds);
       let minutes = parseInt(seconds / 60);
       if(minutes < 10) {

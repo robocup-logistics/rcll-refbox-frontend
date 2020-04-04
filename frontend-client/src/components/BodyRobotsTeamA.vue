@@ -22,12 +22,13 @@
           <div class="robot-state">
             <span class="robot-current-state mr-2 text-success"
                   v-if="robotState(index) === 'active'"
-            >{{robotState(index)}}</span>
+            >{{robotState(index)}}
+            </span>
             <span v-else-if="robotState(index) === 'maintenance'" class="text-warning mr-2">
-              {{robotState(index)}}</span>
+              {{robotState(index)}} </span>
             <span v-else-if="robotState(index) === 'disqualified'" class="text-danger mr-2"> 
               {{robotState(index)}}!</span>
-            <span class="robot-maintnance-cycles" >{{robot['maintenance-cycles']}}</span>
+            <span class="robot-maintenance-cycles" >{{robot['maintenance-cycles']}}</span>
           </div>
         </div>
       </div>
@@ -40,10 +41,15 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'BodyRobotsTeamA',
+  data() {
+    return {
+      timer: 120
+    }
+  },
   computed: {
     ...mapState({
       allCyanRobots: state => state.robots.robotsCyan,
-      currentPhase: state => state.phase 
+      currentPhase: state => state.phase
     })
   },
 

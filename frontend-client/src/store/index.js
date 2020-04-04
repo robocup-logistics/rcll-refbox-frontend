@@ -110,7 +110,7 @@ export default new Vuex.Store({
       } else if(state.phase === 'Setup') {
         commit('previousPhase', 'Pre_game');
     }
-    }
+  },
   },
   
   mutations: {

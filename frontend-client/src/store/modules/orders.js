@@ -31,7 +31,6 @@ export default{
         const response = await get('/orders')
         const data = response.data    
         if (data && !state.populated) {
-          console.log('IN TRY');
           dispatch(`populateProductsArray`, data)
           commit('togglePopulated')
         }
@@ -47,9 +46,6 @@ export default{
       const products = [];
       let product = {};
       orders.forEach(order => {
-        console.log('we in there!');
-        console.log(order.id);
-        
         const complexity = order.complexity.toLowerCase();
         // Fetched Information Format: base-color: "BASE_RED"
         // Split the string to extract: 'red, grey...'
@@ -70,8 +66,6 @@ export default{
         }
         product.id = order.id;
         product['product-img-url'] = `${complexity}_${baseColor}_${ringColors.substring(0,ringColors.length-1)}_${capColor}.svg`;
-        console.log(product['product-img-url']);
-        
         products.push(product);    
         product = {}    
       });

@@ -149,7 +149,7 @@ export default {
     this.pollAllOrders();
   },
   methods: {
-    ...mapActions(['fetchAllOrders', 'populateProductsArray']),
+    ...mapActions(['fetchAllOrders', 'populateProductsArray',]),
     pollAllOrders() {
       setInterval(this.fetchAllOrders, 1500);
     },

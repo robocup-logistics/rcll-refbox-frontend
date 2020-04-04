@@ -9,7 +9,11 @@
           <div class="d-flex align-content-center ml-3" >
             <div class="base-image-container mr-1">
                     <figure>
-                      <img :src="imageUrl" alt="">
+                      <div class="station-specific-info-container text-center"
+                           :class="setMachineClass(machine)" 
+                      >
+                        <span class="text-secondary text-center">{{machine.name}}</span>
+                      </div>
                       <figcaption class="text-center machine-zone">{{machine.zone}}
                         <br>
                         <span v-if="currPhase === 'Setup'">{{machine.rotation}}°</span>
@@ -25,10 +29,16 @@
                     <div class="ml-2 d-flex">
                       <div 
                         class="rs-color-container mr-1"
-                        :class="setRsColor(machine['rs-ring-color'])">
+                        :class="setRsColor(machine['rs-ring-colors'][0])">
                         <span class="invisible">color</span>
                       </div>
-                      <span>{{showPreparedColorInfo(machine['rs-ring-color'])}}</span>
+                      <span>{{showPreparedColorInfo(machine['rs-ring-colors'][0])}}</span>
+                      <div 
+                        class="rs-color-container mx-1"
+                        :class="setRsColor(machine['rs-ring-colors'][1])">
+                        <span class="invisible">color</span>
+                      </div>
+                      <span>{{showPreparedColorInfo(machine['rs-ring-colors'][1])}}</span>
                     </div>
                   </div>
                   <span>{{machine.name}}</span>
@@ -66,7 +76,7 @@ export default {
   methods: {
     ...mapActions({
       fetchMachinesCyan: 'fetchMachinesCyan',
-      fetchRingSpec: 'fetchRingSpec'
+      fetchRingSpec: 'fetchRingSpec',
     }),
     pollMachineInfo() {
       // Polls Information every 3 seconds
@@ -103,6 +113,11 @@ export default {
       } else if (ringcolor === 'RING_YELLOW') {
         return 'bg-yellow'
       }
+    },
+    setMachineClass(machine){
+      if(machine.mtype === 'RS'){
+        return this.setRsColor(machine['rs-ring-color'])
+      }
     }
   }
 }
@@ -136,6 +151,11 @@ figcaption {
 .rs-color-container {
   width: 20px;
   border-radius: 5px;
+}
+.station-specific-info-container{
+  width: 50px;
+  height: 25px;
+  border: 1px solid black !important;
 }
 
 
