@@ -45,24 +45,8 @@ export default {
     setInterval(this.fetchGameState, 1000);
   },
   methods: {
-    ...mapActions(['setNextPhase', 'setPreviousPhase','formatSeconds', 'fetchGameState' ]),
-
-    // To format fetched seconds
-    formatSeconds(seconds) {
-      // seconds = parseFloat(seconds);
-      // 328 seconds => 
-      seconds = parseInt(seconds)
-      let minutes = parseInt(seconds / 60)
-      if(minutes < 10) {
-        minutes = `0${minutes}`
-      }
-      let _seconds = parseInt(seconds % 60)
-      if(_seconds < 10) {
-        _seconds = `0${_seconds}`
-      }
-      const result = `${minutes}:${_seconds}`
-      return result
-    }
+    ...mapActions(['setNextPhase', 'setPreviousPhase','formatSeconds', 'fetchGameState' ])
+    
   }
 }
 </script>

@@ -118,7 +118,7 @@
               </span>
             </div>
             <div class="delivery-time">
-              <span>{{formatSeconds(order['delivery-period'][0])}}-{{formatSeconds(order['delivery-period'][1])}}</span>
+              <span>{{ formatSeconds(order['delivery-period'][0]) }}-{{formatSeconds(order['delivery-period'][1])}}</span>
             </div>
           </div>
         </div>
@@ -156,21 +156,6 @@ export default {
     // Returns the img url responding to order ID
     getProductsImg(orderID) {
       return this.products.find(({id}) => id === orderID)['product-img-url'];
-    },
-    // To format fetched seconds
-    formatSeconds(seconds) {
-      // 328 seconds => 
-      seconds = parseInt(seconds);
-      let minutes = parseInt(seconds / 60);
-      if(minutes < 10) {
-        minutes = `0${minutes}`;
-      }
-      let _seconds = parseInt(seconds % 60);
-      if(_seconds < 10) {
-        _seconds = `0${_seconds}`;
-      }
-      const result = `${minutes}:${_seconds}`;
-      return result;
     },
     // Checks if the order was delivered
     isDelivered(currDelivered, requested) {
