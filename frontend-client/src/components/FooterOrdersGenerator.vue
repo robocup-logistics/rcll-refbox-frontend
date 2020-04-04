@@ -19,14 +19,14 @@
           <div class="order-infos ">
             <div>
             <div class="d-flex justify-items-center align-items-center ">
-              <div pt-5>
+              <div pt-5 :class="activeDeliveryPeriod(order['delivery-period'])">
                 <span>{{order.id}}</span>
               </div>
               <form >
                 <!-- If requested amount is 1 -->
                 <div 
                   v-if="order['quantity-requested'] === 1"
-                  class="form-group m-0 ml-2 d-flex">
+                  class="form-group m-0 ml-2 d-flex text-primary">
                   <div class="custom-control custom-checkbox">
                     <!-- Checked only if the order was delivered -->
                     <input 
@@ -112,12 +112,16 @@
           </div>  
             </div>
 
-            <div class="order-complexity">
+            <div class="order-complexity"
+                 :class="activeDeliveryPeriod(order['delivery-period'])"
+            >
               <span>
                 Complexity: {{order.complexity}}
               </span>
             </div>
-            <div class="delivery-time">
+            <div class="delivery-time" 
+                 :class="activeDeliveryPeriod(order['delivery-period'])"
+            >
               <span>{{ formatSeconds(order['delivery-period'][0]) }}-{{formatSeconds(order['delivery-period'][1])}}</span>
             </div>
           </div>
@@ -141,7 +145,8 @@ export default {
       allOrders: state => state.orders.allOrders,
       products: state => state.orders.products,
       populated: state => state.orders.populated,
-      nameTeamCyan: state => state.nameTeamCyan
+      nameTeamCyan: state => state.nameTeamCyan,
+      gametime: state => state.gametime
     })
   },
   mounted() {
@@ -174,7 +179,15 @@ export default {
     },
     cyanCheckboxId(orderId) {
       return `cyanCheckbox-${orderId}`;
-    }
+    },
+    activeDeliveryPeriod(deliveryPeriod){
+      // Check if it is in the delivery period
+      if (deliveryPeriod[0] <= this.gametime && deliveryPeriod[1] >= this.gametime) {
+        return 'text-active'
+      } else {
+        return 'text-dark'
+      }
+    },
   }
 }
 
