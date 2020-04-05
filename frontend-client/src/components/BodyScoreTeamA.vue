@@ -35,10 +35,8 @@ export default {
   mounted() {
     this.fetchAwardedPoints();
     this.pollAwardedPoints();
-  },
-  updated(){
-    // Scroll to bottom of awarded points on each added reason
-    this.scrollToEnd('.awarded-points-container');
+    this.scrollToEnd();
+    setInterval(this.scrollToEnd, 10000);
   },
   methods: {
     ...mapActions(['fetchAwardedPoints']),
@@ -46,8 +44,8 @@ export default {
       setInterval(this.fetchAwardedPoints, 1500);
     },
     // Scroll to end of scrollable div
-    scrollToEnd(className){
-      let container = document.querySelector(className);
+    scrollToEnd(){
+      let container = document.querySelector('.awarded-points-container');
       container.scrollTop = container.scrollHeight;
     }
   }
