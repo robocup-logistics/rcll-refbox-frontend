@@ -75,7 +75,6 @@ export default {
       return this.allCyanRobots[index].state.toLowerCase()
     },
     getMaintenanceLeft(mntStart, gametime,index){
-      console.log('In get');
       let res = (this.maintenanceStartTime[index]+120) - this.gametime;
       return `${res.toString().split('.')[0]}s`
     },
@@ -83,7 +82,6 @@ export default {
       if (this.isInMaintenance[index] === false) {
         if (team === 'cyan') {
           this.isInMaintenance[index] = true
-          console.log('In save');
           this.maintenanceStartTime[index] = mntStart;
         }else {
           this.isInMaintenance[index+3] = true
@@ -92,7 +90,6 @@ export default {
       }
     },
     setMaintenanceToFalse(index){
-      console.log('In set');
       this.isInMaintenance[index] = false;
     }
   }
