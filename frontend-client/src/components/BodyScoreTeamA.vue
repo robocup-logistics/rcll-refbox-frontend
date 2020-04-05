@@ -43,7 +43,6 @@ export default {
   methods: {
     ...mapActions(['fetchAwardedPoints']),
     pollAwardedPoints() {
-      console.log(this.awardedPoints);
       setInterval(this.fetchAwardedPoints, 1500);
     },
     // Scroll to end of scrollable div

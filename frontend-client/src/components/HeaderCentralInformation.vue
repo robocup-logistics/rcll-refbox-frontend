@@ -45,8 +45,7 @@ export default {
     setInterval(this.fetchGameState, 1000);
   },
   methods: {
-    ...mapActions(['setNextPhase', 'setPreviousPhase','formatSeconds', 'fetchGameState' ])
-    
+    ...mapActions(['setNextPhase', 'setPreviousPhase','fetchGameState' ])
   }
 }
 </script>

@@ -22,11 +22,17 @@
           <div class="robot-state">
             <span class="robot-current-state mr-2 text-success"
                   v-if="robotState(index) === 'active'"
-            >{{robotState(index)}}
+            >
+            {{setMaintenanceToFalse(index)}}
+            {{robotState(index)}}
             </span>
             <span v-else-if="robotState(index) === 'maintenance'" class="text-warning mr-2">
-              {{robotState(index)}} </span>
+              <span>{{saveMaintenanceStart(gametime,index, 'cyan')}}</span>
+              {{robotState(index)}} 
+              {{getMaintenanceLeft(robot['maintenance-start-time'], gametime, index)}}
+              </span>
             <span v-else-if="robotState(index) === 'disqualified'" class="text-danger mr-2"> 
+              {{setMaintenanceToFalse(index)}}
               {{robotState(index)}}!</span>
             <span class="robot-maintenance-cycles" >{{robot['maintenance-cycles']}}</span>
           </div>
@@ -41,15 +47,17 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'BodyRobotsTeamA',
-  data() {
-    return {
-      timer: 120
+  data(){
+    return{
+      maintenanceStartTime: [],
+      isInMaintenance: [false,false,false,false,false,false]
     }
   },
   computed: {
     ...mapState({
       allCyanRobots: state => state.robots.robotsCyan,
-      currentPhase: state => state.phase
+      currentPhase: state => state.phase,
+      gametime: state => state.gametime
     })
   },
 
@@ -66,6 +74,27 @@ export default {
     robotState(index) {
       return this.allCyanRobots[index].state.toLowerCase()
     },
+    getMaintenanceLeft(mntStart, gametime,index){
+      console.log('In get');
+      let res = (this.maintenanceStartTime[index]+120) - this.gametime;
+      return `${res.toString().split('.')[0]}s`
+    },
+    saveMaintenanceStart(mntStart, index, team){
+      if (this.isInMaintenance[index] === false) {
+        if (team === 'cyan') {
+          this.isInMaintenance[index] = true
+          console.log('In save');
+          this.maintenanceStartTime[index] = mntStart;
+        }else {
+          this.isInMaintenance[index+3] = true
+          this.maintenanceStartTime[index+3] = mntStart;
+        }  
+      }
+    },
+    setMaintenanceToFalse(index){
+      console.log('In set');
+      this.isInMaintenance[index] = false;
+    }
   }
 }
 </script>
