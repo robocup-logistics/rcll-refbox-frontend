@@ -38,6 +38,7 @@ export default new Vuex.Store({
   },
 
   actions: {
+    // Fetch data from Endpoint http://localhost:8088/api/clips/game-state
     async fetchGameState({commit, state}) {
       try {
         const response = await get('/game-state');
@@ -57,13 +58,12 @@ export default new Vuex.Store({
           commit('setCurrentPhase', gamestate.phase);
           commit('setCurrentCyanScore', gamestate.points[0]);
           commit('setGametime', gamestate ["game-time"]);
-          //console.log(gamestate["'game-time'"]);
         });
       } catch (error) {
         console.log(error);
       }
     },
-    
+    // Fetch data from Endpoint http://localhost:8088/api/clips/points
     async fetchAwardedPoints({commit}) {
       try {
         const response = await get('/points');
@@ -141,7 +141,6 @@ export default new Vuex.Store({
       state.scoreCyan = score;
     },
     setGametime(state, gametime) {
-      // console.log(gametime);
       state.gametime = gametime;
     },
     setAwardedPoints(state, pointsArray) {

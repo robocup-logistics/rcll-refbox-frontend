@@ -23,13 +23,13 @@
             <span class="robot-current-state mr-2 text-success"
                   v-if="robotState(index) === 'active'"
             >
-            {{setMaintenanceToFalse(index)}}
-            {{robotState(index)}}
+              {{setMaintenanceToFalse(index)}}
+              {{robotState(index)}}
             </span>
             <span v-else-if="robotState(index) === 'maintenance'" class="text-warning mr-2">
               <span>{{saveMaintenanceStart(gametime,index, 'cyan')}}</span>
-              {{robotState(index)}} 
-              {{getMaintenanceLeft(robot['maintenance-start-time'], gametime, index)}}
+                {{robotState(index)}} 
+                {{getMaintenanceLeft(robot['maintenance-start-time'], gametime, index)}}
               </span>
             <span v-else-if="robotState(index) === 'disqualified'" class="text-danger mr-2"> 
               {{setMaintenanceToFalse(index)}}
@@ -46,7 +46,7 @@
 import { mapState, mapActions } from 'vuex'; 
 
 export default {
-  name: 'BodyRobotsTeamA',
+  name: 'BodyRobotsTeamCyan',
   data(){
     return{
       maintenanceStartTime: [],
@@ -71,13 +71,16 @@ export default {
     pollRobotInfo() {
       setInterval(this.fetchCyanRobots, 1500)
     },
+    // Returns current state of a robot
     robotState(index) {
       return this.allCyanRobots[index].state.toLowerCase()
     },
+    // Returns the remaining maintenance time
     getMaintenanceLeft(mntStart, gametime,index){
       let res = (this.maintenanceStartTime[index]+120) - this.gametime;
       return `${res.toString().split('.')[0]}s`
     },
+    // Sets the maintenance start
     saveMaintenanceStart(mntStart, index, team){
       if (this.isInMaintenance[index] === false) {
         if (team === 'cyan') {
@@ -89,6 +92,7 @@ export default {
         }  
       }
     },
+    // Robots is no longer in maintenance
     setMaintenanceToFalse(index){
       this.isInMaintenance[index] = false;
     }

@@ -57,21 +57,6 @@ export default {
     getProductsImg(orderID) {
       return this.products.find(({id}) => id === orderID)['product-img-url'];
     },
-
-    formatSeconds(seconds) {
-      // 328 seconds => 
-      seconds = parseInt(seconds);
-      let minutes = parseInt(seconds / 60);
-      if(minutes < 10) {
-        minutes = `0${minutes}`;
-      }
-      let _seconds = parseInt(seconds % 60);
-      if(_seconds < 10) {
-        _seconds = `0${_seconds}`;
-      }
-      const result = `${minutes}:${_seconds}`;
-      return result;
-    },
     // Scroll to end of scrollable div
     scrollToEnd(className){
       let container = document.querySelector(className);

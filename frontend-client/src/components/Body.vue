@@ -13,7 +13,7 @@
                 <BodyScoreTeamA />
               </div>
               <div class="robots-container col-xl-12 mt-4 ">
-                <BodyRobotsTeamA />
+                <BodyRobotsTeamCyan />
               </div>
             </div>
           </div>  
@@ -36,7 +36,7 @@
 <script>
 import BodyMachinesTeamCyan from './BodyMachinesTeamCyan'
 import BodyScoreTeamA from './BodyScoreTeamA'
-import BodyRobotsTeamA from './BodyRobotsTeamA'
+import BodyRobotsTeamCyan from './BodyRobotsTeamCyan'
 import BodyRefboxLog from './BodyRefboxLog'
 import { mapState } from 'vuex';
 
@@ -45,7 +45,7 @@ export default {
   components: {
     BodyMachinesTeamCyan,
     BodyScoreTeamA,
-    BodyRobotsTeamA,
+    BodyRobotsTeamCyan,
     BodyRefboxLog
   }, computed: {
     ...mapState(['phase', 'showFormCyan'])

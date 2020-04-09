@@ -180,6 +180,7 @@ export default {
     cyanCheckboxId(orderId) {
       return `cyanCheckbox-${orderId}`;
     },
+    // Grays out orders that are not active
     activeDeliveryPeriod(deliveryPeriod){
       // Check if it is in the delivery period
       if (deliveryPeriod[0] <= this.gametime && deliveryPeriod[1] >= this.gametime) {

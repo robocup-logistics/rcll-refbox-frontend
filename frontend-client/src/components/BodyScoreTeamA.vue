@@ -9,9 +9,9 @@
           :key='index'>
           <div v-if="award.team === 'CYAN'">
               <h6 style="font-size: 15px;">
-                {{index + 1}}.
-                [{{formatSeconds(award['game-time'])}}]
-                {{award.phase.substring(0,4)}}
+                  {{index + 1}}.
+                  [{{formatSeconds(award['game-time'])}}]
+                  {{award.phase.substring(0,4)}}
                 <span class="text-light">{{award.points}}</span> point(s)
                 <br>
                 <span class="text-success" style="font-weight:300">{{award.reason}}</span>

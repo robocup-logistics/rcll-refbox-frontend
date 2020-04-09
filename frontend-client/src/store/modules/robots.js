@@ -14,6 +14,7 @@ export default{
     }
   },
   actions: {
+    // Fetch data from Endpoint http://localhost:8088/api/clips/robots
     async fetchCyanRobots({commit, rootState}) {
       try {
         const response = await get('/robots', {team:rootState.nameTeamCyan});

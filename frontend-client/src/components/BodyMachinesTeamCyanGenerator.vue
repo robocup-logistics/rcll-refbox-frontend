@@ -66,7 +66,7 @@ export default {
       imageUrl: 'http://via.placeholder.com/50x25'
     }
   },
-
+  // Run on mount of Component
   mounted() {
     this.fetchMachinesCyan()
     this.fetchRingSpec()
@@ -79,12 +79,12 @@ export default {
       fetchRingSpec: 'fetchRingSpec',
     }),
     pollMachineInfo() {
-      // Polls Information every 3 seconds
+      // Polls Information every 1,5 seconds
       setInterval(this.fetchMachinesCyan, 1500)
     },
+    // Set classname depending on the State of the machine
     setStateClass(state) {
       let classList = ''
-      // IDLE
       if (state === 'IDLE' || state ==='WAIT-IDLE') {
         classList += 'machine-state-large text-light lead'
       } else if (state === 'BROKEN' || state === 'DOWN'){
@@ -94,6 +94,7 @@ export default {
       }
       return classList;
     },
+    // Display how much bases the ring needs
     showPreparedColorInfo(ringColor) {
       let reqBases = 0;
       this.ringspecs.forEach((ringspec) => {
@@ -103,6 +104,7 @@ export default {
       });
       return `- ${reqBases}`;
     },
+    // Sets background color depending on the ringcolor
     setRsColor(ringcolor) {
       if (ringcolor === 'RING_BLUE') {
         return 'bg-info'
