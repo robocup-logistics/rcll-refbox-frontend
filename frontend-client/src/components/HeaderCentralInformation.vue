@@ -4,10 +4,10 @@
       <div class="radio-pause-play row justify-content-center align-items-center">
         <div class="pause-play-container mr-2">
           <a class="btn p-0" >
-            <i class="far fa-play-circle fa-2x "></i>
+            <font-awesome-icon :icon="['fas','play-circle']" class="fa-2x" />
           </a>
           <a class="btn p-0"> 
-            <i class="far fa-pause-circle fa-2x"></i>
+            <font-awesome-icon :icon="['fas','pause-circle']" class="fa-2x" />
           </a>  
         </div>
         <div class="time">
@@ -19,11 +19,11 @@
 
     <div class="phase row justify-content-center mt-1">
       <a class="btn p-0" @click.prevent="setPreviousPhase">
-        <i class="fas fa-chevron-left fa-2x"></i>
+        <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x" />
       </a>
       <h3>{{getPhase}}</h3>
       <a class="btn p-0" @click.prevent="setNextPhase">
-        <i class="fas fa-chevron-right fa-2x"></i>
+        <font-awesome-icon :icon="['fas','chevron-right']" class="fa-2x" />
       </a>
     </div>
   </div>
