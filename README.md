@@ -3,7 +3,7 @@ A web frontend for the RCLL RefBox
 
 ## Project setup
 ```
-cd frontend/
+cd frontend-client/
 npm install
 ```
 
