@@ -12,7 +12,7 @@
         </div>
         <div class="time">
           <!-- <h3>{{formatSeconds(getGametime)}}</h3> -->
-          <h3>{{formatSeconds(getGametime)}}</h3>
+          <h3 class="marg-bot-0">{{formatSeconds(getGametime)}}</h3>
         </div>
       </div>
     </div>
@@ -21,7 +21,7 @@
       <a class="btn p-0" @click.prevent="setPreviousPhase">
         <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x" />
       </a>
-      <h3>{{getPhase}}</h3>
+      <h3 class="marg-bot-0">{{getPhase}}</h3>
       <a class="btn p-0" @click.prevent="setNextPhase">
         <font-awesome-icon :icon="['fas','chevron-right']" class="fa-2x" />
       </a>
@@ -51,7 +51,7 @@ export default {
 </script>
 
 <style scoped>
-h3 {
-  margin-bottom: 0px;
+.marg-bot-0 {
+  margin-bottom: 0px !important;
 }
 </style>

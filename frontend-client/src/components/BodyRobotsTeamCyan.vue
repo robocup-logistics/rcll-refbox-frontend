@@ -101,7 +101,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 .robot-number, .robot-team, .robot-name {
   color: var(--main-cyan-color) !important;

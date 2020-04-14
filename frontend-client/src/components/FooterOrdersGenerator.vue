@@ -195,7 +195,7 @@ export default {
 
 </script>
 
-<style >
+<style scoped>
 
 .quantity-delivered-cyan {
   color: var(--main-cyan-color)

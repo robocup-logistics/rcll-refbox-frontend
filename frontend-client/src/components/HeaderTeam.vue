@@ -112,9 +112,9 @@ export default {
 }
 </script>
 
-<style >
+<style scoped>
 .btn-add-team {
-  min-width: 200px;
+  min-width: 200px !important;
 }
 .btn-magenta-header {
   color: var(--main-magenta-color) !important;
@@ -145,59 +145,59 @@ export default {
 }
 
 .submit-btn {
-  padding: 0; 
-  background: none; 
-  border: none; 
-  outline: none;
-  color: rgb(105, 109, 112);
+  padding: 0 !important; 
+  background: none !important; 
+  border: none !important; 
+  outline: none !important;
+  color: rgb(105, 109, 112) !important;
 }
 
 .input-cyan {
-  border-left: 0;
-  border-right: 0;
-  border-top: 0;
-  border-bottom: 0;
-  border-color: var(--main-cyan-color);
-  border-radius: 2px;
-  outline: 0;
-  background-color: #2B3E50;
-  color: var(--main-cyan-color);
-  text-align: center;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  border-color: var(--main-cyan-color) !important;
+  border-radius: 2px !important;
+  outline: 0 !important;
+  background-color: #2B3E50 !important;
+  color: var(--main-cyan-color) !important;
+  text-align: center !important;
 }
 
 .form-cyan {
-  border-left: 0;
-  border-right: 0;
-  border-top: 0;
-  border-bottom: 1px solid;
-  border-color: var(--main-cyan-color);
-  border-radius: 2px;
-  outline: 0;
-  background-color: #2B3E50;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 1px solid !important;
+  border-color: var(--main-cyan-color) !important;
+  border-radius: 2px !important;
+  outline: 0 !important;
+  background-color: #2B3E50 !important;
 }
 
 .input-magenta {
-  border-left: 0;
-  border-right: 0;
-  border-top: 0;
-  border-bottom: 0;
-  border-color: var(--main-magenta-color);
-  border-radius: 2px;
-  outline: 0;
-  background-color: #2B3E50;
-  color: var(--main-magenta-color);
-  text-align: center;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  border-color: var(--main-magenta-color) !important;
+  border-radius: 2px !important;
+  outline: 0 !important;
+  background-color: #2B3E50 !important;
+  color: var(--main-magenta-color) !important;
+  text-align: center !important;
 }
 
 .form-magenta {
-  border-left: 0;
-  border-right: 0;
-  border-top: 0;
-  border-bottom: 1px solid;
-  border-color: var(--main-magenta-color);
-  border-radius: 2px;
-  outline: 0;
-  background-color: #2B3E50;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 1px solid !important;
+  border-color: var(--main-magenta-color) !important;
+  border-radius: 2px !important;
+  outline: 0 !important;
+  background-color: #2B3E50 !important;
 }
 
 </style>
