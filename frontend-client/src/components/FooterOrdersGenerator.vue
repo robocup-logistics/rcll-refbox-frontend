@@ -146,7 +146,8 @@ export default {
       products: state => state.orders.products,
       populated: state => state.orders.populated,
       nameTeamCyan: state => state.nameTeamCyan,
-      gametime: state => state.gametime
+      gametime: state => state.gametime,
+      pollRate: state => state.pollRate,
     })
   },
   mounted() {
@@ -156,7 +157,7 @@ export default {
   methods: {
     ...mapActions(['fetchAllOrders', 'populateProductsArray',]),
     pollAllOrders() {
-      setInterval(this.fetchAllOrders, 1500);
+      setInterval(this.fetchAllOrders, this.pollRate);
     },
     // Returns the img url responding to order ID
     getProductsImg(orderID) {

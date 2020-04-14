@@ -30,7 +30,9 @@ export default new Vuex.Store({
     // Gamestate
     phase: 'Pre_Game',
     gametime: 0,
-    awardedPoints: []
+    awardedPoints: [],
+    // Polling rate in components
+    pollRate: 1500,
   },
 
   getters: {

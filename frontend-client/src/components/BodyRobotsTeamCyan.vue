@@ -57,7 +57,8 @@ export default {
     ...mapState({
       allCyanRobots: state => state.robots.robotsCyan,
       currentPhase: state => state.phase,
-      gametime: state => state.gametime
+      gametime: state => state.gametime,
+      pollRate: state => state.pollRate,
     })
   },
 
@@ -69,7 +70,7 @@ export default {
   methods: {
     ...mapActions(['fetchCyanRobots']),
     pollRobotInfo() {
-      setInterval(this.fetchCyanRobots, 1500)
+      setInterval(this.fetchCyanRobots, this.pollRate)
     },
     // Returns current state of a robot
     robotState(index) {

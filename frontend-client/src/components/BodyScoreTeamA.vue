@@ -30,7 +30,7 @@ import { mapState, mapActions } from 'vuex';
 export default {
   name: 'BodyScoreTeamA',
   computed: {
-    ...mapState(['scoreCyan', 'phase', 'awardedPoints'])
+    ...mapState(['scoreCyan', 'phase', 'awardedPoints', 'pollRate'])
   },
   mounted() {
     this.fetchAwardedPoints();
@@ -41,7 +41,7 @@ export default {
   methods: {
     ...mapActions(['fetchAwardedPoints']),
     pollAwardedPoints() {
-      setInterval(this.fetchAwardedPoints, 1500);
+      setInterval(this.fetchAwardedPoints, this.pollRate);
     },
     // Scroll to end of scrollable div
     scrollToEnd(){

@@ -57,7 +57,8 @@ export default {
     ...mapState({
       machinesCyan: state => state.machines.machinesCyan,
       currPhase: state => state.phase,
-      ringspecs: state => state.machines.ringspecs
+      ringspecs: state => state.machines.ringspecs,
+      pollRate: state => state.pollRate,
     })
   },
 
@@ -80,7 +81,7 @@ export default {
     }),
     pollMachineInfo() {
       // Polls Information every 1,5 seconds
-      setInterval(this.fetchMachinesCyan, 1500)
+      setInterval(this.fetchMachinesCyan, this.pollRate)
     },
     // Set classname depending on the State of the machine
     setStateClass(state) {
