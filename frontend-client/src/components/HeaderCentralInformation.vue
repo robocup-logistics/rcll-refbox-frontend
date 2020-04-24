@@ -42,7 +42,7 @@ export default {
   },
   mounted() {
     this.fetchGameState();
-    setInterval(this.fetchGameState, 1000);
+    // setInterval(this.fetchGameState, 1000);
   },
   methods: {
     ...mapActions(['setNextPhase', 'setPreviousPhase','fetchGameState' ])

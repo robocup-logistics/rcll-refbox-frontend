@@ -70,8 +70,8 @@ export default {
   // Run on mount of Component
   mounted() {
     this.fetchMachinesCyan()
-    this.fetchRingSpec()
-    this.pollMachineInfo();
+    // this.fetchRingSpec()
+    // this.pollMachineInfo();
   },
 
   methods: {
