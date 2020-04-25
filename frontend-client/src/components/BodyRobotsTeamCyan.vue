@@ -64,7 +64,7 @@ export default {
 
   mounted(){
     this.fetchCyanRobots()
-    // this.pollRobotInfo()
+    this.pollRobotInfo()
   },
 
   methods: {

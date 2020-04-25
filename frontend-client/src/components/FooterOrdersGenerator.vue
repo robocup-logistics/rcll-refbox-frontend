@@ -152,7 +152,7 @@ export default {
   },
   mounted() {
     this.fetchAllOrders();
-    // this.pollAllOrders();
+    this.pollAllOrders();
   },
   methods: {
     ...mapActions(['fetchAllOrders', 'populateProductsArray',]),
