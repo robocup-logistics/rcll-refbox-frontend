@@ -98,7 +98,9 @@ export default {
 .modal-title-h6 {
   color: var(--main-cyan-color);
 }
-
+.delivery-infos{
+  color: orangered !important;
+}
 button {
   margin-top: 10px;
   margin-left: 10px;
