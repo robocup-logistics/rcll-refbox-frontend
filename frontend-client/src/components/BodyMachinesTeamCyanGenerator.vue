@@ -12,7 +12,7 @@
                       <div class="station-specific-info-container text-center"
                            :class="setMachineBackground(machine)" 
                       >
-                        <span class="text-secondary text-center">{{machine.name}}</span>
+                        <span class="text-active text-center">{{machine.name}}</span>
                       </div>
                       <figcaption class="text-center machine-zone">{{machine.zone}}
                         <br>
