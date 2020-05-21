@@ -67,7 +67,7 @@ export default {
 
     setClassName(msgLevel) {
       if (msgLevel === 'info') {
-        return 'text-light'
+        return 'text-active'
       } else if (msgLevel === 'warn' ) {
         return 'text-danger'
       } else if (msgLevel === 'error') {

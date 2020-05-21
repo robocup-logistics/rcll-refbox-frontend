@@ -123,7 +123,7 @@ export default {
 }
 
 .btn-magenta-header:hover {
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19) !important;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.80) !important;
 }
 
 .btn-cyan-header {
@@ -133,7 +133,7 @@ export default {
 }
 
 .btn-cyan-header:hover {
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19) !important;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.80) !important;
 }
 
 .cyan-name-header  {

@@ -188,14 +188,12 @@ export default {
       if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime)) {
         return 'text-active'
       } else {
-        return 'text-dark'
+        return 'text-muted'
       }
     },
     activeDeliveryPeriodImage(deliveryPeriod){
       // Check if it is in the delivery period
       if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime)) {
-        console.log(parseInt(this.gametime));
-        
         return ''
       } 
       // If it's not

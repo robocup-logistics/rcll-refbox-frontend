@@ -10,7 +10,7 @@
             <div class="base-image-container mr-1">
                     <figure>
                       <div class="station-specific-info-container text-center"
-                           :class="setMachineClass(machine)" 
+                           :class="setMachineBackground(machine)" 
                       >
                         <span class="text-secondary text-center">{{machine.name}}</span>
                       </div>
@@ -20,28 +20,29 @@
                       </figcaption>
                     </figure>
             </div>
-            <div class="machine-info d-flex flex-column">
+            <div class="machine-info d-flex flex-column ">
                   <span :class="setStateClass(machine.state)">
                     {{machine.state}}
                   </span>
+                  <!-- If RS show additional Infi -->
                   <div v-if="machine.mtype === 'RS'" class="d-flex my-1">
                     <span>{{machine['bases-added'] - machine['bases-used']}}</span>
                     <div class="ml-2 d-flex">
                       <div 
                         class="rs-color-container mr-1"
-                        :class="setRsColor(machine['rs-ring-colors'][0])">
+                        :class="setRSandBSColor(machine['rs-ring-colors'][0])">
                         <span class="invisible">color</span>
                       </div>
                       <span>{{showPreparedColorInfo(machine['rs-ring-colors'][0])}}</span>
                       <div 
                         class="rs-color-container mx-1"
-                        :class="setRsColor(machine['rs-ring-colors'][1])">
+                        :class="setRSandBSColor(machine['rs-ring-colors'][1])">
                         <span class="invisible">color</span>
                       </div>
                       <span>{{showPreparedColorInfo(machine['rs-ring-colors'][1])}}</span>
                     </div>
                   </div>
-                  <span>{{machine.name}}</span>
+                  <!-- <span>{{machine.name}}</span> -->
             </div>
           </div>
         </div>
@@ -105,22 +106,31 @@ export default {
       });
       return `- ${reqBases}`;
     },
-    // Sets background color depending on the ringcolor
-    setRsColor(ringcolor) {
-      if (ringcolor === 'RING_BLUE') {
-        return 'bg-info'
-      } else if (ringcolor === 'RING_ORANGE') {
-        return 'bg-primary'
-      } else if (ringcolor === 'RING_GREEN') {
-        return 'bg-success'
-      } else if (ringcolor === 'RING_YELLOW') {
+    // Sets background color depending on the ringcolor and BS-Color
+    setRSandBSColor(color) {
+      if (color === 'RING_BLUE') {
+        return 'bg-blue'
+      } else if (color === 'RING_ORANGE') {
+        return 'bg-orange'
+      } else if (color === 'RING_GREEN') {
+        return 'bg-green'
+      } else if (color === 'RING_YELLOW') {
         return 'bg-yellow'
+      } else if (color === 'BASE_SILVER') {
+        return 'bg-silver'
+      }else if (color === 'BASE_RED') {
+        return 'bg-red'
+      }else if (color === 'BASE_BLACK') {
+        return 'bg-black'
       }
     },
-    setMachineClass(machine){
+    setMachineBackground(machine){
       if(machine.mtype === 'RS'){
-        return this.setRsColor(machine['rs-ring-color'])
+        return this.setRSandBSColor(machine['rs-ring-color'])
+      } else if(machine.mtype === 'BS'){        
+        return this.setRSandBSColor(machine['bs-color'])
       }
+
     }
   }
 }
@@ -147,8 +157,26 @@ figcaption {
   line-height: 1 !important;
 }
 
+.bg-black{
+  background-color: black !important;
+}
+.bg-red{
+  background-color: rgb(228, 44, 44) !important;
+}
+.bg-orange{
+  background-color: orangered !important;
+}
+.bg-green{
+  background-color: green;
+}
+.bg-blue{
+  background-color: blue !important;
+}
 .bg-yellow {
   background-color: yellow !important;
+}
+.bg-silver{
+  background-color: silver !important;
 }
 
 .rs-color-container {
