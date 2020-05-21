@@ -1,10 +1,10 @@
 <template>
   <div class="container-fluid border p-0 refbox-log overflow-auto text-left">
-    <button @click=connect> Connect </button>
-    <button @click=disconnect>
+    <button @click=connect class="btn btn-primary"> Connect </button>
+    <button @click=disconnect class="btn btn-primary">
       DC
     </button>
-    <button @click=send>Send Msg</button>
+    <button @click=send class="btn btn-primary">Send Msg</button>
 
     <div class="mx-3 mt-3">
       <div v-for="(msg,index) in msgArray" :key=index>

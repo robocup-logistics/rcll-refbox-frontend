@@ -3,11 +3,11 @@
     <div class="pause-play-time mt-2">
       <div class="radio-pause-play row justify-content-center align-items-center">
         <div class="pause-play-container mr-2">
-          <a class="btn p-0" >
-            <font-awesome-icon :icon="['fas','play-circle']" class="fa-2x" />
+          <a class="btn  p-0" >
+            <font-awesome-icon :icon="['fas','play-circle']" class="fa-2x play-btn" />
           </a>
           <a class="btn p-0"> 
-            <font-awesome-icon :icon="['fas','pause-circle']" class="fa-2x" />
+            <font-awesome-icon :icon="['fas','pause-circle']" class="fa-2x pause-btn " />
           </a>  
         </div>
         <div class="time">
@@ -18,12 +18,12 @@
     </div>
 
     <div class="phase row justify-content-center mt-1">
-      <a class="btn p-0" @click.prevent="setPreviousPhase">
-        <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x" />
+      <a class="btn  p-0" @click.prevent="setPreviousPhase">
+        <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x previous-btn" />
       </a>
       <h3 class="marg-bot-0">{{getPhase}}</h3>
-      <a class="btn p-0" @click.prevent="setNextPhase">
-        <font-awesome-icon :icon="['fas','chevron-right']" class="fa-2x" />
+      <a class="btn  p-0" @click.prevent="setNextPhase">
+        <font-awesome-icon :icon="['fas','chevron-right']" class="fa-2x next-btn" />
       </a>
     </div>
   </div>
@@ -53,5 +53,9 @@ export default {
 <style scoped>
 .marg-bot-0 {
   margin-bottom: 0px !important;
+}
+
+.next-btn:hover, .previous-btn:hover, .play-btn:hover, .pause-btn:hover{
+  color: green;
 }
 </style>
