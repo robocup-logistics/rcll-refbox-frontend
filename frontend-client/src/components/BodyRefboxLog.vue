@@ -1,11 +1,13 @@
 <template>
-  <div class="container-fluid border p-0 refbox-log overflow-auto text-left">
-    <button @click=connect class="btn btn-primary"> Connect </button>
-    <button @click=disconnect class="btn btn-primary">
-      DC
-    </button>
-    <button @click=send class="btn btn-primary">Send Msg</button>
-
+  <div class="container-fluid  border p-0 refbox-log overflow-auto text-left">
+    <div class="d-flex justify-content-end">
+      <button @click=connect class="btn btn-primary "> Connect </button>
+      <button @click=disconnect class="btn btn-primary  ">
+        DC
+      </button>
+      <button @click=send class="btn btn-primary ">Send Msg</button>
+    </div>
+    
     <div class="mx-3 mt-3">
       <div v-for="(msg,index) in msgArray" :key=index>
         <h6 class= "mb-0" :class="setClassName(msg.level)">{{msg.time}} [{{msg.component}}]: {{msg.message}}</h6>
