@@ -12,7 +12,7 @@
                       <div class="station-specific-info-container text-center"
                            :class="setMachineBackground(machine)" 
                       >
-                        <span class="text-active text-center">{{machine.name}}</span>
+                        <span class="text-active font-weight-bold text-center">{{machine.name}}</span>
                       </div>
                       <figcaption class="text-center machine-zone">{{machine.zone}}
                         <br>
@@ -170,10 +170,10 @@ figcaption {
   background-color: green;
 }
 .bg-blue{
-  background-color: blue !important;
+  background-color: rgba(0, 0, 255, 0.651) !important;
 }
 .bg-yellow {
-  background-color: yellow !important;
+  background-color: rgba(255, 255, 0, 0.685) !important;
 }
 .bg-silver{
   background-color: silver !important;

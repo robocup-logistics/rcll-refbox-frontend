@@ -10,7 +10,9 @@
     
     <div class="mx-3 mt-3">
       <div v-for="(msg,index) in msgArray" :key=index>
-        <h6 class= "mb-0" :class="setClassName(msg.level)">{{msg.time}} [{{msg.component}}]: {{msg.message}}</h6>
+          <h6 v-if="msg.level !== 'attention' " class= "mb-0" :class="setClassName(msg.level)">{{msg.time}} [{{msg.component}}]: {{msg.message}}</h6>
+          <!-- If Its attention message -->
+          <h6 v-else-if="msg.level === 'attention' " class= "mb-0 text-danger lead" > Attention: {{msg.text}}</h6>
       </div>
     </div>
   </div>
@@ -47,11 +49,13 @@ export default {
       }
 
       this.socket.onmessage = (e) => { 
-        console.log(e);
         let msgObj = JSON.parse(e.data);
-        this.msgArray.push(msgObj);
-        const refLog = document.querySelector('.refbox-log');
-        refLog.scrollTop = refLog.scrollHeight;
+        if (msgObj !== [] && msgObj.level !== 'clips' ) {
+          console.log(e);
+          this.msgArray.push(msgObj);
+          const refLog = document.querySelector('.refbox-log');
+          refLog.scrollTop = refLog.scrollHeight;
+        }
       }
     },
 
@@ -73,7 +77,7 @@ export default {
       } else if (msgLevel === 'error') {
         return 'text-danger'
       } else {
-        return 'text-primary'
+        return 'text-danger'
       }
     }
   }
