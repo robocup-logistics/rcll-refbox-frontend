@@ -1,8 +1,8 @@
 <template>
   <div class="container-fluid  border p-0 refbox-log overflow-auto text-left">
-    <div class="d-flex justify-content-end">
-      <button @click=connect class="btn btn-primary "> Connect </button>
-      <button @click=disconnect class="btn btn-primary  ">
+    <div class="d-flex justify-content-end mt-2">
+      <button @click=connect class="btn btn-primary mr-2"> Connect </button>
+      <button @click=disconnect class="btn btn-primary  mr-2 ">
         DC
       </button>
       <button @click=send class="btn btn-primary ">Send Msg</button>
