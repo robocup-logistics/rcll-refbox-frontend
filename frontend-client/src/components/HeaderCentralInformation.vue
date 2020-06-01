@@ -12,16 +12,16 @@
         </div>
         <div class="time">
           <!-- <h3>{{formatSeconds(getGametime)}}</h3> -->
-          <h3 class="marg-bot-0">{{formatSeconds(getGametime)}}</h3>
+          <h4 class="marg-bot-0">{{formatSeconds(getGametime)}}</h4>
         </div>
       </div>
     </div>
 
-    <div class="phase row justify-content-center mt-1">
+    <div class="phase row justify-content-center align-items-center mt-1">
       <a class="btn  p-0" @click.prevent="setPreviousPhase">
         <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x previous-btn" />
       </a>
-      <h3 class="marg-bot-0">{{getPhase}}</h3>
+      <h4 class="marg-bot-0">{{getPhase}}</h4>
       <a class="btn  p-0" @click.prevent="setNextPhase">
         <font-awesome-icon :icon="['fas','chevron-right']" class="fa-2x next-btn" />
       </a>

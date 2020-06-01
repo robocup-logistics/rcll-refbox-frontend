@@ -28,7 +28,7 @@
       </div>
     </div>
     <div v-if="!showFormCyan" class="cyan-name-container ">
-      <h3 class="cyan-name-header ">{{getCyanName}}</h3>
+      <h4 class="cyan-name-header ">{{getCyanName}}</h4>
     </div>
   </div>
 
@@ -60,7 +60,7 @@
       </div>
     </div>
     <div v-if="!showFormMagenta" class="teamname-header-magenta">
-      <h3 class="magenta-name-header">{{getMagentaName}}</h3>
+      <h4 class="magenta-name-header">{{getMagentaName}}</h4>
     </div>
   </div>
 </template>
