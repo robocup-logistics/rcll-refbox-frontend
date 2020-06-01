@@ -7,7 +7,7 @@ import { faPlayCircle, faPauseCircle, faChevronLeft, faChevronRight } from '@for
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // Bootswatch import
-import "bootswatch/dist/superhero/bootstrap.min.css"; 
+import "bootswatch/dist/darkly/bootstrap.min.css"; 
 
 
 // Import Vuex Store to have global access in every Component

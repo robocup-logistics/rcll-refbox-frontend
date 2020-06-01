@@ -28,7 +28,7 @@
       </div>
     </div>
     <div v-if="!showFormCyan" class="cyan-name-container ">
-      <h3 class="cyan-name-header ">{{getCyanName}}</h3>
+      <h4 class="cyan-name-header ">{{getCyanName}}</h4>
     </div>
   </div>
 
@@ -60,7 +60,7 @@
       </div>
     </div>
     <div v-if="!showFormMagenta" class="teamname-header-magenta">
-      <h3 class="magenta-name-header">{{getMagentaName}}</h3>
+      <h4 class="magenta-name-header">{{getMagentaName}}</h4>
     </div>
   </div>
 </template>
@@ -119,21 +119,21 @@ export default {
 .btn-magenta-header {
   color: var(--main-magenta-color) !important;
   border-color: var(--main-magenta-color) !important;
-  transition-duration: 0.4s !important
+  transition-duration: 0.2s !important
 }
 
 .btn-magenta-header:hover {
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19) !important;
+  box-shadow: 0 3px 12px 0 var(--main-magenta-color) ,0 17px 50px 0 rgba(0,0,0,0.80) !important;
 }
 
 .btn-cyan-header {
   color:  var(--main-cyan-color) !important;
   border-color: var(--main-cyan-color) !important;
-  transition-duration: 0.4s !important
+  transition-duration: 0.2s !important
 }
 
 .btn-cyan-header:hover {
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19) !important;
+  box-shadow: 0 3px 12px 0 var(--main-cyan-color),0 17px 50px 0 rgba(0,0,0,0.80) !important;
 }
 
 .cyan-name-header  {

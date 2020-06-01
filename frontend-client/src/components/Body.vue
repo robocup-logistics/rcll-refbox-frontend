@@ -27,7 +27,7 @@
     </div>
 
     <div class="">
-      <BodyRefboxLog />
+      <BodyRefboxLog class="border-bottom-0"/>
     </div>
     
   </div>

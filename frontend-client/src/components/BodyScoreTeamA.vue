@@ -1,6 +1,6 @@
 <template>
   <div >
-    <h3 v-if="phase !== 'Pre_game'">Points: {{scoreCyan}}</h3>
+    <h4 v-if="phase !== 'Pre_game'">Points: {{scoreCyan}}</h4>
     <div class="awarded-points-container border-top">
       <div class="row m-0 text-left ">
         <div 
@@ -8,7 +8,7 @@
           v-for="(award,index) in awardedPoints" 
           :key='index'>
           <div v-if="award.team === 'CYAN'">
-              <h6 style="font-size: 15px;">
+              <h6 style="font-size: 13px;">
                   {{index + 1}}.
                   [{{formatSeconds(award['game-time'])}}]
                   {{award.phase.substring(0,4)}}

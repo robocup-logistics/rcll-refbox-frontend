@@ -9,6 +9,7 @@
         <div class="max-height-81 pb-0 mb-0 d-flex">
           <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
                class="max-height-81 max-width-65 img-fluid" 
+               :class="activeDeliveryPeriodImage(order['delivery-period'])"
           > 
           <!-- c0_black__black.svg -->
         </div>  
@@ -184,10 +185,20 @@ export default {
     // Grays out orders that are not active
     activeDeliveryPeriod(deliveryPeriod){
       // Check if it is in the delivery period
-      if (deliveryPeriod[0] <= this.gametime && deliveryPeriod[1] >= this.gametime) {
+      if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime)) {
         return 'text-active'
       } else {
-        return 'text-dark'
+        return 'text-muted'
+      }
+    },
+    activeDeliveryPeriodImage(deliveryPeriod){
+      // Check if it is in the delivery period
+      if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime)) {
+        return ''
+      } 
+      // If it's not
+      else {
+        return 'opacity-4'
       }
     },
   }
@@ -239,6 +250,9 @@ export default {
 
 .max-width-65{
   max-width: 65px !important;
+}
+.opacity-4{
+  opacity: .4;
 }
 
 </style>
