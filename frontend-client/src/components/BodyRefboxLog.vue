@@ -5,8 +5,8 @@
        <button @click=SOCKET_DISCONNECT class="btn btn-primary  mr-2 ">
         DC
       </button>
-      <!-- <button @click.prevent=send(addMagenta) >Magenta Name</button>
-      <button @click.prevent=send(addMagenta) class="btn btn-primary ">Send Msg</button> --> 
+      <button @click.prevent=SOCKET_SEND(addMagenta) >Magenta Name</button>
+      <button @click.prevent=SOCKET_SEND(addMagenta) class="btn btn-primary ">Send Msg</button> 
     </div>
     
     <div class="mx-3 mt-3">
@@ -29,9 +29,6 @@ export default {
 
   data() {
     return {
-      msgArray: [],
-      status: 'disconnected',
-      socket: null,
       addMagenta: {"command" : "set_teamname",
     "color" : "CYAN",
     "name" : "Carologistics"}
@@ -41,7 +38,7 @@ export default {
     ...mapState(['websocketMsgs', 'socket'])
   },
   methods: {
-    ...mapActions(['connectToWebsocket', 'SOCKET_DISCONNECT']),
+    ...mapActions(['connectToWebsocket', 'SOCKET_DISCONNECT', 'SOCKET_SEND']),
           // const refLog = document.querySelector('.refbox-log');
           // refLog.scrollTop = refLog.scrollHeight;
 

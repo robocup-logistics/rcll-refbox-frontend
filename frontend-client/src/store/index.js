@@ -56,6 +56,9 @@ export default new Vuex.Store({
     SOCKET_DISCONNECT({commit}) {
       commit('SOCKET_DISCONNECT')
     },
+    SOCKET_SEND({commit}, msg) {
+      commit('SOCKET_SEND', msg)
+    },
     // Fetch data from Endpoint http://localhost:8088/api/clips/game-state
     async fetchGameState({commit, state}) {
       try {
@@ -158,6 +161,9 @@ export default new Vuex.Store({
     SOCKET_DISCONNECT(state) {
       state.socket.close()
       state.isConnected = false
+    },
+    SOCKET_SEND(state, msg) {
+      state.socket.send(JSON.stringify(msg))
     },
     SOCKET_ADDMESSAGE(state, msg){
       state.websocketMsgs.push(msg)
