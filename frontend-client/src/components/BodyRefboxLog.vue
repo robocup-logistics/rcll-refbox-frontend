@@ -5,7 +5,6 @@
        <button @click=SOCKET_DISCONNECT class="btn btn-primary  mr-2 ">
         DC
       </button>
-      <button @click.prevent=SOCKET_SEND(addMagenta) >Magenta Name</button>
       <button @click.prevent=SOCKET_SEND(addMagenta) class="btn btn-primary ">Send Msg</button> 
     </div>
     
@@ -26,34 +25,17 @@ import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'BodyRefboxLog',
-
-  data() {
-    return {
-      addMagenta: {"command" : "set_teamname",
-    "color" : "CYAN",
-    "name" : "Carologistics"}
-    }
-  },
   computed: {
     ...mapState(['websocketMsgs', 'socket'])
   },
+  watch: {
+    websocketMsgs: () => {
+      const refLog = document.querySelector('.refbox-log');
+      refLog.scrollTop = refLog.scrollHeight;
+    } 
+  },
   methods: {
     ...mapActions(['connectToWebsocket', 'SOCKET_DISCONNECT', 'SOCKET_SEND']),
-          // const refLog = document.querySelector('.refbox-log');
-          // refLog.scrollTop = refLog.scrollHeight;
-
-    // send(message) {
-      
-    //   this.socket.send(JSON.stringify(message))
-    //   console.log(message, "asd");
-    //   console.log('sent!');
-    // },
-
-    // disconnect() {
-    //   this.status = 'disconnected';
-    //   this.socket.close();
-    // },
-
     setClassName(msgLevel) {
       if (msgLevel === 'info') {
         return 'text-active'

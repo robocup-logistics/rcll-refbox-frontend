@@ -41,7 +41,7 @@
                     <!-- Confirm Delivery Popup modal -->
                     <div v-once v-if="isDelivered(order['quantity-delivered'][0], 
                       order['quantity-requested']) === true">
-                      <ConfirmDeliveryModal  :order = 'order' :team="nameTeamCyan"/>
+                      <ConfirmDeliveryModal  :order = 'order' :team="nameTeamCyan" :color='cyan'/>
                     </div>
                     <!-- End of modal -->
                     <label class="custom-control-label" 
@@ -140,6 +140,12 @@ export default {
   name: 'FootersOrdersGenerator',
   components: {
     ConfirmDeliveryModal,
+  },
+  data(){
+    return {
+      cyan: 'CYAN',
+      magenta: 'MAGENTA'
+    }
   },
   computed: {
     ...mapState({

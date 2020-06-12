@@ -24,8 +24,8 @@
             > 
           </div>
           <div class="modal-buttons">
-            <button @click.prevent='closeModal' >Yes</button>
-            <button @click.prevent='closeModal' >No</button>
+            <button @click.prevent='orderAcceptance(order,true)' >Yes</button>
+            <button @click.prevent='orderAcceptance(order,false)' >No</button>
           </div>
         </div>
       </div>
@@ -38,7 +38,7 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'ConfirmDeliveryModal',
-  props: ['order', 'team'],
+  props: ['order', 'team', 'color'],
   data(){
     return{
       isOpen: true
@@ -50,9 +50,11 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['populateProductsArray']),
+    ...mapActions(['populateProductsArray', 'SOCKET_SEND']),
     closeModal() {
-      this.isOpen = !this.isOpen;
+      this.isOpen = false;
+      console.log(this.order);
+      
     },
     getProductsImg(orderID) {
       return this.products.find(({id}) => id === orderID)['product-img-url'];
@@ -61,6 +63,21 @@ export default {
     scrollToEnd(className){
       let container = document.querySelector(className);
       container.scrollTop = container.scrollHeight;
+    },
+    orderAcceptance(order, bool) {
+      const msg = {
+        "command" : "confirm_delivery",
+        "delivery_id" : null,
+        "correctness" : false,
+        "order_id" : null,
+        "color" : ""
+      }
+      msg.correctness = bool
+      msg.color = this.color
+      msg['delivery_id'] = this.order['quantity-requested']
+      msg['order_id'] = this.order.id
+      this.SOCKET_SEND(msg)
+      this.closeModal()
     }
   }
 }
