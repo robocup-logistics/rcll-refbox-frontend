@@ -31,6 +31,7 @@ export default new Vuex.Store({
     phase: 'Pre_Game',
     gametime: 0,
     awardedPoints: [],
+    gamestate: 'WAIT_START',
     // Polling rate in components
     pollRate: 1500,
     // Websocket attributes
@@ -157,6 +158,14 @@ export default new Vuex.Store({
         commit('previousPhase', 'Pre_game');
     }
   },
+    setGameState({commit}, gamestate) {
+      const msg = {
+        "command" : "set_gamestate",
+        "state" : `${gamestate}`
+      }
+      commit('SOCKET_SEND', msg)
+      commit('setGamestate', gamestate)
+    }
   },
   
   mutations: {
@@ -230,6 +239,9 @@ export default new Vuex.Store({
     },
     setAwardedPoints(state, pointsArray) {
       state.awardedPoints = pointsArray;
+    },
+    setGamestate(state, gamestate) {
+      state.gamestate = gamestate
     }
   }
 })

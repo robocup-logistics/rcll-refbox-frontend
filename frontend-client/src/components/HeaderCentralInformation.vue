@@ -4,11 +4,14 @@
     <div class="pause-play-time mt-2">
       <div class="radio-pause-play row justify-content-center align-items-center">
         <div class="pause-play-container mr-2">
-          <a class="btn  p-0" >
+          <a class="btn  p-0" @click="setGameState('RUNNING')" >
             <font-awesome-icon :icon="['fas','play-circle']" class="fa-2x play-btn" />
           </a>
-          <a class="btn p-0"> 
-            <font-awesome-icon :icon="['fas','pause-circle']" class="fa-2x pause-btn " />
+          <a class="btn p-0" @click="setGameState('PAUSED')"
+          > 
+            <font-awesome-icon :icon="['fas','pause-circle']" class="fa-2x pause-btn " 
+                               :class="gamestate === 'PAUSED' ? 'bg-danger' : ''"
+            />
           </a>  
         </div>
         <div class="time">
@@ -38,7 +41,8 @@ export default {
   computed: {
     ...mapState({
       getPhase: state => state.phase,
-      getGametime: state => state.gametime
+      getGametime: state => state.gametime,
+      gamestate: state => state.gamestate
     })
   },
   mounted() {
@@ -46,7 +50,7 @@ export default {
     setInterval(this.fetchGameState, 1000);
   },
   methods: {
-    ...mapActions(['setNextPhase', 'setPreviousPhase','fetchGameState' ])
+    ...mapActions(['setNextPhase', 'setPreviousPhase','fetchGameState', 'setGameState' ])
   }
 }
 </script>

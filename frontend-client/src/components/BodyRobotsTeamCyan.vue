@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="currentPhase !== 'Pre_game'">
+    <div >
       <div v-for="(robot,index) in allCyanRobots" 
            :key="robot.number"
            >
