@@ -107,14 +107,26 @@ export default new Vuex.Store({
     },
 
     setNextPhase({commit, state}) {
+      const msg = {
+        "command" : "set_gamephase",
+        "phase" : ''
+      }
       if(state.nameTeamCyan || state.nameTeamMagenta){
         if (state.phase === 'Pre_game') {
-          commit('nextPhase', 'Setup');
+          msg.phase = 'SETUP'
+          commit('SOCKET_SEND', msg)
+          commit('nextPhase', 'Setup')
         } else if(state.phase === 'Setup') {
+          msg.phase = 'EXPLORATION'
+          commit('SOCKET_SEND', msg)
           commit('nextPhase', 'Exploration');
         } else if(state.phase === 'Exploration') {
+          msg.phase = 'PRODUCTION'
+          commit('SOCKET_SEND', msg)
           commit('nextPhase', 'Production');
         } else if(state.phase === 'Production') {
+          msg.phase = 'POST_GAME'
+          commit('SOCKET_SEND', msg)
           commit('nextPhase', 'Post_game');
         }
       }else {
@@ -123,13 +135,25 @@ export default new Vuex.Store({
   },
 
     setPreviousPhase({commit, state}) {
+      const msg = {
+        "command" : "set_gamephase",
+        "phase" : ''
+      }
       if (state.phase === 'Post_game') {
+        msg.phase = 'PRODUCTION'
+        commit('SOCKET_SEND', msg)
         commit('previousPhase', 'Production');
       } else if(state.phase === 'Production') {
+        msg.phase = 'EXPLORATION'
+        commit('SOCKET_SEND', msg)
         commit('previousPhase', 'Exploration');
       } else if(state.phase === 'Exploration') {
+        msg.phase = 'SETUP'
+        commit('SOCKET_SEND', msg)
         commit('previousPhase', 'Setup');
       } else if(state.phase === 'Setup') {
+        msg.phase = 'PRE_GAME'
+        commit('SOCKET_SEND', msg)
         commit('previousPhase', 'Pre_game');
     }
   },
@@ -176,10 +200,10 @@ export default new Vuex.Store({
       }
     },
     setCyanName(state, value) {
-        state.nameTeamCyan = value;
+        state.nameTeamCyan = value
     },
     setMagentaName(state, name) {
-        state.nameTeamMagenta = name;
+        state.nameTeamMagenta = name
     },
     toggleShowFormCyan(state) {
       state.showFormCyan = !state.showFormCyan;
