@@ -2,11 +2,11 @@
   <div class="container-fluid  border p-0 refbox-log overflow-auto text-left">
     <div class="d-flex justify-content-end mt-2">
       <button @click=connectToWebsocket class="btn btn-primary mr-2"> Connect </button>
-      <!-- <button @click=disconnect class="btn btn-primary  mr-2 ">
+       <button @click=SOCKET_DISCONNECT class="btn btn-primary  mr-2 ">
         DC
       </button>
-      <button @click.prevent=send(addMagenta) >Magenta Name</button>
-      <button @click.prevent=send(addMagenta) class="btn btn-primary ">Send Msg</button> -->
+      <!-- <button @click.prevent=send(addMagenta) >Magenta Name</button>
+      <button @click.prevent=send(addMagenta) class="btn btn-primary ">Send Msg</button> --> 
     </div>
     
     <div class="mx-3 mt-3">
@@ -41,7 +41,7 @@ export default {
     ...mapState(['websocketMsgs', 'socket'])
   },
   methods: {
-    ...mapActions(['connectToWebsocket']),
+    ...mapActions(['connectToWebsocket', 'SOCKET_DISCONNECT']),
           // const refLog = document.querySelector('.refbox-log');
           // refLog.scrollTop = refLog.scrollHeight;
 

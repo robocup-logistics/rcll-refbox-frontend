@@ -37,7 +37,8 @@ export default new Vuex.Store({
     socket: null,
     isConnected: false,
     websocketMsgs: [],
-    error: ''
+    error: '',
+    websocketURL : 'ws://localhost:1234',
   },
 
   getters: {
@@ -51,6 +52,9 @@ export default new Vuex.Store({
       commit('SOCKET_ONOPEN')
       commit('SOCKET_ONCLOSE')
       commit('SOCKET_ONMESSAGE')      
+    },
+    SOCKET_DISCONNECT({commit}) {
+      commit('SOCKET_DISCONNECT')
     },
     // Fetch data from Endpoint http://localhost:8088/api/clips/game-state
     async fetchGameState({commit, state}) {
@@ -129,7 +133,7 @@ export default new Vuex.Store({
   
   mutations: {
     setSocketUrl(state) {
-      state.socket = new WebSocket('ws://localhost:1234')
+      state.socket = new WebSocket(state.websocketURL)
     },
     SOCKET_ONOPEN(state) {
       state.socket.onopen = (e) => {
@@ -150,6 +154,10 @@ export default new Vuex.Store({
           this.commit('SOCKET_ADDMESSAGE', msgObj);
         }
       }
+    },
+    SOCKET_DISCONNECT(state) {
+      state.socket.close()
+      state.isConnected = false
     },
     SOCKET_ADDMESSAGE(state, msg){
       state.websocketMsgs.push(msg)
