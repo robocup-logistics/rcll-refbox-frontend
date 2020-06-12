@@ -10,14 +10,13 @@
           >Add Team Cyan</button>
         </div>
         <div class="mb-2" v-if="isClicked">
-          <form @submit.prevent="setNameCyan"
+          <form @submit.prevent="setName(color)"
                 class="form-cyan"
           >
             <input type="text" 
             placeholder="add teamname"
             class="input-cyan"
             required
-            autofocus
             v-model="cyanName"
             >
             <button type="submit" class="submit-btn">
@@ -43,7 +42,7 @@
           >Add Team Magenta</button>
         </div>
         <div class="mb-2" v-if="isClicked">
-          <form @submit.prevent="setNameMagenta"
+          <form @submit.prevent="setName(color)"
                 class="form-magenta"
           >
               <input type="text" 
@@ -106,7 +105,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setNameCyan', 'setNameMagenta'])
+    ...mapActions(['setNameCyan', 'setNameMagenta', 'SOCKET_SEND']),
+    setName(color) {
+      color = color.toUpperCase()
+      const msg = {
+          "command" : "set_teamname",
+          "color" : `${color}`,
+          "name" : `${color === "CYAN" ? this.getCyanName : this.getMagentaName}`
+        }
+        this.SOCKET_SEND(msg)
+        color === 'CYAN' ? this.setNameCyan() : this.setNameMagenta()
+    }
   }
   
 }

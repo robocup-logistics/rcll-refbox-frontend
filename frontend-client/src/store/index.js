@@ -51,7 +51,8 @@ export default new Vuex.Store({
       commit('setSocketUrl')
       commit('SOCKET_ONOPEN')
       commit('SOCKET_ONCLOSE')
-      commit('SOCKET_ONMESSAGE')      
+      commit('SOCKET_ONMESSAGE')  
+      commit('SOCKET_ONERROR')    
     },
     SOCKET_DISCONNECT({commit}) {
       commit('SOCKET_DISCONNECT')
@@ -68,7 +69,7 @@ export default new Vuex.Store({
         // On refresh it directly applies it, toggles the formbutton and gets
         // back to current state of the game 
         const teamname = data[0].teams[0]
-        if(state.nameTeamCyan !== teamname){
+        if(state.nameTeamCyan !== teamname && teamname !== ''){
           commit('toggleShowFormCyan')
           commit('setCyanName', teamname)
         }
@@ -168,11 +169,17 @@ export default new Vuex.Store({
     SOCKET_ADDMESSAGE(state, msg){
       state.websocketMsgs.push(msg)
     },
+    SOCKET_ONERROR(state) {
+      state.socket.onerror = (e) => { 
+        console.log(e);
+        alert('Couldnt connect to Websocket!')
+      }
+    },
     setCyanName(state, value) {
-      state.nameTeamCyan = value;
+        state.nameTeamCyan = value;
     },
     setMagentaName(state, name) {
-      state.nameTeamMagenta = name;
+        state.nameTeamMagenta = name;
     },
     toggleShowFormCyan(state) {
       state.showFormCyan = !state.showFormCyan;
