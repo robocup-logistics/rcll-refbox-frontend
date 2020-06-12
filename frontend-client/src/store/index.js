@@ -33,6 +33,11 @@ export default new Vuex.Store({
     awardedPoints: [],
     // Polling rate in components
     pollRate: 1500,
+    // Websocket attributes
+    socket: null,
+    isConnected: false,
+    websocketMsgs: [],
+    error: ''
   },
 
   getters: {
@@ -40,6 +45,13 @@ export default new Vuex.Store({
   },
 
   actions: {
+    // establish websocket connection 
+    connectToWebsocket({commit}) {
+      commit('setSocketUrl')
+      commit('SOCKET_ONOPEN')
+      commit('SOCKET_ONCLOSE')
+      commit('SOCKET_ONMESSAGE')      
+    },
     // Fetch data from Endpoint http://localhost:8088/api/clips/game-state
     async fetchGameState({commit, state}) {
       try {
@@ -116,6 +128,32 @@ export default new Vuex.Store({
   },
   
   mutations: {
+    setSocketUrl(state) {
+      state.socket = new WebSocket('ws://localhost:1234')
+    },
+    SOCKET_ONOPEN(state) {
+      state.socket.onopen = (e) => {
+        console.log("Connection established", e);
+        state.isConnected = true;
+      }
+    },
+    SOCKET_ONCLOSE(state){
+      state.socket.onclose = (e) => {
+        console.log("Connection debunked", e);
+      }
+    },
+    SOCKET_ONMESSAGE(state) {
+      state.socket.onmessage = (e) => { 
+        let msgObj = JSON.parse(e.data);
+        if (msgObj !== [] && msgObj.level !== 'clips' ) {
+          console.log(e);
+          this.commit('SOCKET_ADDMESSAGE', msgObj);
+        }
+      }
+    },
+    SOCKET_ADDMESSAGE(state, msg){
+      state.websocketMsgs.push(msg)
+    },
     setCyanName(state, value) {
       state.nameTeamCyan = value;
     },

@@ -38,7 +38,7 @@ import BodyMachinesTeamCyan from './BodyMachinesTeamCyan'
 import BodyScoreTeamA from './BodyScoreTeamA'
 import BodyRobotsTeamCyan from './BodyRobotsTeamCyan'
 import BodyRefboxLog from './BodyRefboxLog'
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'Body',
@@ -49,6 +49,12 @@ export default {
     BodyRefboxLog
   }, computed: {
     ...mapState(['phase', 'showFormCyan'])
+  },
+  created(){
+    this.connectToWebsocket()
+  },
+  methods: {
+    ...mapActions(['connectToWebsocket'])
   }
 }
 </script>
