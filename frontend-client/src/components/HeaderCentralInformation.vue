@@ -46,7 +46,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['setGameState'])
+    ...mapActions(['setGameState', 'setPreviousPhase', 'setNextPhase'])
   }
 }
 </script>
