@@ -28,7 +28,7 @@ export default new Vuex.Store({
     scoreCyan: 0,
     scoreMagenta: 0,
     // Gamestate
-    phase: 'Pre_Game',
+    phase: 'PRE_GAME',
     gametime: 0,
     awardedPoints: [],
     gamestate: 'WAIT_START',
@@ -40,6 +40,7 @@ export default new Vuex.Store({
     websocketMsgs: [],
     error: '',
     websocketURL : 'ws://localhost:1234',
+    infosStringArray: ['machine-info', 'order-info', 'ring-spec'],
   },
 
   getters: {
@@ -48,12 +49,12 @@ export default new Vuex.Store({
 
   actions: {
     // establish websocket connection 
-    connectToWebsocket({commit}) {
+    connectToWebsocket({commit, dispatch}) {
       commit('setSocketUrl')
-      commit('SOCKET_ONOPEN')
-      commit('SOCKET_ONCLOSE')
-      commit('SOCKET_ONMESSAGE')  
-      commit('SOCKET_ONERROR')    
+      dispatch('SOCKET_ONOPEN')
+      dispatch('SOCKET_ONCLOSE')
+      dispatch('SOCKET_ONMESSAGE')  
+      dispatch('SOCKET_ONERROR')    
     },
     SOCKET_DISCONNECT({commit}) {
       commit('SOCKET_DISCONNECT')
@@ -61,27 +62,90 @@ export default new Vuex.Store({
     SOCKET_SEND({commit}, msg) {
       commit('SOCKET_SEND', msg)
     },
+    SOCKET_ONOPEN({commit}) {
+      commit("SOCKET_ONOPEN")
+    },
+    SOCKET_ONCLOSE({commit}){
+      commit("SOCKET_ONCLOSE")
+    },
+    SOCKET_ONMESSAGE({commit, dispatch}) {
+      const onMessage = (e) => { 
+        let msgObj = JSON.parse(e.data);
+        if (msgObj !== [] ) {
+          // Messages for the Logger are Objects not an Array such as machine 
+          // infos at connect
+          if (msgObj.level !== 'clips' && !(Array.isArray(msgObj))) {
+            console.log(e);
+            commit('SOCKET_ADDMESSAGE', msgObj);
+          } else if (msgObj.type === "gamestate") {
+            console.log(msgObj);
+            dispatch("SetGamestateInfomation", msgObj)
+          }
+        }          
+      }
+      commit("SOCKET_ONMESSAGE", onMessage)
+    },
+    SOCKET_ONERROR({commit}) {
+      const onError = (e) => { 
+        console.log(e);
+        alert('Couldnt connect to Websocket!')
+      }
+      commit("SOCKET_ONERROR",onError)
+    },
+    SetGamestateInfomation({commit,state}, payload) {
+      if (state.gamestate !== payload.state) {
+        commit("setGamestate", payload.state)
+        console.log("IN");
+      }
+      if (state.phase !== payload.phase) {
+        commit("setCurrentPhase", payload.phase)
+        console.log(payload.phase); 
+      }
+      if (payload.cyan !== "") {
+        if (state.nameTeamCyan !== payload.cyan) {
+          commit('toggleShowFormCyan')
+          commit("setCyanName", payload.cyan)
+          console.log('opls');
+        }
+      }
+      if (payload.magenta !== "" ) {
+        if (state.nameTeamMagenta !== payload.magenta) {
+          commit('toggleShowFormMagenta')
+          commit("setMagentaName", payload.magenta)
+          console.log('opls2');
+        }
+      }
+      if (state.scoreCyan !== payload['points_cyan']) {
+        commit("setCurrentCyanScore", payload['points_cyan'])
+        console.log("it is me, Mario");
+        
+      }
+      if (state.scoreMagenta !== payload['points_magenta']) {
+        // commit("setCurrentMagentaScore", payload['points_magenta'])
+      }
+      commit("setGametime", payload['game_time'])
+    },
     // Fetch data from Endpoint http://localhost:8088/api/clips/game-state
-    async fetchGameState({commit, state}) {
+    async fetchGameState() {
       try {
-        const response = await get('/game-state');
-        const data = await response.data;
+        // const response = await get('/game-state');
+        // const data = await response.data;
         // Check if cyan teamname ist set in Api and set the store name so
         // On refresh it directly applies it, toggles the formbutton and gets
         // back to current state of the game 
-        const teamname = data[0].teams[0]
-        if(state.nameTeamCyan !== teamname && teamname !== ''){
-          commit('toggleShowFormCyan')
-          commit('setCyanName', teamname)
-        }
-        data.forEach(gamestate => {
-          // Check if cyan teamname ist set in Api and set the store name so
-          // On refresh it directly applies it, toggles the formbutton and gets
-          // back to current state of the game 
-          commit('setCurrentPhase', gamestate.phase);
-          commit('setCurrentCyanScore', gamestate.points[0]);
-          commit('setGametime', gamestate ["game-time"]);
-        });
+        // const teamname = data[0].teams[0]
+        // if(state.nameTeamCyan !== teamname && teamname !== ''){
+        //   commit('toggleShowFormCyan')
+        //   commit('setCyanName', teamname)
+        // }
+      //   data.forEach(gamestate => {
+      //     // Check if cyan teamname ist set in Api and set the store name so
+      //     // On refresh it directly applies it, toggles the formbutton and gets
+      //     // back to current state of the game 
+      //     commit('setCurrentPhase', gamestate.phase);
+      //     commit('setCurrentCyanScore', gamestate.points[0]);
+      //     commit('setGametime', gamestate ["game-time"]);
+      //   });
       } catch (error) {
         console.log(error);
       }
@@ -113,22 +177,22 @@ export default new Vuex.Store({
         "phase" : ''
       }
       if(state.nameTeamCyan || state.nameTeamMagenta){
-        if (state.phase === 'Pre_game') {
+        if (state.phase === 'PRE_GAME') {
           msg.phase = 'SETUP'
           commit('SOCKET_SEND', msg)
-          commit('nextPhase', 'Setup')
-        } else if(state.phase === 'Setup') {
+          commit('nextPhase', 'SETUP')
+        } else if(state.phase === 'SETUP') {
           msg.phase = 'EXPLORATION'
           commit('SOCKET_SEND', msg)
-          commit('nextPhase', 'Exploration');
-        } else if(state.phase === 'Exploration') {
+          commit('nextPhase', 'EXPLORATION');
+        } else if(state.phase === 'EXPLORATION') {
           msg.phase = 'PRODUCTION'
           commit('SOCKET_SEND', msg)
-          commit('nextPhase', 'Production');
-        } else if(state.phase === 'Production') {
+          commit('nextPhase', 'PRODUCTION');
+        } else if(state.phase === 'PRODUCTION') {
           msg.phase = 'POST_GAME'
           commit('SOCKET_SEND', msg)
-          commit('nextPhase', 'Post_game');
+          commit('nextPhase', 'POST_GAME');
         }
       }else {
         alert('First Set Team Name!');
@@ -140,22 +204,22 @@ export default new Vuex.Store({
         "command" : "set_gamephase",
         "phase" : ''
       }
-      if (state.phase === 'Post_game') {
+      if (state.phase === 'POST_GAME') {
         msg.phase = 'PRODUCTION'
         commit('SOCKET_SEND', msg)
-        commit('previousPhase', 'Production');
-      } else if(state.phase === 'Production') {
+        commit('previousPhase', 'PRODUCTION');
+      } else if(state.phase === 'PRODUCTION') {
         msg.phase = 'EXPLORATION'
         commit('SOCKET_SEND', msg)
-        commit('previousPhase', 'Exploration');
-      } else if(state.phase === 'Exploration') {
+        commit('previousPhase', 'EXPLORATION');
+      } else if(state.phase === 'EXPLORATION') {
         msg.phase = 'SETUP'
         commit('SOCKET_SEND', msg)
-        commit('previousPhase', 'Setup');
-      } else if(state.phase === 'Setup') {
+        commit('previousPhase', 'SETUP');
+      } else if(state.phase === 'SETUP') {
         msg.phase = 'PRE_GAME'
         commit('SOCKET_SEND', msg)
-        commit('previousPhase', 'Pre_game');
+        commit('previousPhase', 'PRE_GAME');
     }
   },
     setGameState({commit}, gamestate) {
@@ -183,14 +247,8 @@ export default new Vuex.Store({
         console.log("Connection debunked", e);
       }
     },
-    SOCKET_ONMESSAGE(state) {
-      state.socket.onmessage = (e) => { 
-        let msgObj = JSON.parse(e.data);
-        if (msgObj !== [] && msgObj.level !== 'clips' ) {
-          console.log(e);
-          this.commit('SOCKET_ADDMESSAGE', msgObj);
-        }
-      }
+    SOCKET_ONMESSAGE(state, onMessageFnc) {
+      state.socket.onmessage = onMessageFnc
     },
     SOCKET_DISCONNECT(state) {
       state.socket.close()
@@ -202,11 +260,8 @@ export default new Vuex.Store({
     SOCKET_ADDMESSAGE(state, msg){
       state.websocketMsgs.push(msg)
     },
-    SOCKET_ONERROR(state) {
-      state.socket.onerror = (e) => { 
-        console.log(e);
-        alert('Couldnt connect to Websocket!')
-      }
+    SOCKET_ONERROR(state,onErrorFnc) {
+      state.socket.onerror = onErrorFnc
     },
     setCyanName(state, value) {
         state.nameTeamCyan = value
@@ -228,7 +283,7 @@ export default new Vuex.Store({
     },
     setCurrentPhase(state, phase) {
       // So it's in format Production instead of PRODUCTION
-      phase = phase.charAt(0).toUpperCase() + phase.slice(1).toLowerCase();
+      // phase = phase.charAt(0).toUpperCase() + phase.slice(1).toLowerCase();
       state.phase = phase;
     },
     setCurrentCyanScore(state, score) {

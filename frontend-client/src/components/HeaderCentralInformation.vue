@@ -1,6 +1,6 @@
 <template>
   <div class="col-md-2 border">
-    <div v-if="getPhase !== 'Pre_Game'"></div>
+    <div v-if="getPhase !== 'PRE_GAME'"></div>
     <div class="pause-play-time mt-2">
       <div class="radio-pause-play row justify-content-center align-items-center">
         <div class="pause-play-container mr-2">

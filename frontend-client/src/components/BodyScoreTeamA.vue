@@ -1,6 +1,6 @@
 <template>
   <div >
-    <h4 v-if="phase !== 'Pre_Game'">Points: {{scoreCyan}}</h4>
+    <h4 v-if="phase !== 'PRE_GAME'">Points: {{scoreCyan}}</h4>
     <div class="awarded-points-container border-top">
       <div class="row m-0 text-left ">
         <div 
