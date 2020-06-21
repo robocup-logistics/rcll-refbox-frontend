@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex' 
+import { mapState } from 'vuex' 
 
 export default {
   name: 'HeaderCentralInformation',
@@ -45,13 +45,6 @@ export default {
       gamestate: state => state.gamestate
     })
   },
-  mounted() {
-    this.fetchGameState();
-    setInterval(this.fetchGameState, 1000);
-  },
-  methods: {
-    ...mapActions(['setNextPhase', 'setPreviousPhase','fetchGameState', 'setGameState' ])
-  }
 }
 </script>
 
