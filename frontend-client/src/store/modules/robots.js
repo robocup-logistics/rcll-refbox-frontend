@@ -10,7 +10,7 @@ export default{
     setCyanRobots(state, payload) {      
      if(state.robotsCyan.length < 3) {
         // populate and make sure that there arent any duplicates
-        if (!(state.robotsCyan.filter(robot => robot.name  === payload.name).length > 0)) {
+        if (!(state.robotsCyan.filter(robot => robot.name  === payload.name).length > 0) || state.robotsCyan === 1) {
           state.robotsCyan.splice(payload.number-1, 0, payload)
         }
       } else {
@@ -29,10 +29,9 @@ export default{
     // Fetch payload from Endpoint http://localhost:8088/api/clips/robots
     SetRobotInformation({commit},payload) {
       if (payload['team_color'] === 'CYAN') {
-        console.log(payload, "drinen");
         commit('setCyanRobots', payload)
       }else {
-        console.log('magenta');
+        console.log('magenta robot');
         
       }
     }
