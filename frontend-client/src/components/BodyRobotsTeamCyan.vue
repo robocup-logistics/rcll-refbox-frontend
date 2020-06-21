@@ -34,7 +34,7 @@
             <span v-else-if="robotState(index) === 'disqualified'" class="text-danger mr-2"> 
               {{setMaintenanceToFalse(index)}}
               {{robotState(index)}}!</span>
-            <span class="robot-maintenance-cycles" >{{robot['maintenance-cycles']}}</span>
+            <span class="robot-maintenance-cycles" >{{robot['maintenance_cylces']}}</span>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'; 
+import { mapState} from 'vuex'; 
 
 export default {
   name: 'BodyRobotsTeamCyan',
@@ -61,17 +61,7 @@ export default {
       pollRate: state => state.pollRate,
     })
   },
-
-  mounted(){
-    this.fetchCyanRobots()
-    this.pollRobotInfo()
-  },
-
   methods: {
-    ...mapActions(['fetchCyanRobots']),
-    pollRobotInfo() {
-      setInterval(this.fetchCyanRobots, this.pollRate)
-    },
     // Returns current state of a robot
     robotState(index) {
       return this.allCyanRobots[index].state.toLowerCase()

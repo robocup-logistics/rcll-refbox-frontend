@@ -40,7 +40,6 @@ export default new Vuex.Store({
     websocketMsgs: [],
     error: '',
     websocketURL : 'ws://localhost:1234',
-    infosStringArray: ['machine-info', 'order-info', 'ring-spec'],
   },
 
   getters: {
@@ -78,8 +77,10 @@ export default new Vuex.Store({
             console.log(e);
             commit('SOCKET_ADDMESSAGE', msgObj);
           } else if (msgObj.type === "gamestate") {
-            console.log(msgObj);
             dispatch("SetGamestateInfomation", msgObj)
+          } else if(msgObj.type === 'robot-info') {
+            dispatch("SetRobotInformation", msgObj)
+            
           }
         }          
       }

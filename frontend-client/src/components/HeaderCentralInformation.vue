@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex' 
+import { mapState, mapActions } from 'vuex' 
 
 export default {
   name: 'HeaderCentralInformation',
@@ -45,6 +45,9 @@ export default {
       gamestate: state => state.gamestate
     })
   },
+  methods: {
+    ...mapActions(['setGameState'])
+  }
 }
 </script>
 
