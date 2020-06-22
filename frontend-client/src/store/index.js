@@ -76,15 +76,21 @@ export default new Vuex.Store({
           if (msgObj.level !== 'clips' && !(Array.isArray(msgObj))) {
             console.log(e);
             commit('SOCKET_ADDMESSAGE', msgObj);
-          } else if (msgObj.type === "gamestate") {
+          } 
+          else if (msgObj.type === "gamestate") {
             dispatch("SetGamestateInfomation", msgObj)
-          } else if(msgObj.type === 'robot-info') {
+          } 
+          else if(msgObj.type === 'robot-info') {
             dispatch("SetRobotInformation", msgObj)
-          } else if (msgObj.type === 'machine-info' && msgObj.team === 'CYAN') {
+          } 
+          else if (msgObj.type === 'machine-info' && msgObj.team === 'CYAN') {
             dispatch("SetCyanMachinesInfo",msgObj)  
             // Websocket sends an array of objects with all of the information
             // Check if that"s the case
-          } else if(typeof msgObj[0] !== 'undefined'){
+          } else if(msgObj.type === 'ring-spec'){
+            dispatch('setRingSpecs', msgObj)
+          }
+          else if(typeof msgObj[0] !== 'undefined'){
             if (msgObj[0].type === 'machine-info') {
               const cyanMachines = msgObj.filter( machine => machine.team === 'CYAN')
               // const magentaMachines = msgObj.filter( machine => machine.team === 'MAGENTA')
@@ -93,8 +99,10 @@ export default new Vuex.Store({
               const cyanRobots = msgObj.filter(robot => robot['team_color'] === "CYAN")
               // const magentaRobots = msgObj.filter(robot => robot['team_color'] === "Magenta")
               dispatch("SetCyanRobotsInfoAtReconnect", cyanRobots)              
+            } else if(msgObj[0].type === 'ring-spec'){
+              dispatch("SetRingspecsAtReconnect", msgObj)
             }
-          } 
+          }
         }          
       }
       commit("SOCKET_ONMESSAGE", onMessage)

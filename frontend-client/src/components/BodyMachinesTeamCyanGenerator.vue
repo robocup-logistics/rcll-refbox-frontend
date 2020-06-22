@@ -91,10 +91,10 @@ export default {
     },
     // Display how much bases the ring needs
     showPreparedColorInfo(ringColor) {
-      let reqBases = 0;
+      let reqBases = 0;   
       this.ringspecs.forEach((ringspec) => {
         if(ringspec.color === ringColor) {
-          reqBases = ringspec['req-bases'];
+          reqBases = ringspec['req_bases'];
         }
       });
       return `- ${reqBases}`;

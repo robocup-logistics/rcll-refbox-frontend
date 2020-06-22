@@ -7,15 +7,13 @@ export default{
     machinesMagenta: [],
     ringspecs: [],
     cyanMachinesFlag: false,
+    machinesRingspecsFlag: false,
   },
 
   getters: {
   },
 
   mutations: {
-    setRingSpecs(state,data){
-      state.ringspecs = data
-    },
     addMachinesCyan(state, payloadWithIndex) {
       // state.machinesCyan
       if (payloadWithIndex.index === -1) {
@@ -27,6 +25,17 @@ export default{
     setCyanMachines(state, payload) {
       state.machinesCyan = payload
       state.cyanMachinesFlag = true
+    },
+    addringspecs(state, payload) {
+      if (payload.index === -1) {
+        state.ringspecs.push(payload.payload)
+      } else {
+        state.ringspecs.splice(payload.index, 1, payload.payload)
+      }
+    },
+    setMachinesRingspecs(state, payload) {
+      state.ringspecs = payload
+      state.machinesRingspecsFlag = true
     }
   },
   
@@ -55,6 +64,26 @@ export default{
         dispatch("sortAlpabetically", state.machinesCyan)
       }
     },
+
+    setRingSpecs({commit, state}, payload) {
+      if (state.ringspecs.length < 4) {
+        const index = state.ringspecs.findIndex(ring => ring.color === payload.color)
+        if (index === -1) { 
+          commit("addringspecs", {payload, index})
+        }
+      } else {
+        const index = state.ringspecs.findIndex(ring => ring.color === payload.color)
+        if (index !== -1) {
+          commit("addringspecs", {payload, index})
+        }
+      }
+    },
+
+    SetRingspecsAtReconnect({commit, state}, payload) {
+      if(!state.machinesRingspecsFlag) {
+        commit("setMachinesRingspecs", payload)
+      }
+    },
  
     sortAlpabetically(context, payload) {
       payload.sort((machineA, machineB) => {
@@ -71,11 +100,12 @@ export default{
       })
     },
     // Function that fetches data from Endpoint http://localhost:8088/api/clips/ring-spec
-    async fetchRingSpec({commit}) {
+    async fetchRingSpec() {
       try {
         const response = await get('/ring-spec');
         const data = response.data;
-        commit('setRingSpecs', data);
+        console.log(data);
+        // commit('setRingSpecs', data);
       } catch (error) {
         console.log(error);
       }
