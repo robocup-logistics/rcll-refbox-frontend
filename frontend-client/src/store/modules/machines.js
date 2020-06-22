@@ -12,40 +12,52 @@ export default{
   },
 
   mutations: {
-    setMachinesCyan(state,data) {
-      state.machinesCyan = data;
-    },
     setRingSpecs(state,data){
       state.ringspecs = data
+    },
+    addMachinesCyan(state, payloadWithIndex) {
+      // state.machinesCyan
+      if (payloadWithIndex.index === -1) {
+        state.machinesCyan.push(payloadWithIndex.payload)
+      } else {
+        state.machinesCyan.splice(payloadWithIndex.index, 1, payloadWithIndex.payload)
+      }
+      
     }
   },
   
   actions: {
-    // eslint-disable-next-line no-unused-vars
-    // Get params: 1: url, 2:params, 3:timeout, 4:data
-
-    // Function that fetches data from Endpoint http://localhost:8088/api/clips/machines
-    async fetchMachinesCyan({commit}) {
-      try {
-        const response = await get('/machines', {team:'CYAN'});
-        let data = response.data;
-        // Sort machines alphabetically
-        data = data.sort((machineA, machineB) => {
-          let nameA = machineA.name;
-          let nameB = machineB.name;
-          if (nameA < nameB) {
-            return -1;
-          } 
-          if (nameA > nameB) {
-            return 1;
-          }
-          // names must be equal
-          return 0;
-        })
-        commit('setMachinesCyan', data);
-      } catch(error){
-        console.log(error);
+    SetCyanMachinesInfo({commit, state, dispatch}, payload) {
+      if (state.machinesCyan.length < 7) {
+        // check if there is already that machine in the 
+        // array so it doesn"t dupliocate it
+        const index = state.machinesCyan.findIndex(machine => machine.name === payload.name)
+        if (index === -1) {
+          commit("addMachinesCyan", {payload, index})
+          dispatch("sortAlpabetically", state.machinesCyan)
+        }
+      } else {
+        const index = state.machinesCyan.findIndex(machine => machine.name === payload.name)
+        if (index !== -1) {
+          commit("addMachinesCyan", {payload, index})
+        }
       }
+      
+    },
+ 
+    sortAlpabetically(context, payload) {
+      payload.sort((machineA, machineB) => {
+        let nameA = machineA.name;
+        let nameB = machineB.name;
+        if (nameA < nameB) {
+          return -1;
+        } 
+        if (nameA > nameB) {
+          return 1;
+        }
+        // names must be equal
+        return 0;
+      })
     },
     // Function that fetches data from Endpoint http://localhost:8088/api/clips/ring-spec
     async fetchRingSpec({commit}) {

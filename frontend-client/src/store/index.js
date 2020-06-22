@@ -80,7 +80,8 @@ export default new Vuex.Store({
             dispatch("SetGamestateInfomation", msgObj)
           } else if(msgObj.type === 'robot-info') {
             dispatch("SetRobotInformation", msgObj)
-            
+          } else if (msgObj.type === 'machine-info' && msgObj.team === 'CYAN') {
+            dispatch('SetCyanMachinesInfo',msgObj)                        
           }
         }          
       }
