@@ -2,6 +2,7 @@ export default{
   state: {
     robotsCyan: [],
     robotsMagenta: [],
+    cyanRobotsFlag: false,
   },
   getters: {
 
@@ -16,6 +17,10 @@ export default{
         state.robotsCyan.splice(payload.index, 1, payload.payload)
       }
     },
+    setCyanRobotsAtReconnect(state, payload) {
+      state.robotsCyan = payload
+      state.cyanRobotsFlag = true
+    }
   },
   actions: {
     SetRobotInformation({commit,state, dispatch}, payload) {
@@ -32,11 +37,15 @@ export default{
           if (index !== -1) {
             commit("setCyanRobots", {payload, index})
           }
-          
         } 
       }else {
         console.log('magenta robot');
-        
+      }
+    },
+    SetCyanRobotsInfoAtReconnect({commit, state, dispatch}, payload) {
+      if(!state.cyanRobotsFlag) {
+        commit("setCyanRobotsAtReconnect", payload)
+        dispatch("sortAlpabetically", state.robotsCyan)
       }
     },
     sortAlpabetically(context, payload) {

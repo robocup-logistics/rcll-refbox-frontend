@@ -5,7 +5,8 @@ export default{
   state: {
     machinesCyan: [],
     machinesMagenta: [],
-    ringspecs: []
+    ringspecs: [],
+    cyanMachinesFlag: false,
   },
 
   getters: {
@@ -22,17 +23,21 @@ export default{
       } else {
         state.machinesCyan.splice(payloadWithIndex.index, 1, payloadWithIndex.payload)
       }
-      
+    },
+    setCyanMachines(state, payload) {
+      state.machinesCyan = payload
+      state.cyanMachinesFlag = true
     }
   },
   
   actions: {
     SetCyanMachinesInfo({commit, state, dispatch}, payload) {
+      // If there wasn't information at connect populate in setup
       if (state.machinesCyan.length < 7) {
         // check if there is already that machine in the 
         // array so it doesn"t dupliocate it
         const index = state.machinesCyan.findIndex(machine => machine.name === payload.name)
-        if (index === -1) {
+        if (index === -1) { 
           commit("addMachinesCyan", {payload, index})
           dispatch("sortAlpabetically", state.machinesCyan)
         }
@@ -42,7 +47,13 @@ export default{
           commit("addMachinesCyan", {payload, index})
         }
       }
-      
+    },
+
+    SetCyanMachinesInfoAtReconnect({commit, dispatch, state}, payload) {
+      if (!state.cyanMachinesFlag) {
+        commit("setCyanMachines", payload)
+        dispatch("sortAlpabetically", state.machinesCyan)
+      }
     },
  
     sortAlpabetically(context, payload) {
