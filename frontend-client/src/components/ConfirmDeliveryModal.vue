@@ -67,7 +67,6 @@ export default {
     orderAcceptance(order, bool) {
       const msg = {
         "command" : "confirm_delivery",
-        "delivery_id" : null,
         "correctness" : false,
         "order_id" : null,
         "color" : ""
