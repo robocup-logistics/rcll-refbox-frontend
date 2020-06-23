@@ -7,16 +7,16 @@
           <div class="d-flex align-items-center justify-content-between">
             <p class="delivery-infos">
               <span>Complexity: {{order.complexity}}</span>
-              <span>base-color: {{order['base-color']}}</span>
-              <span v-if="order['ring-colors']">
-                ring colors: {{order['ring-colors']}}
+              <span>base-color: {{order['base_color']}}</span>
+              <span v-if="order['ring_colors']">
+                ring colors: {{order['ring_colors']}}
               </span>
-              <span>cap-color: {{order['cap-color']}}</span>
+              <span>cap-color: {{order['cap_color']}}</span>
               <span>
                 delivery period: 
-                {{formatSeconds(order['delivery-period'][0])}}
+                {{formatSeconds(order['delivery_period'][0])}}
                 -
-                {{formatSeconds(order['delivery-period'][1])}}
+                {{formatSeconds(order['delivery_period'][1])}}
               </span>
             </p>
             <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
@@ -74,7 +74,6 @@ export default {
       }
       msg.correctness = bool
       msg.color = this.color
-      msg['delivery_id'] = this.order['quantity-requested']
       msg['order_id'] = this.order.id
       this.SOCKET_SEND(msg)
       this.closeModal()

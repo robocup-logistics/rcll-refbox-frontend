@@ -92,16 +92,23 @@ export default new Vuex.Store({
           }
           else if(typeof msgObj[0] !== 'undefined'){
             if (msgObj[0].type === 'machine-info') {
+              console.log(msgObj)
               const cyanMachines = msgObj.filter( machine => machine.team === 'CYAN')
               // const magentaMachines = msgObj.filter( machine => machine.team === 'MAGENTA')
               dispatch("SetCyanMachinesInfoAtReconnect", cyanMachines)  
             } else if(msgObj[0].type === 'robot-info') {
+              console.log(msgObj)
               const cyanRobots = msgObj.filter(robot => robot['team_color'] === "CYAN")
               // const magentaRobots = msgObj.filter(robot => robot['team_color'] === "Magenta")
               dispatch("SetCyanRobotsInfoAtReconnect", cyanRobots)              
             } else if(msgObj[0].type === 'ring-spec'){
+              console.log(msgObj)
               dispatch("SetRingspecsAtReconnect", msgObj)
-            }
+            } else if(msgObj[0].type === 'order-info') {
+              dispatch("SetOrdersAtReconnect", msgObj)
+            } 
+          } else {
+            console.log(msgObj);
           }
         }          
       }
@@ -141,32 +148,7 @@ export default new Vuex.Store({
       }
       commit("setGametime", payload['game_time'])
     },
-    // Fetch data from Endpoint http://localhost:8088/api/clips/game-state
-    // async fetchGameState() {
-    //   try {
-    //     // const response = await get('/game-state');
-    //     // const data = await response.data;
-    //     // Check if cyan teamname ist set in Api and set the store name so
-    //     // On refresh it directly applies it, toggles the formbutton and gets
-    //     // back to current state of the game 
-    //     // const teamname = data[0].teams[0]
-    //     // if(state.nameTeamCyan !== teamname && teamname !== ''){
-    //     //   commit('toggleShowFormCyan')
-    //     //   commit('setCyanName', teamname)
-    //     // }
-    //   //   data.forEach(gamestate => {
-    //   //     // Check if cyan teamname ist set in Api and set the store name so
-    //   //     // On refresh it directly applies it, toggles the formbutton and gets
-    //   //     // back to current state of the game 
-    //   //     commit('setCurrentPhase', gamestate.phase);
-    //   //     commit('setCurrentCyanScore', gamestate.points[0]);
-    //   //     commit('setGametime', gamestate ["game-time"]);
-    //   //   });
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
-    // Fetch data from Endpoint http://localhost:8088/api/clips/points
+    
     async fetchAwardedPoints({commit}) {
       try {
         const response = await get('/points');

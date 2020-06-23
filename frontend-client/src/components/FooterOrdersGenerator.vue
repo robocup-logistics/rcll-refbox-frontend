@@ -7,9 +7,11 @@
     >
       <div class="d-flex " >
         <div class="max-height-81 pb-0 mb-0 d-flex">
-          <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
+          <img 
+              v-if="products.length >= 1"
+              :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
                class="max-height-81 max-width-65 img-fluid" 
-               :class="activeDeliveryPeriodImage(order['delivery-period'])"
+               :class="activeDeliveryPeriodImage(order['delivery_period'])"
           > 
           <!-- c0_black__black.svg -->
         </div>  
@@ -20,13 +22,13 @@
           <div class="order-infos ">
             <div>
             <div class="d-flex justify-items-center align-items-center ">
-              <div pt-5 :class="activeDeliveryPeriod(order['delivery-period'])">
+              <div pt-5 :class="activeDeliveryPeriod(order['delivery_period'])">
                 <span>{{order.id}}</span>
               </div>
               <form >
                 <!-- If requested amount is 1 -->
                 <div 
-                  v-if="order['quantity-requested'] === 1"
+                  v-if="order['quantity_requested'] === 1"
                   class="form-group m-0 ml-2 d-flex text-primary">
                   <div class="custom-control custom-checkbox">
                     <!-- Checked only if the order was delivered -->
@@ -34,13 +36,13 @@
                       type="checkbox" class="custom-control-input"
                       :id="cyanCheckboxId(order.id)"  
                       disabled
-                      :checked="isDelivered(order['quantity-delivered'][0], 
-                      order['quantity-requested'])
+                      :checked="isDelivered(order['quantity_delivered'][0], 
+                      order['quantity_requested'])
                       "
                     >
                     <!-- Confirm Delivery Popup modal -->
-                    <div v-once v-if="isDelivered(order['quantity-delivered'][0], 
-                      order['quantity-requested']) === true">
+                    <div v-once v-if="isDelivered(order['quantity_delivered'][0], 
+                      order['quantity_requested']) === true">
                       <ConfirmDeliveryModal  :order = 'order' :team="nameTeamCyan" :color='cyan'/>
                     </div>
                     <!-- End of modal -->
@@ -60,7 +62,7 @@
                 </div>
                 <!-- If requested amount is 2  -->
                 <div 
-                  v-else-if="order['quantity-requested'] === 2 "
+                  v-else-if="order['quantity_requested'] === 2 "
                   class="form-group m-0 ml-2 d-flex flex-column">
                   <div>
                     <div class= "d-flex">
@@ -68,8 +70,8 @@
                         <!-- Checked only if the order was delivered -->
                         <input 
                           type="checkbox" class="custom-control-input"       id="customCheck1"  disabled
-                          :checked="isDelivered(order['quantity-delivered'][0], 
-                          order['quantity-requested'])"
+                          :checked="isDelivered(order['quantity_delivered'][0], 
+                          order['quantity_requested'])"
                         >
                         <label class="custom-control-label" for="customCheck1">
                         </label>
@@ -92,7 +94,7 @@
                       <!-- Checked only if the order was delivered -->
                       <input 
                         type="checkbox" class="custom-control-input"       id="customCheck1"  disabled
-                        :checked="isDeliveredSecond(order['quantity-delivered'][0])"
+                        :checked="isDeliveredSecond(order['quantity_delivered'][0])"
                       >
                       <label class="custom-control-label" for="customCheck1"></label>
                     </div>
@@ -114,16 +116,16 @@
             </div>
 
             <div class="order-complexity"
-                 :class="activeDeliveryPeriod(order['delivery-period'])"
+                 :class="activeDeliveryPeriod(order['delivery_period'])"
             >
               <span>
                 Complexity: {{order.complexity}}
               </span>
             </div>
             <div class="delivery-time" 
-                 :class="activeDeliveryPeriod(order['delivery-period'])"
+                 :class="activeDeliveryPeriod(order['delivery_period'])"
             >
-              <span>{{ formatSeconds(order['delivery-period'][0]) }}-{{formatSeconds(order['delivery-period'][1])}}</span>
+              <span>{{ formatSeconds(order['delivery_period'][0]) }}-{{formatSeconds(order['delivery_period'][1])}}</span>
             </div>
           </div>
         </div>
@@ -167,7 +169,7 @@ export default {
       setInterval(this.fetchAllOrders, this.pollRate);
     },
     // Returns the img url responding to order ID
-    getProductsImg(orderID) {
+    getProductsImg(orderID) {      
       return this.products.find(({id}) => id === orderID)['product-img-url'];
     },
     // Checks if the order was delivered

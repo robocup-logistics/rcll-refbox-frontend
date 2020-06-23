@@ -104,7 +104,7 @@ export default{
       try {
         const response = await get('/ring-spec');
         const data = response.data;
-        console.log(data);
+        console.log(data)
         // commit('setRingSpecs', data);
       } catch (error) {
         console.log(error);

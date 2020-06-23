@@ -5,6 +5,7 @@ export default{
     allOrders: [],
     products: [],
     populated: false,
+    ordersFlag: false
   },
 
   getters: {
@@ -15,31 +16,52 @@ export default{
       state.allOrders = data;
     },
     setProducts(state, products) {
-      state.products = products;
+      state.products = products;      
     },
     togglePopulated(state) {
       state.populated = true;
+    },
+    setOrdersArray(state, payload) {
+      state.allOrders = payload
+      console.log(payload);
+      state.ordersFlag = true
     }
   },
 
   actions: {
+    SetOrdersAtReconnect({commit, dispatch, state}, payload) {
+      if(!state.ordersFlag) {
+        commit("setOrdersArray", payload)
+        dispatch("isProductsPopulated")
+      }
+    },
+    isProductsPopulated({commit,state, dispatch}) {
+      if (state.allOrders && !state.populated) {
+        // Calls populateProductsArray function 
+        dispatch(`populateProductsArray`, state.allOrders)
+        // commits a mutation set state's populated
+        commit('togglePopulated')
+      }
+    },
     // eslint-disable-next-line no-unused-vars
     // Fetches data from Endpoint http://localhost:8088/api/clips/orders,
     // And populates the order's corresponding svg's path
-    async fetchAllOrders({commit,state, dispatch}) {      
+    async fetchAllOrders() {      
       try{
         // Fetch all orders from api
         const response = await get('/orders')
-        const data = response.data    
-        // Populate products svg's with their url
-        if (data && !state.populated) {
-          // Calls populateProductsArray function 
-          dispatch(`populateProductsArray`, data)
-          // commits a mutation set state's populated
-          commit('togglePopulated')
-        }
+        const data = response.data 
+        console.log(data, "asdasd");
+           
+        // // Populate products svg's with their url
+        // if (state.allOrders && !state.populated) {
+        //   // Calls populateProductsArray function 
+        //   dispatch(`populateProductsArray`, state.allOrders)
+        //   // commits a mutation set state's populated
+        //   commit('togglePopulated')
+        // }
         // Commits mutation to change allOrders array
-        commit('setAllOrders', data);
+        // commit('setAllOrders', data);
       } catch (error) {
         console.log(error);
       }
@@ -60,24 +82,26 @@ export default{
         const complexity = order.complexity.toLowerCase();
         // Fetched Information Format: base-color: "BASE_RED"
         // Split the string to extract: 'red, grey...'
-        let baseColor = order['base-color'].split('_')[1].toLowerCase();
+        let baseColor = order['base_color'].split('_')[1].toLowerCase();
         // Grey in fetched data / Gray in name of SVGs
         if (baseColor === 'grey') {
           baseColor = 'gray'
         }
-        let capColor = order['cap-color'].split('_')[1].toLowerCase();
+        let capColor = order['cap_color'].split('_')[1].toLowerCase();
         if (capColor === 'grey') {
           capColor = 'gray'
         }
         let ringColors = '';
-        if(order['ring-colors'] !== [ ]){
-          order['ring-colors'].forEach(color => {
+        if(order['ring_colors'] !== [ ]){
+          order['ring_colors'].forEach(color => {
             ringColors += color.split('_')[1].toLowerCase() + '-';
           });
         }
         product.id = order.id;
         // Format: 'c0_black_blue-orange_gray.svg'
         product['product-img-url'] = `${complexity}_${baseColor}_${ringColors.substring(0,ringColors.length-1)}_${capColor}.svg`;
+        console.log(product);
+        
         products.push(product);    
         product = {}    
       });
