@@ -1,5 +1,3 @@
-import { get } from '@/api/api'
-
 export default{
   state: {
     allOrders: [],
@@ -12,9 +10,6 @@ export default{
   },
 
   mutations: {
-    setAllOrders(state, data) {
-      state.allOrders = data;
-    },
     setProducts(state, products) {
       state.products = products;      
     },
@@ -82,29 +77,6 @@ export default{
         // names must be equal
         return 0;
       })
-    },
-    // eslint-disable-next-line no-unused-vars
-    // Fetches data from Endpoint http://localhost:8088/api/clips/orders,
-    // And populates the order's corresponding svg's path
-    async fetchAllOrders() {      
-      try{
-        // Fetch all orders from api
-        const response = await get('/orders')
-        const data = response.data 
-        console.log(data, "asdasd");
-           
-        // // Populate products svg's with their url
-        // if (state.allOrders && !state.populated) {
-        //   // Calls populateProductsArray function 
-        //   dispatch(`populateProductsArray`, state.allOrders)
-        //   // commits a mutation set state's populated
-        //   commit('togglePopulated')
-        // }
-        // Commits mutation to change allOrders array
-        // commit('setAllOrders', data);
-      } catch (error) {
-        console.log(error);
-      }
     },
     /*
     Populates the products array with the svg url

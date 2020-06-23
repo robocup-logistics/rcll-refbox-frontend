@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import {mapState } from 'vuex';
 export default {
   name: 'BodyMachinesTeamCyanGenerator',
   computed: {
@@ -59,7 +59,6 @@ export default {
       machinesCyan: state => state.machines.machinesCyan,
       currPhase: state => state.phase,
       ringspecs: state => state.machines.ringspecs,
-      pollRate: state => state.pollRate,
     })
   },
 
@@ -68,15 +67,9 @@ export default {
       imageUrl: 'http://via.placeholder.com/50x25'
     }
   },
-  // Run on mount of Component
-  mounted() {
-    this.fetchRingSpec()
-  },
+ 
 
   methods: {
-    ...mapActions({
-      fetchRingSpec: 'fetchRingSpec',
-    }),
     // Set classname depending on the State of the machine
     setStateClass(state) {
       let classList = ''

@@ -1,6 +1,4 @@
 // eslint-disable-next-line no-unused-vars
-import { get, post } from '@/api/api'
-
 export default{
   state: {
     machinesCyan: [],
@@ -101,17 +99,6 @@ export default{
         return 0;
       })
     },
-    // Function that fetches data from Endpoint http://localhost:8088/api/clips/ring-spec
-    async fetchRingSpec() {
-      try {
-        const response = await get('/ring-spec');
-        const data = response.data;
-        console.log(data)
-        // commit('setRingSpecs', data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
   }
    
 }
