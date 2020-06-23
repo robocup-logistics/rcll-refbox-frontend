@@ -5,8 +5,6 @@ import Vue from 'vue';
 import machines from './modules/machines';
 import orders from './modules/orders';
 import robots from './modules/robots';
-// Axios 
-import { get } from '@/api/api' 
 
 Vue.use(Vuex)
 
@@ -90,8 +88,15 @@ export default new Vuex.Store({
           else if(msgObj.type === 'ring-spec'){
             dispatch('setRingSpecs', msgObj)
           }
-          else if(msgObj.type === "order-info"){
+          else if(msgObj.type === 'order-info'){
             dispatch("setOrderInfos", msgObj)
+          } 
+          else if(msgObj.type === 'points') {
+            if (msgObj.team === 'CYAN') {
+              dispatch("SetCyanPoint", msgObj)
+            } else {
+              console.log(msgObj);
+            }
           }
           // Websocket sends an array of objects with all of the information
           // Check if that"s the case
@@ -109,11 +114,9 @@ export default new Vuex.Store({
             } else if(msgObj[0].type === 'order-info') {
               dispatch("SetOrdersAtReconnect", msgObj)
             } else if(msgObj[0].type === 'points') {
-              console.log(msgObj);
               const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
-              console.log(cyanPoints);
               // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
-              dispatch("SetPointsAtReconnect", msgObj)
+              dispatch("SetPointsAtReconnect", cyanPoints)
             }
           } 
         }          
@@ -157,17 +160,19 @@ export default new Vuex.Store({
     
     SetPointsAtReconnect({commit, state}, payload) {
       if (!state.pointsCyanFlag) {
-        commit("SetPointsAtReconnect", payload)
+        commit("setCyanPoints", payload)
       }
     },
 
-    async fetchAwardedPoints({commit}) {
-      try {
-        const response = await get('/points');
-        const data = response.data;
-        commit('setAwardedPoints', data)
-      } catch (error) {
-        console.log(error);
+    SetCyanPoint({commit, state}, payload) {
+      const index = state.cyanAwardedPoints.findIndex(point => point.reason === payload.reason 
+        && point['game_time'] === payload['game_time'])
+      if (index !== -1) {
+        console.log(index);
+        
+        commit("addCyanPoints", {payload, index})
+      } else {
+        commit("addCyanPoints", {payload, index})
       }
     },
 
@@ -302,15 +307,19 @@ export default new Vuex.Store({
     setGametime(state, gametime) {
       state.gametime = gametime;
     },
-    setAwardedPoints(state, pointsArray) {
-      state.awardedPoints = pointsArray;
-    },
     setGamestate(state, gamestate) {
       state.gamestate = gamestate
     },
-    SetPointsAtReconnect(state, payload){
+    setCyanPoints(state, payload){
       state.cyanAwardedPoints = payload
       state.pointsCyanFlag = true
+    },
+    addCyanPoints(state, payload) {
+      if (payload.index === -1) {
+        state.cyanAwardedPoints.push(payload.payload)
+      } else {
+        state.cyanAwardedPoints.splice(payload.index, 1, payload.payload)
+      }
     }
   }
 })
