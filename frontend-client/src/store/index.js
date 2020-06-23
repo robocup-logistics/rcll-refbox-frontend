@@ -31,6 +31,7 @@ export default new Vuex.Store({
     phase: 'PRE_GAME',
     gametime: 0,
     awardedPoints: [],
+    cyanAwardedPoints: [],
     gamestate: 'WAIT_START',
     // Polling rate in components
     pollRate: 1500,
@@ -40,6 +41,7 @@ export default new Vuex.Store({
     websocketMsgs: [],
     error: '',
     websocketURL : 'ws://localhost:1234',
+    pointsCyanFlag: false,
   },
 
   getters: {
@@ -73,17 +75,16 @@ export default new Vuex.Store({
         if (msgObj !== [] && msgObj.length !== 0 ) {
           // Messages for the Logger are Objects not an Array such as machine 
           // infos at connect
-          if (msgObj.level !== 'clips' && !(Array.isArray(msgObj))) {
-            console.log(e);
+          if(msgObj.level !== 'clips' && !(Array.isArray(msgObj))) {
             commit('SOCKET_ADDMESSAGE', msgObj);
           } 
-          else if (msgObj.type === "gamestate") {
+          else if(msgObj.type === "gamestate") {
             dispatch("SetGamestateInfomation", msgObj)
           } 
           else if(msgObj.type === 'robot-info') {
             dispatch("SetRobotInformation", msgObj)
           } 
-          else if (msgObj.type === 'machine-info' && msgObj.team === 'CYAN') {
+          else if(msgObj.type === 'machine-info' && msgObj.team === 'CYAN') {
             dispatch("SetCyanMachinesInfo",msgObj)  
           } 
           else if(msgObj.type === 'ring-spec'){
@@ -107,7 +108,13 @@ export default new Vuex.Store({
               dispatch("SetRingspecsAtReconnect", msgObj)
             } else if(msgObj[0].type === 'order-info') {
               dispatch("SetOrdersAtReconnect", msgObj)
-            } 
+            } else if(msgObj[0].type === 'points') {
+              console.log(msgObj);
+              const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
+              console.log(cyanPoints);
+              // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
+              dispatch("SetPointsAtReconnect", msgObj)
+            }
           } 
         }          
       }
@@ -148,6 +155,12 @@ export default new Vuex.Store({
       commit("setGametime", payload['game_time'])
     },
     
+    SetPointsAtReconnect({commit, state}, payload) {
+      if (!state.pointsCyanFlag) {
+        commit("SetPointsAtReconnect", payload)
+      }
+    },
+
     async fetchAwardedPoints({commit}) {
       try {
         const response = await get('/points');
@@ -294,6 +307,10 @@ export default new Vuex.Store({
     },
     setGamestate(state, gamestate) {
       state.gamestate = gamestate
+    },
+    SetPointsAtReconnect(state, payload){
+      state.cyanAwardedPoints = payload
+      state.pointsCyanFlag = true
     }
   }
 })

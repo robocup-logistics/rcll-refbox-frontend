@@ -5,12 +5,12 @@
       <div class="row m-0 text-left ">
         <div 
           class="col-md-6"
-          v-for="(award,index) in awardedPoints" 
+          v-for="(award,index) in cyanAwardedPoints" 
           :key='index'>
-          <div v-if="award.team === 'CYAN'">
+          <div>
               <h6 style="font-size: 13px;">
                   {{index + 1}}.
-                  [{{formatSeconds(award['game-time'])}}]
+                  [{{formatSeconds(award['game_time'])}}]
                   {{award.phase.substring(0,4)}}
                 <span class="text-light">{{award.points}}</span> point(s)
                 <br>
@@ -30,7 +30,7 @@ import { mapState, mapActions } from 'vuex';
 export default {
   name: 'BodyScoreTeamA',
   computed: {
-    ...mapState(['scoreCyan', 'phase', 'awardedPoints', 'pollRate'])
+    ...mapState(['scoreCyan', 'phase', 'cyanAwardedPoints', 'pollRate'])
   },
   mounted() {
     this.fetchAwardedPoints();
