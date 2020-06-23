@@ -33,7 +33,6 @@ export default{
     },
     setMachinesRingspecs(state, payload) {
       state.ringspecs = payload
-      state.machinesRingspecsFlag = true
     }
   },
   
@@ -65,24 +64,8 @@ export default{
       }
     },
 
-    setRingSpecs({commit, state}, payload) {
-      if (state.ringspecs.length < 4) {
-        const index = state.ringspecs.findIndex(ring => ring.color === payload.color)
-        if (index === -1) { 
-          commit("addringspecs", {payload, index})
-        }
-      } else {
-        const index = state.ringspecs.findIndex(ring => ring.color === payload.color)
-        if (index !== -1) {
-          commit("addringspecs", {payload, index})
-        }
-      }
-    },
-
-    SetRingspecsAtReconnect({commit, state}, payload) {
-      if(!state.machinesRingspecsFlag) {
-        commit("setMachinesRingspecs", payload)
-      }
+    SetRingspecs({commit}, payload) {
+      commit("setMachinesRingspecs", payload)
     },
  
     sortAlpabetically(context, payload) {

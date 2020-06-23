@@ -92,11 +92,9 @@ export default new Vuex.Store({
             dispatch("setOrderInfos", msgObj)
           } 
           else if(msgObj.type === 'points') {
-            if (msgObj.team === 'CYAN') {
-              dispatch("SetCyanPoint", msgObj)
-            } else {
-              console.log(msgObj);
-            }
+            const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
+            // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
+            dispatch("SetPointsCyan", cyanPoints)
           }
           // Websocket sends an array of objects with all of the information
           // Check if that"s the case
@@ -110,13 +108,13 @@ export default new Vuex.Store({
               // const magentaRobots = msgObj.filter(robot => robot['team_color'] === "Magenta")
               dispatch("SetCyanRobotsInfoAtReconnect", cyanRobots)              
             } else if(msgObj[0].type === 'ring-spec'){
-              dispatch("SetRingspecsAtReconnect", msgObj)
+              dispatch("SetRingspecs", msgObj)
             } else if(msgObj[0].type === 'order-info') {
               dispatch("SetOrdersAtReconnect", msgObj)
             } else if(msgObj[0].type === 'points') {
               const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
               // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
-              dispatch("SetPointsAtReconnect", cyanPoints)
+              dispatch("SetPointsCyan", cyanPoints)
             }
           } 
         }          
@@ -158,23 +156,10 @@ export default new Vuex.Store({
       commit("setGametime", payload['game_time'])
     },
     
-    SetPointsAtReconnect({commit, state}, payload) {
-      if (!state.pointsCyanFlag) {
+    SetPointsCyan({commit}, payload) {
         commit("setCyanPoints", payload)
-      }
     },
 
-    SetCyanPoint({commit, state}, payload) {
-      const index = state.cyanAwardedPoints.findIndex(point => point.reason === payload.reason 
-        && point['game_time'] === payload['game_time'])
-      if (index !== -1) {
-        console.log(index);
-        
-        commit("addCyanPoints", {payload, index})
-      } else {
-        commit("addCyanPoints", {payload, index})
-      }
-    },
 
     setNameCyan({commit, state}) {
       commit('setCyanName', state.nameTeamCyan);
@@ -312,14 +297,6 @@ export default new Vuex.Store({
     },
     setCyanPoints(state, payload){
       state.cyanAwardedPoints = payload
-      state.pointsCyanFlag = true
     },
-    addCyanPoints(state, payload) {
-      if (payload.index === -1) {
-        state.cyanAwardedPoints.push(payload.payload)
-      } else {
-        state.cyanAwardedPoints.splice(payload.index, 1, payload.payload)
-      }
-    }
   }
 })

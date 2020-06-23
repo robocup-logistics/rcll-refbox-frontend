@@ -22,7 +22,6 @@
       </div>
 
       <div class="team-b-body col-xl-6 border">
-        <h1>Body B</h1>
       </div>
     </div>
 
