@@ -8,7 +8,7 @@
       <div class="d-flex " >
         <div class="max-height-81 pb-0 mb-0 d-flex">
           <img 
-              v-if="products.length >= 1"
+              v-if="products.length === 9"
               :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
                class="max-height-81 max-width-65 img-fluid" 
                :class="activeDeliveryPeriodImage(order['delivery_period'])"
@@ -156,18 +156,10 @@ export default {
       populated: state => state.orders.populated,
       nameTeamCyan: state => state.nameTeamCyan,
       gametime: state => state.gametime,
-      pollRate: state => state.pollRate,
     })
   },
-  mounted() {
-    this.fetchAllOrders();
-    this.pollAllOrders();
-  },
   methods: {
-    ...mapActions(['fetchAllOrders', 'populateProductsArray',]),
-    pollAllOrders() {
-      setInterval(this.fetchAllOrders, this.pollRate);
-    },
+    ...mapActions(['populateProductsArray',]),
     // Returns the img url responding to order ID
     getProductsImg(orderID) {      
       return this.products.find(({id}) => id === orderID)['product-img-url'];
