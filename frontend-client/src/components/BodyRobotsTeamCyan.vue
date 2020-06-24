@@ -19,7 +19,7 @@
               {{robot.host}}
             </span>
           </div>
-          <div class="robot-state">
+          <div class="robot-state display-flex align-items-center">
             <span class="robot-current-state mr-2 text-success"
                   v-if="robotState(index) === 'active'"
             >
@@ -35,6 +35,15 @@
               {{setMaintenanceToFalse(index)}}
               {{robotState(index)}}!</span>
             <span class="robot-maintenance-cycles" >{{robot['maintenance_cylces']}}</span>
+            <a class="ml-2 btn" v-if="robotState(index) === 'active'" data-toggle="tooltip" title="Robot maintenance" @click="SetRobotMaintenanceStatus({robot, bool:true})">
+              <font-awesome-icon :icon="['fa','robot']" class="fa-1x icon-robots-yellow-active" style="color:green"/>
+            </a>
+            <a class="ml-2 btn" v-else-if="robotState(index) === 'maintenance'"  data-toggle="tooltip" title="reset maintenance" @click="SetRobotMaintenanceStatus({robot, bool:false})">
+              <font-awesome-icon :icon="['fa','robot']" class="fa-1x icon-robots icon-robots-green-maintenance" style="color:yellow" />
+            </a>
+            <a class="ml-2 btn" style="pointer-events: none;" v-else-if="robotState(index) === 'disqualified'" data-toggle="tooltip" title="Robot disqualified">
+              <font-awesome-icon :icon="['fa','robot']" class="fa-1x icon-robots" style="color:red" />
+            </a>
           </div>
         </div>
       </div>
@@ -43,7 +52,7 @@
 </template>
 
 <script>
-import { mapState} from 'vuex'; 
+import { mapState, mapActions} from 'vuex'; 
 
 export default {
   name: 'BodyRobotsTeamCyan',
@@ -62,6 +71,7 @@ export default {
     })
   },
   methods: {
+    ...mapActions(["SetRobotMaintenanceStatus"]),
     // Returns current state of a robot
     robotState(index) {
       return this.allCyanRobots[index].state.toLowerCase()
@@ -86,13 +96,19 @@ export default {
     // Robots is no longer in maintenance
     setMaintenanceToFalse(index){
       this.isInMaintenance[index] = false;
-    }
+    },
+
   }
 }
 </script>
 
 <style scoped>
-
+.icon-robots-yellow-active:hover{
+   color: yellow !important;
+}
+.icon-robots-green-maintenance:hover{
+  color: green !important
+}
 .robot-number, .robot-team, .robot-name {
   color: var(--main-cyan-color) !important;
 }

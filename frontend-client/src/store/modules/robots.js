@@ -48,6 +48,17 @@ export default{
         dispatch("sortAlpabetically", state.robotsCyan)
       }
     },
+    SetRobotMaintenanceStatus({commit, dispatch}, payload) {
+      const msg = {
+        "command" : "set_robot_maintenance",
+        "robot_number" : payload.robot.number,
+        "team_color" : payload.robot['team_color'],
+        "maintenance" : payload.bool
+    }
+    console.log(msg);
+      commit('SOCKET_SEND', msg)
+      dispatch("SetRobotInformation", payload.robot)
+    },
     sortAlpabetically(context, payload) {
       payload.sort((machineA, machineB) => {
         let nameA = machineA.name;

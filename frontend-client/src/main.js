@@ -3,7 +3,7 @@ import App from './App.vue'
 
 // FontAwesome imports 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlayCircle, faPauseCircle, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
+import { faPlayCircle, faPauseCircle, faChevronLeft, faChevronRight, faRobot } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // Bootswatch import
@@ -14,7 +14,7 @@ import "bootswatch/dist/darkly/bootstrap.min.css";
 import store from '@/store/index'
 
 // Used Fontawesome icons
-library.add(faPauseCircle, faChevronLeft, faChevronRight, faPlayCircle)
+library.add(faPauseCircle, faChevronLeft, faChevronRight, faPlayCircle, faRobot)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
