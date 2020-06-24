@@ -18,7 +18,6 @@ export default{
     },
     setOrdersArray(state, payload) {
       state.allOrders = payload
-      console.log(payload);
       state.ordersFlag = true
     },
     addOrder(state, payload) {

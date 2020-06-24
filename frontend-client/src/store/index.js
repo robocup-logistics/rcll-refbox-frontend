@@ -158,9 +158,8 @@ export default new Vuex.Store({
       commit("setGametime", payload['game_time'])
     },
     
-    SetPointsCyan({commit,dispatch}, payload) {
+    SetPointsCyan({commit}, payload) {
         commit("setCyanPoints", payload)
-        dispatch("scrollToEndOfCyanPointsDiv")
     },
 
 
@@ -306,6 +305,7 @@ export default new Vuex.Store({
     },
     setCyanPoints(state, payload){
       state.cyanAwardedPoints = payload
+      this.dispatch("scrollToEndOfCyanPointsDiv")
     },
   }
 })
