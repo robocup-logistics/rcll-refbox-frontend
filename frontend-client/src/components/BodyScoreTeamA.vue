@@ -32,14 +32,6 @@ export default {
   computed: {
     ...mapState(['scoreCyan', 'phase', 'cyanAwardedPoints'])
   },
- 
-  methods: {
-    // Scroll to end of scrollable div
-    scrollToEnd(){
-      let container = document.querySelector('.awarded-points-container');
-      container.scrollTop = container.scrollHeight;
-    }
-  }
 }
 </script>
 

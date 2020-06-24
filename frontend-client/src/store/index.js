@@ -116,7 +116,9 @@ export default new Vuex.Store({
               // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
               dispatch("SetPointsCyan", cyanPoints)
             }
-          } 
+          } else if(msgObj.team !== "MAGENTA"){
+            console.log(msgObj)
+          }
         }          
       }
       commit("SOCKET_ONMESSAGE", onMessage)
@@ -156,8 +158,9 @@ export default new Vuex.Store({
       commit("setGametime", payload['game_time'])
     },
     
-    SetPointsCyan({commit}, payload) {
+    SetPointsCyan({commit,dispatch}, payload) {
         commit("setCyanPoints", payload)
+        dispatch("scrollToEndOfCyanPointsDiv")
     },
 
 
@@ -229,6 +232,12 @@ export default new Vuex.Store({
       }
       commit('SOCKET_SEND', msg)
       commit('setGamestate', gamestate)
+    },
+
+    scrollToEndOfCyanPointsDiv(){
+      console.log('scrolled!')
+      let container = document.querySelector('.awarded-points-container');
+     container.scrollTop =container.scrollHeight;
     }
   },
   
