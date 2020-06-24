@@ -12,7 +12,7 @@
                 ring colors: {{order['ring_colors']}}
               </span>
               <span>cap-color: {{order['cap_color']}}</span>
-              <span v-if="order['unconfirmed_deliveries']['game_time']">
+              <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
                 Gametime: {{formatSecond(order['unconfirmed_deliveries']['game_time'])}}
               </span>
               <span>
@@ -78,7 +78,9 @@ export default {
       msg.correctness = bool
       msg.color = this.color
       msg['order_id'] = this.order.id
-      msg['delivery_id'] = order['delivery_id']
+      if ( typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined') {
+        msg['delivery_id'] = order['delivery_id']
+      }
       this.SOCKET_SEND(msg)
       this.closeModal()
     }
