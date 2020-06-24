@@ -13,7 +13,7 @@
               </span>
               <span>cap-color: {{order['cap_color']}}</span>
               <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
-                Gametime: {{formatSecond(order['unconfirmed_deliveries']['game_time'])}}
+                Gametime: {{formatSecond(order['unconfirmed_deliveries'][0]['game_time'])}}
               </span>
               <span>
                 delivery period: 
