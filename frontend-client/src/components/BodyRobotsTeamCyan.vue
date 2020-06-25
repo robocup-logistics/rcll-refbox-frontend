@@ -74,6 +74,7 @@ export default {
     ...mapActions(["SetRobotMaintenanceStatus"]),
     // Returns current state of a robot
     robotState(index) {
+      console.log('Im here');
       return this.allCyanRobots[index].state.toLowerCase()
     },
     // Returns the remaining maintenance time

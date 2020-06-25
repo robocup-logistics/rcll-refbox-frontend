@@ -15,6 +15,8 @@ export default{
         // Replace the information of the corresponding robot object in the  
         // array with the payload coming from the websocket
         state.robotsCyan.splice(payload.index, 1, payload.payload)
+        console.log('update');
+        
       }
     },
     setCyanRobotsAtReconnect(state, payload) {
@@ -26,11 +28,16 @@ export default{
     SetRobotInformation({commit,state, dispatch}, payload) {
       if (payload['team_color'] === 'CYAN') {
         if(state.robotsCyan.length < 3) {
+          console.log(payload, 'asdas');
+          
           // populate and make sure that there arent any duplicates
           const index = state.robotsCyan.findIndex(robot => robot.name === payload.name)
           if (index === -1) {
             commit("setCyanRobots", {payload, index})
             dispatch("sortAlpabetically", state.robotsCyan)
+          }
+          if ((state.phase !== 'PRE_GAME' || state.phase !== 'SETUP') && index !== -1 ) {
+            commit("setCyanRobots", {payload, index})
           }
         } else {
           const index = state.robotsCyan.findIndex(robot => robot.name === payload.name)
@@ -48,7 +55,7 @@ export default{
         dispatch("sortAlpabetically", state.robotsCyan)
       }
     },
-    SetRobotMaintenanceStatus({commit, dispatch}, payload) {
+    SetRobotMaintenanceStatus({commit}, payload) {
       const msg = {
         "command" : "set_robot_maintenance",
         "robot_number" : payload.robot.number,
@@ -57,7 +64,6 @@ export default{
     }
     console.log(msg);
       commit('SOCKET_SEND', msg)
-      dispatch("SetRobotInformation", payload.robot)
     },
     sortAlpabetically(context, payload) {
       payload.sort((machineA, machineB) => {
