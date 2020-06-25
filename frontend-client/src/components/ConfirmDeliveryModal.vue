@@ -13,7 +13,7 @@
               </span>
               <span>cap-color: {{order['cap_color']}}</span>
               <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
-                Gametime: {{formatSecond(order['unconfirmed_deliveries'][0]['game_time'])}}
+                Gametime: {{formatSeconds(order['unconfirmed_deliveries'][0]['game_time'])}}
               </span>
               <span>
                 delivery period: 
@@ -76,7 +76,7 @@ export default {
         "color" : ""
       }
       msg.correctness = bool
-      msg.color = this.color
+      msg.color = this.color.toUpperCase()
       msg['order_id'] = this.order.id
       if ( typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined') {
         msg['delivery_id'] = order['unconfirmed_deliveries'][0]['delivery_id']
