@@ -9,10 +9,12 @@
 
           <div class="col-xl-9 p-0 mt-3">
             <div class="row m-0">
-              <div class="score-container col-xl-12 p-0 border-bottom ">
+              <div class="score-container col-xl-12 p-0"
+                   :class="phase === 'PRE_GAME' ? '' : 'border-bottom'"  >
                 <BodyScoreTeamA />
               </div>
-              <div class="robots-container col-xl-12 mt-4 ">
+              <div class="robots-container col-xl-12 mt-4"
+                  :class="phase === 'PRE_GAME' ? 'border-0' : ''">
                 <BodyRobotsTeamCyan />
               </div>
             </div>

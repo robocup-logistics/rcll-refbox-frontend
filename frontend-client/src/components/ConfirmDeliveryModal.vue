@@ -79,7 +79,7 @@ export default {
       msg.color = this.color
       msg['order_id'] = this.order.id
       if ( typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined') {
-        msg['delivery_id'] = order['delivery_id']
+        msg['delivery_id'] = order['unconfirmed_deliveries'][0]['delivery_id']
       }
       this.SOCKET_SEND(msg)
       this.closeModal()
