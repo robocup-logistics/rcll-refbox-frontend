@@ -46,8 +46,6 @@ export default{
         if (index === -1) { 
           commit("addMachinesCyan", {payload, index})
           dispatch("sortAlpabetically", state.machinesCyan)
-          console.log(1);
-          
         }
       } else {
         const index = state.machinesCyan.findIndex(machine => machine.name === payload.name)

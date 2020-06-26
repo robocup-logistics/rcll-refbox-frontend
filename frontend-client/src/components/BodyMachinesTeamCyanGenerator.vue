@@ -112,9 +112,9 @@ export default {
     },
     setMachineBackground(machine){
       if(machine.mtype === 'RS'){
-        return this.setRSandBSColor(machine['rs-ring-color'])
+        return this.setRSandBSColor(machine['rs_ring_color'])
       } else if(machine.mtype === 'BS'){        
-        return this.setRSandBSColor(machine['bs-color'])
+        return this.setRSandBSColor(machine['bs_color'])
       }
 
     }

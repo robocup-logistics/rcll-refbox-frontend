@@ -12,9 +12,9 @@
                 ring colors: {{order['ring_colors']}}
               </span>
               <span>cap-color: {{order['cap_color']}}</span>
-              <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
+              <!-- <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
                 Gametime: {{formatSeconds(order['unconfirmed_deliveries'][0]['game_time'])}}
-              </span>
+              </span> -->
               <span>
                 delivery period: 
                 {{formatSeconds(order['delivery_period'][0])}}
@@ -71,16 +71,22 @@ export default {
       const msg = {
         "command" : "confirm_delivery",
         "correctness" : false,
-        "delivery_id": "",
+        "delivery_id": null,
         "order_id" : null,
         "color" : ""
       }
       msg.correctness = bool
       msg.color = this.color.toUpperCase()
       msg['order_id'] = this.order.id
-      if ( typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined') {
-        msg['delivery_id'] = order['unconfirmed_deliveries'][0]['delivery_id']
+      
+      if (order['unconfirmed_deliveries'].length > 0) {
+        if ( typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined') {
+          msg['delivery_id'] = order['unconfirmed_deliveries'][0]['delivery_id']
+        }
+      } else {
+        msg['delivery_id'] = msg['order_id']
       }
+      
       this.SOCKET_SEND(msg)
       this.closeModal()
     }
