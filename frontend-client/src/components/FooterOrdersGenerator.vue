@@ -41,8 +41,7 @@
                       "
                     >
                     <!-- Confirm Delivery Popup modal -->
-                    <div v-once v-if="isDelivered(order['quantity_delivered'][0], 
-                      order['quantity_requested']) === true">
+                    <div v-once v-if="typeof order['unconfirmed_deliveries'][0] !== 'undefined'">
                       <ConfirmDeliveryModal  :order = 'order' :team="nameTeamCyan" :color='cyan'/>
                     </div>
                     <!-- End of modal -->
