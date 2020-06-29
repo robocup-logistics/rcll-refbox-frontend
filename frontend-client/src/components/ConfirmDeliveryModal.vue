@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isOpen">
+  <div v-if="isOpen === true">
     <transition name="modal-container">
       <div class="overlay">
         <div class="modal-container">
@@ -22,9 +22,9 @@
                 {{formatSeconds(order['delivery_period'][1])}}
               </span>
             </p>
-            <!-- <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
+            <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
                class="img-fluid" 
-            >  -->
+            > 
           </div>
           <div class="modal-buttons">
             <button @click.prevent='orderAcceptance(order,true)' >Yes</button>
@@ -97,8 +97,7 @@ export default {
       
       this.SOCKET_SEND(msg)
       console.log('after sending');
-      this.$destroy()
-      // this.closeModal()
+      this.closeModal()
     }
   }
 }
