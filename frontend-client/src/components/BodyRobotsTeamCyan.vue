@@ -1,21 +1,21 @@
 <template>
-  <div>
+  <div >
     <div >
       <div v-for="(robot,index) in allCyanRobots" 
            :key="robot.number"
            >
-        <div class="robot-col">
-          <span class="robot-number mr-2 ">{{robot.number}}</span>
-          <span class="robot-name mr-3 ">
-            <strong> {{robot.name}} </strong>
-          </span>
-        </div>
         <div class="robot-info d-flex justify-content-between">
           <div class="robot-host">
             <span class="robot-host-ip">
               {{robot.host}}
             </span>
           </div>
+          <div class="robot-col">
+          <span class="robot-number mr-2 ">{{robot.number}}</span>
+          <span class="robot-name mr-3 ">
+            <strong> {{robot.name}} </strong>
+          </span>
+        </div>
           <div class="robot-state display-flex align-items-center">
             <span class="robot-current-state mr-2 text-success"
                   v-if="robotState(index) === 'active'"
