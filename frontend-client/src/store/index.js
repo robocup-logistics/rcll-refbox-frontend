@@ -75,7 +75,6 @@ export default new Vuex.Store({
           // infos at connect
           if(msgObj.level !== 'clips' && !(Array.isArray(msgObj))) {
             commit('SOCKET_ADDMESSAGE', msgObj)
-            dispatch("scrollToBottomOfLog")
           } 
           else if(msgObj.type === "gamestate") {
             dispatch("SetGamestateInfomation", msgObj)
@@ -241,7 +240,12 @@ export default new Vuex.Store({
     },
     scrollToBottomOfLog() {
       const refLog = document.querySelector('.refbox-log');
-      refLog.scrollTop = refLog.scrollHeight;
+      const ref = document.querySelector('.reflog-normal-msgs-logger');
+
+      
+      ref.scrollTop = ref.scrollHeight - ref.clientHeight;
+      refLog.scrollTop = refLog.scrollHeight - refLog.clientHeight;
+      
     }
   },
   
@@ -272,6 +276,7 @@ export default new Vuex.Store({
     },
     SOCKET_ADDMESSAGE(state, msg){
       state.websocketMsgs.push(msg)
+      this.dispatch("scrollToBottomOfLog")
     },
     SOCKET_ONERROR(state,onErrorFnc) {
       state.socket.onerror = onErrorFnc
