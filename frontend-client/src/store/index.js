@@ -74,7 +74,8 @@ export default new Vuex.Store({
           // Messages for the Logger are Objects not an Array such as machine 
           // infos at connect
           if(msgObj.level !== 'clips' && !(Array.isArray(msgObj))) {
-            commit('SOCKET_ADDMESSAGE', msgObj);
+            commit('SOCKET_ADDMESSAGE', msgObj)
+            dispatch("scrollToBottomOfLog")
           } 
           else if(msgObj.type === "gamestate") {
             dispatch("SetGamestateInfomation", msgObj)
@@ -237,6 +238,10 @@ export default new Vuex.Store({
       console.log('scrolled!')
       let container = document.querySelector('.awarded-points-container');
      container.scrollTop =container.scrollHeight;
+    },
+    scrollToBottomOfLog() {
+      const refLog = document.querySelector('.refbox-log');
+      refLog.scrollTop = refLog.scrollHeight;
     }
   },
   

@@ -28,12 +28,6 @@ export default {
   computed: {
     ...mapState(['websocketMsgs', 'socket'])
   },
-  watch: {
-    websocketMsgs: () => {
-      const refLog = document.querySelector('.refbox-log');
-      refLog.scrollTop = refLog.scrollHeight;
-    } 
-  },
   methods: {
     ...mapActions(['connectToWebsocket', 'SOCKET_DISCONNECT', 'SOCKET_SEND']),
     setClassName(msgLevel) {
