@@ -59,7 +59,9 @@ export default new Vuex.Store({
       commit('SOCKET_DISCONNECT')
     },
     SOCKET_SEND({commit}, msg) {
+      console.log(msg, 'blaber');
       commit('SOCKET_SEND', msg)
+      
     },
     SOCKET_ONOPEN({commit}) {
       commit("SOCKET_ONOPEN")
@@ -89,6 +91,8 @@ export default new Vuex.Store({
             dispatch('setRingSpecs', msgObj)
           }
           else if(msgObj.type === 'order-info'){
+            console.log(msgObj, 'The new order!');
+            
             dispatch("setOrderInfos", msgObj)
           } 
           else if(msgObj.type === 'points') {
@@ -116,9 +120,7 @@ export default new Vuex.Store({
               // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
               dispatch("SetPointsCyan", cyanPoints)
             }
-          } else if(msgObj.team !== "MAGENTA"){
-            console.log(msgObj)
-          }
+          } 
         }          
       }
       commit("SOCKET_ONMESSAGE", onMessage)
@@ -237,7 +239,6 @@ export default new Vuex.Store({
       commit('SOCKET_SEND', msg)
     },
     scrollToEndOfCyanPointsDiv(){
-      console.log('scrolled!')
       let container = document.querySelector('.awarded-points-container');
      container.scrollTop =container.scrollHeight;
     },
@@ -267,12 +268,15 @@ export default new Vuex.Store({
     },
     SOCKET_ONMESSAGE(state, onMessageFnc) {
       state.socket.onmessage = onMessageFnc
+      console.log(1);
     },
     SOCKET_DISCONNECT(state) {
       state.socket.close()
       state.isConnected = false
     },
     SOCKET_SEND(state, msg) {
+      console.log('Sending', msg);
+      
       state.socket.send(JSON.stringify(msg))
     },
     SOCKET_ADDMESSAGE(state, msg){

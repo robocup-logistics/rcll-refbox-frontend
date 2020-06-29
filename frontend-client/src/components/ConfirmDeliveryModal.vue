@@ -22,9 +22,9 @@
                 {{formatSeconds(order['delivery_period'][1])}}
               </span>
             </p>
-            <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
+            <!-- <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
                class="img-fluid" 
-            > 
+            >  -->
           </div>
           <div class="modal-buttons">
             <button @click.prevent='orderAcceptance(order,true)' >Yes</button>
@@ -53,11 +53,15 @@ export default {
     })
   },
   beforeDestroy() {
+    console.log('close');
+    
     this.closeModal()
   },
   methods: {
     ...mapActions(['populateProductsArray', 'SOCKET_SEND']),
     closeModal() {
+      console.log('closing');
+      
       this.isOpen = false;
     },
     getProductsImg(orderID) {
@@ -82,15 +86,19 @@ export default {
       
       if (order['unconfirmed_deliveries'].length > 0) {
         if ( typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined') {
+          console.log('first if');
           msg['delivery_id'] = order['unconfirmed_deliveries'][0]['delivery_id']
         }
       } else {
-        msg['delivery_id'] = msg['order_id']
+          console.log('else ');
+          msg['delivery_id'] = msg['order_id']
       }
-      console.log(msg);
+      console.log(msg, 'sad');
       
       this.SOCKET_SEND(msg)
-      this.closeModal()
+      console.log('after sending');
+      this.$destroy()
+      // this.closeModal()
     }
   }
 }

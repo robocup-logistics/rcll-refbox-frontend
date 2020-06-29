@@ -47,11 +47,14 @@ export default{
       } else {
         const index = state.allOrders.findIndex(order => order.id === payload.id)
         if (index !== -1) {
+          console.log('commit addOrder');
+          
           commit("addOrder", {payload, index})
         }
       }
       if (state.allOrders.length === 9) {
         dispatch("sortById", state.allOrders)
+
         dispatch("populateProducts")
       }
     },

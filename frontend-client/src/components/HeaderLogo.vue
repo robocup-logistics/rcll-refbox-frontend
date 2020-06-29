@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-between border">
     <img  alt="Refbox Logo">
     <a @click.prevent='toggleConfirmationDialogFieldRnd' class="btn btn-primary">
-      <font-awesome-icon :icon="['fa','random']" class="fa-1x" />
+      <font-awesome-icon :icon="['fa','random']" style="font-size: 12px;" />
     </a>
     <ConfirmRandomizeFieldModal v-if="toggle" />
   </div>
