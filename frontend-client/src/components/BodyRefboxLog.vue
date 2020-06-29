@@ -14,8 +14,6 @@
       <div v-if="websocketMsgs !== []" class="">
         <div v-for="(msg,index) in websocketMsgs" :key=index>
             <h6 v-if="msg.level !== 'attention' " class= "mb-0" :class="setClassName(msg.level)">{{msg.time}} [{{msg.component}}]: {{msg.message}}</h6>
-            <!-- If Its attention message -->
-            <h6 v-else-if="msg.level === 'attention' " class= "mb-0 text-danger" > !Attention: {{msg.text}}</h6>
         </div>
       </div>
     </div>

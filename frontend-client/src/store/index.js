@@ -232,7 +232,10 @@ export default new Vuex.Store({
       commit('SOCKET_SEND', msg)
       commit('setGamestate', gamestate)
     },
-
+    randomizeField({commit}) {
+      const msg = { "command" : "randomize_field"}
+      commit('SOCKET_SEND', msg)
+    },
     scrollToEndOfCyanPointsDiv(){
       console.log('scrolled!')
       let container = document.querySelector('.awarded-points-container');

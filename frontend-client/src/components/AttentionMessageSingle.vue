@@ -10,6 +10,7 @@
 
 <script>
 export default {
+  name: 'AttentionMessageSingle',
   props: ['msg', 'index'],
  data() {
    return {

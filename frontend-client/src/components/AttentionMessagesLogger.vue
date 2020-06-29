@@ -16,7 +16,7 @@ import { mapState } from 'vuex';
 import AttentionMessageSingle from './AttentionMessageSingle'
 
 export default {
-  name: 'BodyRefboxLog',
+  name: 'AttentionMessagesLogger',
   components: {
     AttentionMessageSingle
   },

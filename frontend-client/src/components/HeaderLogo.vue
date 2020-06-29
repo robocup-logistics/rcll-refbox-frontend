@@ -1,18 +1,29 @@
 <template>
-  <div class="justify-content-center border">
-    <img :src=logoUrl alt="Refbox Logo">
+  <div class="d-flex justify-content-between border">
+    <img  alt="Refbox Logo">
+    <a @click.prevent='toggleConfirmationDialogFieldRnd' class="btn btn-primary">
+      <font-awesome-icon :icon="['fa','random']" class="fa-1x" />
+    </a>
+    <ConfirmRandomizeFieldModal v-if="toggle" />
   </div>
 </template>
 
 <script>
+import ConfirmRandomizeFieldModal from './ConfirmRandomizeFieldModal'
 export default {
   name: 'HeaderLogo',
+  components: {
+    ConfirmRandomizeFieldModal
+  },
   data() {
-    // eslint-disable-next-line no-unused-labels
     return {
-      // Placeholder for logo
-      logoUrl: 'http://via.placeholder.com/150x20'
+      toggle: false
     }
+  },
+  methods: {
+    toggleConfirmationDialogFieldRnd() {
+      this.toggle = !this.toggle      
+    },
   }
 }
 </script>
