@@ -27,7 +27,8 @@
       </div>
     </div>
 
-    <div class="">
+    <div class="border">
+      <AttentionMessagesLogger />
       <BodyRefboxLog class="border-bottom-0"/>
     </div>
     
@@ -39,6 +40,7 @@ import BodyMachinesTeamCyan from './BodyMachinesTeamCyan'
 import BodyScoreTeamA from './BodyScoreTeamA'
 import BodyRobotsTeamCyan from './BodyRobotsTeamCyan'
 import BodyRefboxLog from './BodyRefboxLog'
+import AttentionMessagesLogger from './AttentionMessagesLogger'
 import { mapState, mapActions } from 'vuex';
 
 export default {
@@ -47,7 +49,8 @@ export default {
     BodyMachinesTeamCyan,
     BodyScoreTeamA,
     BodyRobotsTeamCyan,
-    BodyRefboxLog
+    BodyRefboxLog,
+    AttentionMessagesLogger
   }, computed: {
     ...mapState(['phase', 'showFormCyan'])
   },

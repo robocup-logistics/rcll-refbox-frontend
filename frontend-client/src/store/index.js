@@ -240,9 +240,7 @@ export default new Vuex.Store({
     },
     scrollToBottomOfLog() {
       const refLog = document.querySelector('.refbox-log');
-      const ref = document.querySelector('.reflog-normal-msgs-logger');
-
-      
+      const ref = document.querySelector('.reflog-normal-msgs-logger');      
       ref.scrollTop = ref.scrollHeight - ref.clientHeight;
       refLog.scrollTop = refLog.scrollHeight - refLog.clientHeight;
       

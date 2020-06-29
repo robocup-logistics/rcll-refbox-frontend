@@ -1,5 +1,6 @@
 <template>
-  <div class="container-fluid  border p-0  refbox-log overflow-y
+<div>
+  <div class="container-fluid   p-0  refbox-log overflow-y
    text-left">
     <div class="d-flex justify-content-end mt-2 ">
       <button @click=connectToWebsocket class="btn btn-primary mr-2"> Connect </button>
@@ -19,13 +20,14 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 
 export default {
-  name: 'BodyRefboxLog',
+  name: 'AttentionMessagesLogger',
   computed: {
     ...mapState(['websocketMsgs', 'socket'])
   },
@@ -51,7 +53,7 @@ export default {
 
 <style >
 .refbox-log {
-  min-height: 30vh !important;
+  min-height: 26vh !important;
   max-height: 31vh !important;
 }
 .reflog-normal-msgs-logger{
