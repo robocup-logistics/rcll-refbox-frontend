@@ -12,9 +12,9 @@
                 ring colors: {{order['ring_colors']}}
               </span>
               <span>cap-color: {{order['cap_color']}}</span>
-              <!-- <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
+              <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
                 Gametime: {{formatSeconds(order['unconfirmed_deliveries'][0]['game_time'])}}
-              </span> -->
+              </span>
               <span>
                 delivery period: 
                 {{formatSeconds(order['delivery_period'][0])}}
@@ -52,12 +52,13 @@ export default {
       products: state => state.orders.products,
     })
   },
+  beforeDestroy() {
+    this.closeModal()
+  },
   methods: {
     ...mapActions(['populateProductsArray', 'SOCKET_SEND']),
     closeModal() {
       this.isOpen = false;
-      console.log(this.order);
-      
     },
     getProductsImg(orderID) {
       return this.products.find(({id}) => id === orderID)['product-img-url'];
@@ -86,6 +87,7 @@ export default {
       } else {
         msg['delivery_id'] = msg['order_id']
       }
+      console.log(msg);
       
       this.SOCKET_SEND(msg)
       this.closeModal()

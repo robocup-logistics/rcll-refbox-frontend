@@ -9,9 +9,6 @@
           <span class="robot-name mr-3 ">
             <strong> {{robot.name}} </strong>
           </span>
-          <span class="robot-team">
-            <strong> ({{robot.team}}) </strong>
-          </span>
         </div>
         <div class="robot-info d-flex justify-content-between">
           <div class="robot-host">
