@@ -1,5 +1,7 @@
 <template>
-  <div v-if="isOpen === true">
+  <div>
+   <div v-if="isOpen === true">
+
     <transition name="modal-container">
       <div class="overlay">
         <div class="modal-container">
@@ -23,7 +25,7 @@
               </span>
             </p>
             <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
-               class="img-fluid" 
+              class="img-fluid" 
             > 
           </div>
           <div class="modal-buttons">
@@ -34,6 +36,7 @@
       </div>
     </transition>
   </div>
+</div>
 </template>
 
 <script>
