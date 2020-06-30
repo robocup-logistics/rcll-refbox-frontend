@@ -26,14 +26,14 @@
         <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x previous-btn" />
       </a>
       <ul class="nav nav-pills">
-        <li class=" nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
-          @click.prevent="toggleSubmenus()"
+        <li class=" nav-item dropdown ">
+          <a class="nav-link dropdown-toggle current-phase-anchor" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+          @click.prevent="togglePhaseSubmenus()"
           >
             {{getPhase}}
           </a>
           <div class="dropdown-menu" style=""
-               :style="showSubmenus ? 'display:block' : 'display:none'"
+               :style="showPhaseSubmenus ? 'display:block' : 'display:none'"
           >
             <a class="dropdown-item" href="#"
               v-if="getPhase !== 'PRE_GAME'"
@@ -70,26 +70,19 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'HeaderCentralInformation',
-  data() {
-    return{
-      showSubmenus: false
-    }
-  },
   computed: {
     ...mapState({
       getPhase: state => state.phase,
       getGametime: state => state.gametime,
-      gamestate: state => state.gamestate
+      gamestate: state => state.gamestate,
+      showPhaseSubmenus: state => state.showPhaseSubmenus
     })
   },
   methods: {
-    ...mapActions(['setGameState', 'setPreviousPhase', 'setNextPhase', 'setCurrentPhase']),
-    toggleSubmenus(){
-      this.showSubmenus = !this.showSubmenus
-    },
+    ...mapActions(['setGameState', 'setPreviousPhase', 'setNextPhase', 'setCurrentPhase', 'togglePhaseSubmenus']),
     switchGamestate(state) {
-      this.setCurrentPhase(state);
-      this.toggleSubmenus()
+      this.setCurrentPhase(state)
+      this.togglePhaseSubmenus()
     }
   }
 }

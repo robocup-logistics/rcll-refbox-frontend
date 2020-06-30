@@ -40,10 +40,13 @@ export default new Vuex.Store({
     error: '',
     websocketURL : 'ws://localhost:1234',
     pointsCyanFlag: false,
+    showPhaseSubmenus: false
   },
 
   getters: {
-
+    getPhaseSubmenusStatus(state) {
+      return state.showPhaseSubmenus
+    }
   },
 
   actions: {
@@ -255,6 +258,12 @@ export default new Vuex.Store({
       ref.scrollTop = ref.scrollHeight - ref.clientHeight;
       refLog.scrollTop = refLog.scrollHeight - refLog.clientHeight;
       
+    },
+    togglePhaseSubmenus({commit}){
+      commit('togglePhaseSubmenus')
+    },
+    closePhaseSubmenus({commit}) {
+      commit('closePhaseSubmenus')
     }
   },
   
@@ -327,5 +336,11 @@ export default new Vuex.Store({
       state.cyanAwardedPoints = payload
       this.dispatch("scrollToEndOfCyanPointsDiv")
     },
+    togglePhaseSubmenus(state) {
+      state.showPhaseSubmenus = !state.showPhaseSubmenus
+    },
+    closePhaseSubmenus(state) {
+      state.showPhaseSubmenus = false
+    }
   }
 })
