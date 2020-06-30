@@ -56,9 +56,8 @@ export default {
     })
   },
   beforeDestroy() {
-    console.log('close');
+    console.log('destroying');
     
-    this.closeModal()
   },
   methods: {
     ...mapActions(['populateProductsArray', 'SOCKET_SEND']),
@@ -101,6 +100,7 @@ export default {
       this.SOCKET_SEND(msg)
       console.log('after sending');
       this.closeModal()
+      this.$destroy()
     }
   }
 }

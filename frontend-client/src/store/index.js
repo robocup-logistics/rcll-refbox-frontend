@@ -174,7 +174,14 @@ export default new Vuex.Store({
       commit('setMagentaName', state.nameTeamMagenta);
       commit('toggleShowFormMagenta');
     },
-
+    setCurrentPhase({commit}, phase){
+      const msg = {
+        "command" : "set_gamephase",
+        "phase" : `${phase}`
+      }
+      commit('SOCKET_SEND', msg)
+      commit('setCurrentPhase', phase)
+    },
     setNextPhase({commit, state}) {
       const msg = {
         "command" : "set_gamephase",
@@ -305,8 +312,6 @@ export default new Vuex.Store({
       state.phase = phase;
     },
     setCurrentPhase(state, phase) {
-      // So it's in format Production instead of PRODUCTION
-      // phase = phase.charAt(0).toUpperCase() + phase.slice(1).toLowerCase();
       state.phase = phase;
     },
     setCurrentCyanScore(state, score) {

@@ -26,8 +26,37 @@
         <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x previous-btn" />
       </a>
       <ul class="nav nav-pills">
-      <li class="marg-bot-0">{{getPhase}}</li>
-
+        <li class=" nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+          @click.prevent="toggleSubmenus()"
+          >
+            {{getPhase}}
+          </a>
+          <div class="dropdown-menu" style=""
+               :style="showSubmenus ? 'display:block' : 'display:none'"
+          >
+            <a class="dropdown-item" href="#"
+              v-if="getPhase !== 'PRE_GAME'"
+              @click.prevent="switchGamestate('PRE_GAME')"
+              >PRE_GAME</a>
+            <a class="dropdown-item" href="#"
+              v-if="getPhase !== 'SETUP'"
+              @click.prevent="switchGamestate('SETUP')"
+              >SETUP</a>
+            <a class="dropdown-item" href="#"
+              v-if="getPhase !== 'EXPLORATION'"
+              @click.prevent="switchGamestate('EXPLORATION')"
+              >EXPLORATION</a>
+            <a class="dropdown-item" href="#"
+              v-if="getPhase !== 'PRODUCTION'"
+              @click.prevent="switchGamestate('PRODUCTION')"
+              >PRODUCTION</a>
+            <a class="dropdown-item" href="#"
+              v-if="getPhase !== 'POST_GAME'"
+              @click.prevent="switchGamestate('POST_GAME')"
+              >POST_GAME</a>
+          </div>
+        </li>
       </ul>
       <a class="btn  p-0" @click.prevent="setNextPhase">
         <font-awesome-icon :icon="['fas','chevron-right']" class="fa-2x next-btn" />
@@ -41,6 +70,11 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'HeaderCentralInformation',
+  data() {
+    return{
+      showSubmenus: false
+    }
+  },
   computed: {
     ...mapState({
       getPhase: state => state.phase,
@@ -49,7 +83,14 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['setGameState', 'setPreviousPhase', 'setNextPhase'])
+    ...mapActions(['setGameState', 'setPreviousPhase', 'setNextPhase', 'setCurrentPhase']),
+    toggleSubmenus(){
+      this.showSubmenus = !this.showSubmenus
+    },
+    switchGamestate(state) {
+      this.setCurrentPhase(state);
+      this.toggleSubmenus()
+    }
   }
 }
 </script>
