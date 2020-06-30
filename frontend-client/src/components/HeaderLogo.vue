@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-content-between border">
     <img  alt="Refbox Logo">
-    <div class="d-flex">
+    <div class="d-flex my-1">
       <a @click.prevent='toggleConfirmationDialogFieldRnd' class="btn btn-outline-info btn-md">
         <font-awesome-icon :icon="['fa','random']" style="font-size: 12px;" />
       </a>
