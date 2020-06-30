@@ -31,8 +31,6 @@ export default {
     phaseSubmenus(){
       if (this.$store.getters.getPhaseSubmenusStatus === true) {
         this.$el.addEventListener('click', this.closeSubmenusForPhases)
-        console.log('yes');
-        
       } else {
         this.$el.removeEventListener('click', this.closeSubmenusForPhases)
       }

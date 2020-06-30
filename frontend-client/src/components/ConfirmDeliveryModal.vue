@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="Modal">
    <div v-if="isOpen === true">
 
     <transition name="modal-container">

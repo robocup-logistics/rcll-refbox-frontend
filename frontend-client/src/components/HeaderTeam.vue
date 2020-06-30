@@ -1,15 +1,15 @@
 <template>
   <div  v-if="color==='cyan'" class="col-md-5 border d-flex justify-content-center align-items-center"
   >
-    <div v-if="showFormCyan">
+    <div v-show="showFormCyan">
       <div class="row justify-content-center">
         <div class="col-md-12 my-2 add-team-container">
           <button 
           class="btn  btn-add-team btn-cyan-header"
-          @click="isClicked=!isClicked"
+          @click="toggleForm()"
           >Add Team Cyan</button>
         </div>
-        <div class="mb-2" v-if="isClicked">
+        <div class="mb-2" v-show="isClicked">
           <form @submit.prevent="setName(color)"
                 class="form-cyan"
           >
@@ -17,16 +17,17 @@
             placeholder="add teamname"
             class="input-cyan"
             required
+            ref="cyanInputBox"
             v-model="cyanName"
             >
             <button type="submit" class="submit-btn">
-              <i class="fas fa-arrow-right"></i>
+               <font-awesome-icon :icon="['fa','arrow-right']" class="fa-1x " />
             </button>
           </form>
         </div>
       </div>
     </div>
-    <div v-if="!showFormCyan" class="cyan-name-container ">
+    <div v-show="!showFormCyan" class="cyan-name-container ">
       <h4 class="cyan-name-header ">{{getCyanName}}</h4>
     </div>
   </div>
@@ -34,14 +35,14 @@
   <div  v-else-if="color==='magenta'" class="col-md-5 border
     d-flex justify-content-center align-items-center"
     >
-    <div v-if="showFormMagenta">
+    <div v-show="showFormMagenta">
       <div class="row justify-content-center">
         <div class="col-md-12 my-2 add-team-container">
           <button class="btn  btn-add-team btn-magenta-header"
-          @click="isClicked=!isClicked"
+          @click="toggleForm()"
           >Add Team Magenta</button>
         </div>
-        <div class="mb-2" v-if="isClicked">
+        <div class="mb-2" v-show="isClicked">
           <form @submit.prevent="setName(color)"
                 class="form-magenta"
           >
@@ -49,16 +50,17 @@
               placeholder="add teamname"
               class="input-magenta"
               required  
+              ref="magentaInputBox"
               v-model="magentaName"
               >
-              <button type="submit" class="submit-btn">
-                <i class="fas fa-arrow-right"></i>
+              <button type="submit" class="submit-btn ">
+                <font-awesome-icon :icon="['fa','arrow-right']" class="fa-1x " />
               </button>
             </form>
         </div>
       </div>
     </div>
-    <div v-if="!showFormMagenta" class="teamname-header-magenta">
+    <div v-show="!showFormMagenta" class="teamname-header-magenta">
       <h4 class="magenta-name-header">{{getMagentaName}}</h4>
     </div>
   </div>
@@ -115,6 +117,18 @@ export default {
         }
         this.SOCKET_SEND(msg)
         color === 'CYAN' ? this.setNameCyan() : this.setNameMagenta()
+    },
+    toggleForm() {
+      this.isClicked = !this.isClicked
+      if (this.color === 'cyan') {
+        this.$nextTick(function () {
+          this.$refs.cyanInputBox.focus()
+        })
+      } else {
+        this.$nextTick(function () {
+          this.$refs.magentaInputBox.focus()
+        })
+      }
     }
   }
   

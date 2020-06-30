@@ -264,6 +264,9 @@ export default new Vuex.Store({
     },
     closePhaseSubmenus({commit}) {
       commit('closePhaseSubmenus')
+    },
+    setWebsocketURL({commit}, URL) {
+      commit('setWebsocketURL', URL)
     }
   },
   
@@ -341,6 +344,9 @@ export default new Vuex.Store({
     },
     closePhaseSubmenus(state) {
       state.showPhaseSubmenus = false
+    },
+    setWebsocketURL(state, URL) {
+      state.websocketURL = URL
     }
   }
 })
