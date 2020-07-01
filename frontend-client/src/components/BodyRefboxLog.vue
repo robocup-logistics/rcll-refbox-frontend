@@ -2,13 +2,13 @@
 <div>
   <div class="container-fluid border-top  p-0  refbox-log overflow-y
    text-left">
-    <div class="d-flex justify-content-end mt-2 ">
+    <!-- <div class="d-flex justify-content-end mt-2 ">
       <button @click=connectToWebsocket class="btn btn-primary mr-2"> Connect </button>
        <button @click=SOCKET_DISCONNECT class="btn btn-primary  mr-2 ">
         DC
       </button>
       <button @click.prevent=SOCKET_SEND(addMagenta) class="btn btn-primary ">Send Msg</button> 
-    </div>
+    </div> -->
     
     <div class="mx-3 mt-3 reflog-normal-msgs-logger overflow-auto  ">
       <div v-if="websocketMsgs !== []" class="">

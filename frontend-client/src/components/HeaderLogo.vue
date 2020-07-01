@@ -2,7 +2,9 @@
   <div class="d-flex justify-content-between border">
     <img  alt="Refbox Logo">
     <div class="d-flex my-1">
-      <a @click.prevent='toggleConfirmationDialogFieldRnd' class="btn btn-outline-info btn-md">
+      <a @click.prevent='toggleConfirmationDialogFieldRnd' class="btn btn-outline-info btn-md"
+      data-toggle="tooltip" data-placement="bottom" title="Randomize Field" 
+      >
         <font-awesome-icon :icon="['fa','random']" style="font-size: 12px;" />
       </a>
       <ConfirmRandomizeFieldModal v-if="toggle" />
@@ -17,6 +19,7 @@
           </fieldset>
         </form>
         <a class="btn btn-outline-info btn-md ml-1 mr-1"
+            data-toggle="tooltip" data-placement="bottom" title="Change Websocket Port" 
             @click.prevent="toggleAddPort()">
           <font-awesome-icon :icon="['fa','globe']" style="font-size: 12px;" />
         </a>
