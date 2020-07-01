@@ -55,6 +55,9 @@ export default {
       products: state => state.orders.products,
     })
   },
+  mounted() {
+    console.log('Mounted Modal!');
+  },
   beforeDestroy() {
     console.log('destroying');
     
@@ -100,7 +103,7 @@ export default {
       this.SOCKET_SEND(msg)
       console.log('after sending');
       this.closeModal()
-      this.$destroy()
+      // this.$destroy()
     }
   }
 }

@@ -41,8 +41,9 @@
                       "
                     >
                     <!-- Confirm Delivery Popup modal -->
-                    <div v-if=" order['unconfirmed_deliveries'].length > 0">
-                      <ConfirmDeliveryModal  :order = 'order' :team="nameTeamCyan" :color='cyan'/>
+                    <div v-for="unconfirmedOrder in  unconfirmedOrders" 
+                    :key="unconfirmedOrder.id">
+                      <ConfirmDeliveryModal  v-if="unconfirmedOrder.id === order.id" :order = 'unconfirmedOrder' :team="nameTeamCyan" :color='cyan'/>
                     </div>
                     <!-- End of modal -->
                     <label class="custom-control-label" 
@@ -155,7 +156,12 @@ export default {
       populated: state => state.orders.populated,
       nameTeamCyan: state => state.nameTeamCyan,
       gametime: state => state.gametime,
-    })
+    }),
+    unconfirmedOrders() {
+      console.log(this.allOrders.filter(order => order['unconfirmed_deliveries'].length > 0), 'UNCONIRMED');
+      
+      return this.allOrders.filter(order => order['unconfirmed_deliveries'].length > 0)
+    }
   },
   methods: {
     ...mapActions(['populateProductsArray',]),

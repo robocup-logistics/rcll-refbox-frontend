@@ -1,12 +1,11 @@
 <template>
-  <div >
+  <div class="container-fluid">
     <div v-if="websocketMsgs !== []" class="row">
-        <div v-for="(msg,index) in websocketMsgs" 
-            :key=index class="col-md-6" >
-          <AttentionMessageSingle v-if="msg.level === 'attention'"
+          <AttentionMessageSingle 
+            v-for="(msg,index) in attentionMessages"
+            :key=index class="col-md-6"
               :msg='msg' :index='index'
           />
-        </div>
     </div>
   </div>
 </template>
@@ -21,7 +20,10 @@ export default {
     AttentionMessageSingle
   },
   computed: {
-    ...mapState(['websocketMsgs', 'socket'])
+    ...mapState(['websocketMsgs', 'socket']),
+    attentionMessages() {
+      return this.websocketMsgs.filter(msg => msg.level === 'attention')
+    }
   },
   methods: {
     

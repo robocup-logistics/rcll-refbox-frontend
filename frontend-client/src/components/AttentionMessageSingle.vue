@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <h6 v-show="elementVisible" 
-        class="attention-msg-text ">
+  <div v-if="elementVisible" >
+    <h6 
+        class="attention-msg-text text-center">
         <font-awesome-icon :icon="['fas','exclamation-triangle']" class="fa-1x" />
         {{msg.text}}
     </h6>
@@ -18,7 +18,7 @@ export default {
    }
  },
  mounted() {
-   setTimeout(() => this.elementVisible = false, 4000)
+   setTimeout(() => this.elementVisible = false, 6000)
  }
 }
 </script>
