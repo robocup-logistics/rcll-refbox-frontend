@@ -41,7 +41,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setWebsocketURL', 'connectToWebsocket']),
+    ...mapActions(['setWebsocketURL', 'connectToWebsocket', 'SOCKET_DISCONNECT']),
     toggleConfirmationDialogFieldRnd() {
       this.toggle = !this.toggle      
     },
@@ -52,6 +52,7 @@ export default {
       })
     },
     setPortConnection(portAddres) {
+      this.SOCKET_DISCONNECT()
       this.setWebsocketURL(portAddres)
       this.connectToWebsocket()
       this.toggleAddPort()

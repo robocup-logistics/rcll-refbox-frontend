@@ -1,8 +1,8 @@
 <template>
   <div >
-    <div v-if="websocketMsgs !== []" class="d-flex flex-column">
+    <div v-if="websocketMsgs !== []" class="row">
         <div v-for="(msg,index) in websocketMsgs" 
-            :key=index  >
+            :key=index class="col-md-6" >
           <AttentionMessageSingle v-if="msg.level === 'attention'"
               :msg='msg' :index='index'
           />
