@@ -43,7 +43,15 @@
                     <!-- Confirm Delivery Popup modal -->
                     <div v-for="unconfirmedOrder in  unconfirmedOrders" 
                     :key="unconfirmedOrder.id">
-                      <ConfirmDeliveryModal  v-if="unconfirmedOrder.id === order.id" :order = 'unconfirmedOrder' :team="nameTeamCyan" :color='cyan'/>
+                      <div v-if="unconfirmedOrder.id === order.id && unconfirmedOrder['unconfirmed_deliveries'].length === 1">
+                        <ConfirmDeliveryModal   :order = 'unconfirmedOrder' :team="getCorrespondingTeamname(unconfirmedOrder['unconfirmed_deliveries'][0].team)" :color="unconfirmedOrder['unconfirmed_deliveries'][0].team"/>
+                      </div>
+                      <!-- If there are more than one unconfirmed delivery for the corresponding order loop through all -->
+                      <div v-else-if="unconfirmedOrder.id === order.id && unconfirmedOrder['unconfirmed_deliveries'].length > 1">
+                        <ConfirmDeliveryModal   
+                        v-for="(unconfirmedDeliveryElement,index) in unconfirmedOrder['unconfirmed_deliveries'] " :key="index"
+                        :order = 'unconfirmedOrder' :team="getCorrespondingTeamname(unconfirmedDeliveryElement.team)" :color='unconfirmedDeliveryElement.team'/>
+                      </div>
                     </div>
                     <!-- End of modal -->
                     <label class="custom-control-label" 
@@ -154,8 +162,9 @@ export default {
       allOrders: state => state.orders.allOrders,
       products: state => state.orders.products,
       populated: state => state.orders.populated,
-      nameTeamCyan: state => state.nameTeamCyan,
+      nameTeamCYAN: state => state.nameTeamCyan,
       gametime: state => state.gametime,
+      nameTeamMAGENTA: state => state.nameTeamMagenta
     }),
     unconfirmedOrders() {
       console.log(this.allOrders.filter(order => order['unconfirmed_deliveries'].length > 0), 'UNCONIRMED');
@@ -206,6 +215,13 @@ export default {
         return 'opacity-4'
       }
     },
+    getCorrespondingTeamname(color) {
+      if (color === 'CYAN') {
+        return this.nameTeamCYAN
+      } else {
+        return this.nameTeamMAGENTA
+      }
+    }
   }
 }
 
