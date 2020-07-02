@@ -1,9 +1,9 @@
 <template>
   <div class="container-fluid">
-    <div v-if="websocketMsgs !== []" class="row">
+    <div v-if="websocketMsgs !== []" class="d-flex flex-column">
           <AttentionMessageSingle 
             v-for="(msg,index) in attentionMessages"
-            :key=index class="col-md-6"
+            :key=index 
               :msg='msg' :index='index'
           />
     </div>
