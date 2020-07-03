@@ -9,10 +9,10 @@
       </a>
       <ConfirmRandomizeFieldModal v-if="toggle" />
       <div class="d-flex align-items-center justify-items-center">
-        <form @submit.prevent="setPortConnection(portAddres)" v-show="addPort">
+        <form @submit.prevent="setPortConnection(portAddres)" v-show="addIpAndPort">
           <fieldset>
             <div class="form-group mb-0">
-              <input type="text" class="form-control"   ref="portInput" placeholder="Enter Port Adress"
+              <input type="text" class="form-control"   ref="portInput" placeholder="Enter Ip and Port Adress To Connect To"
                 v-model="portAddres" required
               >
             </div>
@@ -20,7 +20,7 @@
         </form>
         <a class="btn btn-outline-info btn-md ml-1 mr-1"
             data-toggle="tooltip" data-placement="bottom" title="Change Websocket Port" 
-            @click.prevent="toggleAddPort()">
+            @click.prevent="toggleAddIpAndPort()">
           <font-awesome-icon :icon="['fa','globe']" style="font-size: 12px;" />
         </a>
       </div>
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       toggle: false,
-      addPort: false,
+      addIpAndPort: false,
       portAddres: null
     }
   },
@@ -48,17 +48,18 @@ export default {
     toggleConfirmationDialogFieldRnd() {
       this.toggle = !this.toggle      
     },
-    toggleAddPort() {
-      this.addPort = !this.addPort
+    toggleAddIpAndPort() {
+      this.addIpAndPort = !this.addIpAndPort
       this.$nextTick(function () {
         this.$refs.portInput.focus()
       })
     },
     setPortConnection(portAddres) {
+      const adress = `ws://`+`${portAddres}`
       this.SOCKET_DISCONNECT()
-      this.setWebsocketURL(portAddres)
+      this.setWebsocketURL(adress)
       this.connectToWebsocket()
-      this.toggleAddPort()
+      this.toggleAddIpAndPort()
 
     }
   }
