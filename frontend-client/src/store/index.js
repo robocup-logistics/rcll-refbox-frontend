@@ -282,7 +282,7 @@ export default new Vuex.Store({
     },
     SOCKET_ONCLOSE(state){
       state.socket.onclose = (e) => {
-        console.log("Connection debunked", e);
+        console.log("Connection closed", e);
         alert("Connection has been lost")
       }
     },

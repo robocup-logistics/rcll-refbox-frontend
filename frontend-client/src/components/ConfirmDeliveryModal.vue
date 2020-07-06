@@ -29,8 +29,8 @@
             > 
           </div>
           <div class="modal-buttons">
-            <button @click.prevent='orderAcceptance(order,true)' class="btn btn-outline-info ml-10 mt-10 ">Yes</button>
-            <button @click.prevent='orderAcceptance(order,false)' class="btn btn-outline-info ml-10 mt-10">No</button>
+            <button @click.prevent='orderAcceptance(order,true)' class="btn btn-outline-info yes-btn ">Yes</button>
+            <button @click.prevent='orderAcceptance(order,false)' class="btn btn-outline-info no-btn">No</button>
           </div>
         </div>
       </div>
@@ -169,5 +169,9 @@ button {
 .delivery-infos{
   display: flex;
   flex-direction: column;
+}
+.yes-btn {
+  margin-right: 10px !important;
+  margin-top: 15px !important;
 }
 </style>
