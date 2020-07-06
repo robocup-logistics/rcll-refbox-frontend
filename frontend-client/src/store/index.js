@@ -283,6 +283,7 @@ export default new Vuex.Store({
     SOCKET_ONCLOSE(state){
       state.socket.onclose = (e) => {
         console.log("Connection debunked", e);
+        alert("Connection has been lost")
       }
     },
     SOCKET_ONMESSAGE(state, onMessageFnc) {
@@ -292,6 +293,7 @@ export default new Vuex.Store({
     SOCKET_DISCONNECT(state) {
       state.socket.close()
       state.isConnected = false
+      alert('Connection has been lost')
     },
     SOCKET_SEND(state, msg) {
       console.log('Sending', msg);
