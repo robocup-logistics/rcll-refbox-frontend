@@ -29,8 +29,8 @@
             > 
           </div>
           <div class="modal-buttons">
-            <button @click.prevent='orderAcceptance(order,true)' >Yes</button>
-            <button @click.prevent='orderAcceptance(order,false)' >No</button>
+            <button @click.prevent='orderAcceptance(order,true)' class="btn btn-outline-info ml-10 mt-10 ">Yes</button>
+            <button @click.prevent='orderAcceptance(order,false)' class="btn btn-outline-info ml-10 mt-10">No</button>
           </div>
         </div>
       </div>
@@ -145,9 +145,9 @@ export default {
   color: orangered !important;
 }
 button {
-  margin-top: 10px;
+  /* margin-top: 10px;
   margin-left: 10px;
-  background-color: black;
+  background-color: black; */
   color: white;
   font-size: 1.1rem;
 }
