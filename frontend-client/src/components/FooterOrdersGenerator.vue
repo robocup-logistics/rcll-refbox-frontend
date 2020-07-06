@@ -136,14 +136,14 @@
               </div>
           </div>  
             </div>
-
+<!-- 
             <div class="order-complexity"
                  :class="activeDeliveryPeriod(order['delivery_period'])"
             >
               <span>
                 Complexity: {{order.complexity}}
               </span>
-            </div>
+            </div> -->
             <div class="delivery-time" 
                  :class="activeDeliveryPeriod(order['delivery_period'])"
             >
