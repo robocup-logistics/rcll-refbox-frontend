@@ -3,14 +3,14 @@
   <div>
     <div v-for="order in allOrders" 
          :key=order.id
-         class="max-height-81"
+         class="max-height-91"
     >
       <div class="d-flex " >
-        <div class="max-height-81 pb-0 mb-0 d-flex">
+        <div class="max-height-91 pb-0 mb-0 d-flex">
           <img 
               v-if="products.length === 9"
               :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
-               class="max-height-81 max-width-65 img-fluid" 
+               class="max-height-91 max-width-65 img-fluid" 
                :class="activeDeliveryPeriodImage(order['delivery_period'])"
           > 
           <!-- c0_black__black.svg -->
@@ -279,7 +279,7 @@ export default {
     background-color: var(--main-magenta-color)  !important;
 }
 
-.max-height-81{
+.max-height-91{
   max-height: 91px !important;
 }
 
