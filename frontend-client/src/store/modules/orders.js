@@ -1,48 +1,89 @@
-import { get } from '@/api/api'
-
 export default{
   state: {
     allOrders: [],
     products: [],
     populated: false,
+    ordersFlag: false
   },
 
   getters: {
+    getAllOrders(state, index) {
+      return state.allOrders[index]
+    }
   },
 
   mutations: {
-    setAllOrders(state, data) {
-      state.allOrders = data;
-    },
     setProducts(state, products) {
-      state.products = products;
+      state.products = products;      
     },
     togglePopulated(state) {
       state.populated = true;
+    },
+    setOrdersArray(state, payload) {
+      state.allOrders = payload
+      state.ordersFlag = true
+    },
+    addOrder(state, payload) {
+      if (payload.index === -1) {
+        state.allOrders.push(payload.payload)
+      } else {
+        state.allOrders.splice(payload.index, 1, payload.payload)
+      }
     }
   },
 
   actions: {
-    // eslint-disable-next-line no-unused-vars
-    // Fetches data from Endpoint http://localhost:8088/api/clips/orders,
-    // And populates the order's corresponding svg's path
-    async fetchAllOrders({commit,state, dispatch}) {      
-      try{
-        // Fetch all orders from api
-        const response = await get('/orders')
-        const data = response.data    
-        // Populate products svg's with their url
-        if (data && !state.populated) {
-          // Calls populateProductsArray function 
-          dispatch(`populateProductsArray`, data)
-          // commits a mutation set state's populated
-          commit('togglePopulated')
-        }
-        // Commits mutation to change allOrders array
-        commit('setAllOrders', data);
-      } catch (error) {
-        console.log(error);
+    SetOrdersAtReconnect({commit, dispatch, state}, payload) {
+      if(!state.ordersFlag) {
+        console.log(payload);
+        
+        commit("setOrdersArray", payload)
+        dispatch("populateProducts")
       }
+    },
+    setOrderInfos({commit, dispatch, state}, payload) {
+      if (state.allOrders.length < 9) {
+        // check if there is already that order in the 
+        // array so it doesn"t duplicate it
+        const index = state.allOrders.findIndex(order => order.id === payload.id)
+        if (index === -1) { 
+          commit("addOrder", {payload, index})
+        }
+      } else {
+        const index = state.allOrders.findIndex(order => order.id === payload.id)
+        if (index !== -1) {
+          console.log('commit addOrder');
+          
+          commit("addOrder", {payload, index})
+        }
+      }
+      if (state.allOrders.length === 9) {
+        dispatch("sortById", state.allOrders)
+
+        dispatch("populateProducts")
+      }
+    },
+    populateProducts({commit,state, dispatch}) {
+      if (state.allOrders && !state.populated) {
+        // Calls populateProductsArray function 
+        dispatch(`populateProductsArray`, state.allOrders)
+        // commits a mutation set state's populated
+        commit('togglePopulated')
+      }
+    },
+    sortById(context, payload){
+      payload.sort((order1, order2) => {
+        let id = order1.id
+        let id2 = order2.id
+        if (id < id2) {
+          return -1;
+        } 
+        if (id > id2) {
+          return 1;
+        }
+        // names must be equal
+        return 0;
+      })
     },
     /*
     Populates the products array with the svg url
@@ -60,24 +101,25 @@ export default{
         const complexity = order.complexity.toLowerCase();
         // Fetched Information Format: base-color: "BASE_RED"
         // Split the string to extract: 'red, grey...'
-        let baseColor = order['base-color'].split('_')[1].toLowerCase();
+        let baseColor = order['base_color'].split('_')[1].toLowerCase();
         // Grey in fetched data / Gray in name of SVGs
         if (baseColor === 'grey') {
           baseColor = 'gray'
         }
-        let capColor = order['cap-color'].split('_')[1].toLowerCase();
+        let capColor = order['cap_color'].split('_')[1].toLowerCase();
         if (capColor === 'grey') {
           capColor = 'gray'
         }
         let ringColors = '';
-        if(order['ring-colors'] !== [ ]){
-          order['ring-colors'].forEach(color => {
+        if(order['ring_colors'] !== [ ]){
+          order['ring_colors'].forEach(color => {
             ringColors += color.split('_')[1].toLowerCase() + '-';
           });
         }
         product.id = order.id;
         // Format: 'c0_black_blue-orange_gray.svg'
         product['product-img-url'] = `${complexity}_${baseColor}_${ringColors.substring(0,ringColors.length-1)}_${capColor}.svg`;
+        
         products.push(product);    
         product = {}    
       });

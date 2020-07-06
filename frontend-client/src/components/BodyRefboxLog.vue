@@ -1,74 +1,40 @@
 <template>
-  <div class="container-fluid  border p-0 refbox-log overflow-auto text-left">
-    <div class="d-flex justify-content-end mt-2">
-      <button @click=connect class="btn btn-primary mr-2"> Connect </button>
-      <button @click=disconnect class="btn btn-primary  mr-2 ">
+<div>
+  <div class="container-fluid border-top  p-0  refbox-log overflow-y
+   text-left">
+    <!-- <div class="d-flex justify-content-end mt-2 ">
+      <button @click=connectToWebsocket class="btn btn-primary mr-2"> Connect </button>
+       <button @click=SOCKET_DISCONNECT class="btn btn-primary  mr-2 ">
         DC
       </button>
-      <button @click=send class="btn btn-primary ">Send Msg</button>
-    </div>
+      <button @click.prevent=SOCKET_SEND(addMagenta) class="btn btn-primary ">Send Msg</button> 
+    </div> -->
     
-    <div class="mx-3 mt-3">
-      <div v-for="(msg,index) in msgArray" :key=index>
-          <h6 v-if="msg.level !== 'attention' " class= "mb-0" :class="setClassName(msg.level)">{{msg.time}} [{{msg.component}}]: {{msg.message}}</h6>
-          <!-- If Its attention message -->
-          <h6 v-else-if="msg.level === 'attention' " class= "mb-0 text-danger" > !Attention: {{msg.text}}</h6>
+    <div class="mx-3 mt-3 reflog-normal-msgs-logger overflow-auto  ">
+      <div v-if="websocketMsgs !== []" class="">
+        <div v-for="(msg,index) in websocketMsgs" :key=index>
+            <h6 v-if="msg.level !== 'attention' " class= "mb-0" :class="setClassName(msg.level)">{{msg.time}} [{{msg.component}}]: {{msg.message}}</h6>
+            <h6 v-else-if="msg.level === 'attention' " class= "mb-0 text-danger" > <font-awesome-icon :icon="['fas','exclamation-triangle']" class="fa-1x" /> {{msg.text}}</h6>
+        </div>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+
 export default {
-  name: 'BodyRefboxLog',
-
-  data() {
-    return {
-      msgArray: [],
-      status: 'disconnected',
-      socket: null
-    }
+  name: 'AttentionMessagesLogger',
+  computed: {
+    ...mapState(['websocketMsgs', 'socket'])
   },
-
   mounted() {
-    this.connect();
+    setInterval(this.scrollToBottomOfLog, 1000)
   },
-
   methods: {
-
-    connect() {
-      this.socket = new WebSocket('ws://localhost:1234');
-
-      this.socket.onopen = (e) => {
-        console.log("Connection established", e);
-        this.status = 'connected';
-      }
-
-      this.socket.onclose = (e) => {
-        console.log("Connection debunked", e);
-      }
-
-      this.socket.onmessage = (e) => { 
-        let msgObj = JSON.parse(e.data);
-        if (msgObj !== [] && msgObj.level !== 'clips' ) {
-          console.log(e);
-          this.msgArray.push(msgObj);
-          const refLog = document.querySelector('.refbox-log');
-          refLog.scrollTop = refLog.scrollHeight;
-        }
-      }
-    },
-
-    send() {
-      this.socket.send(`{"message": "testuu"}`)
-      console.log('sent!');
-    },
-
-    disconnect() {
-      this.status = 'disconnected';
-      this.socket.close();
-    },
-
+    ...mapActions(['connectToWebsocket', 'SOCKET_DISCONNECT', 'SOCKET_SEND', 'scrollToBottomOfLog']),
     setClassName(msgLevel) {
       if (msgLevel === 'info') {
         return 'text-active'
@@ -86,7 +52,15 @@ export default {
 
 <style >
 .refbox-log {
-  min-height: 29vh;
-  max-height: 29vh;
+  min-height: 26vh !important;
+  max-height: 31vh !important;
 }
+.reflog-normal-msgs-logger{
+height: 100% !important;
+padding: 0%;
+}
+.overflow-y {
+  overflow-y: scroll !important;
+}
+
 </style>

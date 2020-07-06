@@ -1,13 +1,17 @@
 <template>
   <div class="col-md-2 border">
+    <div v-if="getPhase !== 'PRE_GAME'"></div>
     <div class="pause-play-time mt-2">
       <div class="radio-pause-play row justify-content-center align-items-center">
         <div class="pause-play-container mr-2">
-          <a class="btn  p-0" >
+          <a class="btn  p-0" @click="setGameState('RUNNING')" >
             <font-awesome-icon :icon="['fas','play-circle']" class="fa-2x play-btn" />
           </a>
-          <a class="btn p-0"> 
-            <font-awesome-icon :icon="['fas','pause-circle']" class="fa-2x pause-btn " />
+          <a class="btn p-0" @click="setGameState('PAUSED')"
+          > 
+            <font-awesome-icon :icon="['fas','pause-circle']" class="fa-2x pause-btn " 
+                               :class="gamestate === 'PAUSED' ? 'bg-danger' : ''"
+            />
           </a>  
         </div>
         <div class="time">
@@ -21,7 +25,39 @@
       <a class="btn  p-0" @click.prevent="setPreviousPhase">
         <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x previous-btn" />
       </a>
-      <h4 class="marg-bot-0">{{getPhase}}</h4>
+      <ul class="nav nav-pills">
+        <li class=" nav-item dropdown ">
+          <a class="nav-link dropdown-toggle current-phase-anchor" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+          @click.prevent="togglePhaseSubmenus()"
+          >
+            {{getPhase}}
+          </a>
+          <div class="dropdown-menu" style=""
+               :style="showPhaseSubmenus ? 'display:block' : 'display:none'"
+          >
+            <a class="dropdown-item" href="#"
+              v-if="getPhase !== 'PRE_GAME'"
+              @click.prevent="switchGamestate('PRE_GAME')"
+              >PRE_GAME</a>
+            <a class="dropdown-item" href="#"
+              v-if="getPhase !== 'SETUP'"
+              @click.prevent="switchGamestate('SETUP')"
+              >SETUP</a>
+            <a class="dropdown-item" href="#"
+              v-if="getPhase !== 'EXPLORATION'"
+              @click.prevent="switchGamestate('EXPLORATION')"
+              >EXPLORATION</a>
+            <a class="dropdown-item" href="#"
+              v-if="getPhase !== 'PRODUCTION'"
+              @click.prevent="switchGamestate('PRODUCTION')"
+              >PRODUCTION</a>
+            <a class="dropdown-item" href="#"
+              v-if="getPhase !== 'POST_GAME'"
+              @click.prevent="switchGamestate('POST_GAME')"
+              >POST_GAME</a>
+          </div>
+        </li>
+      </ul>
       <a class="btn  p-0" @click.prevent="setNextPhase">
         <font-awesome-icon :icon="['fas','chevron-right']" class="fa-2x next-btn" />
       </a>
@@ -37,15 +73,17 @@ export default {
   computed: {
     ...mapState({
       getPhase: state => state.phase,
-      getGametime: state => state.gametime
+      getGametime: state => state.gametime,
+      gamestate: state => state.gamestate,
+      showPhaseSubmenus: state => state.showPhaseSubmenus
     })
   },
-  mounted() {
-    this.fetchGameState();
-    setInterval(this.fetchGameState, 1000);
-  },
   methods: {
-    ...mapActions(['setNextPhase', 'setPreviousPhase','fetchGameState' ])
+    ...mapActions(['setGameState', 'setPreviousPhase', 'setNextPhase', 'setCurrentPhase', 'togglePhaseSubmenus']),
+    switchGamestate(state) {
+      this.setCurrentPhase(state)
+      this.togglePhaseSubmenus()
+    }
   }
 }
 </script>

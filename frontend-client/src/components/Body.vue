@@ -2,17 +2,19 @@
   <div >
     <div class="row m-0">
       <div class="team-cyan-body-container col-xl-6 border">
-        <div class="row" v-if="phase !== 'Pre_game' && !showFormCyan">
+        <div class="row" >
           <div class="col-xl-3 body-machines-container p-0 border-right">
             <BodyMachinesTeamCyan />
           </div>
 
           <div class="col-xl-9 p-0 mt-3">
             <div class="row m-0">
-              <div class="score-container col-xl-12 p-0 border-bottom ">
+              <div class="score-container col-xl-12 p-0"
+                   :class="phase === 'PRE_GAME' ? '' : 'border-bottom'"  >
                 <BodyScoreTeamA />
               </div>
-              <div class="robots-container col-xl-12 mt-4 ">
+              <div class="robots-container col-xl-12 mt-4"
+                  :class="phase === 'PRE_GAME' ? 'border-0' : ''">
                 <BodyRobotsTeamCyan />
               </div>
             </div>
@@ -22,11 +24,11 @@
       </div>
 
       <div class="team-b-body col-xl-6 border">
-        <h1>Body B</h1>
       </div>
     </div>
 
-    <div class="">
+    <div class="border">
+      <AttentionMessagesLogger />
       <BodyRefboxLog class="border-bottom-0"/>
     </div>
     
@@ -38,7 +40,8 @@ import BodyMachinesTeamCyan from './BodyMachinesTeamCyan'
 import BodyScoreTeamA from './BodyScoreTeamA'
 import BodyRobotsTeamCyan from './BodyRobotsTeamCyan'
 import BodyRefboxLog from './BodyRefboxLog'
-import { mapState } from 'vuex';
+import AttentionMessagesLogger from './AttentionMessagesLogger'
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'Body',
@@ -46,9 +49,16 @@ export default {
     BodyMachinesTeamCyan,
     BodyScoreTeamA,
     BodyRobotsTeamCyan,
-    BodyRefboxLog
+    BodyRefboxLog,
+    AttentionMessagesLogger
   }, computed: {
     ...mapState(['phase', 'showFormCyan'])
+  },
+  created(){
+    this.connectToWebsocket()
+  },
+  methods: {
+    ...mapActions(['connectToWebsocket'])
   }
 }
 </script>

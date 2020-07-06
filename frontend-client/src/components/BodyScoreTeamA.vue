@@ -1,17 +1,17 @@
 <template>
   <div >
-    <h4 v-if="phase !== 'Pre_game'">Points: {{scoreCyan}}</h4>
+    <h4 v-if="phase !== 'PRE_GAME'">Points: {{scoreCyan}}</h4>
     <div class="awarded-points-container border-top">
       <div class="row m-0 text-left ">
         <div 
           class="col-md-6"
-          v-for="(award,index) in awardedPoints" 
+          v-for="(award,index) in cyanAwardedPoints" 
           :key='index'>
-          <div v-if="award.team === 'CYAN'">
+          <div v-if="cyanAwardedPoints.length !== 0">
               <h6 style="font-size: 13px;">
                   {{index + 1}}.
-                  [{{formatSeconds(award['game-time'])}}]
-                  {{award.phase.substring(0,4)}}
+                  [{{formatSeconds(award['game_time'])}}]
+                  {{award.phase.substring(0,3)}}
                 <span class="text-light">{{award.points}}</span> point(s)
                 <br>
                 <span class="text-success" style="font-weight:300">{{award.reason}}</span>
@@ -26,29 +26,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 export default {
   name: 'BodyScoreTeamA',
   computed: {
-    ...mapState(['scoreCyan', 'phase', 'awardedPoints', 'pollRate'])
+    ...mapState(['scoreCyan', 'phase', 'cyanAwardedPoints'])
   },
-  mounted() {
-    this.fetchAwardedPoints();
-    this.pollAwardedPoints();
-    this.scrollToEnd();
-    setInterval(this.scrollToEnd, 10000);
-  },
-  methods: {
-    ...mapActions(['fetchAwardedPoints']),
-    pollAwardedPoints() {
-      setInterval(this.fetchAwardedPoints, this.pollRate);
-    },
-    // Scroll to end of scrollable div
-    scrollToEnd(){
-      let container = document.querySelector('.awarded-points-container');
-      container.scrollTop = container.scrollHeight;
-    }
-  }
 }
 </script>
 

@@ -16,7 +16,7 @@
                       </div>
                       <figcaption class="text-center machine-zone">{{machine.zone}}
                         <br>
-                        <span v-if="currPhase === 'Setup'">{{machine.rotation}}°</span>
+                        <span v-if="currPhase === 'SETUP'">{{machine.rotation}}°</span>
                       </figcaption>
                     </figure>
             </div>
@@ -24,22 +24,22 @@
                   <span :class="setStateClass(machine.state)">
                     {{machine.state}}
                   </span>
-                  <!-- If RS show additional Infi -->
+                  <!-- If RS show additional Info -->
                   <div v-if="machine.mtype === 'RS'" class="d-flex my-1">
-                    <span>{{machine['bases-added'] - machine['bases-used']}}</span>
+                    <span>{{machine['bases_added'] - machine['bases_used']}}</span>
                     <div class="ml-2 d-flex">
                       <div 
                         class="rs-color-container mr-1"
-                        :class="setRSandBSColor(machine['rs-ring-colors'][0])">
+                        :class="setRSandBSColor(machine['rs_ring_colors'][0])">
                         <span class="invisible">color</span>
                       </div>
-                      <span>{{showPreparedColorInfo(machine['rs-ring-colors'][0])}}</span>
+                      <span>{{showPreparedColorInfo(machine['rs_ring_colors'][0])}}</span>
                       <div 
                         class="rs-color-container mx-1"
-                        :class="setRSandBSColor(machine['rs-ring-colors'][1])">
+                        :class="setRSandBSColor(machine['rs_ring_colors'][1])">
                         <span class="invisible">color</span>
                       </div>
-                      <span>{{showPreparedColorInfo(machine['rs-ring-colors'][1])}}</span>
+                      <span>{{showPreparedColorInfo(machine['rs_ring_colors'][1])}}</span>
                     </div>
                   </div>
                   <!-- <span>{{machine.name}}</span> -->
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import {mapState } from 'vuex';
 export default {
   name: 'BodyMachinesTeamCyanGenerator',
   computed: {
@@ -59,7 +59,6 @@ export default {
       machinesCyan: state => state.machines.machinesCyan,
       currPhase: state => state.phase,
       ringspecs: state => state.machines.ringspecs,
-      pollRate: state => state.pollRate,
     })
   },
 
@@ -68,22 +67,9 @@ export default {
       imageUrl: 'http://via.placeholder.com/50x25'
     }
   },
-  // Run on mount of Component
-  mounted() {
-    this.fetchMachinesCyan()
-    this.fetchRingSpec()
-    this.pollMachineInfo();
-  },
+ 
 
   methods: {
-    ...mapActions({
-      fetchMachinesCyan: 'fetchMachinesCyan',
-      fetchRingSpec: 'fetchRingSpec',
-    }),
-    pollMachineInfo() {
-      // Polls Information every 1,5 seconds
-      setInterval(this.fetchMachinesCyan, this.pollRate)
-    },
     // Set classname depending on the State of the machine
     setStateClass(state) {
       let classList = ''
@@ -98,10 +84,10 @@ export default {
     },
     // Display how much bases the ring needs
     showPreparedColorInfo(ringColor) {
-      let reqBases = 0;
+      let reqBases = 0;   
       this.ringspecs.forEach((ringspec) => {
         if(ringspec.color === ringColor) {
-          reqBases = ringspec['req-bases'];
+          reqBases = ringspec['req_bases'];
         }
       });
       return `- ${reqBases}`;
@@ -126,9 +112,9 @@ export default {
     },
     setMachineBackground(machine){
       if(machine.mtype === 'RS'){
-        return this.setRSandBSColor(machine['rs-ring-color'])
+        return this.setRSandBSColor(machine['rs_ring_color'])
       } else if(machine.mtype === 'BS'){        
-        return this.setRSandBSColor(machine['bs-color'])
+        return this.setRSandBSColor(machine['bs_color'])
       }
 
     }

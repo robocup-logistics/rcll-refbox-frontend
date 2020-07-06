@@ -1,5 +1,7 @@
 <template>
-  <div v-if="isOpen">
+  <div class="Modal">
+   <div v-if="isOpen === true">
+
     <transition name="modal-container">
       <div class="overlay">
         <div class="modal-container">
@@ -7,30 +9,34 @@
           <div class="d-flex align-items-center justify-content-between">
             <p class="delivery-infos">
               <span>Complexity: {{order.complexity}}</span>
-              <span>base-color: {{order['base-color']}}</span>
-              <span v-if="order['ring-colors']">
-                ring colors: {{order['ring-colors']}}
+              <span>base-color: {{order['base_color']}}</span>
+              <span v-if="order['ring_colors']">
+                ring colors: {{order['ring_colors']}}
               </span>
-              <span>cap-color: {{order['cap-color']}}</span>
+              <span>cap-color: {{order['cap_color']}}</span>
+              <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
+                Gametime: {{formatSeconds(order['unconfirmed_deliveries'][0]['game_time'])}}
+              </span>
               <span>
                 delivery period: 
-                {{formatSeconds(order['delivery-period'][0])}}
+                {{formatSeconds(order['delivery_period'][0])}}
                 -
-                {{formatSeconds(order['delivery-period'][1])}}
+                {{formatSeconds(order['delivery_period'][1])}}
               </span>
             </p>
             <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
-               class="img-fluid" 
+              class="img-fluid" 
             > 
           </div>
           <div class="modal-buttons">
-            <button @click.prevent='closeModal' >Yes</button>
-            <button @click.prevent='closeModal' >No</button>
+            <button @click.prevent='orderAcceptance(order,true)' class="btn btn-outline-info yes-btn ">Yes</button>
+            <button @click.prevent='orderAcceptance(order,false)' class="btn btn-outline-info no-btn">No</button>
           </div>
         </div>
       </div>
     </transition>
   </div>
+</div>
 </template>
 
 <script>
@@ -38,7 +44,7 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'ConfirmDeliveryModal',
-  props: ['order', 'team'],
+  props: ['order', 'team', 'color'],
   data(){
     return{
       isOpen: true
@@ -49,10 +55,19 @@ export default {
       products: state => state.orders.products,
     })
   },
+  mounted() {
+    console.log('Mounted Modal!');
+  },
+  beforeDestroy() {
+    console.log('destroying');
+    
+  },
   methods: {
-    ...mapActions(['populateProductsArray']),
+    ...mapActions(['populateProductsArray', 'SOCKET_SEND']),
     closeModal() {
-      this.isOpen = !this.isOpen;
+      console.log('closing');
+      
+      this.isOpen = false;
     },
     getProductsImg(orderID) {
       return this.products.find(({id}) => id === orderID)['product-img-url'];
@@ -61,6 +76,34 @@ export default {
     scrollToEnd(className){
       let container = document.querySelector(className);
       container.scrollTop = container.scrollHeight;
+    },
+    orderAcceptance(order, bool) {
+      const msg = {
+        "command" : "confirm_delivery",
+        "correctness" : false,
+        "delivery_id": null,
+        "order_id" : null,
+        "color" : ""
+      }
+      msg.correctness = bool
+      msg.color = this.color.toUpperCase()
+      msg['order_id'] = this.order.id
+      
+      if (order['unconfirmed_deliveries'].length > 0) {
+        if ( typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined') {
+          console.log('first if');
+          msg['delivery_id'] = order['unconfirmed_deliveries'][0]['delivery_id']
+        }
+      } else {
+          console.log('else ');
+          msg['delivery_id'] = msg['order_id']
+      }
+      console.log(msg, 'sad');
+      
+      this.SOCKET_SEND(msg)
+      console.log('after sending');
+      this.closeModal()
+      // this.$destroy()
     }
   }
 }
@@ -102,9 +145,9 @@ export default {
   color: orangered !important;
 }
 button {
-  margin-top: 10px;
+  /* margin-top: 10px;
   margin-left: 10px;
-  background-color: black;
+  background-color: black; */
   color: white;
   font-size: 1.1rem;
 }
@@ -126,5 +169,9 @@ button {
 .delivery-infos{
   display: flex;
   flex-direction: column;
+}
+.yes-btn {
+  margin-right: 10px !important;
+  margin-top: 15px !important;
 }
 </style>
