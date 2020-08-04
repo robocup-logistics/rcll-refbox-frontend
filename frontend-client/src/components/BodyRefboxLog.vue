@@ -13,8 +13,12 @@
     <div class="mx-3 mt-3 reflog-normal-msgs-logger overflow-auto  ">
       <div v-if="websocketMsgs !== []" class="">
         <div v-for="(msg,index) in websocketMsgs" :key=index>
-            <h6 v-if="msg.level !== 'attention' " class= "mb-0" :class="setClassName(msg.level)">{{msg.time}} [{{msg.component}}]: {{msg.message}}</h6>
-            <h6 v-else-if="msg.level === 'attention' " class= "mb-0 text-danger" > <font-awesome-icon :icon="['fas','exclamation-triangle']" class="fa-1x" /> {{msg.text}}</h6>
+            <h6 v-if="msg.level !== 'attention' " class= "mb-0" :class="setClassName(msg.level)"
+            :style="setMsgColor(msg.component)"
+            >
+            {{msg.time}} [{{msg.component}}]: {{msg.message}}</h6>
+            <h6 v-else-if="msg.level === 'attention' " class= "mb-0 text-danger" > <font-awesome-icon :icon="['fas','exclamation-triangle']" class="fa-1x" 
+            /> {{msg.text}}</h6>
         </div>
       </div>
     </div>
@@ -44,6 +48,13 @@ export default {
         return 'text-danger'
       } else {
         return 'text-danger'
+      }
+    },
+    setMsgColor(color) {      
+      if(color === 'C') {
+        return 'color: var(--main-cyan-color);'
+      } else if (color === 'M'){
+        return 'color: var(--main-magenta-color);'
       }
     }
   }
