@@ -38,6 +38,6 @@ export default {
 <style scoped>
 .awarded-points-container{
   overflow: auto !important;
-  max-height: 35vh !important;
+  height: 35vh !important;
 }
 </style>
