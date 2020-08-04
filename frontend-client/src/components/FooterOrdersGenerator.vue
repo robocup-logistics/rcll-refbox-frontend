@@ -137,18 +137,19 @@
           </div>  
             </div>
 
-            <div class="order-complexity"
+            
+            <div class="delivery-time" 
+                 :class="activeDeliveryPeriod(order['delivery_period'])"
+            >
+              <span>{{ formatSeconds(order['delivery_period'][0]) }}-{{formatSeconds(order['delivery_period'][1])}}</span>
+            </div>
+            <div class="order-complexity mt-1"
                  :class="activeDeliveryPeriod(order['delivery_period'])"
                  style="font-size: 12px"
             >
               <span>
                 Complexity: {{order.complexity}}
               </span>
-            </div>
-            <div class="delivery-time" 
-                 :class="activeDeliveryPeriod(order['delivery_period'])"
-            >
-              <span>{{ formatSeconds(order['delivery_period'][0]) }}-{{formatSeconds(order['delivery_period'][1])}}</span>
             </div>
           </div>
         </div>
