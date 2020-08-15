@@ -32,7 +32,8 @@ npm run serve
 ```
 
 The frontend runs on [port 8080](http://localhost:8080) per default and connects
-via the tcp websocket on port 1234 (configurable in the refbox).
+via a tcp websocket on port 1234 (configurable in the refbox and via a button
+in the frontend).
 
 In order to start a game through the frontend follow these steps:
 1. type in your team name on cyan (corresponds to old refbox `<f4>` -> `<cyan>` -> `<teamname>`)
