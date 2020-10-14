@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div class="border llal"
+    <div class="border "
          :style="phase === 'PRE_GAME' ? 'height: 35vh !important;' : ''">
       <AttentionMessagesLogger />
       <BodyRefboxLog class="border-bottom-0"/>

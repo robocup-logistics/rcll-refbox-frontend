@@ -14,7 +14,8 @@
                       >
                         <span class="text-active font-weight-bold text-center">{{machine.name}}</span>
                       </div>
-                      <figcaption class="text-center machine-zone">{{machine.zone}}
+                      <figcaption class="text-center machine-zone d-flex">
+                          <span class="pr-2">{{machine.zone}}</span> 
                         <br>
                         <span v-if="currPhase === 'SETUP'">{{machine.rotation}}°</span>
                       </figcaption>
