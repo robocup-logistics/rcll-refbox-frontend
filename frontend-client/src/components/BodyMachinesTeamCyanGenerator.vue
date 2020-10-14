@@ -21,25 +21,25 @@
                     </figure>
             </div>
             <div class="machine-info d-flex flex-column ">
-                  <span :class="setStateClass(machine.state)">
+                  <span :class="setStateClass(machine.state)" >
                     {{machine.state}}
                   </span>
                   <!-- If RS show additional Info -->
                   <div v-if="machine.mtype === 'RS'" class="d-flex my-1">
-                    <span>{{machine['bases_added'] - machine['bases_used']}}</span>
+                    <span class="lead">{{machine['bases_added'] - machine['bases_used']}}</span>
                     <div class="ml-2 d-flex">
                       <div 
-                        class="rs-color-container mr-1"
+                        class="rs-color-container mr-1 text-center"
                         :class="setRSandBSColor(machine['rs_ring_colors'][0])">
-                        <span class="invisible">color</span>
+                        <span class="lead">{{showPreparedColorInfo(machine['rs_ring_colors'][0])}}</span>
+
                       </div>
-                      <span>{{showPreparedColorInfo(machine['rs_ring_colors'][0])}}</span>
                       <div 
-                        class="rs-color-container mx-1"
+                        class="rs-color-container mx-1 text-center"
                         :class="setRSandBSColor(machine['rs_ring_colors'][1])">
-                        <span class="invisible">color</span>
+                        <span class="lead">{{showPreparedColorInfo(machine['rs_ring_colors'][1])}}</span>
+
                       </div>
-                      <span>{{showPreparedColorInfo(machine['rs_ring_colors'][1])}}</span>
                     </div>
                   </div>
                   <!-- <span>{{machine.name}}</span> -->
@@ -90,7 +90,7 @@ export default {
           reqBases = ringspec['req_bases'];
         }
       });
-      return `- ${reqBases}`;
+      return `${reqBases}`;
     },
     // Sets background color depending on the ringcolor and BS-Color
     setRSandBSColor(color) {
