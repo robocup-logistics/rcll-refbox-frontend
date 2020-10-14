@@ -4,16 +4,17 @@
     <div class="pause-play-time mt-2">
       <div class="radio-pause-play row justify-content-center align-items-center">
         <div class="pause-play-container mr-2">
-          <a class="btn  p-0" @click="setGameState('RUNNING')"
+          <a v-if="gamestate === 'PAUSED' || gamestate === 'WAIT_START'"
+             class="btn  p-0" @click="setGameState('RUNNING')"
              data-toggle="tooltip" data-placement="top" title="start/resume game"
            >
             <font-awesome-icon :icon="['fas','play-circle']" class="fa-2x play-btn" />
           </a>
-          <a class="btn p-0" @click="setGameState('PAUSED')"
+          <a v-if="gamestate === 'RUNNING'"
+             class="btn p-0" @click="setGameState('PAUSED')"
              data-toggle="tooltip" data-placement="top" title="pause game"
           > 
             <font-awesome-icon :icon="['fas','pause-circle']" class="fa-2x pause-btn " 
-                               :class="gamestate === 'PAUSED' ? 'bg-danger' : ''"
             />
           </a>  
         </div>
@@ -30,9 +31,9 @@
       >
         <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x previous-btn" />
       </a>
-      <ul class="nav nav-pills">
-        <li class=" nav-item dropdown" >
-          <a class="nav-link dropdown-toggle current-phase-anchor" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+      <ul class="nav nav-pills  text-center">
+        <li class=" nav-item dropdown fixedSizeGamestate" >
+          <a class="nav-link dropdown-toggle current-phase-anchor " data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
           @click.prevent="togglePhaseSubmenus()"
           >
             {{getPhase}}
@@ -102,5 +103,11 @@ export default {
 
 .next-btn:hover, .previous-btn:hover, .play-btn:hover, .pause-btn:hover{
   color: green;
+}
+
+@media (min-width: 1024px){
+  .fixedSizeGamestate{
+    width: 190px !important;
+  }
 }
 </style>
