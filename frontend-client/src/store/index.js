@@ -254,9 +254,9 @@ export default new Vuex.Store({
     },
     scrollToBottomOfLog() {
       const refLog = document.querySelector('.refbox-log');
-      const ref = document.querySelector('.reflog-normal-msgs-logger');      
-      ref.scrollTop = ref.scrollHeight - ref.clientHeight;
+      const msgs = document.querySelector('.msg-holder')
       refLog.scrollTop = refLog.scrollHeight - refLog.clientHeight;
+      msgs.scrollTop = msgs.scrollHeight - msgs.clientHeight;
       
     },
     togglePhaseSubmenus({commit}){
@@ -283,7 +283,6 @@ export default new Vuex.Store({
     SOCKET_ONCLOSE(state){
       state.socket.onclose = (e) => {
         console.log("Connection closed", e);
-        alert("Connection has been lost")
       }
     },
     SOCKET_ONMESSAGE(state, onMessageFnc) {

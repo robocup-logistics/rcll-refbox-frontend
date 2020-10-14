@@ -3,9 +3,9 @@
     <h4 v-if="phase !== 'PRE_GAME'">Points: {{scoreCyan}}</h4>
     <div class="awarded-points-container "
          :class="phase === 'PRE_GAME' ? '' : 'border-top'">
-      <div class="row m-0 text-left ">
+      <div class="row m-0 text-left mt-1">
         <div 
-          class="col-md-6"
+          class="col-md-6 " 
           v-for="(award,index) in cyanAwardedPoints" 
           :key='index'>
           <div v-if="cyanAwardedPoints.length !== 0">
