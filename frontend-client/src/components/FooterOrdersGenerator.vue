@@ -215,7 +215,7 @@ export default {
     // Grays out orders that are not active
     activeDeliveryPeriod(deliveryPeriod){
       // Check if it is in the delivery period
-      if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime)) {
+      if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime) ) {
         return 'text-active'
       } else {
         return 'text-muted'
@@ -223,7 +223,7 @@ export default {
     },
     activeDeliveryPeriodImage(deliveryPeriod){
       // Check if it is in the delivery period
-      if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime)) {
+      if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime) || deliveryPeriod[0] >= parseInt(this.gametime) ) {
         return ''
       } 
       // If it's not
