@@ -7,19 +7,18 @@
             <BodyMachinesTeamCyan />
           </div>
 
-          <div class="col-xl-9 p-0 mt-3">
+          <div class="col-xl-9 p-0 mt-1">
             <div class="row m-0">
-              <div class="score-container col-xl-12 p-0"
-                   :class="phase === 'PRE_GAME' ? '' : 'border-bottom'"  >
-                <BodyScoreTeamA />
-              </div>
-              <div class="robots-container col-xl-12 mt-4"
-                  :class="phase === 'PRE_GAME' ? 'border-0' : ''">
+              <div class="robots-container col-xl-12 mb-1"
+                  :class="phase === 'PRE_GAME' ? 'border-0' : 'border-bottom'">
                 <BodyRobotsTeamCyan />
+              </div>
+              <div class="score-container col-xl-12 p-0 mt-2"
+                   :class="phase === 'PRE_GAME' ? '' : ''"  >
+                <BodyScoreTeamA />
               </div>
             </div>
           </div>  
-          
         </div>
       </div>
 
