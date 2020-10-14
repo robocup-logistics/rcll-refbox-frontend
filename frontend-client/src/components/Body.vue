@@ -26,10 +26,10 @@
       </div>
     </div>
 
-    <div class="border "
+    <div class="border-right border-left row m-0 log-msgs-main-container "
          :style="phase === 'PRE_GAME' ? 'height: 35vh !important;' : ''">
-      <AttentionMessagesLogger />
-      <BodyRefboxLog class="border-bottom-0"/>
+      <BodyRefboxLog class="border-bottom-0 p-0 col-md-9"/>
+      <AttentionMessagesLogger class="col-md-3 p-0"/>
     </div>
     
   </div>
@@ -66,5 +66,8 @@ export default {
 <style scoped>
 .team-cyan-body-container {
   min-height: 40vh !important;
+}
+.log-msgs-main-container {
+  height:30vh;
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div v-if="elementVisible" >
-    <h6 
+    <span 
         class="attention-msg-text text-center">
         <font-awesome-icon :icon="['fas','exclamation-triangle']" class="fa-1x" />
         {{msg.text}}
-    </h6>
+    </span>
   </div>
 </template>
 
@@ -26,6 +26,6 @@ export default {
 <style>
 .attention-msg-text {
   color:red;
-  font-size: 20px !important;
+  font-size: 16px !important;
 }
 </style>
