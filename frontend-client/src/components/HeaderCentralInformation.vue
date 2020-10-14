@@ -32,7 +32,7 @@
         <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x previous-btn" />
       </a>
       <ul class="nav nav-pills  text-center">
-        <li class=" nav-item dropdown fixedSizeGamestate" >
+        <li class=" nav-item dropdown fixedSizeGamestate text-center" >
           <a class="nav-link dropdown-toggle current-phase-anchor " data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
           @click.prevent="togglePhaseSubmenus()"
           >
@@ -105,9 +105,26 @@ export default {
   color: green;
 }
 
-@media (min-width: 1024px){
+@media (min-width: 1200px){
   .fixedSizeGamestate{
-    width: 190px !important;
+    width: 155px !important;
+  }
+  .current-phase-anchor{
+    padding: 0.5rem 0rem;
+  }
+}
+
+@media (max-width: 1440px){
+  .previous-btn, .next-btn {
+    width: 1em;
+    height: 0.7em;
+  }
+  .current-phase-anchor{
+    font-size: 12px;
+    padding: 0.5rem 0rem;
+  }
+  .fixedSizeGamestate{
+    width: 130px !important;
   }
 }
 </style>
