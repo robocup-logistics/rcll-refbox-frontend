@@ -27,7 +27,8 @@
       </div>
     </div>
 
-    <div class="border">
+    <div class="border llal"
+         :style="phase === 'PRE_GAME' ? 'height: 35vh !important;' : ''">
       <AttentionMessagesLogger />
       <BodyRefboxLog class="border-bottom-0"/>
     </div>
@@ -52,7 +53,7 @@ export default {
     BodyRefboxLog,
     AttentionMessagesLogger
   }, computed: {
-    ...mapState(['phase', 'showFormCyan'])
+    ...mapState(['phase', 'showFormCyan', 'gamestate'])
   },
   created(){
     this.connectToWebsocket()
