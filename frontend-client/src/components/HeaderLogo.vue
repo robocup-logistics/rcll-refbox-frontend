@@ -2,23 +2,23 @@
   <div class="d-flex justify-content-between border">
     <img  alt="Refbox Logo">
     <div class="d-flex my-1">
-      <a @click.prevent='toggleConfirmationDialogFieldRnd' class="btn btn-fields btn-md"
+      <a @click.prevent='toggleConfirmationDialogFieldRnd' class="btn btn-outline-info btn-md"
       data-toggle="tooltip" data-placement="bottom" title="Randomize Field" 
       >
         <font-awesome-icon :icon="['fa','random']" style="font-size: 12px;" />
       </a>
       <ConfirmRandomizeFieldModal v-if="toggle" />
       <div class="d-flex align-items-center justify-items-center">
-        <form  class='form-connection' @submit.prevent="setPortConnection(portAddres)" v-show="addIpAndPort">
+        <form  @submit.prevent="setPortConnection(portAddres)" v-show="addIpAndPort">
           <fieldset>
             <div class="form-group mb-0">
-              <input type="text" class="form-control input-connection"   ref="portInput" placeholder="Enter Ip and Port Adress To Connect To"
+              <input type="text" class="form-control"   ref="portInput" placeholder="Enter Ip and Port Adress To Connect To"
                 v-model="portAddres" required
               >
             </div>
           </fieldset>
         </form>
-        <a class="btn btn-md ml-1 mr-1 btn-connection"
+        <a class="btn btn-outline-info btn-md ml-1 mr-1"
             data-toggle="tooltip" data-placement="bottom" title="Change Websocket Port" 
             @click.prevent="toggleAddIpAndPortAndFocus()">
           <font-awesome-icon :icon="['fa','globe']" style="font-size: 12px;" />
@@ -28,7 +28,7 @@
           <font-awesome-icon :icon="['fa','link']" style="font-size: 12px; color:green;" />
         </a>
         <a v-else class="mx-2 icon-unlink"
-            data-toggle="tooltip" data-placement="bottom" title="No Connection!" >
+            data-toggle="tooltip" data-placement="bottom" title="Connection lost!" >
           <font-awesome-icon :icon="['fa','unlink']" style="font-size: 12px; color:red;" />
         </a>
       </div>
@@ -78,11 +78,5 @@ export default {
 </script>
 
 <style>
-.btn-connection:hover, .btn-fields:hover{
-  opacity: 0.5 !important;
-}
-.input-connection{
-  max-width: 180px;
-  max-height: 1.7em;
-}
+
 </style>
