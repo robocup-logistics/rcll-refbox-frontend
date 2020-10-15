@@ -9,7 +9,7 @@
       </a>
       <ConfirmRandomizeFieldModal v-if="toggle" />
       <div class="d-flex align-items-center justify-items-center">
-        <form @submit.prevent="setPortConnection(portAddres)" v-show="addIpAndPort">
+        <form  @submit.prevent="setPortConnection(portAddres)" v-show="addIpAndPort">
           <fieldset>
             <div class="form-group mb-0">
               <input type="text" class="form-control"   ref="portInput" placeholder="Enter Ip and Port Adress To Connect To"
@@ -20,7 +20,7 @@
         </form>
         <a class="btn btn-outline-info btn-md ml-1 mr-1"
             data-toggle="tooltip" data-placement="bottom" title="Change Websocket Port" 
-            @click.prevent="toggleAddIpAndPort()">
+            @click.prevent="toggleAddIpAndPortAndFocus()">
           <font-awesome-icon :icon="['fa','globe']" style="font-size: 12px;" />
         </a>
         <a v-if="isConnected" class="mx-2 "
@@ -48,20 +48,19 @@ export default {
   data() {
     return {
       toggle: false,
-      addIpAndPort: false,
       portAddres: null
     }
   },
   computed:{
-    ...mapState(['isConnected'])
+    ...mapState(['isConnected', 'addIpAndPort'])
   },
   methods: {
-    ...mapActions(['setWebsocketURL', 'connectToWebsocket', 'SOCKET_DISCONNECT']),
+    ...mapActions(['setWebsocketURL', 'connectToWebsocket', 'SOCKET_DISCONNECT', 'toggleAddIpAndPort']),
     toggleConfirmationDialogFieldRnd() {
       this.toggle = !this.toggle      
     },
-    toggleAddIpAndPort() {
-      this.addIpAndPort = !this.addIpAndPort
+    toggleAddIpAndPortAndFocus() {
+      this.toggleAddIpAndPort()
       this.$nextTick(function () {
         this.$refs.portInput.focus()
       })

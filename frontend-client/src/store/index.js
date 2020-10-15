@@ -40,7 +40,8 @@ export default new Vuex.Store({
     error: '',
     websocketURL : 'ws://localhost:1234',
     pointsCyanFlag: false,
-    showPhaseSubmenus: false
+    showPhaseSubmenus: false,
+    addIpAndPort: false,
   },
 
   getters: {
@@ -128,10 +129,11 @@ export default new Vuex.Store({
       }
       commit("SOCKET_ONMESSAGE", onMessage)
     },
-    SOCKET_ONERROR({commit}) {
+    SOCKET_ONERROR({commit, dispatch}) {
       const onError = (e) => { 
         console.log(e);
         alert('Couldnt connect to Websocket!')
+        dispatch('toggleAddIpAndPort')
       }
       commit("SOCKET_ONERROR",onError)
     },
@@ -267,12 +269,17 @@ export default new Vuex.Store({
     },
     setWebsocketURL({commit}, URL) {
       commit('setWebsocketURL', URL)
-    }
+    },
+    toggleAddIpAndPort({state}) {
+      state.addIpAndPort = !state.addIpAndPort
+    },
   },
   
   mutations: {
     setSocketUrl(state) {
       state.socket = new WebSocket(state.websocketURL)
+      console.log(state.socket);
+      
     },
     SOCKET_ONOPEN(state) {
       state.socket.onopen = (e) => {
@@ -287,12 +294,10 @@ export default new Vuex.Store({
     },
     SOCKET_ONMESSAGE(state, onMessageFnc) {
       state.socket.onmessage = onMessageFnc
-      console.log(1);
     },
     SOCKET_DISCONNECT(state) {
       state.socket.close()
       state.isConnected = false
-      alert('Connection has been lost')
     },
     SOCKET_SEND(state, msg) {
       console.log('Sending', msg);
