@@ -23,14 +23,23 @@
             @click.prevent="toggleAddIpAndPort()">
           <font-awesome-icon :icon="['fa','globe']" style="font-size: 12px;" />
         </a>
+        <a v-if="isConnected" class="mx-2 "
+            data-toggle="tooltip" data-placement="bottom" title="Connection established!" >
+          <font-awesome-icon :icon="['fa','link']" style="font-size: 12px; color:green;" />
+        </a>
+        <a v-else class="mx-2 icon-unlink"
+            data-toggle="tooltip" data-placement="bottom" title="Connection lost!" >
+          <font-awesome-icon :icon="['fa','unlink']" style="font-size: 12px; color:red;" />
+        </a>
       </div>
     </div>
   </div>
+  
 </template>
 
 <script>
 import ConfirmRandomizeFieldModal from './ConfirmRandomizeFieldModal'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'HeaderLogo',
   components: {
@@ -42,6 +51,9 @@ export default {
       addIpAndPort: false,
       portAddres: null
     }
+  },
+  computed:{
+    ...mapState(['isConnected'])
   },
   methods: {
     ...mapActions(['setWebsocketURL', 'connectToWebsocket', 'SOCKET_DISCONNECT']),

@@ -26,9 +26,9 @@
       </div>
     </div>
 
-    <div class="border-right border-left row m-0 log-msgs-main-container "
+    <div class="border-right border-left row m-0 log-msgs-main-container h-100"
          :style="phase === 'PRE_GAME' ? 'height: 35vh !important;' : ''">
-      <BodyRefboxLog class="border-bottom-0 p-0 col-md-9"/>
+      <BodyRefboxLog class="border-bottom-0 p-0 pb-3 col-md-9 bodyRefboxLogCmp"/>
       <AttentionMessagesLogger class="col-md-3 p-0"/>
     </div>
     
@@ -69,5 +69,8 @@ export default {
 }
 .log-msgs-main-container {
   height:30vh;
+}
+.bodyRefboxLogCmp {
+  overflow-y: auto;
 }
 </style>

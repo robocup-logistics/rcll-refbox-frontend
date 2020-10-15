@@ -3,7 +3,8 @@ import App from './App.vue'
 
 // FontAwesome imports 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlayCircle, faPauseCircle, faChevronLeft, faArrowRight, faChevronRight, faRobot,  faExclamationTriangle, faRandom, faGlobe
+import { faPlayCircle, faPauseCircle, faChevronLeft, faArrowRight, faChevronRight, 
+         faRobot,  faExclamationTriangle, faRandom, faGlobe, faLink, faUnlink 
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -15,7 +16,8 @@ import "bootswatch/dist/darkly/bootstrap.min.css";
 import store from '@/store/index'
 
 // Used Fontawesome icons
-library.add(faPauseCircle, faChevronLeft, faChevronRight, faArrowRight, faPlayCircle, faRobot, faExclamationTriangle, faRandom, faGlobe)
+library.add(faPauseCircle, faChevronLeft, faChevronRight, faArrowRight, faPlayCircle, 
+  faRobot, faExclamationTriangle, faRandom, faGlobe,faLink, faUnlink )
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

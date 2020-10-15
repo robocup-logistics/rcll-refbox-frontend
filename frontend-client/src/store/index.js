@@ -253,7 +253,7 @@ export default new Vuex.Store({
      container.scrollTop =container.scrollHeight;
     },
     scrollToBottomOfLog() {
-      const refLog = document.querySelector('.refbox-log');
+      const refLog = document.querySelector('.bodyRefboxLogCmp');
       const msgs = document.querySelector('.msg-holder')
       refLog.scrollTop = refLog.scrollHeight - refLog.clientHeight;
       msgs.scrollTop = msgs.scrollHeight - msgs.clientHeight;
@@ -301,7 +301,7 @@ export default new Vuex.Store({
     },
     SOCKET_ADDMESSAGE(state, msg){
       state.websocketMsgs.push(msg)
-      this.dispatch("scrollToBottomOfLog")
+      // this.dispatch("scrollToBottomOfLog")
     },
     SOCKET_ONERROR(state,onErrorFnc) {
       state.socket.onerror = onErrorFnc

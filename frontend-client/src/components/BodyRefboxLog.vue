@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="container-fluid p-0 refbox-log text-left overflow-auto">
+  <div class="container-fluid p-0 refbox-log text-left ">
     <!-- <div class="d-flex justify-content-end mt-2 ">
       <button @click=connectToWebsocket class="btn btn-primary mr-2"> Connect </button>
        <button @click=SOCKET_DISCONNECT class="btn btn-primary  mr-2 ">
@@ -10,7 +10,7 @@
     </div> -->
     
     <div class="mx-3 mt-3 reflog-normal-msgs-logger   ">
-      <div v-if="websocketMsgs !== []" class="overflow-auto msg-holder">
+      <div v-if="websocketMsgs !== []" class=" msg-holder">
         <div v-for="(msg,index) in websocketMsgs" :key=index>
             <h6 v-if="msg.level !== 'attention' " class= "mb-0" :class="setClassName(msg.level)"
             :style="setMsgColor(msg.message)"
@@ -34,12 +34,14 @@ export default {
     ...mapState(['websocketMsgs', 'socket'])
   },
   // mounted() {
-  //   setInterval(this.scrollToBottomOfLog, 1000)
+  //   this.$nextTick(() => {
+  //     this.scrollToBottomOfLog();
+  //   });
   // },
   methods: {
     ...mapActions(['connectToWebsocket', 'SOCKET_DISCONNECT', 'SOCKET_SEND', 'scrollToBottomOfLog']),
     setClassName(msgLevel) {
-      this.scrollToBottomOfLog()
+      // this.scrollToBottomOfLog()
       if (msgLevel === 'info') {
         return 'text-active'
       } else if (msgLevel === 'warn' ) {
@@ -51,7 +53,7 @@ export default {
       }
     },
     setMsgColor(msg) {  
-
+      this.scrollToBottomOfLog()
       const reM = /M-*/ 
       const reC = /C-*/ 
       let matchC = reC.exec(msg)
