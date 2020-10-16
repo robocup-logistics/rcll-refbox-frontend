@@ -29,7 +29,7 @@
     <div class="border-right border-left row m-0 log-msgs-main-container h-100"
          :style="phase === 'PRE_GAME' ? 'height: 35vh !important;' : ''">
       <BodyRefboxLog class="border-bottom-0 p-0 pb-3 col-md-9 bodyRefboxLogCmp"/>
-      <AttentionMessagesLogger class="col-md-3 p-0"/>
+      <AttentionMessagesLogger class="col-md-3 p-0 overflow-auto"/>
     </div>
     
   </div>

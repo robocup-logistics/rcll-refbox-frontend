@@ -26,6 +26,6 @@ export default {
 <style>
 .attention-msg-text {
   color:red;
-  font-size: 16px !important;
+  font-size: 18px !important;
 }
 </style>
