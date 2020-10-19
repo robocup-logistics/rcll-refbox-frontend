@@ -25,12 +25,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 export default {
   name: 'BodyScoreTeamA',
   computed: {
     ...mapState(['scoreCyan', 'phase', 'cyanAwardedPoints'])
   },
+  mounted(){
+    this.scrollToEndOfCyanPointsDiv()
+  },
+  methods: {
+    ...mapActions(['scrollToEndOfCyanPointsDiv'])
+  }
 }
 </script>
 
