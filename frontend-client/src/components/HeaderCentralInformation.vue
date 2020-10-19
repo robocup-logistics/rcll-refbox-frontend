@@ -20,7 +20,7 @@
         </div>
         <div class="time">
           <!-- <h3>{{formatSeconds(getGametime)}}</h3> -->
-          <h4 class="marg-bot-0">{{formatSeconds(getGametime)}}</h4>
+          <h4 class="marg-bot-0 time-heading">{{formatSeconds(getGametime)}}</h4>
         </div>
       </div>
     </div>
@@ -114,13 +114,16 @@ export default {
   }
 }
 
-@media (max-width: 1440px){
+@media (max-width: 1540px){
   .previous-btn, .next-btn {
     width: 1em;
     height: 0.7em;
   }
+  .time-heading{
+    font-size: 1.2rem !important;
+  }
   .current-phase-anchor{
-    font-size: 12px;
+    font-size: 0.85rem;
     padding: 0.5rem 0rem;
   }
   .fixedSizeGamestate{

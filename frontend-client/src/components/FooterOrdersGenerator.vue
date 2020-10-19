@@ -3,21 +3,20 @@
   <div>
     <div v-for="order in allOrders" 
          :key=order.id
-         class="max-height-91"
+         class="max-height-6rem"
     >
       <div class="d-flex " >
-        <div class="max-height-91 pb-0 mb-0 d-flex">
+        <div class="max-height-6rem pb-0 mb-0 d-flex">
           <img 
               v-if="products.length === 9"
               :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
-               class="max-height-91 max-width-65 img-fluid" 
+               class="max-height-6rem img-max-width img-fluid" 
                :class="activeDeliveryPeriodImage(order['delivery_period'])"
           > 
           <!-- c0_black__black.svg -->
         </div>  
         <div 
             class="order-info-container ml-2 d-flex flex-column text-left justify-content-around"
-            style="font-size:14px"
             >
           <div class="order-infos ">
             <div>
@@ -148,7 +147,7 @@
                  style="font-size: 12px"
             >
               <span>
-                Complexity: {{order.complexity}}
+                Cmplx: {{order.complexity}}
               </span>
             </div>
           </div>
@@ -281,15 +280,35 @@ export default {
     background-color: var(--main-magenta-color)  !important;
 }
 
-.max-height-91{
-  max-height: 91px !important;
+.max-height-6rem{
+  max-height: 6rem !important;
 }
 
-.max-width-65{
-  max-width: 65px !important;
+.img-max-width{
+  max-width: 4rem !important;
+}
+.order-info-container{
+  font-size: 14px !important;
+}
+@media (max-width: 1540px){
+  .img-max-width{
+    max-width: 3.3rem !important;
+  }
+  .order-info-container{
+    font-size: 12.5px !important;
+  }
+}
+@media (max-width: 1340px){
+  .img-max-width{
+    max-width: 2.8rem !important;
+  }
+  .order-info-container{
+    font-size: 12px !important;
+  }
 }
 .opacity-4{
   opacity: .4;
 }
+
 
 </style>
