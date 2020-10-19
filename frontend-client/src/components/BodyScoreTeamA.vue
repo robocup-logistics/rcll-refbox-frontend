@@ -34,6 +34,11 @@ export default {
   mounted(){
     this.scrollToEndOfCyanPointsDiv()
   },
+  watch:{
+    '': function() {
+      setTimeout(this.scrollToEndOfCyanPointsDiv, 1000)
+    }
+  },
   methods: {
     ...mapActions(['scrollToEndOfCyanPointsDiv'])
   }
