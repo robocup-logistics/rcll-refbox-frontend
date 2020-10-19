@@ -11,11 +11,11 @@
             <div class="d-flex flex-column m-0">
               <div class="robots-container col-xl-12 p-0 "
                   :class="phase === 'PRE_GAME' ? 'border-0' : 'border-bottom'">
-                <BodyRobotsTeamCyan />
+                <BodyRobotsTeamCyan v-if="phase !== 'PRE_GAME'"/>
               </div>
               <div class="score-container col-xl-12 p-0 "
                    :class="phase === 'PRE_GAME' ? '' : ''"  >
-                <BodyScoreTeamA />
+                <BodyScoreTeamA v-if="phase !== 'PRE_GAME'"/>
               </div>
             </div>
           </div>  

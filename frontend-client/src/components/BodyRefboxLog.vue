@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="container-fluid p-0 refbox-log text-left ">
+  <div class="container-fluid p-0 refbox-log text-left">
     <!-- <div class="d-flex justify-content-end mt-2 ">
       <button @click=connectToWebsocket class="btn btn-primary mr-2"> Connect </button>
        <button @click=SOCKET_DISCONNECT class="btn btn-primary  mr-2 ">
