@@ -16,8 +16,6 @@
                       </div>
                       <figcaption class="text-center machine-zone d-flex">
                           <span class="pr-2">{{machine.zone}}</span> 
-                        <br>
-                        <span v-if="currPhase === 'SETUP'">{{machine.rotation}}°</span>
                       </figcaption>
                     </figure>
             </div>
@@ -44,6 +42,9 @@
                     </div>
                   </div>
                   <!-- <span>{{machine.name}}</span> -->
+                  <div class="machine-rotation">
+                        <span v-if="currPhase === 'SETUP'">{{machine.rotation}}°</span>
+                      </div>
             </div>
           </div>
         </div>
@@ -142,6 +143,10 @@ figcaption {
 
 .machine-info {
   line-height: 1 !important;
+}
+
+.machine-rotation{
+  color: var(--main-cyan-color)
 }
 
 .bg-black{

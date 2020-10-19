@@ -2,7 +2,7 @@
   <div >
     <div class="row m-0">
       <div class="team-cyan-body-container col-xl-6 border ">
-        <div class="row" >
+        <div class="row " >
           <div class="col-xl-3 body-machines-container p-0 border-right">
             <BodyMachinesTeamCyan />
           </div>
