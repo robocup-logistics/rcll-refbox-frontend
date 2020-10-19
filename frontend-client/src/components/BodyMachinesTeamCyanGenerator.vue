@@ -14,8 +14,8 @@
                       >
                         <span class="text-active font-weight-bold text-center">{{machine.name}}</span>
                       </div>
-                      <figcaption class="text-center machine-zone d-flex">
-                          <span class="pr-2">{{machine.zone}}</span> 
+                      <figcaption class="text-center machine-zone">
+                          <span >{{machine.zone}}</span> 
                       </figcaption>
                     </figure>
             </div>
