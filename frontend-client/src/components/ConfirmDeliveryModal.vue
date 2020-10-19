@@ -66,7 +66,6 @@ export default {
     ...mapActions(['populateProductsArray', 'SOCKET_SEND']),
     closeModal() {
       console.log('closing');
-      
       this.isOpen = false;
     },
     getProductsImg(orderID) {
@@ -91,17 +90,13 @@ export default {
       
       if (order['unconfirmed_deliveries'].length > 0) {
         if ( typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined') {
-          console.log('first if');
           msg['delivery_id'] = order['unconfirmed_deliveries'][0]['delivery_id']
         }
       } else {
-          console.log('else ');
           msg['delivery_id'] = msg['order_id']
       }
-      console.log(msg, 'sad');
       
       this.SOCKET_SEND(msg)
-      console.log('after sending');
       this.closeModal()
       // this.$destroy()
     }
