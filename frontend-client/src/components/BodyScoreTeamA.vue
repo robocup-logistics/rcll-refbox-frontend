@@ -1,9 +1,7 @@
 <template>
-  <div >
-    <h4 v-if="phase !== 'PRE_GAME'">Points: {{scoreCyan}}</h4>
-    <div class="awarded-points-container "
-         :class="phase === 'PRE_GAME' ? '' : 'border-top'">
-      <div class="row m-0 text-left mt-1">
+  <div class="awarded-points-parent-container">
+    <div class="awarded-points-container ">
+      <div class="row m-0 text-left ">
         <div 
           class="col-md-6 " 
           v-for="(award,index) in cyanAwardedPoints" 
@@ -39,6 +37,7 @@ export default {
 <style scoped>
 .awarded-points-container{
   overflow: auto !important;
-  height: 40vh !important;
+  height: 30vh !important;
 }
+
 </style>

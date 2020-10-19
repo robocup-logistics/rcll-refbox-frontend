@@ -1,19 +1,19 @@
 <template>
   <div >
     <div class="row m-0">
-      <div class="team-cyan-body-container col-xl-6 border">
+      <div class="team-cyan-body-container col-xl-6 border ">
         <div class="row" >
           <div class="col-xl-3 body-machines-container p-0 border-right">
             <BodyMachinesTeamCyan />
           </div>
 
           <div class="col-xl-9 p-0 mt-1">
-            <div class="row m-0">
-              <div class="robots-container col-xl-12 mb-1"
+            <div class="d-flex flex-column m-0">
+              <div class="robots-container col-xl-12 p-0 "
                   :class="phase === 'PRE_GAME' ? 'border-0' : 'border-bottom'">
                 <BodyRobotsTeamCyan />
               </div>
-              <div class="score-container col-xl-12 p-0 mt-2"
+              <div class="score-container col-xl-12 p-0 pt-1"
                    :class="phase === 'PRE_GAME' ? '' : ''"  >
                 <BodyScoreTeamA />
               </div>

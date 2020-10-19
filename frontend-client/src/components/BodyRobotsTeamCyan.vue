@@ -1,12 +1,15 @@
 <template>
   <div >
     <div >
+      <div class="points-container ">
+        <h4 v-if="phase !== 'PRE_GAME'">Points: {{scoreCyan}}</h4>
+      </div>
       <div v-for="(robot,index) in allCyanRobots" 
            :key="robot.number"
            >
         <div class="robot-info d-flex  justify-content-between
-        align-items-center">
-          <div class="robot-col ">
+          align-items-center">
+          <div class="robot-col pl-2">
             <span class="robot-number mr-2 ">{{robot.number}}</span>
             <span class="robot-name mr-3 ">
               <strong> {{robot.name}} </strong>
@@ -66,6 +69,8 @@ export default {
       currentPhase: state => state.phase,
       gametime: state => state.gametime,
       pollRate: state => state.pollRate,
+      scoreCyan: state => state.scoreCyan,
+      phase: state => state.phase
     })
   },
   methods: {
@@ -109,5 +114,8 @@ export default {
 }
 .robot-number, .robot-team, .robot-name {
   color: var(--main-cyan-color) !important;
+}
+.points-container{
+  border-bottom: 1px #dee2e6 solid !important;
 }
 </style>
