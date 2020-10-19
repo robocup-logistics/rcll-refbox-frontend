@@ -343,7 +343,6 @@ export default new Vuex.Store({
     },
     setCyanPoints(state, payload){
       state.cyanAwardedPoints = payload
-      this.dispatch("scrollToEndOfCyanPointsDiv")
     },
     togglePhaseSubmenus(state) {
       state.showPhaseSubmenus = !state.showPhaseSubmenus

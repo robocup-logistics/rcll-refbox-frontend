@@ -38,6 +38,11 @@ export default {
   //     this.scrollToBottomOfLog();
   //   });
   // },
+  watch: {
+    'websocketMsgs': function(){
+      setTimeout(this.scrollToBottomOfLog, 250)
+    }
+  },
   methods: {
     ...mapActions(['connectToWebsocket', 'SOCKET_DISCONNECT', 'SOCKET_SEND', 'scrollToBottomOfLog']),
     setClassName(msgLevel) {
@@ -53,7 +58,6 @@ export default {
       }
     },
     setMsgColor(msg) {  
-      this.scrollToBottomOfLog()
       const reM = /M-*/ 
       const reC = /C-*/ 
       let matchC = reC.exec(msg)
