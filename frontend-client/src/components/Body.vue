@@ -13,7 +13,7 @@
                   :class="phase === 'PRE_GAME' ? 'border-0' : 'border-bottom'">
                 <BodyRobotsTeamCyan />
               </div>
-              <div class="score-container col-xl-12 p-0 pt-1"
+              <div class="score-container col-xl-12 p-0 "
                    :class="phase === 'PRE_GAME' ? '' : ''"  >
                 <BodyScoreTeamA />
               </div>
@@ -72,5 +72,8 @@ export default {
 }
 .bodyRefboxLogCmp {
   overflow-y: auto;
+}
+.score-container {
+  padding-top: 0.1rem !important;
 }
 </style>
