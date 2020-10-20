@@ -287,7 +287,7 @@ export default {
   max-width: 4rem !important;
 }
 .order-info-container{
-  font-size: 14px !important;
+  font-size: 13px !important;
 }
 @media (max-width: 1540px){
   .img-max-width{
@@ -304,6 +304,9 @@ export default {
   .order-info-container{
     font-size: 12px !important;
   }
+  .order-complexity{
+  font-size: 0.8rem !important;
+}
 } 
 @media (max-width: 1225px){
   .img-max-width{
@@ -312,9 +315,17 @@ export default {
   .order-info-container{
     font-size: 10px !important;
   }
+  .order-complexity{
+  font-size: 0.7rem !important;
+}
+}
+@media (max-width: 1100px){
+  .order-complexity{
+  font-size: 0.6rem !important;
+  }
 }
 .order-complexity{
-  font-size: 0.7rem;
+  font-size: 0.8rem;
 }
 .opacity-4{
   opacity: .4;
