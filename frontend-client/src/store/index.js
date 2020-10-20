@@ -75,7 +75,7 @@ export default new Vuex.Store({
         console.log(e);
         console.log('232');
         if (e.code === 1006) {
-          alert('Connection lost!')
+          alert('There is no Connection!')
           state.isConnected = false
           dispatch('toggleAddIpAndPort')
         }
