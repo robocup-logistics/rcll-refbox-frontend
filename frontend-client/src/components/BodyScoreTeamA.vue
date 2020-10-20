@@ -35,7 +35,7 @@ export default {
     this.scrollToEndOfCyanPointsDiv()
   },
   watch:{
-    '': function() {
+    'cyanAwardedPoints': function() {
       setTimeout(this.scrollToEndOfCyanPointsDiv, 1000)
     }
   },
