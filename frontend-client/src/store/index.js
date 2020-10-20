@@ -70,8 +70,17 @@ export default new Vuex.Store({
     SOCKET_ONOPEN({commit}) {
       commit("SOCKET_ONOPEN")
     },
-    SOCKET_ONCLOSE({commit}){
-      commit("SOCKET_ONCLOSE")
+    SOCKET_ONCLOSE({state,commit, dispatch}){
+      const onClose = (e) => { 
+        console.log(e);
+        console.log('232');
+        if (e.code === 1006) {
+          alert('Connection lost!')
+          state.isConnected = false
+          dispatch('toggleAddIpAndPort')
+        }
+      }
+      commit("SOCKET_ONCLOSE", onClose)
     },
     SOCKET_ONMESSAGE({commit, dispatch}) {
       const onMessage = (e) => { 
@@ -129,11 +138,12 @@ export default new Vuex.Store({
       }
       commit("SOCKET_ONMESSAGE", onMessage)
     },
-    SOCKET_ONERROR({commit, dispatch}) {
+    SOCKET_ONERROR({commit}) {
       const onError = (e) => { 
         console.log(e);
-        alert('Couldnt connect to Websocket!')
-        dispatch('toggleAddIpAndPort')
+        // alert('Couldnt connect to Websocket!')
+        console.log("ON ERROR!");
+        
       }
       commit("SOCKET_ONERROR",onError)
     },
@@ -287,17 +297,15 @@ export default new Vuex.Store({
         state.isConnected = true;
       }
     },
-    SOCKET_ONCLOSE(state){
-      state.socket.onclose = (e) => {
-        console.log("Connection closed", e);
-      }
+    SOCKET_ONCLOSE(state, onClose){
+      state.socket.onclose = onClose
     },
     SOCKET_ONMESSAGE(state, onMessageFnc) {
       state.socket.onmessage = onMessageFnc
     },
     SOCKET_DISCONNECT(state) {
       state.socket.close()
-      state.isConnected = false
+      console.log('Disconnect');
     },
     SOCKET_SEND(state, msg) {
       console.log('Sending', msg);
