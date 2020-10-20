@@ -7,8 +7,7 @@
       <div v-for="(robot,index) in allCyanRobots" 
            :key="robot.number"
            >
-        <div class="robot-info d-flex  justify-content-between
-          align-items-center">
+        <div class="robot-info d-flex align-items-center">
           <div class="robot-col pl-2">
             <span class="robot-number mr-2 ">{{robot.number}}</span>
             <span class="robot-name mr-3 ">
@@ -117,5 +116,19 @@ export default {
 }
 .points-container{
   border-bottom: 1px #dee2e6 solid !important;
+}
+.robot-info > * {
+  flex: 1  !important;
+}
+.robot-host-ip{
+  text-align: center !important;
+  margin: 0 !important;
+}
+.robot-info > div{
+  display: flex !important;
+  justify-content: space-around;
+}
+.robot-col{
+  justify-content: flex-start !important;
 }
 </style>
