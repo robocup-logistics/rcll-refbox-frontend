@@ -1,19 +1,19 @@
 <template>
   <div >
     <div class="row m-0">
-      <div class="team-cyan-body-container col-xl-6 border ">
+      <div class="team-cyan-body-container col-md-6 border ">
         <div class="row " >
-          <div class="col-xl-3 body-machines-container p-0 border-right">
+          <div class="col-md-3 body-machines-container p-0 border-right">
             <BodyMachinesTeamCyan />
           </div>
 
-          <div class="col-xl-9 p-0 mt-1">
+          <div class="col-md-9 p-0 mt-1">
             <div class="d-flex flex-column m-0">
-              <div class="robots-container col-xl-12 p-0 "
+              <div class="robots-container col-md-12 p-0 "
                   :class="phase === 'PRE_GAME' ? 'border-0' : 'border-bottom'">
                 <BodyRobotsTeamCyan v-if="phase !== 'PRE_GAME'"/>
               </div>
-              <div class="score-container col-xl-12 p-0 "
+              <div class="score-container col-md-12 p-0 "
                    :class="phase === 'PRE_GAME' ? '' : ''"  >
                 <BodyScoreTeamA v-if="phase !== 'PRE_GAME'"/>
               </div>
@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <div class="team-b-body col-xl-6 border">
+      <div class="team-b-body col-md-6 border">
       </div>
     </div>
 

@@ -144,7 +144,6 @@
             </div>
             <div class="order-complexity mt-1"
                  :class="activeDeliveryPeriod(order['delivery_period'])"
-                 style="font-size: 12px"
             >
               <span>
                 Cmplx: {{order.complexity}}
@@ -305,6 +304,17 @@ export default {
   .order-info-container{
     font-size: 12px !important;
   }
+} 
+@media (max-width: 1225px){
+  .img-max-width{
+    max-width: 2.3rem !important;
+  }
+  .order-info-container{
+    font-size: 10px !important;
+  }
+}
+.order-complexity{
+  font-size: 0.7rem;
 }
 .opacity-4{
   opacity: .4;
