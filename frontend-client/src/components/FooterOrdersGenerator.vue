@@ -146,7 +146,7 @@
                  :class="activeDeliveryPeriod(order['delivery_period'])"
             >
               <span>
-                Cmplx: {{order.complexity}}
+                Complex: {{order.complexity}}
               </span>
             </div>
           </div>
@@ -308,7 +308,7 @@ export default {
   font-size: 0.8rem !important;
 }
 } 
-@media (max-width: 1225px){
+@media (max-width: 1265px){
   .img-max-width{
     max-width: 2.3rem !important;
   }
