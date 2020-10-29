@@ -3,21 +3,20 @@
   <div>
     <div v-for="order in allOrders" 
          :key=order.id
-         class="max-height-91"
+         class="max-height-6rem"
     >
       <div class="d-flex " >
-        <div class="max-height-91 pb-0 mb-0 d-flex">
+        <div class="max-height-6rem pb-0 mb-0 d-flex">
           <img 
               v-if="products.length === 9"
               :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
-               class="max-height-91 max-width-65 img-fluid" 
+               class="max-height-6rem img-max-width img-fluid" 
                :class="activeDeliveryPeriodImage(order['delivery_period'])"
           > 
           <!-- c0_black__black.svg -->
         </div>  
         <div 
             class="order-info-container ml-2 d-flex flex-column text-left justify-content-around"
-            style="font-size:14px"
             >
           <div class="order-infos ">
             <div>
@@ -137,18 +136,18 @@
           </div>  
             </div>
 
-            <div class="order-complexity"
-                 :class="activeDeliveryPeriod(order['delivery_period'])"
-                 style="font-size: 12px"
-            >
-              <span>
-                Complexity: {{order.complexity}}
-              </span>
-            </div>
+            
             <div class="delivery-time" 
                  :class="activeDeliveryPeriod(order['delivery_period'])"
             >
               <span>{{ formatSeconds(order['delivery_period'][0]) }}-{{formatSeconds(order['delivery_period'][1])}}</span>
+            </div>
+            <div class="order-complexity mt-1"
+                 :class="activeDeliveryPeriod(order['delivery_period'])"
+            >
+              <span>
+                Complex: {{order.complexity}}
+              </span>
             </div>
           </div>
         </div>
@@ -214,7 +213,7 @@ export default {
     // Grays out orders that are not active
     activeDeliveryPeriod(deliveryPeriod){
       // Check if it is in the delivery period
-      if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime)) {
+      if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime) ) {
         return 'text-active'
       } else {
         return 'text-muted'
@@ -222,7 +221,7 @@ export default {
     },
     activeDeliveryPeriodImage(deliveryPeriod){
       // Check if it is in the delivery period
-      if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime)) {
+      if (deliveryPeriod[0] <= parseInt(this.gametime) && deliveryPeriod[1] >= parseInt(this.gametime) || deliveryPeriod[0] >= parseInt(this.gametime) ) {
         return ''
       } 
       // If it's not
@@ -280,15 +279,57 @@ export default {
     background-color: var(--main-magenta-color)  !important;
 }
 
-.max-height-91{
-  max-height: 91px !important;
+.max-height-6rem{
+  max-height: 6rem !important;
 }
 
-.max-width-65{
-  max-width: 65px !important;
+.img-max-width{
+  max-width: 4rem !important;
+}
+.order-info-container{
+  font-size: 13px !important;
+}
+@media (max-width: 1540px){
+  .img-max-width{
+    max-width: 3.3rem !important;
+  }
+  .order-info-container{
+    font-size: 12.5px !important;
+  }
+}
+@media (max-width: 1340px){
+  .img-max-width{
+    max-width: 2.8rem !important;
+  }
+  .order-info-container{
+    font-size: 12px !important;
+  }
+  .order-complexity{
+  font-size: 0.8rem !important;
+}
+} 
+@media (max-width: 1265px){
+  .img-max-width{
+    max-width: 2.3rem !important;
+  }
+  .order-info-container{
+    font-size: 10px !important;
+  }
+  .order-complexity{
+  font-size: 0.7rem !important;
+}
+}
+@media (max-width: 1100px){
+  .order-complexity{
+  font-size: 0.6rem !important;
+  }
+}
+.order-complexity{
+  font-size: 0.8rem;
 }
 .opacity-4{
   opacity: .4;
 }
+
 
 </style>

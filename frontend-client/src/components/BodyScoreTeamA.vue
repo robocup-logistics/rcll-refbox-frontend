@@ -1,10 +1,9 @@
 <template>
-  <div >
-    <h4 v-if="phase !== 'PRE_GAME'">Points: {{scoreCyan}}</h4>
-    <div class="awarded-points-container border-top">
+  <div class="awarded-points-parent-container">
+    <div class="awarded-points-container ">
       <div class="row m-0 text-left ">
         <div 
-          class="col-md-6"
+          class="col-md-6 " 
           v-for="(award,index) in cyanAwardedPoints" 
           :key='index'>
           <div v-if="cyanAwardedPoints.length !== 0">
@@ -26,18 +25,30 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 export default {
   name: 'BodyScoreTeamA',
   computed: {
     ...mapState(['scoreCyan', 'phase', 'cyanAwardedPoints'])
   },
+  mounted(){
+    this.scrollToEndOfCyanPointsDiv()
+  },
+  watch:{
+    'cyanAwardedPoints': function() {
+      setTimeout(this.scrollToEndOfCyanPointsDiv, 500)
+    }
+  },
+  methods: {
+    ...mapActions(['scrollToEndOfCyanPointsDiv'])
+  }
 }
 </script>
 
 <style scoped>
 .awarded-points-container{
   overflow: auto !important;
-  max-height: 35vh !important;
+  height: 31vh !important;
 }
+
 </style>

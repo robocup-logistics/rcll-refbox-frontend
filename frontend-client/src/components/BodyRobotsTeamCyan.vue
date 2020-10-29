@@ -1,22 +1,25 @@
 <template>
   <div >
     <div >
+      <div class="points-container ">
+        <h4 v-if="phase !== 'PRE_GAME'">Points: {{scoreCyan}}</h4>
+      </div>
       <div v-for="(robot,index) in allCyanRobots" 
            :key="robot.number"
            >
-        <div class="robot-info d-flex justify-content-between">
-          <div class="robot-host">
+        <div class="robot-info d-flex align-items-center">
+          <div class="robot-col pl-2">
+            <span class="robot-number mr-2 ">{{robot.number}}</span>
+            <span class="robot-name mr-3 ">
+              <strong> {{robot.name}} </strong>
+            </span>
+          </div>
+          <div class="robot-host  ">
             <span class="robot-host-ip">
               {{robot.host}}
             </span>
           </div>
-          <div class="robot-col">
-          <span class="robot-number mr-2 ">{{robot.number}}</span>
-          <span class="robot-name mr-3 ">
-            <strong> {{robot.name}} </strong>
-          </span>
-        </div>
-          <div class="robot-state display-flex align-items-center">
+          <div class="robot-state display-flex align-items-center ">
             <span class="robot-current-state mr-2 text-success"
                   v-if="robotState(index) === 'active'"
             >
@@ -65,6 +68,8 @@ export default {
       currentPhase: state => state.phase,
       gametime: state => state.gametime,
       pollRate: state => state.pollRate,
+      scoreCyan: state => state.scoreCyan,
+      phase: state => state.phase
     })
   },
   methods: {
@@ -108,5 +113,22 @@ export default {
 }
 .robot-number, .robot-team, .robot-name {
   color: var(--main-cyan-color) !important;
+}
+.points-container{
+  border-bottom: 1px #dee2e6 solid !important;
+}
+.robot-info > * {
+  flex: 1  !important;
+}
+.robot-host-ip{
+  text-align: center !important;
+  margin: 0 !important;
+}
+.robot-info > div{
+  display: flex !important;
+  justify-content: space-around;
+}
+.robot-col{
+  justify-content: flex-start !important;
 }
 </style>

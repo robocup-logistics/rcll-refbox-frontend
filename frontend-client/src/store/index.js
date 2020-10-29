@@ -40,7 +40,8 @@ export default new Vuex.Store({
     error: '',
     websocketURL : 'ws://localhost:1234',
     pointsCyanFlag: false,
-    showPhaseSubmenus: false
+    showPhaseSubmenus: false,
+    addIpAndPort: false,
   },
 
   getters: {
@@ -69,8 +70,17 @@ export default new Vuex.Store({
     SOCKET_ONOPEN({commit}) {
       commit("SOCKET_ONOPEN")
     },
-    SOCKET_ONCLOSE({commit}){
-      commit("SOCKET_ONCLOSE")
+    SOCKET_ONCLOSE({state,commit, dispatch}){
+      const onClose = (e) => { 
+        console.log(e);
+        console.log('232');
+        if (e.code === 1006) {
+          alert('There is no Connection!')
+          state.isConnected = false
+          dispatch('toggleAddIpAndPort')
+        }
+      }
+      commit("SOCKET_ONCLOSE", onClose)
     },
     SOCKET_ONMESSAGE({commit, dispatch}) {
       const onMessage = (e) => { 
@@ -131,7 +141,9 @@ export default new Vuex.Store({
     SOCKET_ONERROR({commit}) {
       const onError = (e) => { 
         console.log(e);
-        alert('Couldnt connect to Websocket!')
+        // alert('Couldnt connect to Websocket!')
+        console.log("ON ERROR!");
+        
       }
       commit("SOCKET_ONERROR",onError)
     },
@@ -253,10 +265,10 @@ export default new Vuex.Store({
      container.scrollTop =container.scrollHeight;
     },
     scrollToBottomOfLog() {
-      const refLog = document.querySelector('.refbox-log');
-      const ref = document.querySelector('.reflog-normal-msgs-logger');      
-      ref.scrollTop = ref.scrollHeight - ref.clientHeight;
+      const refLog = document.querySelector('.bodyRefboxLogCmp');
+      const msgs = document.querySelector('.msg-holder')
       refLog.scrollTop = refLog.scrollHeight - refLog.clientHeight;
+      msgs.scrollTop = msgs.scrollHeight - msgs.clientHeight;
       
     },
     togglePhaseSubmenus({commit}){
@@ -267,12 +279,17 @@ export default new Vuex.Store({
     },
     setWebsocketURL({commit}, URL) {
       commit('setWebsocketURL', URL)
-    }
+    },
+    toggleAddIpAndPort({state}) {
+      state.addIpAndPort = !state.addIpAndPort
+    },
   },
   
   mutations: {
     setSocketUrl(state) {
       state.socket = new WebSocket(state.websocketURL)
+      console.log(state.socket);
+      
     },
     SOCKET_ONOPEN(state) {
       state.socket.onopen = (e) => {
@@ -280,20 +297,15 @@ export default new Vuex.Store({
         state.isConnected = true;
       }
     },
-    SOCKET_ONCLOSE(state){
-      state.socket.onclose = (e) => {
-        console.log("Connection closed", e);
-        alert("Connection has been lost")
-      }
+    SOCKET_ONCLOSE(state, onClose){
+      state.socket.onclose = onClose
     },
     SOCKET_ONMESSAGE(state, onMessageFnc) {
       state.socket.onmessage = onMessageFnc
-      console.log(1);
     },
     SOCKET_DISCONNECT(state) {
       state.socket.close()
-      state.isConnected = false
-      alert('Connection has been lost')
+      console.log('Disconnect');
     },
     SOCKET_SEND(state, msg) {
       console.log('Sending', msg);
@@ -302,7 +314,7 @@ export default new Vuex.Store({
     },
     SOCKET_ADDMESSAGE(state, msg){
       state.websocketMsgs.push(msg)
-      this.dispatch("scrollToBottomOfLog")
+      // this.dispatch("scrollToBottomOfLog")
     },
     SOCKET_ONERROR(state,onErrorFnc) {
       state.socket.onerror = onErrorFnc
@@ -339,7 +351,6 @@ export default new Vuex.Store({
     },
     setCyanPoints(state, payload){
       state.cyanAwardedPoints = payload
-      this.dispatch("scrollToEndOfCyanPointsDiv")
     },
     togglePhaseSubmenus(state) {
       state.showPhaseSubmenus = !state.showPhaseSubmenus

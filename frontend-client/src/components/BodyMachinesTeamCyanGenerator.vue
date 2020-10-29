@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="row m-0 pt-3 h-100 w-100">
-        <div class="mb-1 col-xl-12 col-md-3"
+    <div class="row m-0 pt-2 h-100 w-100">
+        <div class=" col-md-12 col-md-3"
              :class="[machine.mtype+'-station']"
              v-for="(machine,index) in machinesCyan" 
              :key="index" 
         >
-          <div class="d-flex align-content-center ml-3" >
+          <div class="d-flex align-content-center ml-2" >
             <div class="base-image-container mr-1">
                     <figure>
                       <div class="station-specific-info-container text-center"
@@ -14,35 +14,37 @@
                       >
                         <span class="text-active font-weight-bold text-center">{{machine.name}}</span>
                       </div>
-                      <figcaption class="text-center machine-zone">{{machine.zone}}
-                        <br>
-                        <span v-if="currPhase === 'SETUP'">{{machine.rotation}}°</span>
+                      <figcaption class="text-center machine-zone">
+                          <span >{{machine.zone}}</span> 
                       </figcaption>
                     </figure>
             </div>
             <div class="machine-info d-flex flex-column ">
-                  <span :class="setStateClass(machine.state)">
+                  <span :class="setStateClass(machine.state)" >
                     {{machine.state}}
                   </span>
                   <!-- If RS show additional Info -->
                   <div v-if="machine.mtype === 'RS'" class="d-flex my-1">
-                    <span>{{machine['bases_added'] - machine['bases_used']}}</span>
+                    <span class="lead">{{machine['bases_added'] - machine['bases_used']}}</span>
                     <div class="ml-2 d-flex">
                       <div 
-                        class="rs-color-container mr-1"
+                        class="rs-color-container mr-1 text-center"
                         :class="setRSandBSColor(machine['rs_ring_colors'][0])">
-                        <span class="invisible">color</span>
+                        <span class="lead">{{showPreparedColorInfo(machine['rs_ring_colors'][0])}}</span>
+
                       </div>
-                      <span>{{showPreparedColorInfo(machine['rs_ring_colors'][0])}}</span>
                       <div 
-                        class="rs-color-container mx-1"
+                        class="rs-color-container mx-1 text-center"
                         :class="setRSandBSColor(machine['rs_ring_colors'][1])">
-                        <span class="invisible">color</span>
+                        <span class="lead">{{showPreparedColorInfo(machine['rs_ring_colors'][1])}}</span>
+
                       </div>
-                      <span>{{showPreparedColorInfo(machine['rs_ring_colors'][1])}}</span>
                     </div>
                   </div>
                   <!-- <span>{{machine.name}}</span> -->
+                  <div class="machine-rotation">
+                        <span v-if="currPhase === 'SETUP'">{{machine.rotation}}°</span>
+                      </div>
             </div>
           </div>
         </div>
@@ -90,7 +92,7 @@ export default {
           reqBases = ringspec['req_bases'];
         }
       });
-      return `- ${reqBases}`;
+      return `${reqBases}`;
     },
     // Sets background color depending on the ringcolor and BS-Color
     setRSandBSColor(color) {
@@ -141,6 +143,10 @@ figcaption {
 
 .machine-info {
   line-height: 1 !important;
+}
+
+.machine-rotation{
+  color: var(--main-cyan-color)
 }
 
 .bg-black{

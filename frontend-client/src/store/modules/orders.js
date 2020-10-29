@@ -34,9 +34,7 @@ export default{
 
   actions: {
     SetOrdersAtReconnect({commit, dispatch, state}, payload) {
-      if(!state.ordersFlag) {
-        console.log(payload);
-        
+      if(!state.ordersFlag) {        
         commit("setOrdersArray", payload)
         dispatch("populateProducts")
       }
@@ -52,8 +50,6 @@ export default{
       } else {
         const index = state.allOrders.findIndex(order => order.id === payload.id)
         if (index !== -1) {
-          console.log('commit addOrder');
-          
           commit("addOrder", {payload, index})
         }
       }
