@@ -21,6 +21,7 @@ library.add(faPauseCircle, faChevronLeft, faChevronRight, faArrowRight, faPlayCi
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(require('vue-shortkey'))
 Vue.config.productionTip = false
+
 Vue.mixin({
   methods: {
     formatSeconds: function formatSeconds(seconds){

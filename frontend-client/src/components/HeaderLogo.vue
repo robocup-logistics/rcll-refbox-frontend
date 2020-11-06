@@ -2,8 +2,10 @@
   <div class="d-flex justify-content-between border">
     <img  alt="Refbox Logo">
     <div class="d-flex m-0">
-      <a @click.prevent='toggleConfirmationDialogFieldRnd' class="btn btn-fields btn-md"
-      data-toggle="tooltip" data-placement="bottom" title="Randomize Field" 
+      <a @click.prevent='toggleConfirmationDialogFieldRnd' 
+      class="btn btn-fields btn-md" data-toggle="tooltip" 
+      data-placement="bottom" title="Randomize Field" 
+      v-shortkey.once="['f1']" @shortkey="toggleConfirmationDialogFieldRnd"
       >
         <font-awesome-icon :icon="['fa','random']" style="font-size: 12px;" />
       </a>
