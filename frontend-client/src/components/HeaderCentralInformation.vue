@@ -37,6 +37,7 @@
         <li class=" nav-item dropdown fixedSizeGamestate text-center" >
           <a class="nav-link dropdown-toggle current-phase-anchor " data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
           @click.prevent="togglePhaseSubmenus()"
+          v-shortkey.once="['f3']" @shortkey="togglePhaseSubmenus()"
           >
             {{getPhase}}
           </a>
