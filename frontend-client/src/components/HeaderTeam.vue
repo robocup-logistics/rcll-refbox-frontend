@@ -7,6 +7,7 @@
           <button 
           class="btn  btn-add-team btn-cyan-header"
           @click="toggleForm()"
+          v-shortkey.once="['f4']" @shortkey="toggleForm()"
           >Add Team Cyan</button>
         </div>
         <div class="mb-2" v-show="isClicked">
