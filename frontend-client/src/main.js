@@ -19,7 +19,7 @@ import store from '@/store/index'
 library.add(faPauseCircle, faChevronLeft, faChevronRight, faArrowRight, faPlayCircle, 
   faRobot, faExclamationTriangle, faRandom, faGlobe,faLink, faUnlink )
 Vue.component('font-awesome-icon', FontAwesomeIcon)
-
+Vue.use(require('vue-shortkey'))
 Vue.config.productionTip = false
 Vue.mixin({
   methods: {
