@@ -98,7 +98,6 @@ export default {
     togglePhaseMenuAndFocus() {
       this.togglePhaseSubmenus()
       this.$nextTick(function () {
-        console.log(this.$refs.firstOne);
         this.$refs.firstOne.focus()
       })
     }
@@ -119,6 +118,9 @@ export default {
 }
 .current-phase-anchor:hover, .current-phase-anchor:focus{
   box-shadow: none;
+}
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: rgba(133, 230, 205, 0.5) !important;
 }
 
 @media (min-width: 1200px){
