@@ -25,6 +25,9 @@ export default {
     ...mapState(['showPhaseSubmenus']),
     phaseSubmenus () {
       return this.$store.getters.getPhaseSubmenusStatus
+    },
+    teamMenuCyan () {
+      return this.$store.getters.getTeamMenuCyanTriggerStatus
     }
   },
   watch: {
@@ -34,14 +37,29 @@ export default {
       } else {
         this.$el.removeEventListener('click', this.closeSubmenusForPhases)
       }
+    },
+    teamMenuCyan() {
+      if (this.$store.getters.getTeamMenuCyanTriggerStatus === true) {
+        this.$el.addEventListener('click', this.closeTeamMenuCyanMethod)
+      } else {
+        this.$el.removeEventListener('click', this.closeTeamMenuCyanMethod)
+      }
     }
   },
   methods: {
-    ...mapActions(['closePhaseSubmenus']),
+    ...mapActions(['closePhaseSubmenus', 'closeTeamMenuCyan']),
     closeSubmenusForPhases(e) {
       // check if anything other than the phase is clicked and close the submenu 
       if (!(e.target.classList.contains('current-phase-anchor')) ) {
         this.closePhaseSubmenus()
+      }
+    },
+    closeTeamMenuCyanMethod(e) {
+      // check if anything other than the menu is clicked and close the submenu
+      console.log();
+      
+      if (!(e.target.classList.contains('cyanSelectArrow')) || (e.target.classList.contains('btn-cyan-header'))) {
+        this.closeTeamMenuCyan()
       }
     }
   }

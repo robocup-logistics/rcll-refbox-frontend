@@ -6,24 +6,41 @@
         <div class="col-md-12 my-2 add-team-container">
           <button 
           class="btn  btn-add-team btn-cyan-header"
-          @click="toggleForm()"
-          v-shortkey.once="['f4']" @shortkey="toggleForm()"
+          @click="toggleFormAndTeams()"
+          v-shortkey.once="['f4']" @shortkey="toggleFormAndTeams()"
           >Add Team Cyan</button>
         </div>
         <div class="mb-2" v-show="isClicked">
           <form @submit.prevent="setName(color)"
-                class="form-cyan"
+                class="form-cyan d-flex"
           >
             <input type="text" 
             placeholder="add teamname"
-            class="input-cyan"
+            class="input-cyan "
             required
             ref="cyanInputBox"
             v-model="cyanName"
             >
-            <button type="submit" class="submit-btn">
-               <font-awesome-icon :icon="['fa','arrow-right']" class="fa-1x " />
+            <button type="submit" class="submit-btn" v-show="cyanName.length >= 1">
+               <font-awesome-icon :icon="['fa','arrow-right']" class="fa-1x" 
+                                  
+              />
             </button>
+            <div class="dropdown show">
+              <a class=" btn dropdown-toggle cyanSelectArrow " 
+                 data-toggle="dropdown" href="#" role="button" 
+                 aria-haspopup="true" aria-expanded="false" 
+                 @click.prevent="toggleTeamMenuCyan()">
+              </a>
+              <div class="dropdown-menu cyanDropdown" 
+                   :style="teamMenuTriggeredCyan ? 'display:block' : 'display:none'"
+              >
+                <a href="#" class="dropdown-item" @click.prevent="fillCyanNameInput(knownTeam)"
+                   v-for="(knownTeam,index) in knownTeams" :key="index"  >
+                   {{knownTeam}}
+                </a>
+              </div>
+            </div>
           </form>
         </div>
       </div>
@@ -80,7 +97,7 @@ export default {
   },
   data() {
     return {
-      isClicked: false
+      isClicked: false,
     }
   },
   computed: {
@@ -88,7 +105,9 @@ export default {
       showFormCyan: state => state.showFormCyan,
       showFormMagenta: state => state.showFormMagenta,
       getCyanName: state => state.nameTeamCyan,
-      getMagentaName: state => state.nameTeamMagenta
+      getMagentaName: state => state.nameTeamMagenta,
+      knownTeams: state => state.knownTeams,
+      teamMenuTriggeredCyan: state => state.teamMenuTriggeredCyan
     }),
     cyanName: {
       get() {
@@ -108,7 +127,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setNameCyan', 'setNameMagenta', 'SOCKET_SEND']),
+    ...mapActions(['setNameCyan', 'setNameMagenta', 'SOCKET_SEND', 'toggleTeamMenuCyan', 'openTeamMenuCyan']),
     setName(color) {
       color = color.toUpperCase()
       const msg = {
@@ -130,7 +149,18 @@ export default {
           this.$refs.magentaInputBox.focus()
         })
       }
+    },
+    toggleFormAndTeams(){
+      this.toggleForm()
+      this.openTeamMenuCyan()
+    },
+    fillCyanNameInput(name){
+      this.cyanName = name
+      this.$nextTick(function () {
+          this.$refs.cyanInputBox.focus()
+        })
     }
+    
   }
   
 }
@@ -144,6 +174,10 @@ export default {
   color: var(--main-magenta-color) !important;
   border-color: var(--main-magenta-color) !important;
   transition-duration: 0.2s !important
+}
+.cyanSelectArrow{
+  padding: 0 0.4em !important;
+  
 }
 
 .btn-magenta-header:hover {
