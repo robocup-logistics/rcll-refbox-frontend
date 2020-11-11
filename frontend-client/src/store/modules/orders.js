@@ -39,7 +39,6 @@ export default{
   actions: {
     SetOrdersAtReconnect({commit, dispatch, state}, payload) {
       if(!state.ordersFlag) {        
-        console.log(payload);
         commit("setOrdersArray", payload)
         dispatch("populateProducts")
       }

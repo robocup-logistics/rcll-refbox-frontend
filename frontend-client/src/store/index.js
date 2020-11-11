@@ -78,7 +78,6 @@ export default new Vuex.Store({
     SOCKET_ONCLOSE({state,commit, dispatch}){
       const onClose = (e) => { 
         console.log(e);
-        console.log('232');
         if (e.code === 1006) {
           alert('There is no Connection!')
           state.isConnected = false
@@ -120,7 +119,6 @@ export default new Vuex.Store({
             dispatch("SetPointsCyan", cyanPoints)
           }
           else if(msgObj.type === 'order-count') {
-            console.log(msgObj);
             dispatch('setOrderCount', msgObj.count)
           }
           // Websocket sends an array of objects with all of the information
@@ -145,9 +143,6 @@ export default new Vuex.Store({
               dispatch("SetPointsCyan", cyanPoints)
             }
             if(msgObj[0].type === 'known-teams') {
-              console.log(msgObj, 'asd');
-              console.log(msgObj[0]["known_teams"]);
-              
               dispatch('setKnownTeams', msgObj[0]["known_teams"])
             }  
           } 
