@@ -113,6 +113,10 @@ export default new Vuex.Store({
             // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
             dispatch("SetPointsCyan", cyanPoints)
           }
+          else if(msgObj.type === 'order-count') {
+            console.log(msgObj);
+            dispatch('setOrderCount', msgObj.count)
+          }
           // Websocket sends an array of objects with all of the information
           // Check if that"s the case
           else if(typeof msgObj[0] !== 'undefined'){
@@ -127,6 +131,7 @@ export default new Vuex.Store({
             } else if(msgObj[0].type === 'ring-spec'){
               dispatch("SetRingspecs", msgObj)
             } else if(msgObj[0].type === 'order-info') {
+              console.log(msgObj);
               dispatch("SetOrdersAtReconnect", msgObj)
             } else if(msgObj[0].type === 'points') {
               const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
