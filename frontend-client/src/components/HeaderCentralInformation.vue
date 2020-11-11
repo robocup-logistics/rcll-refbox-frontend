@@ -28,45 +28,45 @@
     </div>
 
     <div class="phase row justify-content-center align-items-center mt-1">
-      <a class="btn  p-0" @click.prevent="setPreviousPhase"
+      <a class="btn p-0" @click.prevent="setPreviousPhase"
          data-toggle="tooltip" data-placement="top" title="return previous phase"
       >
         <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x previous-btn" />
       </a>
-      <ul class="nav nav-pills  text-center">
-        <li class=" nav-item dropdown fixedSizeGamestate text-center" >
-          <a class="nav-link dropdown-toggle current-phase-anchor " data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
-          @click.prevent="togglePhaseSubmenus()"
-          v-shortkey.once="['f3']" @shortkey="togglePhaseSubmenus()"
+        <div class="dropdown fixedSizeGamestate text-center" >
+          <a class=" btn dropdown-toggle current-phase-anchor " 
+          data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+          @click.prevent="togglePhaseMenuAndFocus()" ref="firstOne"
+          v-shortkey.once="['f3']" @shortkey="togglePhaseMenuAndFocus()"
           >
             {{getPhase}}
           </a>
-          <div class="dropdown-menu" style=""
+          <div class="dropdown-menu" 
+              v-shortkey.once="['esc']" @shortkey="togglePhaseSubmenus()"
                :style="showPhaseSubmenus ? 'display:block' : 'display:none'"
           >
-            <a class="dropdown-item" href="#"
-              v-if="getPhase !== 'PRE_GAME'"
+           <a class="dropdown-item" href="#" 
+              v-show="getPhase !== 'PRE_GAME'" 
               @click.prevent="switchGamestate('PRE_GAME')"
-              >PRE_GAME</a>
-            <a class="dropdown-item" href="#"
-              v-if="getPhase !== 'SETUP'"
+              >PRE_GAME</a>    
+           <a class="dropdown-item" href="#"
+              v-show="getPhase !== 'SETUP'"
               @click.prevent="switchGamestate('SETUP')"
               >SETUP</a>
-            <a class="dropdown-item" href="#"
-              v-if="getPhase !== 'EXPLORATION'"
+           <a class="dropdown-item" href="#" 
+              v-show="getPhase !== 'EXPLORATION'"
               @click.prevent="switchGamestate('EXPLORATION')"
               >EXPLORATION</a>
-            <a class="dropdown-item" href="#"
-              v-if="getPhase !== 'PRODUCTION'"
+           <a class="dropdown-item" href="#"
+              v-show="getPhase !== 'PRODUCTION'" 
               @click.prevent="switchGamestate('PRODUCTION')"
               >PRODUCTION</a>
-            <a class="dropdown-item" href="#"
-              v-if="getPhase !== 'POST_GAME'"
+           <a class="dropdown-item" href="#"
+              v-show="getPhase !== 'POST_GAME'"
               @click.prevent="switchGamestate('POST_GAME')"
               >POST_GAME</a>
           </div>
-        </li>
-      </ul>
+      </div>
       <a class="btn  p-0" @click.prevent="setNextPhase"
          data-toggle="tooltip" data-placement="top" title="change to next phase"
       >
@@ -94,6 +94,13 @@ export default {
     switchGamestate(state) {
       this.setCurrentPhase(state)
       this.togglePhaseSubmenus()
+    },
+    togglePhaseMenuAndFocus() {
+      this.togglePhaseSubmenus()
+      this.$nextTick(function () {
+        console.log(this.$refs.firstOne);
+        this.$refs.firstOne.focus()
+      })
     }
   }
 }
@@ -105,7 +112,13 @@ export default {
 }
 
 .next-btn:hover, .previous-btn:hover, .play-btn:hover, .pause-btn:hover{
-  color: green;
+  color: #00bc8c;
+}
+.current-phase-anchor:hover{
+  color: #00bc8c;
+}
+.current-phase-anchor:hover, .current-phase-anchor:focus{
+  box-shadow: none;
 }
 
 @media (min-width: 1200px){
