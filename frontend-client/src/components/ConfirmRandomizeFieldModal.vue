@@ -11,8 +11,12 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary"
-                        @click.prevent="confirmedRandomize()">Yes</button>
-                <button type="button" class="btn btn-secondary" @click.prevent="closeModal()" data-dismiss="modal">No</button>
+                        @click.prevent="confirmedRandomize()"
+                        v-shortkey.once="['enter']" @shortkey="confirmedRandomize()"
+                        >Yes</button>
+                <button type="button" class="btn btn-secondary" @click.prevent="closeModal()" 
+                        v-shortkey.once="['esc']" @shortkey="closeModal()"
+                        data-dismiss="modal">No</button>
               </div>
             </div>
           </div>
