@@ -4,7 +4,7 @@
       <div class="team-cyan-body-container col-md-6 border ">
         <div class="row " >
           <div class="col-md-3 body-machines-container p-0 border-right">
-            <BodyMachinesTeamCyan />
+            <BodyMachines />
           </div>
 
           <div class="col-md-9 p-0 mt-1">
@@ -22,7 +22,26 @@
         </div>
       </div>
 
-      <div class="team-b-body col-md-6 border">
+      <div class="team-magenta-body col-md-6 border">
+        <div class="row " >
+
+          <div class="col-md-9 p-0 mt-1">
+            <div class="d-flex flex-column m-0">
+              <div class="robots-container col-md-12 p-0 "
+                  :class="phase === 'PRE_GAME' ? 'border-0' : 'border-bottom'">
+                <!-- <BodyRobotsTeamCyan v-if="phase !== 'PRE_GAME'"/> -->
+              </div>
+              <div class="score-container col-md-12 p-0 "
+                   :class="phase === 'PRE_GAME' ? '' : ''"  >
+                <!-- <BodyScoreTeamA v-if="phase !== 'PRE_GAME'"/> -->
+              </div>
+            </div>
+          </div>  
+          <div class="col-md-3 body-machines-container p-0 border-left">
+            <BodyMachines />
+          </div>
+          <!-- Magenta Row ends hier -->
+        </div>
       </div>
     </div>
 
@@ -36,7 +55,7 @@
 </template>
 
 <script>
-import BodyMachinesTeamCyan from './BodyMachinesTeamCyan'
+import BodyMachines from './BodyMachines'
 import BodyScoreTeamA from './BodyScoreTeamA'
 import BodyRobotsTeamCyan from './BodyRobotsTeamCyan'
 import BodyRefboxLog from './BodyRefboxLog'
@@ -46,7 +65,7 @@ import { mapState, mapActions } from 'vuex';
 export default {
   name: 'Body',
   components: {
-    BodyMachinesTeamCyan,
+    BodyMachines,
     BodyScoreTeamA,
     BodyRobotsTeamCyan,
     BodyRefboxLog,

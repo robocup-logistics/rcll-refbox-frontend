@@ -11,7 +11,7 @@ import { mapState } from 'vuex';
 import BodyMachinesTeamCyanGenerator from './BodyMachinesTeamCyanGenerator';
 
 export default {
-  name: 'BodyMachinesTeamCyan',
+  name: 'BodyMachines',
   components: {
     BodyMachinesTeamCyanGenerator
   },
