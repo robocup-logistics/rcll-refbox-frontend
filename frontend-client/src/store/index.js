@@ -187,7 +187,7 @@ export default new Vuex.Store({
         commit("setCurrentCyanScore", payload['points_cyan'])        
       }
       if (state.scoreMagenta !== payload['points_magenta']) {
-        // commit("setCurrentMagentaScore", payload['points_magenta'])
+        commit("setCurrentMagentaScore", payload['points_magenta'])
       }
       commit("setGametime", payload['game_time'])
     },
@@ -371,6 +371,9 @@ export default new Vuex.Store({
     },
     setCurrentCyanScore(state, score) {
       state.scoreCyan = score;
+    },
+    setCurrentMagentaScore(state,score){
+      state.scoreMagenta = score;
     },
     setGametime(state, gametime) {
       state.gametime = gametime;
