@@ -30,6 +30,7 @@ export default new Vuex.Store({
     gametime: 0,
     awardedPoints: [],
     cyanAwardedPoints: [],
+    magentaAwardedPoints:[],
     gamestate: 'WAIT_START',
     // Polling rate in components
     pollRate: 1500,
@@ -117,9 +118,11 @@ export default new Vuex.Store({
             dispatch("setOrderInfos", msgObj)
           } 
           else if(msgObj.type === 'points') {
+            console.log(msgObj, 'Points!');
             const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
-            // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
+            const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
             dispatch("SetPointsCyan", cyanPoints)
+            dispatch("SetPointsMagenta", magentaPoints)
           }
           else if(msgObj.type === 'order-count') {
             dispatch('setOrderCount', msgObj.count)
@@ -143,9 +146,12 @@ export default new Vuex.Store({
               console.log(msgObj);
               dispatch("SetOrdersAtReconnect", msgObj)
             } else if(msgObj[0].type === 'points') {
+              console.log(msgObj,'Points Down!');
               const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
-              // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
+              const magentaPoints = msgObj.filter(point => point.team === 'MAGENTA')
               dispatch("SetPointsCyan", cyanPoints)
+              dispatch("SetPointsMagenta", magentaPoints)
+
             }
             if(msgObj[0].type === 'known-teams') {
               dispatch('setKnownTeams', msgObj[0]["known_teams"])
@@ -194,6 +200,9 @@ export default new Vuex.Store({
     
     SetPointsCyan({commit}, payload) {
         commit("setCyanPoints", payload)
+    },
+    SetPointsMagenta({commit}, payload) {
+      commit("setMagentaPoints", payload)
     },
 
 
@@ -383,6 +392,9 @@ export default new Vuex.Store({
     },
     setCyanPoints(state, payload){
       state.cyanAwardedPoints = payload
+    },
+    setMagentaPoints(state, payload){
+      state.magentaAwardedPoints = payload
     },
     togglePhaseSubmenus(state) {
       state.showPhaseSubmenus = !state.showPhaseSubmenus
