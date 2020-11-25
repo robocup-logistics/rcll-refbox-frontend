@@ -131,8 +131,9 @@ export default new Vuex.Store({
           else if(typeof msgObj[0] !== 'undefined'){
             if (msgObj[0].type === 'machine-info') {
               const cyanMachines = msgObj.filter( machine => machine.team === 'CYAN')
-              // const magentaMachines = msgObj.filter( machine => machine.team === 'MAGENTA')
-              dispatch("SetCyanMachinesInfoAtReconnect", cyanMachines)  
+              const magentaMachines = msgObj.filter( machine => machine.team === 'MAGENTA')
+              dispatch("SetCyanMachinesInfoAtReconnect", cyanMachines)
+              dispatch("SetMagentaMachinesInfoAtReconnect", magentaMachines)  
             } else if(msgObj[0].type === 'robot-info') {
               const cyanRobots = msgObj.filter(robot => robot['team_color'] === "CYAN")
               // const magentaRobots = msgObj.filter(robot => robot['team_color'] === "Magenta")

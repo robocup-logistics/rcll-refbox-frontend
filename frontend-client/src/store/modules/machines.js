@@ -5,6 +5,7 @@ export default{
     machinesMagenta: [],
     ringspecs: [],
     cyanMachinesFlag: false,
+    magentaMachinesFlag: false,
     machinesRingspecsFlag: false,
   },
 
@@ -32,6 +33,10 @@ export default{
       state.machinesCyan = payload
       state.cyanMachinesFlag = true
     },
+    setMagentaMachines(state, payload) {
+      state.machinesMagenta = payload
+      state.magentaMachinesFlag = true
+    },
     addringspecs(state, payload) {
       if (payload.index === -1) {
         state.ringspecs.push(payload.payload)
@@ -53,7 +58,7 @@ export default{
         const index = state.machinesCyan.findIndex(machine => machine.name === payload.name)
         if (index === -1) { 
           commit("addMachinesCyan", {payload, index})
-          dispatch("sortAlpabetically", state.machinesCyan)
+          dispatch("sortAlphabetically", state.machinesCyan)
         }
       } else {
         const index = state.machinesCyan.findIndex(machine => machine.name === payload.name)
@@ -70,7 +75,7 @@ export default{
         const index = state.machinesMagenta.findIndex(machine => machine.name === payload.name)
         if (index === -1) { 
           commit("addMachinesMagenta", {payload, index})
-          dispatch("sortAlpabetically", state.machinesMagenta)
+          dispatch("sortAlphabetically", state.machinesMagenta)
         }
       } else {
         const index = state.machinesMagenta.findIndex(machine => machine.name === payload.name)
@@ -83,7 +88,13 @@ export default{
     SetCyanMachinesInfoAtReconnect({commit, dispatch, state}, payload) {
       if (!state.cyanMachinesFlag) {
         commit("setCyanMachines", payload)
-        dispatch("sortAlpabetically", state.machinesCyan)
+        dispatch("sortAlphabetically", state.machinesCyan)
+      }
+    },
+    SetMagentaMachinesInfoAtReconnect({commit, dispatch, state}, payload) {
+      if (!state.magentaMachinesFlag) {
+        commit("setMagentaMachines", payload)
+        dispatch("sortAlphabetically", state.machinesMagenta)
       }
     },
 
@@ -91,7 +102,7 @@ export default{
       commit("setMachinesRingspecs", payload)
     },
  
-    sortAlpabetically(context, payload) {
+    sortAlphabetically(context, payload) {
       payload.sort((machineA, machineB) => {
         let nameA = machineA.name;
         let nameB = machineB.name;
