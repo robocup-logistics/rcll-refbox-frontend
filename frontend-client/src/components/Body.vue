@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <div class="team-magenta-body col-md-6 border">
+      <div class="team-magenta-body-container col-md-6 border">
         <div class="row " >
 
           <div class="col-md-9 p-0 mt-1">
@@ -83,7 +83,7 @@ export default {
 </script>
 
 <style scoped>
-.team-cyan-body-container {
+.team-cyan-body-container, .team-magenta-body-container {
   min-height: 40vh !important;
 }
 .log-msgs-main-container {
