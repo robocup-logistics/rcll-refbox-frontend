@@ -1,7 +1,7 @@
 <template>
   <div  class="machines-container text-left h-100 w-100">
     <div v-if="getPhase !== 'PRE_GAME'" class="w-100 h-100">
-      <BodyMachinesGenerator class="h-100 w-100" />
+      <BodyMachinesGenerator class="h-100 w-100" :color=color />
     </div>
   </div>
 </template>
@@ -12,6 +12,12 @@ import BodyMachinesGenerator from './BodyMachinesGenerator';
 
 export default {
   name: 'BodyMachines',
+  props: {
+    color: {
+      type: String,
+      required: true
+    }
+  },
   components: {
     BodyMachinesGenerator
   },

@@ -4,7 +4,7 @@
       <div class="team-cyan-body-container col-md-6 border ">
         <div class="row " >
           <div class="col-md-3 body-machines-container p-0 border-right">
-            <BodyMachines />
+            <BodyMachines color='cyan'/>
           </div>
 
           <div class="col-md-9 p-0 mt-1">
@@ -38,9 +38,9 @@
             </div>
           </div>  
           <div class="col-md-3 body-machines-container p-0 border-left">
-            <BodyMachines />
+            <BodyMachines color='magenta'/>
           </div>
-          <!-- Magenta Row ends hier -->
+          <!-- Magenta Row ends here -->
         </div>
       </div>
     </div>

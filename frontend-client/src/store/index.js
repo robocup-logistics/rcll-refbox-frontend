@@ -103,7 +103,12 @@ export default new Vuex.Store({
             dispatch("SetRobotInformation", msgObj)
           } 
           else if(msgObj.type === 'machine-info' && msgObj.team === 'CYAN') {
+            console.log(msgObj);
             dispatch("SetCyanMachinesInfo",msgObj)  
+          } 
+          else if(msgObj.type === 'machine-info' && msgObj.team === 'MAGENTA') {
+            console.log(msgObj);
+            dispatch("SetMagentaMachinesInfo",msgObj)  
           } 
           else if(msgObj.type === 'ring-spec'){
             dispatch('setRingSpecs', msgObj)

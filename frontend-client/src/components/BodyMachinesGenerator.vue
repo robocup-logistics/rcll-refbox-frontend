@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="row m-0 pt-2 h-100 w-100">
-        <div class=" col-md-12 col-md-3"
+        <div class=" col-md-12"
              :class="[machine.mtype+'-station']"
-             v-for="(machine,index) in machinesCyan" 
+             v-for="(machine,index) in selectMachinesArray(color)" 
              :key="index" 
         >
           <div class="d-flex align-content-center ml-2" >
@@ -14,7 +14,9 @@
                       >
                         <span class="text-active font-weight-bold text-center">{{machine.name}}</span>
                       </div>
-                      <figcaption class="text-center machine-zone">
+                      <figcaption class="text-center "
+                                  :class="color=== 'cyan' ? 'machine-zone-cyan' : 'machine-zone-magenta' "
+                      >
                           <span >{{machine.zone}}</span> 
                       </figcaption>
                     </figure>
@@ -42,7 +44,7 @@
                     </div>
                   </div>
                   <!-- <span>{{machine.name}}</span> -->
-                  <div class="machine-rotation">
+                  <div :class="color=== 'cyan' ? 'machine-rotation-cyan' : 'machine-rotation-magenta' ">
                         <span v-if="currPhase === 'SETUP'">{{machine.rotation}}°</span>
                       </div>
             </div>
@@ -55,10 +57,17 @@
 <script>
 import {mapState } from 'vuex';
 export default {
-  name: 'BodyMachinesTeamCyanGenerator',
+  name: 'BodyMachinesGenerator',
+  props: {
+    color: {
+      type: String,
+      required: true
+    }
+  },
   computed: {
     ...mapState({
       machinesCyan: state => state.machines.machinesCyan,
+      machinesMagenta: state => state.machines.machinesMagenta,
       currPhase: state => state.phase,
       ringspecs: state => state.machines.ringspecs,
     })
@@ -72,6 +81,15 @@ export default {
  
 
   methods: {
+    selectMachinesArray(teamColor){
+      if (teamColor === 'cyan') {
+        console.log('CYAN ARRAY RETURNED');
+        return this.machinesCyan
+      } else {  
+        console.log('MAGENTA ARRAY RETURNED');
+        return this.machinesMagenta
+      }
+    },
     // Set classname depending on the State of the machine
     setStateClass(state) {
       let classList = ''
@@ -130,9 +148,14 @@ figcaption {
   font-size: 12px;
 }
 
-.machine-zone{
+.machine-zone-cyan{
   color: var(--main-cyan-color)
 }
+
+.machine-zone-magenta{
+  color: var(--main-magenta-color)
+}
+
 .machine-state-small {
   font-size: 12px;
 }
@@ -145,8 +168,12 @@ figcaption {
   line-height: 1 !important;
 }
 
-.machine-rotation{
+.machine-rotation-cyan{
   color: var(--main-cyan-color)
+}
+
+.machine-rotation-magenta{
+  color: var(--main-magenta-color)
 }
 
 .bg-black{

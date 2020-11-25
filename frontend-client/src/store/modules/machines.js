@@ -20,6 +20,14 @@ export default{
         state.machinesCyan.splice(payloadWithIndex.index, 1, payloadWithIndex.payload)
       }
     },
+    addMachinesMagenta(state, payloadWithIndex) {
+      // state.machinesMagenta
+      if (payloadWithIndex.index === -1) {
+        state.machinesMagenta.push(payloadWithIndex.payload)
+      } else {
+        state.machinesMagenta.splice(payloadWithIndex.index, 1, payloadWithIndex.payload)
+      }
+    },
     setCyanMachines(state, payload) {
       state.machinesCyan = payload
       state.cyanMachinesFlag = true
@@ -51,6 +59,23 @@ export default{
         const index = state.machinesCyan.findIndex(machine => machine.name === payload.name)
         if (index !== -1) {
           commit("addMachinesCyan", {payload, index})
+        }
+      }
+    },
+    SetMagentaMachinesInfo({commit, state, dispatch}, payload) {
+      // If there wasn't information at connect populate in setup
+      if (state.machinesMagenta.length < 7) {
+        // check if there is already that machine in the 
+        // array so it doesn"t dupliocate it
+        const index = state.machinesMagenta.findIndex(machine => machine.name === payload.name)
+        if (index === -1) { 
+          commit("addMachinesMagenta", {payload, index})
+          dispatch("sortAlpabetically", state.machinesMagenta)
+        }
+      } else {
+        const index = state.machinesMagenta.findIndex(machine => machine.name === payload.name)
+        if (index !== -1) {
+          commit("addMachinesMagenta", {payload, index})
         }
       }
     },
