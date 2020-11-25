@@ -1,13 +1,42 @@
 <template>
   <div>
     <div class="row m-0 pt-2 h-100 w-100">
-        <div class=" col-md-12"
+        <div class=" col-md-12 pb-1"
              :class="[machine.mtype+'-station']"
              v-for="(machine,index) in selectMachinesArray(color)" 
              :key="index" 
         >
-          <div class="d-flex align-content-center ml-2" >
-            <div class="base-image-container mr-1">
+          <div class="d-flex align-content-center " 
+               :class="color === 'magenta' ? 'justify-content-end ml-2' : 'mr-2'" >
+            <div class="machine-info d-flex flex-column " v-if="color === 'magenta'">
+                  <span :class="setStateClass(machine.state)" >
+                    {{machine.state}}
+                  </span>
+                  <!-- If RS show additional Info -->
+                  <div v-if="machine.mtype === 'RS'" class="d-flex my-1">
+                    <div class="mr-2 d-flex">
+                      <div 
+                        class="rs-color-container mx-1 text-center"
+                        :class="setRSandBSColor(machine['rs_ring_colors'][1])">
+                        <span class="lead">{{showPreparedColorInfo(machine['rs_ring_colors'][1])}}</span>
+
+                      </div>
+                      <div 
+                        class="rs-color-container ml-1 text-center"
+                        :class="setRSandBSColor(machine['rs_ring_colors'][0])">
+                        <span class="lead">{{showPreparedColorInfo(machine['rs_ring_colors'][0])}}</span>
+
+                      </div>
+                    </div>
+                    <span class="lead">{{machine['bases_added'] - machine['bases_used']}}</span>
+                  </div>
+                  <!-- <span>{{machine.name}}</span> -->
+                  <div :class="color=== 'cyan' ? 'machine-rotation-cyan' : 'machine-rotation-magenta' ">
+                        <span v-if="currPhase === 'SETUP'">{{machine.rotation}}°</span>
+                      </div>
+            </div>
+            <div class="base-image-container"
+                 :class="color === 'cyan' ? 'mr-1' : 'ml-1'">
                     <figure>
                       <div class="station-specific-info-container text-center"
                            :class="setMachineBackground(machine)" 
@@ -21,7 +50,7 @@
                       </figcaption>
                     </figure>
             </div>
-            <div class="machine-info d-flex flex-column ">
+            <div class="machine-info d-flex flex-column " v-if="color === 'cyan'">
                   <span :class="setStateClass(machine.state)" >
                     {{machine.state}}
                   </span>

@@ -1,5 +1,6 @@
 <template>
-  <div  class="machines-container text-left h-100 w-100">
+  <div  class="machines-container h-100 w-100"
+        :class="color === 'cyan' ? 'text-left' : 'text-right'">
     <div v-if="getPhase !== 'PRE_GAME'" class="w-100 h-100">
       <BodyMachinesGenerator class="h-100 w-100" :color=color />
     </div>
