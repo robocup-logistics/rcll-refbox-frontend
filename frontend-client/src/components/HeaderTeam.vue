@@ -58,6 +58,7 @@
         <div class="col-md-12 my-2 add-team-container">
           <button class="btn  btn-add-team btn-magenta-header"
           @click="toggleForm()"
+          v-shortkey.once="['f5']" @shortkey="toggleForm()"
           >Add Team Magenta</button>
         </div>
         <div class="mb-2" v-show="isClicked">
