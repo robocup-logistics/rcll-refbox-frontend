@@ -112,10 +112,8 @@ export default {
   methods: {
     selectMachinesArray(teamColor){
       if (teamColor === 'cyan') {
-        console.log('CYAN ARRAY RETURNED');
         return this.machinesCyan
       } else {  
-        console.log('MAGENTA ARRAY RETURNED');
         return this.machinesMagenta
       }
     },

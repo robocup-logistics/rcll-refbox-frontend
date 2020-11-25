@@ -27,7 +27,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 export default {
-  name: 'BodyScoreTeamA',
+  name: 'BodyScore',
   computed: {
     ...mapState(['scoreCyan', 'phase', 'cyanAwardedPoints'])
   },

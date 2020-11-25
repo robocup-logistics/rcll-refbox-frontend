@@ -2,9 +2,9 @@
   <div >
     <div >
       <div class="points-container ">
-        <h4 v-if="phase !== 'PRE_GAME'">Points: {{scoreCyan}}</h4>
+        <h4 v-if="phase !== 'PRE_GAME'">Points: {{selectPointsArray(color)}}</h4>
       </div>
-      <div v-for="(robot,index) in allCyanRobots" 
+      <div v-for="(robot,index) in selectRobotsArray(color)" 
            :key="robot.number"
            >
         <div class="robot-info d-flex align-items-center">
@@ -27,7 +27,7 @@
               {{robotState(index)}}
             </span>
             <span v-else-if="robotState(index) === 'maintenance'" class="text-warning mr-2">
-              <span>{{saveMaintenanceStart(gametime,index, 'cyan')}}</span>
+              <span>{{saveMaintenanceStart(gametime,index, color)}}</span>
                 {{robotState(index)}} 
                 {{getMaintenanceLeft(robot['maintenance-start-time'], gametime, index)}}
               </span>
@@ -55,28 +55,56 @@
 import { mapState, mapActions} from 'vuex'; 
 
 export default {
-  name: 'BodyRobotsTeamCyan',
+  name: 'BodyRobots',
+  props: {
+    color: {
+      type: String,
+      required: true
+    }
+  },
   data(){
     return{
       maintenanceStartTime: [],
-      isInMaintenance: [false,false,false,false,false,false]
+      isInMaintenance: [false,false,false]
     }
   },
   computed: {
     ...mapState({
       allCyanRobots: state => state.robots.robotsCyan,
+      allMagentaRobots: state => state.robots.robotsMagenta,
       currentPhase: state => state.phase,
       gametime: state => state.gametime,
       pollRate: state => state.pollRate,
       scoreCyan: state => state.scoreCyan,
-      phase: state => state.phase
+      scoreMagenta: state => state.scoreMagenta,
+      phase: state => state.phase,
+
     })
   },
   methods: {
     ...mapActions(["SetRobotMaintenanceStatus"]),
     // Returns current state of a robot
+    selectRobotsArray(color){
+      if (color === 'cyan') {
+        return this.allCyanRobots
+      } else {
+        return this.allMagentaRobots
+      }
+    },
+    selectPointsArray(teamColor){
+      if (teamColor === 'cyan') {
+        return this.scoreCyan
+      } else {
+        return this.scoreMagenta
+      }
+    },
     robotState(index) {
-      return this.allCyanRobots[index].state.toLowerCase()
+      if (this.color === 'cyan') {
+        return this.allCyanRobots[index].state.toLowerCase()
+      } else {
+        return this.allMagentaRobots[index].state.toLowerCase()
+        
+      }
     },
     // Returns the remaining maintenance time
     getMaintenanceLeft(mntStart, gametime,index){
@@ -84,22 +112,18 @@ export default {
       return `${res.toString().split('.')[0]}s`
     },
     // Sets the maintenance start
-    saveMaintenanceStart(mntStart, index, team){
+    saveMaintenanceStart(mntStart, index){
       if (this.isInMaintenance[index] === false) {
-        if (team === 'cyan') {
           this.isInMaintenance[index] = true
-          this.maintenanceStartTime[index] = mntStart;
-        }else {
-          this.isInMaintenance[index+3] = true
-          this.maintenanceStartTime[index+3] = mntStart;
-        }  
+          this.maintenanceStartTime[index] = mntStart;  
       }
     },
     // Robots is no longer in maintenance
     setMaintenanceToFalse(index){
-      this.isInMaintenance[index] = false;
+      if (this.robotState(index) !== 'maintenance') {
+          this.isInMaintenance[index] = false;
+        }
     },
-
   }
 }
 </script>

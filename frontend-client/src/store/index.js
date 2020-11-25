@@ -103,11 +103,9 @@ export default new Vuex.Store({
             dispatch("SetRobotInformation", msgObj)
           } 
           else if(msgObj.type === 'machine-info' && msgObj.team === 'CYAN') {
-            console.log(msgObj);
             dispatch("SetCyanMachinesInfo",msgObj)  
           } 
           else if(msgObj.type === 'machine-info' && msgObj.team === 'MAGENTA') {
-            console.log(msgObj);
             dispatch("SetMagentaMachinesInfo",msgObj)  
           } 
           else if(msgObj.type === 'ring-spec'){
@@ -136,8 +134,9 @@ export default new Vuex.Store({
               dispatch("SetMagentaMachinesInfoAtReconnect", magentaMachines)  
             } else if(msgObj[0].type === 'robot-info') {
               const cyanRobots = msgObj.filter(robot => robot['team_color'] === "CYAN")
-              // const magentaRobots = msgObj.filter(robot => robot['team_color'] === "Magenta")
-              dispatch("SetCyanRobotsInfoAtReconnect", cyanRobots)              
+              const magentaRobots = msgObj.filter(robot => robot['team_color'] === "Magenta")
+              dispatch("SetCyanRobotsInfoAtReconnect", cyanRobots)     
+              dispatch("SetMagentaRobotsInfoAtReconnect",magentaRobots )         
             } else if(msgObj[0].type === 'ring-spec'){
               dispatch("SetRingspecs", msgObj)
             } else if(msgObj[0].type === 'order-info') {

@@ -11,11 +11,11 @@
             <div class="d-flex flex-column m-0">
               <div class="robots-container col-md-12 p-0 "
                   :class="phase === 'PRE_GAME' ? 'border-0' : 'border-bottom'">
-                <BodyRobotsTeamCyan v-if="phase !== 'PRE_GAME'"/>
+                <BodyRobots v-if="phase !== 'PRE_GAME'" color='cyan'/>
               </div>
               <div class="score-container col-md-12 p-0 "
                    :class="phase === 'PRE_GAME' ? '' : ''"  >
-                <BodyScoreTeamA v-if="phase !== 'PRE_GAME'"/>
+                <BodyScore v-if="phase !== 'PRE_GAME'"/>
               </div>
             </div>
           </div>  
@@ -29,11 +29,11 @@
             <div class="d-flex flex-column m-0">
               <div class="robots-container col-md-12 p-0 "
                   :class="phase === 'PRE_GAME' ? 'border-0' : 'border-bottom'">
-                <!-- <BodyRobotsTeamCyan v-if="phase !== 'PRE_GAME'"/> -->
+                <BodyRobots v-if="phase !== 'PRE_GAME'" color='magenta' />
               </div>
               <div class="score-container col-md-12 p-0 "
                    :class="phase === 'PRE_GAME' ? '' : ''"  >
-                <!-- <BodyScoreTeamA v-if="phase !== 'PRE_GAME'"/> -->
+                <BodyScore v-if="phase !== 'PRE_GAME'"/>
               </div>
             </div>
           </div>  
@@ -56,8 +56,8 @@
 
 <script>
 import BodyMachines from './BodyMachines'
-import BodyScoreTeamA from './BodyScoreTeamA'
-import BodyRobotsTeamCyan from './BodyRobotsTeamCyan'
+import BodyScore from './BodyScore'
+import BodyRobots from './BodyRobots'
 import BodyRefboxLog from './BodyRefboxLog'
 import AttentionMessagesLogger from './AttentionMessagesLogger'
 import { mapState, mapActions } from 'vuex';
@@ -66,8 +66,8 @@ export default {
   name: 'Body',
   components: {
     BodyMachines,
-    BodyScoreTeamA,
-    BodyRobotsTeamCyan,
+    BodyScore,
+    BodyRobots,
     BodyRefboxLog,
     AttentionMessagesLogger
   }, computed: {
