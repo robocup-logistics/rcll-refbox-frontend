@@ -61,7 +61,11 @@
                     class="custom-control custom-checkbox  custom-checkbox-magenta">
                     <input type="checkbox" 
                       class="custom-control-input custom-control-input-magenta" 
-                      id="customCheck2" disabled>
+                      :id="magentaCheckboxId(order.id)"
+                      :checked="isDelivered(order['quantity_delivered'][1], 
+                      order['quantity_requested'])
+                      "
+                       disabled>
                     <label 
                       class="custom-control-label custom-control-label-magenta" for="customCheck2">
                     </label>
@@ -87,7 +91,9 @@
                         class="custom-control custom-checkbox custom-checkbox-magenta">
                         <input type="checkbox" 
                             class="custom-control-input custom-control-input-magenta" 
-                            id="customCheck2" disabled>
+                            id="customCheck2" disabled
+                            :checked="isDelivered(order['quantity_delivered'][1], order['quantity_requested'])"
+                          >
                         <label 
                           class="custom-control-label custom-control-label-magenta" 
                           for="customCheck2">
@@ -100,7 +106,7 @@
                     <div class="custom-control custom-checkbox">
                       <!-- Checked only if the order was delivered -->
                       <input 
-                        type="checkbox" class="custom-control-input"       id="customCheck1"  disabled
+                        type="checkbox" class="custom-control-input" id="customCheck1"  disabled
                         :checked="isDeliveredSecond(order['quantity_delivered'][0])"
                       >
                       <label class="custom-control-label" for="customCheck1"></label>
@@ -109,7 +115,9 @@
                       class="custom-control custom-checkbox custom-checkbox-magenta">
                       <input type="checkbox" 
                         class="custom-control-input custom-control-input-magenta" 
-                        id="customCheck2" disabled>
+                        id="customCheck2" disabled
+                        :checked="isDeliveredSecond(order['quantity_delivered'][1])"
+                        >
                       <label class="custom-control-label custom-control-label-magenta" for="customCheck2">
                       </label>
                     </div>
@@ -210,6 +218,9 @@ export default {
     },
     cyanCheckboxId(orderId) {
       return `cyanCheckbox-${orderId}`;
+    },
+    magentaCheckboxId(orderId){
+      return `magentaCheckbox-${orderId}`;
     },
     // Grays out orders that are not active
     activeDeliveryPeriod(deliveryPeriod){

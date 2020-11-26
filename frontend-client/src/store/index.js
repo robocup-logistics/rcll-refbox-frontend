@@ -118,7 +118,6 @@ export default new Vuex.Store({
             dispatch("setOrderInfos", msgObj)
           } 
           else if(msgObj.type === 'points') {
-            console.log(msgObj, 'Points!');
             const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
             const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
             dispatch("SetPointsCyan", cyanPoints)
@@ -146,7 +145,6 @@ export default new Vuex.Store({
               console.log(msgObj);
               dispatch("SetOrdersAtReconnect", msgObj)
             } else if(msgObj[0].type === 'points') {
-              console.log(msgObj,'Points Down!');
               const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
               const magentaPoints = msgObj.filter(point => point.team === 'MAGENTA')
               dispatch("SetPointsCyan", cyanPoints)
