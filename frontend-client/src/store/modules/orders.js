@@ -3,7 +3,8 @@ export default{
     allOrders: [],
     products: [],
     populated: false,
-    ordersFlag: false
+    ordersFlag: false,
+    orderCount: 9
   },
 
   getters: {
@@ -29,6 +30,9 @@ export default{
       } else {
         state.allOrders.splice(payload.index, 1, payload.payload)
       }
+    },
+    setOrderCount(state, count) {
+      state.orderCount = count;
     }
   },
 
@@ -40,7 +44,7 @@ export default{
       }
     },
     setOrderInfos({commit, dispatch, state}, payload) {
-      if (state.allOrders.length < 9) {
+      if (state.allOrders.length < state.orderCount) {
         // check if there is already that order in the 
         // array so it doesn"t duplicate it
         const index = state.allOrders.findIndex(order => order.id === payload.id)
@@ -53,11 +57,16 @@ export default{
           commit("addOrder", {payload, index})
         }
       }
-      if (state.allOrders.length === 9) {
+      if (state.allOrders.length === state.orderCount) {
         dispatch("sortById", state.allOrders)
 
         dispatch("populateProducts")
       }
+    },
+    setOrderCount({commit}, orderCount){
+      console.log(orderCount);
+      
+      commit('setOrderCount', orderCount)
     },
     populateProducts({commit,state, dispatch}) {
       if (state.allOrders && !state.populated) {

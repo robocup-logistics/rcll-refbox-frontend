@@ -8,7 +8,7 @@
       <div class="d-flex " >
         <div class="max-height-6rem pb-0 mb-0 d-flex">
           <img 
-              v-if="products.length === 9"
+              v-if="products.length === orderCount"
               :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
                class="max-height-6rem img-max-width img-fluid" 
                :class="activeDeliveryPeriodImage(order['delivery_period'])"
@@ -178,7 +178,8 @@ export default {
       populated: state => state.orders.populated,
       nameTeamCYAN: state => state.nameTeamCyan,
       gametime: state => state.gametime,
-      nameTeamMAGENTA: state => state.nameTeamMagenta
+      nameTeamMAGENTA: state => state.nameTeamMagenta,
+      orderCount: state => state.orders.orderCount,
     }),
     unconfirmedOrders() {
       console.log(this.allOrders.filter(order => order['unconfirmed_deliveries'].length > 0), 'UNCONIRMED');

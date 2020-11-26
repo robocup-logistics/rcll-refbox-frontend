@@ -42,11 +42,16 @@ export default new Vuex.Store({
     pointsCyanFlag: false,
     showPhaseSubmenus: false,
     addIpAndPort: false,
+    knownTeams: [],
+    teamMenuTriggeredCyan: false
   },
 
   getters: {
     getPhaseSubmenusStatus(state) {
       return state.showPhaseSubmenus
+    },
+    getTeamMenuCyanTriggerStatus(state){
+      return state.teamMenuTriggeredCyan
     }
   },
 
@@ -73,7 +78,6 @@ export default new Vuex.Store({
     SOCKET_ONCLOSE({state,commit, dispatch}){
       const onClose = (e) => { 
         console.log(e);
-        console.log('232');
         if (e.code === 1006) {
           alert('There is no Connection!')
           state.isConnected = false
@@ -85,6 +89,7 @@ export default new Vuex.Store({
     SOCKET_ONMESSAGE({commit, dispatch}) {
       const onMessage = (e) => { 
         let msgObj = JSON.parse(e.data);
+        
         if (msgObj !== [] && msgObj.length !== 0 ) {
           // Messages for the Logger are Objects not an Array such as machine 
           // infos at connect
@@ -113,6 +118,9 @@ export default new Vuex.Store({
             // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
             dispatch("SetPointsCyan", cyanPoints)
           }
+          else if(msgObj.type === 'order-count') {
+            dispatch('setOrderCount', msgObj.count)
+          }
           // Websocket sends an array of objects with all of the information
           // Check if that"s the case
           else if(typeof msgObj[0] !== 'undefined'){
@@ -127,12 +135,16 @@ export default new Vuex.Store({
             } else if(msgObj[0].type === 'ring-spec'){
               dispatch("SetRingspecs", msgObj)
             } else if(msgObj[0].type === 'order-info') {
+              console.log(msgObj);
               dispatch("SetOrdersAtReconnect", msgObj)
             } else if(msgObj[0].type === 'points') {
               const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
               // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
               dispatch("SetPointsCyan", cyanPoints)
             }
+            if(msgObj[0].type === 'known-teams') {
+              dispatch('setKnownTeams', msgObj[0]["known_teams"])
+            }  
           } 
         }          
       }
@@ -256,6 +268,9 @@ export default new Vuex.Store({
       commit('SOCKET_SEND', msg)
       commit('setGamestate', gamestate)
     },
+    setKnownTeams({commit}, teams){
+      commit('setKnownTeams', teams)
+    },
     randomizeField({commit}) {
       const msg = { "command" : "randomize_field"}
       commit('SOCKET_SEND', msg)
@@ -276,6 +291,15 @@ export default new Vuex.Store({
     },
     closePhaseSubmenus({commit}) {
       commit('closePhaseSubmenus')
+    },
+    toggleTeamMenuCyan({commit}){
+      commit('toggleTeamMenuCyan')
+    },
+    closeTeamMenuCyan({commit}){
+      commit('closeTeamMenuCyan')
+    },
+    openTeamMenuCyan({commit}) {
+      commit('openTeamMenuCyan')
     },
     setWebsocketURL({commit}, URL) {
       commit('setWebsocketURL', URL)
@@ -360,6 +384,18 @@ export default new Vuex.Store({
     },
     setWebsocketURL(state, URL) {
       state.websocketURL = URL
+    },
+    setKnownTeams(state, teams) {
+      state.knownTeams = teams
+    },
+    toggleTeamMenuCyan(state){
+      state.teamMenuTriggeredCyan = !state.teamMenuTriggeredCyan
+    },
+    closeTeamMenuCyan(state) {
+      state.teamMenuTriggeredCyan = false
+    },
+    openTeamMenuCyan(state){
+      state.teamMenuTriggeredCyan = true
     }
   }
 })
