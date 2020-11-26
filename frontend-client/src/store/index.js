@@ -290,7 +290,11 @@ export default new Vuex.Store({
       commit('SOCKET_SEND', msg)
     },
     scrollToEndOfCyanPointsDiv(){
-      let container = document.querySelector('.awarded-points-container');
+      let container = document.querySelector('.awarded-points-container-cyan');
+     container.scrollTop =container.scrollHeight;
+    },
+    scrollToEndOfMagentaPointsDiv(){
+      let container = document.querySelector('.awarded-points-container-magenta');
      container.scrollTop =container.scrollHeight;
     },
     scrollToBottomOfLog() {

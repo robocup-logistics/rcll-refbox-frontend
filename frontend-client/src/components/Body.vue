@@ -15,7 +15,7 @@
               </div>
               <div class="score-container col-md-12 p-0 "
                    :class="phase === 'PRE_GAME' ? '' : ''"  >
-                <BodyScore v-if="phase !== 'PRE_GAME'"/>
+                <BodyScore v-if="phase !== 'PRE_GAME'" color='cyan'/>
               </div>
             </div>
           </div>  
@@ -33,7 +33,7 @@
               </div>
               <div class="score-container col-md-12 p-0 "
                    :class="phase === 'PRE_GAME' ? '' : ''"  >
-                <BodyScore v-if="phase !== 'PRE_GAME'"/>
+                <BodyScore v-if="phase !== 'PRE_GAME'" color='magenta'/>
               </div>
             </div>
           </div>  
