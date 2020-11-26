@@ -6,14 +6,14 @@
         <div class="pause-play-container mr-2">
           <a v-if="gamestate === 'PAUSED' || gamestate === 'WAIT_START'"
              class="btn  p-0" @click="setGameState('RUNNING')"
-             v-shortkey.once="{up:['space'],down:['f2']}"  @shortkey="setGameState('RUNNING')"
+             v-shortkey.once="{down:['f2']}"  @shortkey="setGameState('RUNNING')"
              data-toggle="tooltip" data-placement="top" title="start/resume game"
            >
             <font-awesome-icon :icon="['fas','play-circle']" class="fa-2x play-btn" />
           </a>
           <a v-if="gamestate === 'RUNNING'"
              class="btn p-0" @click="setGameState('PAUSED')"
-             v-shortkey.once="{up:['space'],down:['f2']}" @shortkey="setGameState('PAUSED')"
+             v-shortkey.once="{down:['f2']}" @shortkey="setGameState('PAUSED')"
              data-toggle="tooltip" data-placement="top" title="pause game"
           > 
             <font-awesome-icon :icon="['fas','pause-circle']" class="fa-2x pause-btn " 

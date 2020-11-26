@@ -280,8 +280,13 @@ export default new Vuex.Store({
       commit('SOCKET_SEND', msg)
       commit('setGamestate', gamestate)
     },
+
     setKnownTeams({commit}, teams){
       commit('setKnownTeams', teams)
+    },
+
+    sendAddPointsTeam({commit}, msg){
+      commit('SOCKET_SEND', msg)
     },
     randomizeField({commit}) {
       const msg = { "command" : "randomize_field"}

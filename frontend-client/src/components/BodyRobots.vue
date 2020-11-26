@@ -2,7 +2,11 @@
   <div >
     <div >
       <div class="points-container ">
-        <h4 v-if="phase !== 'PRE_GAME'">Points: {{selectPointsArray(color)}}</h4>
+        <div class="d-flex align-content-center justify-content-center">
+          <h4 v-if="phase !== 'PRE_GAME'" class="current-points m-0 mr-2 ">Points: {{selectPointsArray(color)}}</h4>
+          <img src="../assets/plus.png" alt="plus icon" class="img-fluid plus-png" @click="toggleShowAddPoints()">
+        </div>
+          <AddPointsManually  v-if="showAddPoints === true" :color=color />
       </div>
       <div v-for="(robot,index) in selectRobotsArray(color)" 
            :key="robot.number"
@@ -52,10 +56,15 @@
 </template>
 
 <script>
+import AddPointsManually from './AddPointsManually'
+
 import { mapState, mapActions} from 'vuex'; 
 
 export default {
   name: 'BodyRobots',
+  components: {
+    AddPointsManually
+  },
   props: {
     color: {
       type: String,
@@ -65,7 +74,8 @@ export default {
   data(){
     return{
       maintenanceStartTime: [],
-      isInMaintenance: [false,false,false]
+      isInMaintenance: [false,false,false],
+      showAddPoints: false
     }
   },
   computed: {
@@ -124,6 +134,9 @@ export default {
           this.isInMaintenance[index] = false;
         }
     },
+    toggleShowAddPoints(){
+      this.showAddPoints = !this.showAddPoints
+    }
   }
 }
 </script>
@@ -155,4 +168,14 @@ export default {
 .robot-col{
   justify-content: flex-start !important;
 }
+.plus-png{
+  width: 25px;
+  height: 25px;
+}
+
+.plus-png:hover{
+  cursor: pointer;
+  opacity: 0.5;
+}
+
 </style>
