@@ -63,7 +63,6 @@ export default {
       let matchM = msg.match(".*(M-|MAGENTA).*")
     
       if(matchC) {
-        console.log(matchC, 'CyanMatch');
         return 'color: var(--main-cyan-color);'
       } else if (matchM){
         return 'color: var(--main-magenta-color);'
