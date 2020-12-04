@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <form @submit.prevent="formatAndSendInputToWebsocket(pointsAndReaseon)">
-      <input type="text" class="p-0" required placeholder="Format: points, reason"
+  <div class="add-points-container">
+    <form @submit.prevent="formatAndSendInputToWebsocket(pointsAndReaseon)" class="add-points-form">
+      <input type="text" class="p-0 add-points-input" required placeholder="Format: points, reason"
              v-model="pointsAndReaseon"
       >
     </form>
@@ -54,6 +54,29 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.add-points-container{
+  margin: auto !important;
+}
+.add-points-form{
+ border-left: 0 !important;
+  border-right: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 1px solid !important;
+  border-radius: 2px !important;
+  outline: 0 !important;
+  background-color: #2B3E50 !important;
+}
+.add-points-input{
+    border-left: 0 !important;
+  border-right: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  border-radius: 2px !important;
+  outline: 0 !important;
+  background-color: #2B3E50 !important;
+  text-align: center !important;
+  color: #FFF;
+  min-width: 25vw;
+}
 </style>
