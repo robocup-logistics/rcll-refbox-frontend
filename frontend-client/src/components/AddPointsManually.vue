@@ -3,6 +3,7 @@
     <form @submit.prevent="formatAndSendInputToWebsocket(pointsAndReaseon)" class="add-points-form">
       <input type="text" class="p-0 add-points-input" required placeholder="Format: points, reason"
              v-model="pointsAndReaseon"
+             ref="addInput"
       >
     </form>
   </div>
@@ -23,6 +24,11 @@ export default {
     return{
       pointsAndReaseon: ""
     }
+  },
+  mounted(){
+    this.$nextTick(function () {
+          this.$refs.addInput.focus()
+        })
   },
   methods: {
     ...mapActions(['sendAddPointsTeam']),
