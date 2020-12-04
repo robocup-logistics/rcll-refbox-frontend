@@ -6,6 +6,8 @@
           <h4 v-if="phase !== 'PRE_GAME'" class="current-points m-0 mr-2 ">Points: {{selectPointsArray(color)}}</h4>
           <img src="../assets/plus.png" alt="plus icon" class="img-fluid plus-png" 
           @click="toggleShowAddPoints()"
+          data-toggle="tooltip" data-placement="bottom"
+          title="Add points manually"
           >
         </div>
           <AddPointsManually  v-if="showAddPoints === true" :color=color />
