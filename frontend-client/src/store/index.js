@@ -44,7 +44,8 @@ export default new Vuex.Store({
     showPhaseSubmenus: false,
     addIpAndPort: false,
     knownTeams: [],
-    teamMenuTriggeredCyan: false
+    teamMenuTriggeredCyan: false,
+    teamMenuTriggeredMagenta: false
   },
 
   getters: {
@@ -53,6 +54,9 @@ export default new Vuex.Store({
     },
     getTeamMenuCyanTriggerStatus(state){
       return state.teamMenuTriggeredCyan
+    },
+    getCyanTeamName(state){
+      return state.nameTeamCyan
     }
   },
 
@@ -322,6 +326,15 @@ export default new Vuex.Store({
     openTeamMenuCyan({commit}) {
       commit('openTeamMenuCyan')
     },
+    toggleTeamMenuMagenta({commit}){
+      commit('toggleTeamMenuMagenta')
+    },
+    closeTeamMenuMagenta({commit}){
+      commit('closeTeamMenuMagenta')
+    },
+    openTeamMenuMagenta({commit}) {
+      commit('openTeamMenuMagenta')
+    },
     setWebsocketURL({commit}, URL) {
       commit('setWebsocketURL', URL)
     },
@@ -423,6 +436,15 @@ export default new Vuex.Store({
     },
     openTeamMenuCyan(state){
       state.teamMenuTriggeredCyan = true
+    },
+    toggleTeamMenuMagenta(state){
+      state.teamMenuTriggeredMagenta = !state.teamMenuTriggeredMagenta
+    },
+    closeTeamMenuMagenta(state) {
+      state.teamMenuTriggeredMagenta = false
+    },
+    openTeamMenuMagenta(state){
+      state.teamMenuTriggeredMagenta = true
     }
   }
 })
