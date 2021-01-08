@@ -180,12 +180,14 @@ export default {
       this.$nextTick(function () {
           this.$refs.cyanInputBox.focus()
         })
+      this.toggleTeamMenuCyan()
     },
     fillMagentaNameInput(name){
       this.magentaName = name
       this.$nextTick(function () {
           this.$refs.magentaInputBox.focus()
         })
+      this.toggleTeamMenuMagenta()
     },
     
     
