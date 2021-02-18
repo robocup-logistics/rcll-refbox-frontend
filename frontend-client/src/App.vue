@@ -28,6 +28,9 @@ export default {
     },
     teamMenuCyan () {
       return this.$store.getters.getTeamMenuCyanTriggerStatus
+    },
+    cyanTeamName(){
+      return this.$store.getters.getCyanTeamName
     }
   },
   watch: {
@@ -38,13 +41,6 @@ export default {
         this.$el.removeEventListener('click', this.closeSubmenusForPhases)
       }
     },
-    teamMenuCyan() {
-      if (this.$store.getters.getTeamMenuCyanTriggerStatus === true) {
-        this.$el.addEventListener('click', this.closeTeamMenuCyanMethod)
-      } else {
-        this.$el.removeEventListener('click', this.closeTeamMenuCyanMethod)
-      }
-    }
   },
   methods: {
     ...mapActions(['closePhaseSubmenus', 'closeTeamMenuCyan']),

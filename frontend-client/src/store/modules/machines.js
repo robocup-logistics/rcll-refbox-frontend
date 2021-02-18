@@ -5,6 +5,7 @@ export default{
     machinesMagenta: [],
     ringspecs: [],
     cyanMachinesFlag: false,
+    magentaMachinesFlag: false,
     machinesRingspecsFlag: false,
   },
 
@@ -20,9 +21,21 @@ export default{
         state.machinesCyan.splice(payloadWithIndex.index, 1, payloadWithIndex.payload)
       }
     },
+    addMachinesMagenta(state, payloadWithIndex) {
+      // state.machinesMagenta
+      if (payloadWithIndex.index === -1) {
+        state.machinesMagenta.push(payloadWithIndex.payload)
+      } else {
+        state.machinesMagenta.splice(payloadWithIndex.index, 1, payloadWithIndex.payload)
+      }
+    },
     setCyanMachines(state, payload) {
       state.machinesCyan = payload
       state.cyanMachinesFlag = true
+    },
+    setMagentaMachines(state, payload) {
+      state.machinesMagenta = payload
+      state.magentaMachinesFlag = true
     },
     addringspecs(state, payload) {
       if (payload.index === -1) {
@@ -45,7 +58,7 @@ export default{
         const index = state.machinesCyan.findIndex(machine => machine.name === payload.name)
         if (index === -1) { 
           commit("addMachinesCyan", {payload, index})
-          dispatch("sortAlpabetically", state.machinesCyan)
+          dispatch("sortAlphabetically", state.machinesCyan)
         }
       } else {
         const index = state.machinesCyan.findIndex(machine => machine.name === payload.name)
@@ -54,11 +67,34 @@ export default{
         }
       }
     },
+    SetMagentaMachinesInfo({commit, state, dispatch}, payload) {
+      // If there wasn't information at connect populate in setup
+      if (state.machinesMagenta.length < 7) {
+        // check if there is already that machine in the 
+        // array so it doesn"t dupliocate it
+        const index = state.machinesMagenta.findIndex(machine => machine.name === payload.name)
+        if (index === -1) { 
+          commit("addMachinesMagenta", {payload, index})
+          dispatch("sortAlphabetically", state.machinesMagenta)
+        }
+      } else {
+        const index = state.machinesMagenta.findIndex(machine => machine.name === payload.name)
+        if (index !== -1) {
+          commit("addMachinesMagenta", {payload, index})
+        }
+      }
+    },
 
     SetCyanMachinesInfoAtReconnect({commit, dispatch, state}, payload) {
       if (!state.cyanMachinesFlag) {
         commit("setCyanMachines", payload)
-        dispatch("sortAlpabetically", state.machinesCyan)
+        dispatch("sortAlphabetically", state.machinesCyan)
+      }
+    },
+    SetMagentaMachinesInfoAtReconnect({commit, dispatch, state}, payload) {
+      if (!state.magentaMachinesFlag) {
+        commit("setMagentaMachines", payload)
+        dispatch("sortAlphabetically", state.machinesMagenta)
       }
     },
 
@@ -66,7 +102,7 @@ export default{
       commit("setMachinesRingspecs", payload)
     },
  
-    sortAlpabetically(context, payload) {
+    sortAlphabetically(context, payload) {
       payload.sort((machineA, machineB) => {
         let nameA = machineA.name;
         let nameB = machineB.name;

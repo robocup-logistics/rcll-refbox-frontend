@@ -30,6 +30,7 @@ export default new Vuex.Store({
     gametime: 0,
     awardedPoints: [],
     cyanAwardedPoints: [],
+    magentaAwardedPoints:[],
     gamestate: 'WAIT_START',
     // Polling rate in components
     pollRate: 1500,
@@ -43,7 +44,8 @@ export default new Vuex.Store({
     showPhaseSubmenus: false,
     addIpAndPort: false,
     knownTeams: [],
-    teamMenuTriggeredCyan: false
+    teamMenuTriggeredCyan: false,
+    teamMenuTriggeredMagenta: false
   },
 
   getters: {
@@ -52,6 +54,9 @@ export default new Vuex.Store({
     },
     getTeamMenuCyanTriggerStatus(state){
       return state.teamMenuTriggeredCyan
+    },
+    getCyanTeamName(state){
+      return state.nameTeamCyan
     }
   },
 
@@ -105,6 +110,9 @@ export default new Vuex.Store({
           else if(msgObj.type === 'machine-info' && msgObj.team === 'CYAN') {
             dispatch("SetCyanMachinesInfo",msgObj)  
           } 
+          else if(msgObj.type === 'machine-info' && msgObj.team === 'MAGENTA') {
+            dispatch("SetMagentaMachinesInfo",msgObj)  
+          } 
           else if(msgObj.type === 'ring-spec'){
             dispatch('setRingSpecs', msgObj)
           }
@@ -115,8 +123,9 @@ export default new Vuex.Store({
           } 
           else if(msgObj.type === 'points') {
             const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
-            // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
+            const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
             dispatch("SetPointsCyan", cyanPoints)
+            dispatch("SetPointsMagenta", magentaPoints)
           }
           else if(msgObj.type === 'order-count') {
             dispatch('setOrderCount', msgObj.count)
@@ -126,12 +135,14 @@ export default new Vuex.Store({
           else if(typeof msgObj[0] !== 'undefined'){
             if (msgObj[0].type === 'machine-info') {
               const cyanMachines = msgObj.filter( machine => machine.team === 'CYAN')
-              // const magentaMachines = msgObj.filter( machine => machine.team === 'MAGENTA')
-              dispatch("SetCyanMachinesInfoAtReconnect", cyanMachines)  
+              const magentaMachines = msgObj.filter( machine => machine.team === 'MAGENTA')
+              dispatch("SetCyanMachinesInfoAtReconnect", cyanMachines)
+              dispatch("SetMagentaMachinesInfoAtReconnect", magentaMachines)  
             } else if(msgObj[0].type === 'robot-info') {
               const cyanRobots = msgObj.filter(robot => robot['team_color'] === "CYAN")
-              // const magentaRobots = msgObj.filter(robot => robot['team_color'] === "Magenta")
-              dispatch("SetCyanRobotsInfoAtReconnect", cyanRobots)              
+              const magentaRobots = msgObj.filter(robot => robot['team_color'] === "Magenta")
+              dispatch("SetCyanRobotsInfoAtReconnect", cyanRobots)     
+              dispatch("SetMagentaRobotsInfoAtReconnect",magentaRobots )         
             } else if(msgObj[0].type === 'ring-spec'){
               dispatch("SetRingspecs", msgObj)
             } else if(msgObj[0].type === 'order-info') {
@@ -139,8 +150,10 @@ export default new Vuex.Store({
               dispatch("SetOrdersAtReconnect", msgObj)
             } else if(msgObj[0].type === 'points') {
               const cyanPoints = msgObj.filter(point => point.team === 'CYAN')
-              // const magentaPoints = msgObj.filter(point => point.team === 'Magenta')
+              const magentaPoints = msgObj.filter(point => point.team === 'MAGENTA')
               dispatch("SetPointsCyan", cyanPoints)
+              dispatch("SetPointsMagenta", magentaPoints)
+
             }
             if(msgObj[0].type === 'known-teams') {
               dispatch('setKnownTeams', msgObj[0]["known_teams"])
@@ -182,13 +195,16 @@ export default new Vuex.Store({
         commit("setCurrentCyanScore", payload['points_cyan'])        
       }
       if (state.scoreMagenta !== payload['points_magenta']) {
-        // commit("setCurrentMagentaScore", payload['points_magenta'])
+        commit("setCurrentMagentaScore", payload['points_magenta'])
       }
       commit("setGametime", payload['game_time'])
     },
     
     SetPointsCyan({commit}, payload) {
         commit("setCyanPoints", payload)
+    },
+    SetPointsMagenta({commit}, payload) {
+      commit("setMagentaPoints", payload)
     },
 
 
@@ -268,15 +284,24 @@ export default new Vuex.Store({
       commit('SOCKET_SEND', msg)
       commit('setGamestate', gamestate)
     },
+
     setKnownTeams({commit}, teams){
       commit('setKnownTeams', teams)
+    },
+
+    sendAddPointsTeam({commit}, msg){
+      commit('SOCKET_SEND', msg)
     },
     randomizeField({commit}) {
       const msg = { "command" : "randomize_field"}
       commit('SOCKET_SEND', msg)
     },
     scrollToEndOfCyanPointsDiv(){
-      let container = document.querySelector('.awarded-points-container');
+      let container = document.querySelector('.awarded-points-container-cyan');
+     container.scrollTop =container.scrollHeight;
+    },
+    scrollToEndOfMagentaPointsDiv(){
+      let container = document.querySelector('.awarded-points-container-magenta');
      container.scrollTop =container.scrollHeight;
     },
     scrollToBottomOfLog() {
@@ -300,6 +325,15 @@ export default new Vuex.Store({
     },
     openTeamMenuCyan({commit}) {
       commit('openTeamMenuCyan')
+    },
+    toggleTeamMenuMagenta({commit}){
+      commit('toggleTeamMenuMagenta')
+    },
+    closeTeamMenuMagenta({commit}){
+      commit('closeTeamMenuMagenta')
+    },
+    openTeamMenuMagenta({commit}) {
+      commit('openTeamMenuMagenta')
     },
     setWebsocketURL({commit}, URL) {
       commit('setWebsocketURL', URL)
@@ -367,6 +401,9 @@ export default new Vuex.Store({
     setCurrentCyanScore(state, score) {
       state.scoreCyan = score;
     },
+    setCurrentMagentaScore(state,score){
+      state.scoreMagenta = score;
+    },
     setGametime(state, gametime) {
       state.gametime = gametime;
     },
@@ -375,6 +412,9 @@ export default new Vuex.Store({
     },
     setCyanPoints(state, payload){
       state.cyanAwardedPoints = payload
+    },
+    setMagentaPoints(state, payload){
+      state.magentaAwardedPoints = payload
     },
     togglePhaseSubmenus(state) {
       state.showPhaseSubmenus = !state.showPhaseSubmenus
@@ -396,6 +436,15 @@ export default new Vuex.Store({
     },
     openTeamMenuCyan(state){
       state.teamMenuTriggeredCyan = true
+    },
+    toggleTeamMenuMagenta(state){
+      state.teamMenuTriggeredMagenta = !state.teamMenuTriggeredMagenta
+    },
+    closeTeamMenuMagenta(state) {
+      state.teamMenuTriggeredMagenta = false
+    },
+    openTeamMenuMagenta(state){
+      state.teamMenuTriggeredMagenta = true
     }
   }
 })

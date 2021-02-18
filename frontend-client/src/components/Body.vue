@@ -4,25 +4,44 @@
       <div class="team-cyan-body-container col-md-6 border ">
         <div class="row " >
           <div class="col-md-3 body-machines-container p-0 border-right">
-            <BodyMachinesTeamCyan />
+            <BodyMachines color='cyan'/>
           </div>
 
           <div class="col-md-9 p-0 mt-1">
             <div class="d-flex flex-column m-0">
               <div class="robots-container col-md-12 p-0 "
                   :class="phase === 'PRE_GAME' ? 'border-0' : 'border-bottom'">
-                <BodyRobotsTeamCyan v-if="phase !== 'PRE_GAME'"/>
+                <BodyRobots v-if="phase !== 'PRE_GAME'" color='cyan'/>
               </div>
               <div class="score-container col-md-12 p-0 "
                    :class="phase === 'PRE_GAME' ? '' : ''"  >
-                <BodyScoreTeamA v-if="phase !== 'PRE_GAME'"/>
+                <BodyScore v-if="phase !== 'PRE_GAME'" color='cyan'/>
               </div>
             </div>
           </div>  
         </div>
       </div>
 
-      <div class="team-b-body col-md-6 border">
+      <div class="team-magenta-body-container col-md-6 border">
+        <div class="row " >
+
+          <div class="col-md-9 p-0 mt-1">
+            <div class="d-flex flex-column m-0">
+              <div class="robots-container col-md-12 p-0 "
+                  :class="phase === 'PRE_GAME' ? 'border-0' : 'border-bottom'">
+                <BodyRobots v-if="phase !== 'PRE_GAME'" color='magenta' />
+              </div>
+              <div class="score-container col-md-12 p-0 "
+                   :class="phase === 'PRE_GAME' ? '' : ''"  >
+                <BodyScore v-if="phase !== 'PRE_GAME'" color='magenta'/>
+              </div>
+            </div>
+          </div>  
+          <div class="col-md-3 body-machines-container p-0 border-left">
+            <BodyMachines color='magenta'/>
+          </div>
+          <!-- Magenta Row ends here -->
+        </div>
       </div>
     </div>
 
@@ -36,9 +55,9 @@
 </template>
 
 <script>
-import BodyMachinesTeamCyan from './BodyMachinesTeamCyan'
-import BodyScoreTeamA from './BodyScoreTeamA'
-import BodyRobotsTeamCyan from './BodyRobotsTeamCyan'
+import BodyMachines from './BodyMachines'
+import BodyScore from './BodyScore'
+import BodyRobots from './BodyRobots'
 import BodyRefboxLog from './BodyRefboxLog'
 import AttentionMessagesLogger from './AttentionMessagesLogger'
 import { mapState, mapActions } from 'vuex';
@@ -46,9 +65,9 @@ import { mapState, mapActions } from 'vuex';
 export default {
   name: 'Body',
   components: {
-    BodyMachinesTeamCyan,
-    BodyScoreTeamA,
-    BodyRobotsTeamCyan,
+    BodyMachines,
+    BodyScore,
+    BodyRobots,
     BodyRefboxLog,
     AttentionMessagesLogger
   }, computed: {
@@ -64,7 +83,7 @@ export default {
 </script>
 
 <style scoped>
-.team-cyan-body-container {
+.team-cyan-body-container, .team-magenta-body-container {
   min-height: 40vh !important;
 }
 .log-msgs-main-container {

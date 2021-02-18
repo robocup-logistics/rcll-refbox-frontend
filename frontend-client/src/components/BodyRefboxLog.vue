@@ -58,10 +58,9 @@ export default {
       }
     },
     setMsgColor(msg) {  
-      const reM = /M-*/ 
-      const reC = /C-*/ 
-      let matchC = reC.exec(msg)
-      let matchM = reM.exec(msg)   
+      
+      let matchC = msg.match(".*(C-|CYAN).*")
+      let matchM = msg.match(".*(M-|MAGENTA).*")
     
       if(matchC) {
         return 'color: var(--main-cyan-color);'

@@ -27,7 +27,7 @@
               />
             </button>
             <div class="dropdown show">
-              <a class=" btn dropdown-toggle cyanSelectArrow " 
+              <a class=" btn dropdown-toggle SelectArrow " 
                  data-toggle="dropdown" href="#" role="button" 
                  aria-haspopup="true" aria-expanded="false" 
                  @click.prevent="toggleTeamMenuCyan()">
@@ -57,12 +57,13 @@
       <div class="row justify-content-center">
         <div class="col-md-12 my-2 add-team-container">
           <button class="btn  btn-add-team btn-magenta-header"
-          @click="toggleForm()"
+          @click="toggleFormAndTeams()"
+          v-shortkey.once="['f5']" @shortkey="toggleFormAndTeams()"
           >Add Team Magenta</button>
         </div>
         <div class="mb-2" v-show="isClicked">
           <form @submit.prevent="setName(color)"
-                class="form-magenta"
+                class="form-magenta d-flex"
           >
               <input type="text" 
               placeholder="add teamname"
@@ -71,9 +72,24 @@
               ref="magentaInputBox"
               v-model="magentaName"
               >
-              <button type="submit" class="submit-btn ">
+              <button type="submit" class="submit-btn"  v-show="magentaName.length >= 1">
                 <font-awesome-icon :icon="['fa','arrow-right']" class="fa-1x " />
               </button>
+              <div class="dropdown show">
+              <a class=" btn dropdown-toggle SelectArrow " 
+                 data-toggle="dropdown" href="#" role="button" 
+                 aria-haspopup="true" aria-expanded="false" 
+                 @click.prevent="toggleTeamMenuMagenta()">
+              </a>
+              <div class="dropdown-menu magentaDropdown" 
+                   :style="teamMenuTriggeredMagenta ? 'display:block' : 'display:none'"
+              >
+                <a href="#" class="dropdown-item" @click.prevent="fillMagentaNameInput(knownTeam)"
+                   v-for="(knownTeam,index) in knownTeams" :key="index"  >
+                   {{knownTeam}}
+                </a>
+              </div>
+            </div>
             </form>
         </div>
       </div>
@@ -107,7 +123,8 @@ export default {
       getCyanName: state => state.nameTeamCyan,
       getMagentaName: state => state.nameTeamMagenta,
       knownTeams: state => state.knownTeams,
-      teamMenuTriggeredCyan: state => state.teamMenuTriggeredCyan
+      teamMenuTriggeredCyan: state => state.teamMenuTriggeredCyan,
+      teamMenuTriggeredMagenta: state => state.teamMenuTriggeredMagenta
     }),
     cyanName: {
       get() {
@@ -127,7 +144,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setNameCyan', 'setNameMagenta', 'SOCKET_SEND', 'toggleTeamMenuCyan', 'openTeamMenuCyan']),
+    ...mapActions(['setNameCyan', 'setNameMagenta', 'SOCKET_SEND', 'toggleTeamMenuCyan', 'openTeamMenuCyan', 'toggleTeamMenuMagenta', 'openTeamMenuMagenta']),
     setName(color) {
       color = color.toUpperCase()
       const msg = {
@@ -152,14 +169,27 @@ export default {
     },
     toggleFormAndTeams(){
       this.toggleForm()
-      this.openTeamMenuCyan()
+      if (this.color === 'magenta') {
+        this.openTeamMenuCyan()
+      } else {
+        this.openTeamMenuMagenta()
+      }
     },
     fillCyanNameInput(name){
       this.cyanName = name
       this.$nextTick(function () {
           this.$refs.cyanInputBox.focus()
         })
-    }
+      this.toggleTeamMenuCyan()
+    },
+    fillMagentaNameInput(name){
+      this.magentaName = name
+      this.$nextTick(function () {
+          this.$refs.magentaInputBox.focus()
+        })
+      this.toggleTeamMenuMagenta()
+    },
+    
     
   }
   
@@ -175,7 +205,7 @@ export default {
   border-color: var(--main-magenta-color) !important;
   transition-duration: 0.2s !important
 }
-.cyanSelectArrow{
+.SelectArrow{
   padding: 0 0.4em !important;
   
 }

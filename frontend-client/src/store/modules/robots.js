@@ -3,6 +3,7 @@ export default{
     robotsCyan: [],
     robotsMagenta: [],
     cyanRobotsFlag: false,
+    magentaRobotsFlag: false,
   },
   getters: {
 
@@ -17,9 +18,22 @@ export default{
         state.robotsCyan.splice(payload.index, 1, payload.payload)
       }
     },
+    setMagentaRobot(state, payload) {   
+      if(payload.index === -1) {
+         state.robotsMagenta.push(payload.payload)
+       } else {
+         // Replace the information of the corresponding robot object in the  
+         // array with the payload coming from the websocket
+         state.robotsMagenta.splice(payload.index, 1, payload.payload)
+       }
+     },
     setCyanRobotsAtReconnect(state, payload) {
       state.robotsCyan = payload
       state.cyanRobotsFlag = true
+    },
+    setMagentaRobotsAtReconnect(state, payload) {
+      state.robotsMagenta = payload
+      state.magentaRobotsFlag = true
     }
   },
   actions: {
@@ -42,13 +56,34 @@ export default{
           }
         } 
       }else {
-        console.log('magenta robot');
+        if(state.robotsMagenta.length < 3) {          
+          // populate and make sure that there arent any duplicates
+          const index = state.robotsMagenta.findIndex(robot => robot.name === payload.name)
+          if (index === -1) {
+            commit("setMagentaRobot", {payload, index})
+            dispatch("sortByRobotsNumber", state.robotsMagenta)
+          }
+          if ((state.phase !== 'PRE_GAME' || state.phase !== 'SETUP') && index !== -1 ) {
+            commit("setMagentaRobot", {payload, index})
+          }
+        } else {
+          const index = state.robotsMagenta.findIndex(robot => robot.name === payload.name)
+          if (index !== -1) {
+            commit("setMagentaRobot", {payload, index})
+          }
+        } 
       }
     },
     SetCyanRobotsInfoAtReconnect({commit, state, dispatch}, payload) {
       if(!state.cyanRobotsFlag) {
         commit("setCyanRobotsAtReconnect", payload)
         dispatch("sortByRobotsNumber", state.robotsCyan)
+      }
+    },
+    SetMagentaRobotsInfoAtReconnect({commit, state, dispatch}, payload) {
+      if(!state.magentaRobotsFlag) {
+        commit("setMagentaRobotsAtReconnect", payload)
+        dispatch("sortByRobotsNumber", state.robotsMagenta)
       }
     },
     SetRobotMaintenanceStatus({commit}, payload) {
