@@ -17,9 +17,6 @@ A web frontend for the RCLL RefBox
 ## Bugs and Limitations
 Report any issues you encounter on [github](https://github.com/carologistics/rcll-refbox-frontend/issues).
 
-Currently only playing as team cyan is supported.
-
-
 ## Project setup
 ```
 npm install
