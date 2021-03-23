@@ -22,7 +22,6 @@ Currently only playing as team cyan is supported.
 
 ## Project setup
 ```
-cd frontend-client/
 npm install
 ```
 
