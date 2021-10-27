@@ -45,7 +45,8 @@ export default new Vuex.Store({
     addIpAndPort: false,
     knownTeams: [],
     teamMenuTriggeredCyan: false,
-    teamMenuTriggeredMagenta: false
+    teamMenuTriggeredMagenta: false,
+    reconnectTimerId: 0
   },
 
   getters: {
@@ -77,7 +78,8 @@ export default new Vuex.Store({
       commit('SOCKET_SEND', msg)
       
     },
-    SOCKET_ONOPEN({commit}) {
+    SOCKET_ONOPEN({commit, state}) {
+      clearInterval(state.timerId);
       commit("SOCKET_ONOPEN")
     },
     SOCKET_ONCLOSE({state,commit, dispatch}){
@@ -88,6 +90,11 @@ export default new Vuex.Store({
           state.isConnected = false
           dispatch('toggleAddIpAndPort')
         }
+        state.socket.close();
+        state.socket = null; // prevent memory leak
+        state.reconnectTimerId = setInterval(() => {
+                dispatch('connectToWebsocket');
+            }, 5000);
       }
       commit("SOCKET_ONCLOSE", onClose)
     },
@@ -168,7 +175,6 @@ export default new Vuex.Store({
         console.log(e);
         // alert('Couldnt connect to Websocket!')
         console.log("ON ERROR!");
-        
       }
       commit("SOCKET_ONERROR",onError)
     },
