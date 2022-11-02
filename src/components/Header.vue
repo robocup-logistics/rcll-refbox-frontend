@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import HeaderLogo from './HeaderLogo'
-import HeaderTeam from './HeaderTeam'
-import HeaderCentralInformation from './HeaderCentralInformation'
+import HeaderLogo from '@/components/HeaderLogo.vue'
+import HeaderTeam from '@/components/HeaderTeam.vue'
+import HeaderCentralInformation from '@/components/HeaderCentralInformation.vue'
 
 export default {
   name: 'Header',

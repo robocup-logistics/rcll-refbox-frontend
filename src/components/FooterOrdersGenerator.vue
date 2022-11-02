@@ -166,7 +166,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import ConfirmDeliveryModal from './ConfirmDeliveryModal'
+import ConfirmDeliveryModal from '@/components/ConfirmDeliveryModal.vue'
 
 export default {
   name: 'FootersOrdersGenerator',

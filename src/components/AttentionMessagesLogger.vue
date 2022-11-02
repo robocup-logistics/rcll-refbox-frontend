@@ -12,7 +12,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import AttentionMessageSingle from './AttentionMessageSingle'
+import AttentionMessageSingle from '@/components/AttentionMessageSingle.vue'
 
 export default {
   name: 'AttentionMessagesLogger',
