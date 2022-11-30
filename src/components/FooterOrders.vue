@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import FootersOrdersGenerator from './FooterOrdersGenerator'
+import FootersOrdersGenerator from '@/components/FooterOrdersGenerator.vue'
 import { mapState } from 'vuex'
 export default {
   name: 'FootersOrders',

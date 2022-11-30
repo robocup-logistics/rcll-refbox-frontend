@@ -50,16 +50,16 @@
       <BodyRefboxLog class="border-bottom-0 p-0 pb-3 col-md-9 bodyRefboxLogCmp"/>
       <AttentionMessagesLogger class="col-md-3 p-0 overflow-auto"/>
     </div>
-    
+
   </div>
 </template>
 
 <script>
-import BodyMachines from './BodyMachines'
-import BodyScore from './BodyScore'
-import BodyRobots from './BodyRobots'
-import BodyRefboxLog from './BodyRefboxLog'
-import AttentionMessagesLogger from './AttentionMessagesLogger'
+import BodyMachines from '@/components/BodyMachines.vue'
+import BodyScore from '@/components/BodyScore.vue'
+import BodyRobots from '@/components/BodyRobots.vue'
+import BodyRefboxLog from '@/components/BodyRefboxLog.vue'
+import AttentionMessagesLogger from '@/components/AttentionMessagesLogger.vue'
 import { mapState, mapActions } from 'vuex';
 
 export default {

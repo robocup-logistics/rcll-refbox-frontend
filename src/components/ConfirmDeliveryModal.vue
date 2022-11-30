@@ -24,9 +24,9 @@
                 {{formatSeconds(order['delivery_period'][1])}}
               </span>
             </p>
-            <img :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
-              class="img-fluid" 
-            > 
+            <img :src="`/products/generated/${getProductsImg(order.id)}`"
+              class="img-fluid"
+            >
           </div>
           <div class="modal-buttons">
             <button @click.prevent='orderAcceptance(order,true)' class="btn btn-outline-info yes-btn ">Yes</button>

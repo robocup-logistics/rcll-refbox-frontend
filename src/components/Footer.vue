@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import FooterOrders from './FooterOrders'
+import FooterOrders from '@/components/FooterOrders.vue'
 export default {
   name: 'Footer',
   components: {

@@ -9,7 +9,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import BodyMachinesGenerator from './BodyMachinesGenerator';
+import BodyMachinesGenerator from '@/components/BodyMachinesGenerator.vue';
 
 export default {
   name: 'BodyMachines',

@@ -36,11 +36,11 @@
       </div>
     </div>
   </div>
-  
+
 </template>
 
 <script>
-import ConfirmRandomizeFieldModal from './ConfirmRandomizeFieldModal'
+import ConfirmRandomizeFieldModal from '@/components/ConfirmRandomizeFieldModal.vue'
 import { mapActions, mapState } from 'vuex'
 export default {
   name: 'HeaderLogo',

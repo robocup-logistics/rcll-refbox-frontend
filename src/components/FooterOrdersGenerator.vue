@@ -9,8 +9,8 @@
         <div class="max-height-6rem pb-0 mb-0 d-flex">
           <img 
               v-if="products.length === orderCount"
-              :src="require(`@/assets/products/generated/${getProductsImg(order.id)}`)" 
-               class="max-height-6rem img-max-width img-fluid" 
+              :src="`/products/generated/${getProductsImg(order.id)}`" alt="img"
+               class="max-height-6rem img-max-width img-fluid"
                :class="activeDeliveryPeriodImage(order['delivery_period'])"
           > 
           <!-- c0_black__black.svg -->
@@ -166,7 +166,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import ConfirmDeliveryModal from './ConfirmDeliveryModal'
+import ConfirmDeliveryModal from '@/components/ConfirmDeliveryModal.vue'
 
 export default {
   name: 'FootersOrdersGenerator',

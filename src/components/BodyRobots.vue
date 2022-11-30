@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import AddPointsManually from './AddPointsManually'
+import AddPointsManually from '@/components/AddPointsManually.vue'
 
 import { mapState, mapActions} from 'vuex'; 
 
