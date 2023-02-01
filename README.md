@@ -17,9 +17,23 @@ A web frontend for the RCLL RefBox
 ## Bugs and Limitations
 Report any issues you encounter on [github](https://github.com/carologistics/rcll-refbox-frontend/issues).
 
+## Docker setup
+You can get the docker image via:
+```
+docker pull quay.io/robocup-logistics/rcll-refbox-frontend
+```
+
+Launch it by by specifying the port mapping that you prefer, here 4173 is chosen:
+
+```
+docker run -it -p 4173:80 quay.io/robocup-logistics/rcll-refbox-frontend
+```
+
+
 ## Project setup
 ```
 npm install
+npm run build
 ```
 
 ### To run locally
@@ -27,7 +41,7 @@ npm install
 npm run serve
 ```
 
-The frontend runs on [port 8080](http://localhost:8080) per default and connects
+The frontend runs on [port 4173](http://localhost:4173) per default and connects
 via a tcp websocket on port 1234 (configurable in the refbox and via a button
 in the frontend).
 
