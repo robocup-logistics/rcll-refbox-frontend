@@ -1,28 +1,23 @@
 <template>
-  <div >
-    <div >
+  <div>
+    <div>
       <FootersOrdersGenerator 
-        v-if="(currentPhase === 'PRODUCTION' || currentPhase === 'POST_GAME')"
-        class="d-flex justify-content-around align-items-center px-4 py-2"/>
+        v-if="(phase === 'PRODUCTION' || phase === 'POST_GAME')"
+        class="d-flex justify-content-around align-items-center px-4 py-2"
+      />
     </div>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useMainStore } from '@/store/mainStore'
 import FootersOrdersGenerator from '@/components/FooterOrdersGenerator.vue'
-import { mapState } from 'vuex'
-export default {
-  name: 'FootersOrders',
-  components: {
-    FootersOrdersGenerator
-  },
-  computed: {
-    ...mapState({
-      currentPhase: state => state.phase
-    })
-  }
-}
 
+const mainStore = useMainStore()
+const { phase } = storeToRefs(mainStore)
+
+defineExpose({ phase })
 </script>
 
 <style>

@@ -1,63 +1,61 @@
 <template>
   <div class="add-points-container">
-    <form @submit.prevent="formatAndSendInputToWebsocket(pointsAndReaseon)" class="add-points-form">
+    <form @submit.prevent="formatAndSendInputToWebsocket(pointsAndReason)" class="add-points-form">
       <input type="text" class="p-0 add-points-input" required placeholder="Format: points, reason"
-             v-model="pointsAndReaseon"
+             v-model="pointsAndReason"
              ref="addInput"
       >
     </form>
   </div>
 </template>
 
-<script>
-import {mapActions} from 'vuex';
+<script setup lang="ts">
+import { ref, Ref, onMounted, nextTick } from 'vue'
+import { useMainStore } from '@/store/mainStore'
 
-export default {
-  name: 'AddPointsManually',
-  props: {
-    color: {
-      type: String,
-      required: true
-    }
-  },
-  data(){
-    return{
-      pointsAndReaseon: ""
-    }
-  },
-  mounted(){
-    this.$nextTick(function () {
-          this.$refs.addInput.focus()
-        })
-  },
-  methods: {
-    ...mapActions(['sendAddPointsTeam']),
-    printInput(input){
-      console.log(input);
-    },
-    formatAndSendInputToWebsocket(input){
-      console.log(input);
-      // Input Format: points, Reason
-      const splitInput = input.split(/,(.+)/)
-      const points = parseInt(splitInput[0])
-      const reason = splitInput[1]
-      
-      const msg = {
-        "command": "add_points_team",
-        "points": points,
-        "team_color": `${this.color.toUpperCase()}`,
-        "game_time": parseFloat(this.$store.state.gametime),
-        "phase": `${this.$store.state.phase}`,
-        "reason": `${reason}`
-      }
-      console.log(typeof msg.points);
-      this.sendAddPointsTeam(msg)
-      this.$parent.toggleShowAddPoints()
+const props = defineProps({
+  color: {
+    type: String,
+    required: true
+  }
+})
 
-    }
+const emit = defineEmits<{
+  (e: 'toggleShowAddPoints'): void
+}>()
+
+const mainStore = useMainStore()
+
+const addInput: Ref<HTMLInputElement | null> = ref(null)
+
+onMounted(() => {
+  nextTick(() => {
+    if(addInput.value) addInput.value.focus()
+  })
+})
+
+function formatAndSendInputToWebsocket(input: string){
+
+  // Input Format: points, Reason
+  const splitInput = input.split(/,(.+)/)
+  const points = parseInt(splitInput[0])
+  const reason = splitInput[1]
+  
+  const msg = {
+    "command": "add_points_team",
+    "points": points,
+    "team_color": `${props.color.toUpperCase()}`,
+    "game_time": mainStore.gametime,
+    "phase": `${mainStore.phase}`,
+    "reason": `${reason}`
   }
 
+  console.log(typeof msg.points)
+  mainStore.sendAddPointsTeam(msg)
+  emit('toggleShowAddPoints')
 }
+
+defineExpose({addInput, formatAndSendInputToWebsocket})
 </script>
 
 <style scoped>

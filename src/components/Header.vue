@@ -11,19 +11,10 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import HeaderLogo from '@/components/HeaderLogo.vue'
 import HeaderTeam from '@/components/HeaderTeam.vue'
 import HeaderCentralInformation from '@/components/HeaderCentralInformation.vue'
-
-export default {
-  name: 'Header',
-  components: {
-    HeaderLogo,
-    HeaderTeam,
-    HeaderCentralInformation
-  }
-}
 </script>
 
 <style>

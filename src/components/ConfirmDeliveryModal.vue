@@ -1,19 +1,26 @@
 <template>
   <div class="Modal">
    <div v-if="isOpen === true">
-
     <transition name="modal-container">
       <div class="overlay">
         <div class="modal-container">
-          <h6 class="font-weight-bold modal-title-h6">OrderId {{order.id}}: Confirm delivery for {{team}}? </h6>
+          <h6 class="font-weight-bold modal-title-h6">
+            OrderId {{order.id}}: Confirm delivery for {{team}}?
+          </h6>
           <div class="d-flex align-items-center justify-content-between">
             <p class="delivery-infos">
-              <span>Complexity: {{order.complexity}}</span>
-              <span>base-color: {{order['base_color']}}</span>
+              <span>
+                Complexity: {{order.complexity}}
+              </span>
+              <span>
+                base-color: {{order['base_color']}}
+              </span>
               <span v-if="order['ring_colors']">
                 ring colors: {{order['ring_colors']}}
               </span>
-              <span>cap-color: {{order['cap_color']}}</span>
+              <span>
+                cap-color: {{order['cap_color']}}
+              </span>
               <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
                 Gametime: {{formatSeconds(order['unconfirmed_deliveries'][0]['game_time'])}}
               </span>
@@ -39,69 +46,67 @@
 </div>
 </template>
 
-<script>
-import { mapActions, mapState } from 'vuex'
+<script setup lang="ts">
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useMainStore } from '@/store/mainStore'
+import { useOrderStore } from '@/store/orderStore'
 
-export default {
-  name: 'ConfirmDeliveryModal',
-  props: ['order', 'team', 'color'],
-  data(){
-    return{
-      isOpen: true
-    }
+const props = defineProps({
+  order: {
+    type: Object,
+    required: true
   },
-  computed: {
-    ...mapState({
-      products: state => state.orders.products,
-    })
+  team: {
+    type: String,
+    required: true
   },
-  mounted() {
-    console.log('Mounted Modal!');
-  },
-  beforeDestroy() {
-    console.log('destroying');
-    
-  },
-  methods: {
-    ...mapActions(['populateProductsArray', 'SOCKET_SEND']),
-    closeModal() {
-      console.log('closing');
-      this.isOpen = false;
-    },
-    getProductsImg(orderID) {
-      return this.products.find(({id}) => id === orderID)['product-img-url'];
-    },
-    // Scroll to end of scrollable div
-    scrollToEnd(className){
-      let container = document.querySelector(className);
-      container.scrollTop = container.scrollHeight;
-    },
-    orderAcceptance(order, bool) {
-      const msg = {
-        "command" : "confirm_delivery",
-        "correctness" : false,
-        "delivery_id": null,
-        "order_id" : null,
-        "color" : ""
-      }
-      msg.correctness = bool
-      msg.color = this.color.toUpperCase()
-      msg['order_id'] = this.order.id
-      
-      if (order['unconfirmed_deliveries'].length > 0) {
-        if ( typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined') {
-          msg['delivery_id'] = order['unconfirmed_deliveries'][0]['delivery_id']
-        }
-      } else {
-          msg['delivery_id'] = msg['order_id']
-      }
-      
-      this.SOCKET_SEND(msg)
-      this.closeModal()
-      // this.$destroy()
-    }
+  color: {
+    type: String,
+    required: true
   }
+})
+
+const mainStore = useMainStore()
+const orderStore = useOrderStore()
+const { products } = storeToRefs(orderStore)
+
+const isOpen = ref(true)
+
+function closeModal() {
+  isOpen.value = false;
 }
+
+function getProductsImg(orderID: number) {
+  return products.value.find(({id} : {id: number}) => id === orderID)['product-img-url'];
+}
+
+function orderAcceptance(order, bool: boolean) {
+  const msg = {
+    "command" : "confirm_delivery",
+    "correctness" : false,
+    "delivery_id": null,
+    "order_id" : null,
+    "color" : ""
+  }
+  msg.correctness = bool
+  msg.color = props.color.toUpperCase()
+  msg['order_id'] = props.order.id
+  
+  if (order['unconfirmed_deliveries'].length > 0) {
+    if ( typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined') {
+      msg['delivery_id'] = order['unconfirmed_deliveries'][0]['delivery_id']
+    }
+  } else {
+      msg['delivery_id'] = msg['order_id']
+  }
+  
+  mainStore.SOCKET_SEND(msg)
+  closeModal()
+  // this.$destroy()
+}
+
+defineExpose({ isOpen, getProductsImg, orderAcceptance })
 </script>
 
 <style scoped>

@@ -4,14 +4,8 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import FooterOrders from '@/components/FooterOrders.vue'
-export default {
-  name: 'Footer',
-  components: {
-    FooterOrders
-  }
-}
 </script>
 
 <style>

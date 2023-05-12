@@ -54,32 +54,20 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useMainStore } from '@/store/mainStore'
 import BodyMachines from '@/components/BodyMachines.vue'
 import BodyScore from '@/components/BodyScore.vue'
 import BodyRobots from '@/components/BodyRobots.vue'
 import BodyRefboxLog from '@/components/BodyRefboxLog.vue'
 import AttentionMessagesLogger from '@/components/AttentionMessagesLogger.vue'
-import { mapState, mapActions } from 'vuex';
 
-export default {
-  name: 'Body',
-  components: {
-    BodyMachines,
-    BodyScore,
-    BodyRobots,
-    BodyRefboxLog,
-    AttentionMessagesLogger
-  }, computed: {
-    ...mapState(['phase', 'showFormCyan', 'gamestate'])
-  },
-  created(){
-    this.connectToWebsocket()
-  },
-  methods: {
-    ...mapActions(['connectToWebsocket'])
-  }
-}
+const mainStore = useMainStore()
+const { phase } = storeToRefs(mainStore)
+mainStore.connectToWebsocket()
+
+defineExpose({phase})
 </script>
 
 <style scoped>

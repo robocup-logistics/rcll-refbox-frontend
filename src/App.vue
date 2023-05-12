@@ -1,6 +1,6 @@
 <template>
-  <div id="app" >
-    <div class="container-fluid"  >
+  <div id="app" ref="root">
+    <div class="container-fluid">
       <Header />
       <Body />
       <Footer />
@@ -8,58 +8,38 @@
   </div>
 </template>
 
-<script>
-import Header from './components/Header.vue'
-import Body from './components/Body.vue'
-import Footer from './components/Footer.vue'
-import { mapActions, mapState } from 'vuex';
+<script setup lang="ts">
+import { Ref, ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import Header from '@/components/Header.vue'
+import Body from '@/components/Body.vue'
+import Footer from '@/components/Footer.vue'
+import { useMainStore } from '@/store/mainStore'
 
-export default {
-  name: 'App',
-  components: {
-    Header,
-    Body,
-    Footer
-  },
-  computed: {
-    ...mapState(['showPhaseSubmenus']),
-    phaseSubmenus () {
-      return this.$store.getters.getPhaseSubmenusStatus
-    },
-    teamMenuCyan () {
-      return this.$store.getters.getTeamMenuCyanTriggerStatus
-    },
-    cyanTeamName(){
-      return this.$store.getters.getCyanTeamName
-    }
-  },
-  watch: {
-    phaseSubmenus(){
-      if (this.$store.getters.getPhaseSubmenusStatus === true) {
-        this.$el.addEventListener('click', this.closeSubmenusForPhases)
-      } else {
-        this.$el.removeEventListener('click', this.closeSubmenusForPhases)
-      }
-    },
-  },
-  methods: {
-    ...mapActions(['closePhaseSubmenus', 'closeTeamMenuCyan']),
-    closeSubmenusForPhases(e) {
-      // check if anything other than the phase is clicked and close the submenu 
-      if (!(e.target.classList.contains('current-phase-anchor')) ) {
-        this.closePhaseSubmenus()
-      }
-    },
-    closeTeamMenuCyanMethod(e) {
-      // check if anything other than the menu is clicked and close the submenu
-      console.log();
-      
-      if (!(e.target.classList.contains('cyanSelectArrow')) || (e.target.classList.contains('btn-cyan-header'))) {
-        this.closeTeamMenuCyan()
-      }
+const root: Ref<HTMLElement | null> = ref(null)
+
+const mainStore = useMainStore()
+const { showPhaseSubmenus } = storeToRefs(mainStore)
+
+watch(showPhaseSubmenus, (newShowPhaseSubmenus) => {
+
+  if (root.value) {
+    if (newShowPhaseSubmenus === true) {
+      root.value.addEventListener('click', closeSubmenusForPhases)
+    } else {
+      root.value.removeEventListener('click', closeSubmenusForPhases)
     }
   }
+})
+
+function closeSubmenusForPhases(e) {
+
+  // check if anything other than the phase is clicked and close the submenu 
+  if (!(e.target.classList.contains('current-phase-anchor')) ) {
+    mainStore.closePhaseSubmenus()
+  }
 }
+defineExpose({root})
 </script>
 
 <style>
