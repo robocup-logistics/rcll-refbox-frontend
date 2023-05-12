@@ -2,8 +2,8 @@
   <div>
     <div class="row m-0 pt-2 h-100 w-100">
       <div class=" col-md-12 pb-1"
-        :class="[machine.mtype+'-station']"
         v-for="(machine,index) in selectMachinesArray(color)" 
+        :class="[machine.mtype+'-station']"
         :key="index" 
       >
         <div class="d-flex align-content-center " 
@@ -110,9 +110,9 @@ const { machinesCyan, machinesMagenta, ringspecs } = storeToRefs(machineStore)
 
 function selectMachinesArray(teamColor: string){
   if (teamColor === 'cyan') {
-    return machinesCyan
+    return machinesCyan.value
   } else {  
-    return machinesMagenta
+    return machinesMagenta.value
   }
 }
 

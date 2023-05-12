@@ -97,7 +97,23 @@ function togglePhaseMenuAndFocus() {
   })
 }
 
-defineExpose({ phase, gametime, gamestate, showPhaseSubmenus, firstOne, switchGamestate, togglePhaseMenuAndFocus, setGameState: mainStore.setGameState, setPreviousPhase: mainStore.setPreviousPhase, setNextPhase: mainStore.setNextPhase, togglePhaseSubmenus: mainStore.togglePhaseSubmenus })
+function setGameState(gamestate: string) {
+  mainStore.setGameState(gamestate)
+}
+
+function setPreviousPhase() {
+  mainStore.setPreviousPhase()
+}
+
+function setNextPhase() {
+  mainStore.setNextPhase()
+}
+
+function togglePhaseSubmenus() {
+  mainStore.togglePhaseSubmenus()
+}
+
+defineExpose({ phase, gametime, gamestate, showPhaseSubmenus, firstOne, switchGamestate, togglePhaseMenuAndFocus, setGameState, setPreviousPhase, setNextPhase, togglePhaseSubmenus })
 </script>
 
 <style scoped>

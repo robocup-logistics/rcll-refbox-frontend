@@ -11,7 +11,7 @@
       </a>
       <ConfirmRandomizeFieldModal 
         v-if="toggle"
-        @confirm-randomize-field-modal="toggleConfirmationDialogFieldRnd"
+        @toggle-confirmation-dialog-field-randomize="toggleConfirmationDialogFieldRnd"
       />
       <div class="d-flex align-items-center justify-items-center">
         <form  class='form-connection' @submit.prevent="setPortConnection(portAddress)" v-show="addIpAndPort">

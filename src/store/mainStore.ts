@@ -311,6 +311,8 @@ export const useMainStore = defineStore('mainStore', () => {
   // set game state
   function setGameState(newGamestate) {
 
+    console.log("setting game state " + newGamestate)
+
     const msg = {
       "command" : "set_gamestate",
       "state" : `${newGamestate}`
