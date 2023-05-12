@@ -18,27 +18,4 @@ library.add(faPauseCircle, faChevronLeft, faChevronRight, faArrowRight, faPlayCi
 const app = createApp(App)
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(createPinia())
-app.mixin({
-  methods: {
-    formatSeconds(secondsArg: string): string{
-      // 328 seconds => 5:28
-      const minutes: number = Math.floor(parseInt(secondsArg) / 60)
-      const seconds: number = parseInt(secondsArg) % 60
-      let minutesString
-      if(minutes < 10) {
-        minutesString = `0${minutes}`
-      } else {
-        minutesString = `${minutes}`
-      }
-      let secondsString
-      if(seconds < 10) {
-        secondsString = `0${seconds}`;
-      } else {
-        secondsString = `${seconds}`;
-      }
-      const result: string = `${minutesString}:${secondsString}`;
-      return result;
-    }
-  }
-})
 app.mount('#app')

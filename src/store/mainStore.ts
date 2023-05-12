@@ -1,6 +1,7 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
+import formatSeconds from '@/utils/formatSeconds'
 
 import { useMachineStore } from '@/store/machineStore'
 import { useOrderStore } from '@/store/orderStore'
@@ -50,6 +51,11 @@ export const useMainStore = defineStore('mainStore', () => {
   const teamMenuTriggeredCyan: Ref<boolean> = ref(false)
   const teamMenuTriggeredMagenta: Ref<boolean> = ref(false)
 
+  // formatted game time
+  const formattedGametime: Ref<string> = computed(() => {
+    return formatSeconds(gametime.value)
+  })
+
   // establish websocket connection
   function connectToWebsocket() {
     socket.value = new WebSocket(websocketURL.value)
@@ -82,7 +88,6 @@ export const useMainStore = defineStore('mainStore', () => {
 
   // socket on close
   function SOCKET_ONCLOSE() {
-     
     socket.value.onclose = (e) => { 
       console.log(e);
       if (e.code === 1006) {
@@ -130,7 +135,6 @@ export const useMainStore = defineStore('mainStore', () => {
 
         } else if(msgObj.type === 'order-info'){
 
-          console.log(msgObj, 'The new order!');
           orderStore.setOrderInfos(msgObj)
 
         } else if(msgObj.type === 'points') {
@@ -209,12 +213,11 @@ export const useMainStore = defineStore('mainStore', () => {
 
     if (gamestate.value !== payload.state) {
 
-      setGameState(payload.state)
-
+      gamestate.value = payload.state;
     }
     if (phase.value !== payload.phase) {
 
-      setPhase(payload.phase)
+      phase.value = payload.phase;
 
     }
     if (payload.cyan !== "") {
@@ -246,6 +249,8 @@ export const useMainStore = defineStore('mainStore', () => {
 
     gametime.value = parseInt(payload['game_time'])
   }
+
+  // set current phase
 
   // set phase by name
   function setPhase(newPhase: string) {
@@ -311,8 +316,6 @@ export const useMainStore = defineStore('mainStore', () => {
   // set game state
   function setGameState(newGamestate) {
 
-    console.log("setting game state " + newGamestate)
-
     const msg = {
       "command" : "set_gamestate",
       "state" : `${newGamestate}`
@@ -366,5 +369,5 @@ export const useMainStore = defineStore('mainStore', () => {
     showFormMagenta.value = !showFormMagenta.value
   }
 
-  return {nameTeamCyan, nameTeamMagenta, showFormCyan, showFormMagenta, scoreCyan, scoreMagenta, phase, gametime, awardedPoints, cyanAwardedPoints, magentaAwardedPoints, gamestate, pollRate, socket, isConnected, websocketMsgs, error, websocketURL, pointsCyanFlag, showPhaseSubmenus, addIpAndPort, knownTeams, teamMenuTriggeredCyan, teamMenuTriggeredMagenta, connectToWebsocket, SOCKET_DISCONNECT, SOCKET_SEND, SOCKET_ONOPEN, SOCKET_ONCLOSE, SOCKET_ONMESSAGE, SOCKET_ONERROR, SOCKET_ADDMESSAGE, setGamestateInformation, setPhase, setNextPhase, setPreviousPhase, setGameState, sendAddPointsTeam, randomizeField, togglePhaseSubmenus, closePhaseSubmenus, toggleTeamMenuCyan, closeTeamMenuCyan, openTeamMenuCyan, toggleTeamMenuMagenta, closeTeamMenuMagenta, openTeamMenuMagenta, toggleAddIpAndPort, toggleShowFormCyan, toggleShowFormMagenta}
+  return {nameTeamCyan, nameTeamMagenta, showFormCyan, showFormMagenta, scoreCyan, scoreMagenta, phase, gametime, awardedPoints, cyanAwardedPoints, magentaAwardedPoints, gamestate, pollRate, socket, isConnected, websocketMsgs, error, websocketURL, pointsCyanFlag, showPhaseSubmenus, addIpAndPort, knownTeams, teamMenuTriggeredCyan, teamMenuTriggeredMagenta, formattedGametime, connectToWebsocket, SOCKET_DISCONNECT, SOCKET_SEND, SOCKET_ONOPEN, SOCKET_ONCLOSE, SOCKET_ONMESSAGE, SOCKET_ONERROR, SOCKET_ADDMESSAGE, setGamestateInformation, setPhase, setNextPhase, setPreviousPhase, setGameState, sendAddPointsTeam, randomizeField, togglePhaseSubmenus, closePhaseSubmenus, toggleTeamMenuCyan, closeTeamMenuCyan, openTeamMenuCyan, toggleTeamMenuMagenta, closeTeamMenuMagenta, openTeamMenuMagenta, toggleAddIpAndPort, toggleShowFormCyan, toggleShowFormMagenta}
 })

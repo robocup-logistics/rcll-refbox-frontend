@@ -209,6 +209,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import formatSeconds from '@/utils/formatSeconds'
 import { useMainStore } from '@/store/mainStore'
 import { useOrderStore } from '@/store/orderStore'
 import ConfirmDeliveryModal from '@/components/ConfirmDeliveryModal.vue'
@@ -219,10 +220,7 @@ const { gametime, nameTeamCyan, nameTeamMagenta} = storeToRefs(mainStore)
 const { allOrders, products, orderCount } = storeToRefs(orderStore)
 
 const unconfirmedOrders = computed(() => {
-
-  console.log(allOrders.value.filter(order => order['unconfirmed_deliveries'].length > 0), 'UNCONIRMED');
   return allOrders.value.filter(order => order['unconfirmed_deliveries'].length > 0)
-
 })
 
 // returns the img url responding to order ID
@@ -283,7 +281,7 @@ function getCorrespondingTeamname(color: string) {
   }
 }
 
-defineExpose({ allOrders, products, orderCount, unconfirmedOrders, getProductsImg, isDelivered, isDeliveredSecond, cyanCheckboxId, magentaCheckboxId, activeDeliveryPeriod, activeDeliveryPeriodImage, getCorrespondingTeamname })
+defineExpose({ formatSeconds, allOrders, products, orderCount, unconfirmedOrders, getProductsImg, isDelivered, isDeliveredSecond, cyanCheckboxId, magentaCheckboxId, activeDeliveryPeriod, activeDeliveryPeriodImage, getCorrespondingTeamname })
 </script>
 
 <style scoped>

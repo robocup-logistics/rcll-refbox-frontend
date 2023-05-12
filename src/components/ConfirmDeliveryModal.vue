@@ -49,6 +49,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import formatSeconds from '@/utils/formatSeconds'
 import { useMainStore } from '@/store/mainStore'
 import { useOrderStore } from '@/store/orderStore'
 
@@ -106,7 +107,7 @@ function orderAcceptance(order, bool: boolean) {
   // this.$destroy()
 }
 
-defineExpose({ isOpen, getProductsImg, orderAcceptance })
+defineExpose({ formatSeconds, isOpen, getProductsImg, orderAcceptance })
 </script>
 
 <style scoped>

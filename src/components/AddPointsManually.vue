@@ -50,7 +50,6 @@ function formatAndSendInputToWebsocket(input: string){
     "reason": `${reason}`
   }
 
-  console.log(typeof msg.points)
   mainStore.sendAddPointsTeam(msg)
   emit('toggleShowAddPoints')
 }

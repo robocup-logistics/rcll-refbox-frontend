@@ -120,7 +120,6 @@ export const useRobotStore = defineStore('robotStore', () => {
       "team_color" : payload.robot['team_color'],
       "maintenance" : payload.bool
     }
-    console.log(msg);
     mainStore.SOCKET_SEND(msg)
   }
 

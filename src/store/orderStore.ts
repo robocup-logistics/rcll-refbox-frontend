@@ -79,7 +79,6 @@ export const useOrderStore = defineStore('orderStore', () => {
 
   // set order count
   function setOrderCount(orderCount){
-    console.log(orderCount);
     setOrderCount(orderCount)
   }
 
@@ -120,11 +119,10 @@ export const useOrderStore = defineStore('orderStore', () => {
         capColor = 'gray'
       }
       let ringColors = '';
-      if(order['ring_colors'] !== [ ]){
-        order['ring_colors'].forEach(color => {
-          ringColors += color.split('_')[1].toLowerCase() + '-'
-        });
-      }
+      order['ring_colors'].forEach(color => {
+        ringColors += color.split('_')[1].toLowerCase() + '-'
+      });
+
       newProduct['id'] = order.id;
       // format: 'c0_black_blue-orange_gray.svg'
       newProduct['product-img-url'] = `${complexity}_${baseColor}_${ringColors.substring(0,ringColors.length-1)}_${capColor}.svg`

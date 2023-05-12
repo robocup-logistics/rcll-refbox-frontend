@@ -70,8 +70,7 @@ function toggleAddIpAndPortAndFocus() {
   })
 }
 
-function setPortConnection(portAddres: string) {
-
+function setPortConnection(portAddress: string) {
   const address = `ws://`+`${portAddress}`
   mainStore.SOCKET_DISCONNECT()
   mainStore.websocketURL = address

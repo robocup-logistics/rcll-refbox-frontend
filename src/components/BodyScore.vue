@@ -28,6 +28,7 @@
 <script setup lang="ts">
 import { onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import formatSeconds from '@/utils/formatSeconds'
 import { useMainStore } from '@/store/mainStore'
 
 const props = defineProps({
@@ -80,7 +81,7 @@ function selectPointsArray(color: string){
   }
 }
 
-defineExpose({ selectPointsArray })
+defineExpose({ formatSeconds, selectPointsArray })
 </script>
 
 <style scoped>

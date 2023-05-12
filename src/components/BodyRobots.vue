@@ -10,7 +10,7 @@
             title="Add points manually"
           >
         </div>
-        <AddPointsManually v-if="showAddPoints === true" :color=color @toggle-show-add-points="toggleShowAddPoint()" />
+        <AddPointsManually v-if="showAddPoints === true" :color=color @toggle-show-add-points="toggleShowAddPoints()" />
       </div>
       <div v-for="(robot,index) in selectRobotsArray(color)" 
         :key="robot.number"

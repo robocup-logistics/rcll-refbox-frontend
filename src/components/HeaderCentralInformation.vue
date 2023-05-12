@@ -20,8 +20,8 @@
           </a>  
         </div>
         <div class="time">
-          <!-- <h3>{{formatSeconds(getGametime)}}</h3> -->
-          <h4 class="marg-bot-0 time-heading">{{formatSeconds(gametime)}}</h4>
+          <!-- <h3>{{formattedGametime}}</h3> -->
+          <h4 class="marg-bot-0 time-heading">{{formattedGametime}}</h4>
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@ import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store/mainStore'
 
 const mainStore = useMainStore()
-const { phase, gametime, gamestate, showPhaseSubmenus } = storeToRefs(mainStore)
+const { phase, gametime, gamestate, showPhaseSubmenus, formattedGametime } = storeToRefs(mainStore)
 
 const firstOne: Ref<HTMLAnchorElement | null> = ref(null)
 
@@ -113,7 +113,7 @@ function togglePhaseSubmenus() {
   mainStore.togglePhaseSubmenus()
 }
 
-defineExpose({ phase, gametime, gamestate, showPhaseSubmenus, firstOne, switchGamestate, togglePhaseMenuAndFocus, setGameState, setPreviousPhase, setNextPhase, togglePhaseSubmenus })
+defineExpose({ phase, gametime, gamestate, showPhaseSubmenus, firstOne, formattedGametime, switchGamestate, togglePhaseMenuAndFocus, setGameState, setPreviousPhase, setNextPhase, togglePhaseSubmenus })
 </script>
 
 <style scoped>
