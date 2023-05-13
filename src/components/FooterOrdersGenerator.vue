@@ -223,33 +223,37 @@ const unconfirmedOrders = computed(() => {
   return allOrders.value.filter(order => order['unconfirmed_deliveries'].length > 0)
 })
 
+setTimeout(() => {
+  console.log(orderCount.value)
+  console.log(products.value)
+}, 5000)
 // returns the img url responding to order ID
-function getProductsImg(orderID) {      
-  return products.value.find(({id}) => id === orderID)['product-img-url'];
+function getProductsImg(orderID) {
+  return products.value.find(({id}) => id === orderID)['product-img-url']
 }
 
 // checks if the order was delivered
 function isDelivered(currDelivered, requested): boolean {
   if (parseInt(currDelivered) >= requested || parseInt(currDelivered) === 1){
-    return true;
+    return true
   } else {
-    return false;
+    return false
   }
 }
 function isDeliveredSecond(currDelivered): boolean {
   if (parseInt(currDelivered) === 2){
-    return true;
+    return true
   } else {
-    return false;
+    return false
   }
 }
 
 function cyanCheckboxId(orderId): string {
-  return `cyanCheckbox-${orderId}`;
+  return `cyanCheckbox-${orderId}`
 }
 
 function magentaCheckboxId(orderId): string {
-  return `magentaCheckbox-${orderId}`;
+  return `magentaCheckbox-${orderId}`
 }
 
 // grays out orders that are not active
@@ -286,11 +290,11 @@ defineExpose({ formatSeconds, allOrders, products, orderCount, unconfirmedOrders
 
 <style scoped>
 .quantity-delivered-cyan {
-  color: var(--main-cyan-color)
+  color: var(--main-cyan-color);
 }
 
 .quantity-delivered-magenta {
-  color: var(--main-magenta-color)
+  color: var(--main-magenta-color);
 }
 
 /* Remove Bootsrap defaults */

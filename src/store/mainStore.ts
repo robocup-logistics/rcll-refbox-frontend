@@ -173,7 +173,6 @@ export const useMainStore = defineStore('mainStore', () => {
 
           } else if(msgObj[0].type === 'order-info') {
 
-            console.log(msgObj);
             orderStore.setOrdersAtReconnect(msgObj)
 
           } else if(msgObj[0].type === 'points') {

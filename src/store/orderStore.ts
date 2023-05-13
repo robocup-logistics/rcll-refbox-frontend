@@ -10,26 +10,16 @@ export const useOrderStore = defineStore('orderStore', () => {
   const ordersFlag: Ref<boolean> = ref(false)
   const orderCount: Ref<number> = ref(9)
 
-  // orders for index
-  const ordersForIndex = computed(() => {
-    return (index) => {
-      return allOrders.value[index]
-    }
-  })
-
   // set products
   function setProducts(newProducts) {
     products.value = newProducts
   }
 
-  // toggle Populated
-  function togglePopulated() {
-    populated.value = true
-  }
-
   // set orders array
   function setOrdersArray(payload) {
 
+    console.log("set orders array")
+    console.log(payload)
     allOrders.value = payload
     ordersFlag.value = true
   }
@@ -77,17 +67,12 @@ export const useOrderStore = defineStore('orderStore', () => {
     }
   }
 
-  // set order count
-  function setOrderCount(orderCount){
-    setOrderCount(orderCount)
-  }
-
   // populate products
   function populateProducts() {
 
     if (allOrders.value && !populated.value) {
       populateProductsArray(allOrders.value)
-      togglePopulated()
+      populated.value = true
     }
   }
 
@@ -101,9 +86,14 @@ export const useOrderStore = defineStore('orderStore', () => {
   */  
   function populateProductsArray(orders){
 
+    console.log("populating producst array")
+    console.log(orders)
+
     // iterate through all orders
-    const newProducts = []
-    let newProduct = {}
+    const newProducts: {
+      "id": number,
+      "product-img-url": string
+    }[] = []
 
     orders.forEach(order => {
       const complexity = order.complexity.toLowerCase()
@@ -119,18 +109,21 @@ export const useOrderStore = defineStore('orderStore', () => {
         capColor = 'gray'
       }
       let ringColors = '';
-      order['ring_colors'].forEach(color => {
+      order['ring_colors'].forEach((color: string) => {
         ringColors += color.split('_')[1].toLowerCase() + '-'
       });
 
-      newProduct['id'] = order.id;
-      // format: 'c0_black_blue-orange_gray.svg'
-      newProduct['product-img-url'] = `${complexity}_${baseColor}_${ringColors.substring(0,ringColors.length-1)}_${capColor}.svg`
+      const newProduct: {
+        "id": number,
+        "product-img-url": string
+      } = {
+        "id": order.id,
+        "product-img-url": `${complexity}_${baseColor}_${ringColors.substring(0,ringColors.length-1)}_${capColor}.svg` // format: 'c0_black_blue-orange_gray.svg'
+      }
       
-      newProducts.push(newProduct)
-      newProduct = {}    
+      newProducts.push(newProduct) 
     })
-    setProducts(products)
+    setProducts(newProducts)
   }
 
   // sort by id
@@ -149,6 +142,6 @@ export const useOrderStore = defineStore('orderStore', () => {
     })
   }
 
-  return {allOrders, products, populated, ordersFlag, orderCount, ordersForIndex, setProducts, togglePopulated, setOrdersArray, addOrder, setOrdersAtReconnect, setOrderInfos, setOrderCount, populateProducts, populateProductsArray, sortById}
+  return {allOrders, products, populated, ordersFlag, orderCount, setProducts, setOrdersArray, addOrder, setOrdersAtReconnect, setOrderInfos, populateProducts, populateProductsArray, sortById}
   
 })
