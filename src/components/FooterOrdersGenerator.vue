@@ -1,15 +1,17 @@
 <template>
- <!-- <img src="http://via.placeholder.com/45x90" alt=""> -->
+  <!-- <img src="http://via.placeholder.com/45x90" alt=""> -->
   <div>
-    <div v-for="order in allOrders" 
-      :key=order.id
+    <div
+      v-for="order in allOrders" 
+      :key="order.id"
       class="max-height-6rem"
     >
-      <div class="d-flex " >
+      <div class="d-flex ">
         <div class="max-height-6rem pb-0 mb-0 d-flex">
           <img 
             v-if="products.length === orderCount"
-            :src="`/products/generated/${getProductsImg(order.id)}`" alt="img"
+            :src="`/products/generated/${getProductsImg(order.id)}`"
+            alt="img"
             class="max-height-6rem img-max-width img-fluid"
             :class="activeDeliveryPeriodImage(order['delivery_period'])"
           > 
@@ -21,31 +23,37 @@
           <div class="order-infos ">
             <div>
               <div class="d-flex justify-items-center align-items-center ">
-                <div pt-5 :class="activeDeliveryPeriod(order['delivery_period'])">
+                <div
+                  pt-5
+                  :class="activeDeliveryPeriod(order['delivery_period'])"
+                >
                   <span>
-                    {{order.id}}
+                    {{ order.id }}
                   </span>
                 </div>
                 <form>
                   <!-- If requested amount is 1 -->
                   <div 
                     v-if="order['quantity_requested'] === 1"
-                    class="form-group m-0 ml-2 d-flex text-primary">
+                    class="form-group m-0 ml-2 d-flex text-primary"
+                  >
                     <div class="custom-control custom-checkbox">
                       <!-- Checked only if the order was delivered -->
                       <input 
-                        type="checkbox" class="custom-control-input"
-                        :id="cyanCheckboxId(order.id)"  
+                        :id="cyanCheckboxId(order.id)"
+                        type="checkbox"
+                        class="custom-control-input"  
                         disabled
                         :checked="isDelivered(order['quantity_delivered'][0], order['quantity_requested'])"
                       >
                       <!-- Confirm Delivery Popup modal -->
-                      <div v-for="unconfirmedOrder in  unconfirmedOrders" 
+                      <div
+                        v-for="unconfirmedOrder in unconfirmedOrders" 
                         :key="unconfirmedOrder.id"
                       >
                         <div v-if="unconfirmedOrder.id === order.id && unconfirmedOrder['unconfirmed_deliveries'].length === 1">
                           <ConfirmDeliveryModal
-                            :order='unconfirmedOrder'
+                            :order="unconfirmedOrder"
                             :team="getCorrespondingTeamname(unconfirmedOrder['unconfirmed_deliveries'][0].team)"
                             :color="unconfirmedOrder['unconfirmed_deliveries'][0].team"
                           />
@@ -55,94 +63,106 @@
                           <ConfirmDeliveryModal   
                             v-for="(unconfirmedDeliveryElement,index) in unconfirmedOrder['unconfirmed_deliveries'] "
                             :key="index"
-                            :order = 'unconfirmedOrder'
+                            :order="unconfirmedOrder"
                             :team="getCorrespondingTeamname(unconfirmedDeliveryElement.team)"
-                            :color='unconfirmedDeliveryElement.team'
+                            :color="unconfirmedDeliveryElement.team"
                           />
                         </div>
                       </div>
                       <!-- End of modal -->
-                      <label class="custom-control-label" 
+                      <label
+                        class="custom-control-label" 
                         :for="cyanCheckboxId(order.id)"
-                      ></label>
+                      />
                     </div>
                     <div 
                       class="custom-control custom-checkbox  custom-checkbox-magenta"
                     >
-                      <input type="checkbox" 
-                        class="custom-control-input custom-control-input-magenta" 
-                        :id="magentaCheckboxId(order.id)"
+                      <input
+                        :id="magentaCheckboxId(order.id)" 
+                        type="checkbox" 
+                        class="custom-control-input custom-control-input-magenta"
                         :checked="isDelivered(order['quantity_delivered'][1], order['quantity_requested'])"
-                        disabled>
+                        disabled
+                      >
                       <label 
                         class="custom-control-label custom-control-label-magenta"
                         for="customCheck2"
-                      ></label>
+                      />
                     </div>
                   </div>
                   <!-- If requested amount is 2  -->
                   <div 
                     v-else-if="order['quantity_requested'] === 2 "
-                    class="form-group m-0 ml-2 d-flex flex-column">
+                    class="form-group m-0 ml-2 d-flex flex-column"
+                  >
                     <div>
-                      <div class= "d-flex">
+                      <div class="d-flex">
                         <div 
                           class="custom-control custom-checkbox"
                         >
                           <!-- Checked only if the order was delivered -->
-                          <input type="checkbox"
-                            class="custom-control-input"
+                          <input
                             id="customCheck1"
+                            type="checkbox"
+                            class="custom-control-input"
                             disabled
                             :checked="isDelivered(order['quantity_delivered'][0], order['quantity_requested'])"
                           >
                           <label 
                             class="custom-control-label" 
                             for="customCheck1"
-                          ></label>
+                          />
                         </div>
                         <div 
                           class="custom-control custom-checkbox custom-checkbox-magenta"
                         >
-                          <input type="checkbox" 
-                            class="custom-control-input custom-control-input-magenta" 
-                            id="customCheck2" disabled
+                          <input
+                            id="customCheck2" 
+                            type="checkbox" 
+                            class="custom-control-input custom-control-input-magenta"
+                            disabled
                             :checked="isDelivered(order['quantity_delivered'][1], order['quantity_requested'])"
                           >
                           <label 
                             class="custom-control-label custom-control-label-magenta" 
-                            for="customCheck2">
-                          </label>
+                            for="customCheck2"
+                          />
                         </div>
                       </div>
                     </div>
                     <!-- If the first was  delivered -->
-                    <div  class="d-flex">
+                    <div class="d-flex">
                       <div 
                         class="custom-control custom-checkbox"
                       >
                         <!-- Checked only if the order was delivered -->
-                        <input type="checkbox"
-                          class="custom-control-input"
+                        <input
                           id="customCheck1"
+                          type="checkbox"
+                          class="custom-control-input"
                           disabled
                           :checked="isDeliveredSecond(order['quantity_delivered'][0])"
                         >
                         <label
                           class="custom-control-label"
                           for="customCheck1"
-                        ></label>
+                        />
                       </div>
                       <div 
                         class="custom-control custom-checkbox custom-checkbox-magenta"
                       >
-                        <input type="checkbox" 
-                          class="custom-control-input custom-control-input-magenta" 
-                          id="customCheck2" disabled
+                        <input
+                          id="customCheck2" 
+                          type="checkbox" 
+                          class="custom-control-input custom-control-input-magenta"
+                          disabled
                           :checked="isDeliveredSecond(order['quantity_delivered'][1])"
                         >
-                        <label class="custom-control-label custom-control-label-magenta" for="customCheck2"
-                        ></label>
+                        <label
+                          class="custom-control-label custom-control-label-magenta"
+                          for="customCheck2"
+                        />
                       </div>
                     </div>
                     <!-- Confirm Delivery Popup modal -->
@@ -154,7 +174,7 @@
                         v-if="unconfirmedOrder.id === order.id && unconfirmedOrder['unconfirmed_deliveries'].length === 1"
                       >
                         <ConfirmDeliveryModal 
-                          :order = 'unconfirmedOrder'
+                          :order="unconfirmedOrder"
                           :team="getCorrespondingTeamname(unconfirmedOrder['unconfirmed_deliveries'][0].team)"
                           :color="unconfirmedOrder['unconfirmed_deliveries'][0].team"
                         />
@@ -167,9 +187,9 @@
                         <ConfirmDeliveryModal   
                           v-for="(unconfirmedDeliveryElement,index) in unconfirmedOrder['unconfirmed_deliveries']"
                           :key="index"
-                          :order = 'unconfirmedOrder'
+                          :order="unconfirmedOrder"
                           :team="getCorrespondingTeamname(unconfirmedDeliveryElement.team)"
-                          :color='unconfirmedDeliveryElement.team'
+                          :color="unconfirmedDeliveryElement.team"
                         />
                       </div>
                     </div>
@@ -177,7 +197,10 @@
                   </div>
                 </form>
                 <div class="text-center">
-                  <span v-if="order.competitive" class="text-warning">
+                  <span
+                    v-if="order.competitive"
+                    class="text-warning"
+                  >
                     C
                   </span>
                 </div>
@@ -192,11 +215,12 @@
                 {{ formatSeconds(order['delivery_period'][0]) }}-{{ formatSeconds(order['delivery_period'][1]) }}
               </span>
             </div>
-            <div class="order-complexity mt-1"
-                  :class="activeDeliveryPeriod(order['delivery_period'])"
+            <div
+              class="order-complexity mt-1"
+              :class="activeDeliveryPeriod(order['delivery_period'])"
             >
               <span>
-                Complex: {{order.complexity}}
+                Complex: {{ order.complexity }}
               </span>
             </div>
           </div>

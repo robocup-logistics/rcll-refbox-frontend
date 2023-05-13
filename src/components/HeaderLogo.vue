@@ -2,44 +2,77 @@
   <div class="d-flex justify-content-between border">
     <img alt="Refbox Logo">
     <div class="d-flex m-0">
-      <a @click.prevent='toggleConfirmationDialogFieldRnd' 
-        class="btn btn-fields btn-md" data-toggle="tooltip" 
-        data-placement="bottom" title="Randomize Field" 
-        v-shortkey.once="['f1']" @shortkey="toggleConfirmationDialogFieldRnd"
+      <a
+        v-shortkey.once="['f1']" 
+        class="btn btn-fields btn-md"
+        data-toggle="tooltip" 
+        data-placement="bottom"
+        title="Randomize Field" 
+        @click.prevent="toggleConfirmationDialogFieldRnd"
+        @shortkey="toggleConfirmationDialogFieldRnd"
       >
-        <font-awesome-icon :icon="['fa','random']" style="font-size: 12px;" />
+        <font-awesome-icon
+          :icon="['fa','random']"
+          style="font-size: 12px;"
+        />
       </a>
       <ConfirmRandomizeFieldModal 
         v-if="toggle"
         @toggle-confirmation-dialog-field-randomize="toggleConfirmationDialogFieldRnd"
       />
       <div class="d-flex align-items-center justify-items-center">
-        <form  class='form-connection' @submit.prevent="setPortConnection(portAddress)" v-show="addIpAndPort">
+        <form
+          v-show="addIpAndPort"
+          class="form-connection"
+          @submit.prevent="setPortConnection"
+        >
           <fieldset>
             <div class="form-group mb-0">
-              <input type="text" 
-                class="form-control input-connection" ref="portInput"
+              <input
+                ref="portInput"
+                type="text"
+                class="form-control input-connection"
                 placeholder="Enter Ip and Port Adress To Connect To"
-                v-model="portAddress" required
+                required
               >
             </div>
           </fieldset>
         </form>
-        <a class="btn btn-md ml-1 mr-1 btn-connection"
-          data-toggle="tooltip" data-placement="bottom" title="Change Websocket Port" 
+        <a
+          class="btn btn-md ml-1 mr-1 btn-connection"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="Change Websocket Port" 
           @click.prevent="toggleAddIpAndPortAndFocus()"
         >
-          <font-awesome-icon :icon="['fa','globe']" style="font-size: 12px;" />
+          <font-awesome-icon
+            :icon="['fa','globe']"
+            style="font-size: 12px;"
+          />
         </a>
-        <a v-if="isConnected" class="mx-2 "
-          data-toggle="tooltip" data-placement="bottom" title="Connection established!"
+        <a
+          v-if="isConnected"
+          class="mx-2 "
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="Connection established!"
         >
-          <font-awesome-icon :icon="['fa','link']" style="font-size: 12px; color:green;" />
+          <font-awesome-icon
+            :icon="['fa','link']"
+            style="font-size: 12px; color:green;"
+          />
         </a>
-        <a v-else class="mx-2 icon-unlink"
-          data-toggle="tooltip" data-placement="bottom" title="No Connection!"
+        <a
+          v-else
+          class="mx-2 icon-unlink"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="No Connection!"
         >
-          <font-awesome-icon :icon="['fa','unlink']" style="font-size: 12px; color:red;" />
+          <font-awesome-icon
+            :icon="['fa','unlink']"
+            style="font-size: 12px; color:red;"
+          />
         </a>
       </div>
     </div>
@@ -56,7 +89,6 @@ const mainStore = useMainStore()
 const { isConnected, addIpAndPort } = storeToRefs(mainStore)
 
 const toggle: Ref<boolean> = ref(false)
-const portAddress = ref(null)
 const portInput: Ref<HTMLInputElement | null> = ref(null)
 
 function toggleConfirmationDialogFieldRnd() {
@@ -70,15 +102,17 @@ function toggleAddIpAndPortAndFocus() {
   })
 }
 
-function setPortConnection(portAddress: string) {
-  const address = `ws://`+`${portAddress}`
+function setPortConnection() {
+  if (!portInput.value) return
+  console.log("seeting " + portInput.value.value)
+  const address = `ws://`+`${portInput.value.value}`
   mainStore.SOCKET_DISCONNECT()
   mainStore.websocketURL = address
   mainStore.connectToWebsocket()
   mainStore.toggleAddIpAndPort()
 }
 
-defineExpose({ isConnected, addIpAndPort, toggle, portAddress, portInput, toggleConfirmationDialogFieldRnd, toggleAddIpAndPortAndFocus, setPortConnection })
+defineExpose({ isConnected, addIpAndPort, toggle, portInput, toggleConfirmationDialogFieldRnd, toggleAddIpAndPortAndFocus, setPortConnection })
 </script>
 
 <style>

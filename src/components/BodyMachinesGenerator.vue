@@ -1,87 +1,110 @@
 <template>
   <div>
     <div class="row m-0 pt-2 h-100 w-100">
-      <div class=" col-md-12 pb-1"
-        v-for="(machine,index) in selectMachinesArray(color)" 
-        :class="[machine.mtype+'-station']"
+      <div
+        v-for="(machine,index) in selectMachinesArray(color)"
         :key="index" 
+        :class="[machine.mtype+'-station']"
+        class=" col-md-12 pb-1"
       >
-        <div class="d-flex align-content-center " 
-          :class="color === 'magenta' ? 'justify-content-end ml-2' : 'mr-2'" >
-          <div class="machine-info d-flex flex-column " v-if="color === 'magenta'">
-            <span :class="setStateClass(machine.state)" >
-              {{machine.state}}
+        <div
+          class="d-flex align-content-center " 
+          :class="color === 'magenta' ? 'justify-content-end ml-2' : 'mr-2'"
+        >
+          <div
+            v-if="color === 'magenta'"
+            class="machine-info d-flex flex-column "
+          >
+            <span :class="setStateClass(machine.state)">
+              {{ machine.state }}
             </span>
             <!-- If RS show additional Info -->
-            <div v-if="machine.mtype === 'RS'" class="d-flex my-1">
+            <div 
+              v-if="machine.mtype === 'RS'"
+              class="d-flex my-1"
+            >
               <div class="mr-2 d-flex">
                 <div 
                   class="rs-color-container mx-1 text-center"
-                  :class="setRSandBSColor(machine['rs_ring_colors'][1])">
+                  :class="setRSandBSColor(machine['rs_ring_colors'][1])"
+                >
                   <span class="lead">
-                    {{showPreparedColorInfo(machine['rs_ring_colors'][1])}}
+                    {{ showPreparedColorInfo(machine['rs_ring_colors'][1]) }}
                   </span>
                 </div>
                 <div 
                   class="rs-color-container ml-1 text-center"
-                  :class="setRSandBSColor(machine['rs_ring_colors'][0])">
+                  :class="setRSandBSColor(machine['rs_ring_colors'][0])"
+                >
                   <span class="lead">
-                    {{showPreparedColorInfo(machine['rs_ring_colors'][0])}}
+                    {{ showPreparedColorInfo(machine['rs_ring_colors'][0]) }}
                   </span>
                 </div>
               </div>
-              <span class="lead">{{machine['bases_added'] - machine['bases_used']}}</span>
+              <span class="lead">{{ machine['bases_added'] - machine['bases_used'] }}</span>
             </div>
             <!-- <span>{{machine.name}}</span> -->
-            <div :class="color=== 'cyan' ? 'machine-rotation-cyan' : 'machine-rotation-magenta' ">
-              <span v-if="currPhase === 'SETUP'">
-                {{machine.rotation}}°
+            <div class="machine-rotation-magenta">
+              <span v-if="phase === 'SETUP'">
+                {{ machine.rotation }}°
               </span>
             </div>
           </div>
-          <div class="base-image-container"
-            :class="color === 'cyan' ? 'mr-1' : 'ml-1'">
+          <div 
+            class="base-image-container"
+            :class="color === 'cyan' ? 'mr-1' : 'ml-1'"
+          >
             <figure>
-              <div class="station-specific-info-container text-center"
+              <div 
+                class="station-specific-info-container text-center"
                 :class="setMachineBackground(machine)" 
               >
-                <span class="text-active font-weight-bold text-center">{{machine.name}}</span>
+                <span class="text-active font-weight-bold text-center">{{ machine.name }}</span>
               </div>
-              <figcaption class="text-center "
+              <figcaption 
+                class="text-center "
                 :class="color=== 'cyan' ? 'machine-zone-cyan' : 'machine-zone-magenta' "
               >
-              <span >{{machine.zone}}</span> 
+                <span>{{ machine.zone }}</span> 
               </figcaption>
             </figure>
           </div>
-          <div class="machine-info d-flex flex-column " v-if="color === 'cyan'">
-            <span :class="setStateClass(machine.state)" >
-              {{machine.state}}
+          <div
+            v-if="color === 'cyan'"
+            class="machine-info d-flex flex-column" 
+          >
+            <span :class="setStateClass(machine.state)">
+              {{ machine.state }}
             </span>
             <!-- If RS show additional Info -->
-            <div v-if="machine.mtype === 'RS'" class="d-flex my-1">
-              <span class="lead">{{machine['bases_added'] - machine['bases_used']}}</span>
+            <div 
+              v-if="machine.mtype === 'RS'"
+              class="d-flex my-1"
+            >
+              <span class="lead">{{ machine['bases_added'] - machine['bases_used'] }}</span>
               <div class="ml-2 d-flex">
                 <div 
                   class="rs-color-container mr-1 text-center"
-                  :class="setRSandBSColor(machine['rs_ring_colors'][0])">
+                  :class="setRSandBSColor(machine['rs_ring_colors'][0])"
+                >
                   <span class="lead">
-                    {{showPreparedColorInfo(machine['rs_ring_colors'][0])}}
+                    {{ showPreparedColorInfo(machine['rs_ring_colors'][0]) }}
                   </span>
                 </div>
                 <div 
                   class="rs-color-container mx-1 text-center"
-                  :class="setRSandBSColor(machine['rs_ring_colors'][1])">
+                  :class="setRSandBSColor(machine['rs_ring_colors'][1])"
+                >
                   <span class="lead">
-                    {{showPreparedColorInfo(machine['rs_ring_colors'][1])}}
+                    {{ showPreparedColorInfo(machine['rs_ring_colors'][1]) }}
                   </span>
                 </div>
               </div>
             </div>
             <!-- <span>{{machine.name}}</span> -->
-            <div :class="color=== 'cyan' ? 'machine-rotation-cyan' : 'machine-rotation-magenta' ">
+            <div class="machine-rotation-cyan">
               <span v-if="phase === 'SETUP'">
-                {{machine.rotation}}°
+                {{ machine.rotation }}°
               </span>
             </div>
           </div>

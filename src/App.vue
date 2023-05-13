@@ -1,9 +1,9 @@
 <template>
   <div id="app" ref="root">
     <div class="container-fluid">
-      <Header />
-      <Body />
-      <Footer />
+      <AppHeader />
+      <AppBody />
+      <AppFooter />
     </div>
   </div>
 </template>
@@ -11,9 +11,9 @@
 <script setup lang="ts">
 import { Ref, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import Header from '@/components/Header.vue'
-import Body from '@/components/Body.vue'
-import Footer from '@/components/Footer.vue'
+import AppHeader from '@/components/AppHeader.vue'
+import AppBody from '@/components/AppBody.vue'
+import AppFooter from '@/components/AppFooter.vue'
 import { useMainStore } from '@/store/mainStore'
 
 const root: Ref<HTMLElement | null> = ref(null)

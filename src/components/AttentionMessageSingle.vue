@@ -1,9 +1,13 @@
 <template>
-  <div v-if="elementVisible" >
+  <div v-if="elementVisible">
     <span 
-      class="attention-msg-text text-center">
-      <font-awesome-icon :icon="['fas','exclamation-triangle']" class="fa-1x" />
-      {{msg.text}}
+      class="attention-msg-text text-center"
+    >
+      <font-awesome-icon 
+        :icon="['fas','exclamation-triangle']"
+        class="fa-1x"
+      />
+      {{ msg.text }}
     </span>
   </div>
 </template>

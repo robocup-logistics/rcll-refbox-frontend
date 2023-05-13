@@ -41,7 +41,7 @@ export const useMainStore = defineStore('mainStore', () => {
   // websocket attributes
   const socket: Ref = ref(null)
   const isConnected: Ref<boolean> = ref(false)
-  const websocketMsgs: Ref<string[]> = ref([])
+  const websocketMsgs = ref([])
   const error: Ref<string> = ref('')
   const websocketURL: Ref<string> = ref('ws://localhost:1234')
   const pointsCyanFlag: Ref<boolean> = ref(false)
@@ -73,7 +73,7 @@ export const useMainStore = defineStore('mainStore', () => {
   }
 
   // socket send
-  function SOCKET_SEND(msg: {}) {
+  function SOCKET_SEND(msg) {
     console.log('Sending ', msg);
     socket.value.send(JSON.stringify(msg))
   }

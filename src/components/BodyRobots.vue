@@ -3,69 +3,108 @@
     <div>
       <div class="points-container ">
         <div class="d-flex align-content-center justify-content-center">
-          <h4 v-if="phase !== 'PRE_GAME'" class="current-points m-0 mr-2 ">Points: {{selectPointsArray(color)}}</h4>
-          <img src="../assets/plus.png" alt="plus icon" class="img-fluid plus-png" 
-            @click="toggleShowAddPoints()"
-            data-toggle="tooltip" data-placement="bottom"
+          <h4
+            v-if="phase !== 'PRE_GAME'"
+            class="current-points m-0 mr-2 "
+          >
+            Points: {{ selectPointsArray(color) }}
+          </h4>
+          <img 
+            src="../assets/plus.png"
+            alt="plus icon"
+            class="img-fluid plus-png" 
+            data-toggle="tooltip"
+            data-placement="bottom"
             title="Add points manually"
+            @click="toggleShowAddPoints()"
           >
         </div>
-        <AddPointsManually v-if="showAddPoints === true" :color=color @toggle-show-add-points="toggleShowAddPoints()" />
+        <AddPointsManually 
+          v-if="showAddPoints === true"
+          :color="color"
+          @toggle-show-add-points="toggleShowAddPoints()"
+        />
       </div>
-      <div v-for="(robot,index) in selectRobotsArray(color)" 
+      <div
+        v-for="(robot,index) in selectRobotsArray(color)" 
         :key="robot.number"
       >
-      <div class="robot-info d-flex align-items-center">
-        <div class="robot-col pl-2">
-          <span class="robot-number mr-2 ">{{robot.number}}</span>
-          <span class="robot-name mr-3 ">
-            <strong> {{robot.name}} </strong>
-          </span>
-        </div>
-        <div class="robot-host  ">
-          <span class="robot-host-ip">
-            {{robot.host}}
-          </span>
-        </div>
-        <div class="robot-state display-flex align-items-center ">
-          <span class="robot-current-state mr-2 text-success"
-            v-if="robotState(index) === 'active'"
-          >
-            {{setMaintenanceToFalse(index)}}
-            {{robotState(index)}}
-          </span>
-          <span v-else-if="robotState(index) === 'maintenance'" class="text-warning mr-2">
-            <span>{{saveMaintenanceStart(gametime, index)}}</span>
-              {{robotState(index)}} 
-              {{getMaintenanceLeft(robot['maintenance-start-time'], gametime, index)}}
+        <div class="robot-info d-flex align-items-center">
+          <div class="robot-col pl-2">
+            <span class="robot-number mr-2 ">{{ robot.number }}</span>
+            <span class="robot-name mr-3 ">
+              <strong>{{ robot.name }}</strong>
             </span>
-            <span v-else-if="robotState(index) === 'disqualified'" class="text-danger mr-2"> 
-              {{setMaintenanceToFalse(index)}}
-              {{robotState(index)}}!</span>
-            <span class="robot-maintenance-cycles" >
-              {{robot['maintenance_cylces']}}
+          </div>
+          <div class="robot-host  ">
+            <span class="robot-host-ip">
+              {{ robot.host }}
             </span>
-            <a class="ml-2 btn" 
+          </div>
+          <div class="robot-state display-flex align-items-center ">
+            <span
               v-if="robotState(index) === 'active'"
+              class="robot-current-state mr-2 text-success"
+            >
+              {{ setMaintenanceToFalse(index) }}
+              {{ robotState(index) }}
+            </span>
+            <span 
+              v-else-if="robotState(index) === 'maintenance'"
+              class="text-warning mr-2"
+            >
+              <span>{{ saveMaintenanceStart(gametime, index) }}</span>
+              {{ robotState(index) }} 
+              {{ getMaintenanceLeft(robot['maintenance-start-time'], gametime, index) }}
+            </span>
+            <span 
+              v-else-if="robotState(index) === 'disqualified'"
+              class="text-danger mr-2"
+            > 
+              {{ setMaintenanceToFalse(index) }}
+              {{ robotState(index) }}!
+            </span>
+            <span class="robot-maintenance-cycles">
+              {{ robot['maintenance_cylces'] }}
+            </span>
+            <a 
+              v-if="robotState(index) === 'active'"
+              class="ml-2 btn" 
               data-toggle="tooltip"
               title="Robot maintenance"
-              @click="SetRobotMaintenanceStatus({robot, bool:true})"
+              @click="setRobotMaintenanceStatus({robot, bool:true})"
             >
-              <font-awesome-icon :icon="['fa','robot']" class="fa-1x icon-robots-yellow-active" style="color:green"/>
+              <font-awesome-icon
+                :icon="['fa','robot']"
+                class="fa-1x icon-robots-yellow-active"
+                style="color:green"
+              />
             </a>
-            <a class="ml-2 btn"
+            <a 
               v-else-if="robotState(index) === 'maintenance'"
+              class="ml-2 btn"
               data-toggle="tooltip"
               title="reset maintenance"
-              @click="SetRobotMaintenanceStatus({robot, bool:false})"
+              @click="setRobotMaintenanceStatus({robot, bool:false})"
             >
-              <font-awesome-icon :icon="['fa','robot']" class="fa-1x icon-robots icon-robots-green-maintenance" style="color:yellow" />
+              <font-awesome-icon
+                :icon="['fa','robot']"
+                class="fa-1x icon-robots icon-robots-green-maintenance"
+                style="color:yellow"
+              />
             </a>
-            <a class="ml-2 btn" style="pointer-events: none;"
-              v-else-if="robotState(index) === 'disqualified'"
-              data-toggle="tooltip" title="Robot disqualified"
+            <a
+              v-else-if="robotState(index) === 'disqualified'" 
+              class="ml-2 btn"
+              style="pointer-events: none;"
+              data-toggle="tooltip"
+              title="Robot disqualified"
             >
-              <font-awesome-icon :icon="['fa','robot']" class="fa-1x icon-robots" style="color:red" />
+              <font-awesome-icon
+                :icon="['fa','robot']"
+                class="fa-1x icon-robots"
+                style="color:red"
+              />
             </a>
           </div>
         </div>
@@ -142,11 +181,15 @@ function setMaintenanceToFalse(index){
   }
 }
 
+function setRobotMaintenanceStatus(payload) {
+  robotStore.setRobotMaintenanceStatus(payload)
+}
+
 function toggleShowAddPoints(){
   showAddPoints.value = !showAddPoints.value
 }
 
-defineExpose({ phase, gametime, showAddPoints, selectRobotsArray, selectPointsArray, robotState, getMaintenanceLeft, saveMaintenanceStart, setMaintenanceToFalse, toggleShowAddPoints })
+defineExpose({ phase, gametime, showAddPoints, selectRobotsArray, selectPointsArray, robotState, getMaintenanceLeft, saveMaintenanceStart, setMaintenanceToFalse, setRobotMaintenanceStatus, toggleShowAddPoints })
 </script>
 
 <style scoped>

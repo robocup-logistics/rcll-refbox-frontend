@@ -1,49 +1,60 @@
 <template>
   <div class="Modal">
-   <div v-if="isOpen === true">
-    <transition name="modal-container">
-      <div class="overlay">
-        <div class="modal-container">
-          <h6 class="font-weight-bold modal-title-h6">
-            OrderId {{order.id}}: Confirm delivery for {{team}}?
-          </h6>
-          <div class="d-flex align-items-center justify-content-between">
-            <p class="delivery-infos">
-              <span>
-                Complexity: {{order.complexity}}
-              </span>
-              <span>
-                base-color: {{order['base_color']}}
-              </span>
-              <span v-if="order['ring_colors']">
-                ring colors: {{order['ring_colors']}}
-              </span>
-              <span>
-                cap-color: {{order['cap_color']}}
-              </span>
-              <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
-                Gametime: {{formatSeconds(order['unconfirmed_deliveries'][0]['game_time'])}}
-              </span>
-              <span>
-                delivery period: 
-                {{formatSeconds(order['delivery_period'][0])}}
-                -
-                {{formatSeconds(order['delivery_period'][1])}}
-              </span>
-            </p>
-            <img :src="`/products/generated/${getProductsImg(order.id)}`"
-              class="img-fluid"
-            >
-          </div>
-          <div class="modal-buttons">
-            <button @click.prevent='orderAcceptance(order,true)' class="btn btn-outline-info yes-btn ">Yes</button>
-            <button @click.prevent='orderAcceptance(order,false)' class="btn btn-outline-info no-btn">No</button>
+    <div v-if="isOpen === true">
+      <transition name="modal-container">
+        <div class="overlay">
+          <div class="modal-container">
+            <h6 class="font-weight-bold modal-title-h6">
+              OrderId {{ order.id }}: Confirm delivery for {{ team }}?
+            </h6>
+            <div class="d-flex align-items-center justify-content-between">
+              <p class="delivery-infos">
+                <span>
+                  Complexity: {{ order.complexity }}
+                </span>
+                <span>
+                  base-color: {{ order['base_color'] }}
+                </span>
+                <span v-if="order['ring_colors']">
+                  ring colors: {{ order['ring_colors'] }}
+                </span>
+                <span>
+                  cap-color: {{ order['cap_color'] }}
+                </span>
+                <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
+                  Gametime: {{ formatSeconds(order['unconfirmed_deliveries'][0]['game_time']) }}
+                </span>
+                <span>
+                  delivery period: 
+                  {{ formatSeconds(order['delivery_period'][0]) }}
+                  -
+                  {{ formatSeconds(order['delivery_period'][1]) }}
+                </span>
+              </p>
+              <img
+                :src="`/products/generated/${getProductsImg(order.id)}`"
+                class="img-fluid"
+              >
+            </div>
+            <div class="modal-buttons">
+              <button
+                class="btn btn-outline-info yes-btn "
+                @click.prevent="orderAcceptance(order,true)"
+              >
+                Yes
+              </button>
+              <button
+                class="btn btn-outline-info no-btn"
+                @click.prevent="orderAcceptance(order,false)"
+              >
+                No
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </div>
   </div>
-</div>
 </template>
 
 <script setup lang="ts">
@@ -74,15 +85,15 @@ const { products } = storeToRefs(orderStore)
 
 const isOpen = ref(true)
 
-function closeModal() {
-  isOpen.value = false;
+function closeModal(): void {
+  isOpen.value = false
 }
 
-function getProductsImg(orderID: number) {
-  return products.value.find(({id} : {id: number}) => id === orderID)['product-img-url'];
+function getProductsImg(orderID: number): string {
+  return products.value.find(({id} : {id: number}) => id === orderID)['product-img-url']
 }
 
-function orderAcceptance(order, bool: boolean) {
+function orderAcceptance(order, bool: boolean): void {
   const msg = {
     "command" : "confirm_delivery",
     "correctness" : false,

@@ -1,28 +1,46 @@
 <template>
-<div>
-  <div class="container-fluid p-0 refbox-log text-left">
-    <!-- <div class="d-flex justify-content-end mt-2 ">
-      <button @click=connectToWebsocket class="btn btn-primary mr-2"> Connect </button>
-       <button @click=SOCKET_DISCONNECT class="btn btn-primary  mr-2 ">
-        DC
-      </button>
-      <button @click.prevent=SOCKET_SEND(addMagenta) class="btn btn-primary ">Send Msg</button> 
-    </div> -->
-    
-    <div class="mx-3 mt-3 reflog-normal-msgs-logger">
-      <div v-if="websocketMsgs !== []" class=" msg-holder">
-        <div v-for="(msg,index) in websocketMsgs" :key=index>
-            <h6 v-if="msg.level !== 'attention' " class= "mb-0" :class="setClassName(msg.level)"
-            :style="setMsgColor(msg.message)"
+  <div>
+    <div class="container-fluid p-0 refbox-log text-left">
+      <!-- <div class="d-flex justify-content-end mt-2 ">
+        <button @click=connectToWebsocket class="btn btn-primary mr-2"> Connect </button>
+        <button @click=SOCKET_DISCONNECT class="btn btn-primary  mr-2 ">
+          DC
+        </button>
+        <button @click.prevent=SOCKET_SEND(addMagenta) class="btn btn-primary ">Send Msg</button> 
+      </div> -->
+      
+      <div class="mx-3 mt-3 reflog-normal-msgs-logger">
+        <div
+          v-if="websocketMsgs.length" 
+          class="msg-holder"
+        >
+          <div 
+            v-for="(msg,index) in websocketMsgs"
+            :key="index"
+          >
+            <h6 
+              v-if="msg.level !== 'attention'"
+              class="mb-0"
+              :class="setClassName(msg.level)"
+              :style="setMsgColor(msg.message)"
             >
-            {{msg.time}} [{{msg.component}}]: {{msg.message}}</h6>
-            <h6 v-else-if="msg.level === 'attention' " class= "mb-0 text-danger" > <font-awesome-icon :icon="['fas','exclamation-triangle']" class="fa-1x" 
-            /> {{msg.text}}</h6>
+              {{ msg.time }} [{{ msg.component }}]: {{ msg.message }}
+            </h6>
+            <h6 
+              v-else-if="msg.level === 'attention'"
+              class="mb-0 text-danger"
+            >
+              <font-awesome-icon 
+                :icon="['fas','exclamation-triangle']"
+                class="fa-1x" 
+              />
+              {{ msg.text }}
+            </h6>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script setup lang="ts">
@@ -75,7 +93,7 @@ function setMsgColor(msg) {
 defineExpose({ websocketMsgs, setClassName, setMsgColor })
 </script>
 
-<style >
+<style>
 .refbox-log {
   height: 30vh !important;
 }

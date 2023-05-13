@@ -1,44 +1,68 @@
 <template>
-  <div v-if="color==='cyan'" class="col-md-5 border d-flex justify-content-center align-items-center">
+  <div
+    v-if="color==='cyan'"
+    class="col-md-5 border d-flex justify-content-center align-items-center"
+  >
     <div v-show="showFormCyan">
       <div class="row justify-content-center">
         <div class="col-md-12 my-2 add-team-container">
           <button 
+            v-shortkey.once="['f4']"
             class="btn btn-add-team btn-cyan-header"
-            @click="toggleFormAndTeams()"
-            v-shortkey.once="['f4']" 
+            @click="toggleFormAndTeams()" 
             @shortkey="toggleFormAndTeams()"
           >
             Add Team Cyan
           </button>
         </div>
-        <div class="mb-2" v-show="isClicked">
-          <form @submit.prevent="setName(color)"
+        <div
+          v-show="isClicked"
+          class="mb-2"
+        >
+          <form
             class="form-cyan d-flex"
+            @submit.prevent="setName(color)"
           >
-            <input type="text" 
+            <input
+              ref="cyanInputBox" 
+              v-model="nameTeamCyan"
+              type="text"
               placeholder="add teamname"
               class="input-cyan "
               required
-              ref="cyanInputBox"
-              v-model="nameTeamCyan"
             >
-            <button type="submit" class="submit-btn" v-show="nameTeamCyan.length >= 1">
-              <font-awesome-icon :icon="['fa','arrow-right']" class="fa-1x"/>
+            <button
+              v-show="nameTeamCyan.length >= 1"
+              type="submit"
+              class="submit-btn"
+            >
+              <font-awesome-icon
+                :icon="['fa','arrow-right']"
+                class="fa-1x"
+              />
             </button>
             <div class="dropdown show">
-              <a class=" btn dropdown-toggle SelectArrow " 
-                data-toggle="dropdown" href="#" role="button" 
-                aria-haspopup="true" aria-expanded="false" 
+              <a
+                class=" btn dropdown-toggle SelectArrow " 
+                data-toggle="dropdown"
+                href="#"
+                role="button" 
+                aria-haspopup="true"
+                aria-expanded="false" 
                 @click.prevent="toggleTeamMenuCyan()"
-              ></a>
-              <div class="dropdown-menu cyanDropdown" 
+              />
+              <div
+                class="dropdown-menu cyanDropdown" 
                 :style="teamMenuTriggeredCyan ? 'display:block' : 'display:none'"
               >
-                <a href="#" class="dropdown-item" @click.prevent="fillCyanNameInput(knownTeam)"
-                  v-for="(knownTeam,index) in knownTeams" :key="index"
+                <a
+                  v-for="(knownTeam,index) in knownTeams"
+                  :key="index"
+                  href="#"
+                  class="dropdown-item"
+                  @click.prevent="fillCyanNameInput(knownTeam)"
                 >
-                  {{knownTeam}}
+                  {{ knownTeam }}
                 </a>
               </div>
             </div>
@@ -46,51 +70,81 @@
         </div>
       </div>
     </div>
-    <div v-show="!showFormCyan" class="cyan-name-container ">
-      <h4 class="cyan-name-header ">{{nameTeamCyan}}</h4>
+    <div
+      v-show="!showFormCyan"
+      class="cyan-name-container "
+    >
+      <h4 class="cyan-name-header ">
+        {{ nameTeamCyan }}
+      </h4>
     </div>
   </div>
 
-  <div  v-else-if="color==='magenta'" class="col-md-5 border
+  <div
+    v-else-if="color==='magenta'"
+    class="col-md-5 border
     d-flex justify-content-center align-items-center"
   >
     <div v-show="showFormMagenta">
       <div class="row justify-content-center">
         <div class="col-md-12 my-2 add-team-container">
-          <button class="btn  btn-add-team btn-magenta-header"
-          @click="toggleFormAndTeams()"
-          v-shortkey.once="['f5']" @shortkey="toggleFormAndTeams()"
+          <button
+            v-shortkey.once="['f5']"
+            class="btn  btn-add-team btn-magenta-header"
+            @click="toggleFormAndTeams()"
+            @shortkey="toggleFormAndTeams()"
           >
             Add Team Magenta
           </button>
         </div>
-        <div class="mb-2" v-show="isClicked">
-          <form @submit.prevent="setName(color)"
+        <div
+          v-show="isClicked"
+          class="mb-2"
+        >
+          <form
             class="form-magenta d-flex"
+            @submit.prevent="setName(color)"
           >
-            <input type="text" 
-              placeholder="add teamname"
-              class="input-magenta"
-              required  
-              ref="magentaInputBox"
+            <input
+              ref="magentaInputBox" 
               v-model="nameTeamMagenta"
+              type="text"
+              placeholder="add teamname"  
+              class="input-magenta"
+              required
             >
-            <button type="submit" class="submit-btn"  v-show="nameTeamMagenta.length >= 1">
-              <font-awesome-icon :icon="['fa','arrow-right']" class="fa-1x " />
+            <button
+              v-show="nameTeamMagenta.length >= 1"
+              type="submit"
+              class="submit-btn"
+            >
+              <font-awesome-icon
+                :icon="['fa','arrow-right']"
+                class="fa-1x "
+              />
             </button>
             <div class="dropdown show">
-              <a class=" btn dropdown-toggle SelectArrow " 
-                data-toggle="dropdown" href="#" role="button" 
-                aria-haspopup="true" aria-expanded="false" 
-                @click.prevent="toggleTeamMenuMagenta()">
-              </a>
-              <div class="dropdown-menu magentaDropdown" 
+              <a
+                class=" btn dropdown-toggle SelectArrow " 
+                data-toggle="dropdown"
+                href="#"
+                role="button" 
+                aria-haspopup="true"
+                aria-expanded="false" 
+                @click.prevent="toggleTeamMenuMagenta()"
+              />
+              <div
+                class="dropdown-menu magentaDropdown" 
                 :style="teamMenuTriggeredMagenta ? 'display:block' : 'display:none'"
               >
-                <a href="#" class="dropdown-item" @click.prevent="fillMagentaNameInput(knownTeam)"
-                  v-for="(knownTeam,index) in knownTeams" :key="index"
+                <a
+                  v-for="(knownTeam,index) in knownTeams"
+                  :key="index"
+                  href="#"
+                  class="dropdown-item"
+                  @click.prevent="fillMagentaNameInput(knownTeam)"
                 >
-                  {{knownTeam}}
+                  {{ knownTeam }}
                 </a>
               </div>
             </div>
@@ -98,8 +152,13 @@
         </div>
       </div>
     </div>
-    <div v-show="!showFormMagenta" class="teamname-header-magenta">
-      <h4 class="magenta-name-header">{{nameTeamMagenta}}</h4>
+    <div
+      v-show="!showFormMagenta"
+      class="teamname-header-magenta"
+    >
+      <h4 class="magenta-name-header">
+        {{ nameTeamMagenta }}
+      </h4>
     </div>
   </div>
 </template>
@@ -161,7 +220,7 @@ function fillCyanNameInput(name: string){
   nextTick(() => {
     if(cyanInputBox.value) cyanInputBox.value.focus()
   })
-  mainStore.toggleTeamMenuCyan()
+  toggleTeamMenuCyan()
 }
 
 function fillMagentaNameInput(name: string){
@@ -169,10 +228,18 @@ function fillMagentaNameInput(name: string){
   nextTick(() => {
     if(magentaInputBox.value) magentaInputBox.value.focus()
   })
+  toggleTeamMenuMagenta()
+}
+
+function toggleTeamMenuCyan() {
+  mainStore.toggleTeamMenuCyan()
+}
+
+function toggleTeamMenuMagenta() {
   mainStore.toggleTeamMenuMagenta()
 }
 
-defineExpose({ showFormCyan, showFormMagenta, nameTeamCyan, nameTeamMagenta, knownTeams, teamMenuTriggeredCyan, teamMenuTriggeredMagenta, isClicked, cyanInputBox, magentaInputBox, toggleFormAndTeams, fillCyanNameInput, fillMagentaNameInput })
+defineExpose({ showFormCyan, showFormMagenta, nameTeamCyan, nameTeamMagenta, knownTeams, teamMenuTriggeredCyan, teamMenuTriggeredMagenta, isClicked, cyanInputBox, magentaInputBox, toggleFormAndTeams, fillCyanNameInput, fillMagentaNameInput, toggleTeamMenuCyan, toggleTeamMenuMagenta })
 </script>
 
 <style scoped>

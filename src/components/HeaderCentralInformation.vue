@@ -1,75 +1,126 @@
 <template>
   <div class="col-md-2 border">
-    <div v-if="phase !== 'PRE_GAME'"></div>
+    <div v-if="phase !== 'PRE_GAME'" />
     <div class="pause-play-time mt-2">
       <div class="radio-pause-play row justify-content-center align-items-center">
         <div class="pause-play-container mr-2">
-          <a v-if="gamestate === 'PAUSED' || gamestate === 'WAIT_START'"
-             class="btn  p-0" @click="setGameState('RUNNING')"
-             v-shortkey.once="{down:['f2']}"  @shortkey="setGameState('RUNNING')"
-             data-toggle="tooltip" data-placement="top" title="start/resume game"
+          <a
+            v-if="gamestate === 'PAUSED' || gamestate === 'WAIT_START'"
+            v-shortkey.once="{down:['f2']}"
+            class="btn  p-0"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="start/resume game"
+            @click="setGameState('RUNNING')"
+            @shortkey="setGameState('RUNNING')"
           >
-            <font-awesome-icon :icon="['fas','play-circle']" class="fa-2x play-btn"/>
+            <font-awesome-icon
+              :icon="['fas','play-circle']"
+              class="fa-2x play-btn"
+            />
           </a>
-          <a v-if="gamestate === 'RUNNING'"
-             class="btn p-0" @click="setGameState('PAUSED')"
-             v-shortkey.once="{down:['f2']}" @shortkey="setGameState('PAUSED')"
-             data-toggle="tooltip" data-placement="top" title="pause game"
+          <a
+            v-if="gamestate === 'RUNNING'"
+            v-shortkey.once="{down:['f2']}"
+            class="btn p-0"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="pause game"
+            @click="setGameState('PAUSED')"
+            @shortkey="setGameState('PAUSED')"
           > 
-            <font-awesome-icon :icon="['fas','pause-circle']" class="fa-2x pause-btn"/>
-          </a>  
+            <font-awesome-icon
+              :icon="['fas','pause-circle']"
+              class="fa-2x pause-btn"
+            />
+          </a>
         </div>
-        <div class="time">
-          <!-- <h3>{{formattedGametime}}</h3> -->
-          <h4 class="marg-bot-0 time-heading">{{formattedGametime}}</h4>
-        </div>
+      </div>
+      <div class="time">
+        <!-- <h3>{{formatSeconds(getGametime)}}</h3> -->
+        <h4 class="marg-bot-0 time-heading">
+          {{ formatSeconds(gametime) }}
+        </h4>
       </div>
     </div>
 
     <div class="phase row justify-content-center align-items-center mt-1">
-      <a class="btn p-0" @click.prevent="setPreviousPhase"
-         data-toggle="tooltip" data-placement="top" title="return previous phase"
+      <a
+        class="btn p-0"
+        data-toggle="tooltip"
+        data-placement="top"
+        title="return previous phase"
+        @click.prevent="setPreviousPhase"
       >
-        <font-awesome-icon :icon="['fas','chevron-left']" class="fa-2x previous-btn"/>
+        <font-awesome-icon
+          :icon="['fas','chevron-left']"
+          class="fa-2x previous-btn"
+        />
       </a>
-      <div class="dropdown fixedSizeGamestate text-center" >
-        <a class=" btn dropdown-toggle current-phase-anchor " 
-          data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
-          @click.prevent="togglePhaseMenuAndFocus()" ref="firstOne"
-          v-shortkey.once="['f3']" @shortkey="togglePhaseMenuAndFocus()"
+      <div class="dropdown fixedSizeGamestate text-center">
+        <a
+          ref="firstOne" 
+          v-shortkey.once="['f3']"
+          class=" btn dropdown-toggle current-phase-anchor "
+          data-toggle="dropdown"
+          href="#"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          @click.prevent="togglePhaseMenuAndFocus()"
+          @shortkey="togglePhaseMenuAndFocus()"
         >
-          {{phase}}
+          {{ phase }}
         </a>
-        <div class="dropdown-menu"
+        <div
+          v-shortkey.once="['esc']"
+          class="dropdown-menu"
           :style="showPhaseSubmenus ? 'display:block' : 'display:none'"
-          v-shortkey.once="['esc']" @shortkey="togglePhaseSubmenus()"
+          @shortkey="togglePhaseSubmenus()"
         >
-          <a class="dropdown-item" href="#" 
-            v-show="phase !== 'PRE_GAME'" 
+          <a
+            v-show="phase !== 'PRE_GAME'"
+            class="dropdown-item" 
+            href="#" 
             @click.prevent="switchGamestate('PRE_GAME')"
           >PRE_GAME</a>    
-          <a class="dropdown-item" href="#"
+          <a
             v-show="phase !== 'SETUP'"
+            class="dropdown-item"
+            href="#"
             @click.prevent="switchGamestate('SETUP')"
           >SETUP</a>
-          <a class="dropdown-item" href="#" 
+          <a
             v-show="phase !== 'EXPLORATION'"
+            class="dropdown-item" 
+            href="#"
             @click.prevent="switchGamestate('EXPLORATION')"
           >EXPLORATION</a>
-          <a class="dropdown-item" href="#"
-            v-show="phase !== 'PRODUCTION'" 
+          <a
+            v-show="phase !== 'PRODUCTION'"
+            class="dropdown-item"
+            href="#" 
             @click.prevent="switchGamestate('PRODUCTION')"
           >PRODUCTION</a>
-          <a class="dropdown-item" href="#"
+          <a
             v-show="phase !== 'POST_GAME'"
+            class="dropdown-item"
+            href="#"
             @click.prevent="switchGamestate('POST_GAME')"
           >POST_GAME</a>
         </div>
       </div>
-      <a class="btn  p-0" @click.prevent="setNextPhase"
-        data-toggle="tooltip" data-placement="top" title="change to next phase"
+      <a
+        class="btn  p-0"
+        data-toggle="tooltip"
+        data-placement="top"
+        title="change to next phase"
+        @click.prevent="setNextPhase"
       >
-        <font-awesome-icon :icon="['fas','chevron-right']" class="fa-2x next-btn"/>
+        <font-awesome-icon
+          :icon="['fas','chevron-right']"
+          class="fa-2x next-btn"
+        />
       </a>
     </div>
   </div>
@@ -78,6 +129,7 @@
 <script setup lang="ts">
 import { ref, Ref, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
+import formatSeconds from '@/utils/formatSeconds'
 import { useMainStore } from '@/store/mainStore'
 
 const mainStore = useMainStore()
@@ -113,7 +165,7 @@ function togglePhaseSubmenus() {
   mainStore.togglePhaseSubmenus()
 }
 
-defineExpose({ phase, gametime, gamestate, showPhaseSubmenus, firstOne, formattedGametime, switchGamestate, togglePhaseMenuAndFocus, setGameState, setPreviousPhase, setNextPhase, togglePhaseSubmenus })
+defineExpose({ formatSeconds, phase, gametime, gamestate, showPhaseSubmenus, firstOne, formattedGametime, switchGamestate, togglePhaseMenuAndFocus, setGameState, setPreviousPhase, setNextPhase, togglePhaseSubmenus })
 </script>
 
 <style scoped>

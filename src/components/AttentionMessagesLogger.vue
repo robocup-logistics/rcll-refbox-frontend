@@ -1,10 +1,14 @@
 <template>
   <div class="container-fluid">
-    <div v-if="attentionMessages !== []" class="d-flex flex-column text-left">
-      <AttentionMessageSingle class="pl-1" 
+    <div 
+      v-if="attentionMessages.length"
+      class="d-flex flex-column text-left"
+    >
+      <AttentionMessageSingle 
         v-for="(msg,index) in attentionMessages"
-        :key=index 
-        :msg='msg'
+        :key="index"
+        :msg="msg"
+        class="pl-1" 
       />
     </div>
   </div>

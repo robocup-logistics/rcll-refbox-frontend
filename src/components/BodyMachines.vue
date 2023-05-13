@@ -1,7 +1,16 @@
 <template>
-  <div class="machines-container h-100 w-100" :class="color === 'cyan' ? 'text-left' : 'text-right'">
-    <div v-if="phase !== 'PRE_GAME'" class="w-100 h-100">
-      <BodyMachinesGenerator class="h-100 w-100" :color=color />
+  <div
+    class="machines-container h-100 w-100"
+    :class="color === 'cyan' ? 'text-left' : 'text-right'"
+  >
+    <div 
+      v-if="phase !== 'PRE_GAME'"
+      class="w-100 h-100"
+    >
+      <BodyMachinesGenerator
+        class="h-100 w-100"
+        :color="color"
+      />
     </div>
   </div>
 </template>

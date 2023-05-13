@@ -1,28 +1,47 @@
 <template>
   <div>
-    <div class="modal" style="display:block">
-      <div class="modal-dialog" role="document">
+    <div
+      class="modal"
+      style="display:block"
+    >
+      <div
+        class="modal-dialog"
+        role="document"
+      >
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">
               Confirm Field Randomization?
             </h5>
-            <button type="button" class="close" @click.prevent="closeModal()" data-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              @click.prevent="closeModal()"
+            >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary"
+            <button
+              v-shortkey.once="['enter']"
+              type="button"
+              class="btn btn-primary"
               @click.prevent="confirmedRandomize()"
-              v-shortkey.once="['enter']" @shortkey="confirmedRandomize()"
+              @shortkey="confirmedRandomize()"
             >
-            Yes
+              Yes
             </button>
-            <button type="button" class="btn btn-secondary" @click.prevent="closeModal()" 
-              v-shortkey.once="['esc']" @shortkey="closeModal()"
+            <button
+              v-shortkey.once="['esc']"
+              type="button"
+              class="btn btn-secondary" 
               data-dismiss="modal"
+              @click.prevent="closeModal()"
+              @shortkey="closeModal()"
             >
-            No
+              No
             </button>
           </div>
         </div>

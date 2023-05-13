@@ -1,9 +1,15 @@
 <template>
   <div class="add-points-container">
-    <form @submit.prevent="formatAndSendInputToWebsocket(pointsAndReason)" class="add-points-form">
-      <input type="text" class="p-0 add-points-input" required placeholder="Format: points, reason"
-             v-model="pointsAndReason"
-             ref="addInput"
+    <form 
+      class="add-points-form"
+      @submit.prevent="formatAndSendInputToWebsocket"
+    >
+      <input 
+        ref="pointsAndReason"
+        type="text" 
+        class="p-0 add-points-input"
+        required
+        placeholder="Format: points, reason"
       >
     </form>
   </div>
@@ -20,24 +26,23 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits<{
-  (e: 'toggleShowAddPoints'): void
-}>()
+const emit = defineEmits(['toggleShowAddPoints'])
 
 const mainStore = useMainStore()
 
-const addInput: Ref<HTMLInputElement | null> = ref(null)
+const pointsAndReason: Ref<HTMLInputElement | null> = ref(null)
 
 onMounted(() => {
   nextTick(() => {
-    if(addInput.value) addInput.value.focus()
+    if(pointsAndReason.value) pointsAndReason.value.focus()
   })
 })
 
-function formatAndSendInputToWebsocket(input: string){
+function formatAndSendInputToWebsocket(){
 
   // Input Format: points, Reason
-  const splitInput = input.split(/,(.+)/)
+  if (!pointsAndReason.value) return
+  const splitInput = pointsAndReason.value.value.split(/,(.+)/)
   const points = parseInt(splitInput[0])
   const reason = splitInput[1]
   
@@ -54,7 +59,7 @@ function formatAndSendInputToWebsocket(input: string){
   emit('toggleShowAddPoints')
 }
 
-defineExpose({addInput, formatAndSendInputToWebsocket})
+defineExpose({pointsAndReason, formatAndSendInputToWebsocket})
 </script>
 
 <style scoped>
