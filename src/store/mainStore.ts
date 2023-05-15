@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
 import formatSeconds from '@/utils/formatSeconds'
+import WebsocketMessage from '@/types/websocketMessage'
 
 import { useMachineStore } from '@/store/machineStore'
 import { useOrderStore } from '@/store/orderStore'
@@ -41,7 +42,7 @@ export const useMainStore = defineStore('mainStore', () => {
   // websocket attributes
   const socket: Ref = ref(null)
   const isConnected: Ref<boolean> = ref(false)
-  const websocketMsgs = ref([])
+  const websocketMsgs: Ref<WebsocketMessage[]> = ref([])
   const error: Ref<string> = ref('')
   const websocketURL: Ref<string> = ref('ws://localhost:1234')
   const pointsCyanFlag: Ref<boolean> = ref(false)
@@ -102,7 +103,7 @@ export const useMainStore = defineStore('mainStore', () => {
   function SOCKET_ONMESSAGE() {
 
     socket.value.onmessage = (e) => { 
-      let msgObj = JSON.parse(e.data);
+      const msgObj = JSON.parse(e.data);
       
       if (msgObj.length !== 0 ) {
 
@@ -169,7 +170,7 @@ export const useMainStore = defineStore('mainStore', () => {
 
           } else if(msgObj[0].type === 'ring-spec'){
 
-            machineStore.setRingspecs(msgObj)
+            machineStore.setRingSpecs(msgObj)
 
           } else if(msgObj[0].type === 'order-info') {
 

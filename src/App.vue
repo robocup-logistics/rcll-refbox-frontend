@@ -1,5 +1,8 @@
 <template>
-  <div id="app" ref="root">
+  <div
+    id="app"
+    ref="root"
+  >
     <div class="container-fluid">
       <AppHeader />
       <AppBody />

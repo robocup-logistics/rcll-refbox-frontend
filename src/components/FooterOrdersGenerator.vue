@@ -247,10 +247,6 @@ const unconfirmedOrders = computed(() => {
   return allOrders.value.filter(order => order['unconfirmed_deliveries'].length > 0)
 })
 
-setTimeout(() => {
-  console.log(orderCount.value)
-  console.log(products.value)
-}, 5000)
 // returns the img url responding to order ID
 function getProductsImg(orderID) {
   return products.value.find(({id}) => id === orderID)['product-img-url']
@@ -282,7 +278,7 @@ function magentaCheckboxId(orderId): string {
 
 // grays out orders that are not active
 function activeDeliveryPeriod(deliveryPeriod){
-  // Check if it is in the delivery period
+  // check if it is in the delivery period
   if (deliveryPeriod[0] <= gametime.value && deliveryPeriod[1] >= gametime.value) {
     return 'text-active'
   } else {
@@ -291,11 +287,11 @@ function activeDeliveryPeriod(deliveryPeriod){
 }
 
 function activeDeliveryPeriodImage(deliveryPeriod){
-  // Check if it is in the delivery period
+  // check if it is in the delivery period
   if (deliveryPeriod[0] <= gametime.value && deliveryPeriod[1] >= gametime.value || deliveryPeriod[0] >= gametime.value ) {
     return ''
   } 
-  // If it's not
+  // iff it's not
   else {
     return 'opacity-4'
   }

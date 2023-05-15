@@ -10,13 +10,8 @@ export const useOrderStore = defineStore('orderStore', () => {
   const ordersFlag: Ref<boolean> = ref(false)
   const orderCount: Ref<number> = ref(9)
 
-  // set products
-  function setProducts(newProducts) {
-    products.value = newProducts
-  }
-
   // set orders array
-  function setOrdersArray(payload) {
+  function setOrdersArray(payload): void {
 
     console.log("set orders array")
     console.log(payload)
@@ -25,7 +20,7 @@ export const useOrderStore = defineStore('orderStore', () => {
   }
 
   // add order
-  function addOrder({payload, index}) {
+  function addOrder({payload, index}): void {
 
     if (payload.index === -1) {
       allOrders.value.push(payload)
@@ -35,14 +30,14 @@ export const useOrderStore = defineStore('orderStore', () => {
   }
 
   // set orders at reconnect
-  function setOrdersAtReconnect(payload) {
+  function setOrdersAtReconnect(payload): void {
 
     setOrdersArray(payload)
     populateProducts()
   }
 
   // set order infos
-  function setOrderInfos(payload) {
+  function setOrderInfos(payload): void {
 
     if (allOrders.value.length < orderCount.value) {
 
@@ -68,7 +63,7 @@ export const useOrderStore = defineStore('orderStore', () => {
   }
 
   // populate products
-  function populateProducts() {
+  function populateProducts(): void {
 
     if (allOrders.value && !populated.value) {
       populateProductsArray(allOrders.value)
@@ -84,7 +79,7 @@ export const useOrderStore = defineStore('orderStore', () => {
       "product-img-url": 'c0_black_blue-orange_gray.svg' (name of the svg)
     },]
   */  
-  function populateProductsArray(orders){
+  function populateProductsArray(orders): void {
 
     console.log("populating producst array")
     console.log(orders)
@@ -123,18 +118,17 @@ export const useOrderStore = defineStore('orderStore', () => {
       
       newProducts.push(newProduct) 
     })
-    setProducts(newProducts)
+
+    products.value = newProducts
   }
 
   // sort by id
-  function sortById(payload){
-    payload.sort((order1, order2) => {
-      let id = order1.id
-      let id2 = order2.id
-      if (id < id2) {
+  function sortById(orders): void {
+    orders.sort((order1, order2) => {
+      if (order1.id < order2.id) {
         return -1
       } 
-      if (id > id2) {
+      if (order1.id > order2.id) {
         return 1
       }
       // names must be equal
@@ -142,6 +136,6 @@ export const useOrderStore = defineStore('orderStore', () => {
     })
   }
 
-  return {allOrders, products, populated, ordersFlag, orderCount, setProducts, setOrdersArray, addOrder, setOrdersAtReconnect, setOrderInfos, populateProducts, populateProductsArray, sortById}
+  return {allOrders, products, populated, ordersFlag, orderCount, setOrdersArray, addOrder, setOrdersAtReconnect, setOrderInfos, populateProducts, populateProductsArray, sortById}
   
 })

@@ -1,143 +1,135 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
+import Machine from '@/types/machine'
+import RingSpec from '@/types/machine'
 
 export const useMachineStore = defineStore('machineStore', () => {
   
-  const machinesCyan: Ref<any[]> = ref([])
-  const machinesMagenta: Ref<any[]> = ref([])
-  const ringspecs: Ref<any[]> = ref([])
+  const machinesCyan: Ref<Machine[]> = ref([])
+  const machinesMagenta: Ref<Machine[]> = ref([])
+  const ringspecs: Ref<RingSpec[]> = ref([])
   const cyanMachinesFlag: Ref<boolean> = ref(false)
   const magentaMachinesFlag: Ref<boolean> = ref(false)
-  const machinesRingspecsFlag: Ref<boolean> = ref(false)
 
   // add machines cyan
-  function addMachinesCyan({payload, index}) {
-    // state.machinesCyan
+  function addMachinesCyan({newMachine, index}: {newMachine: Machine, index: number}): void {
     if (index === -1) {
-      machinesCyan.value.push(payload)
+      machinesCyan.value.push(newMachine)
     } else {
-      machinesCyan.value.splice(index, 1, payload)
+      machinesCyan.value.splice(index, 1, newMachine)
     }
   }
 
   // add machines magents
-  function addMachinesMagenta(payloadWithIndex) {
-    // state.machinesMagenta
-    if (payloadWithIndex.index === -1) {
-      machinesMagenta.value.push(payloadWithIndex.payload)
+  function addMachinesMagenta({newMachine, index}: {newMachine: Machine, index: number}): void {
+    if (index === -1) {
+      machinesMagenta.value.push(newMachine)
     } else {
-      machinesMagenta.value.splice(payloadWithIndex.index, 1, payloadWithIndex.payload)
+      machinesMagenta.value.splice(index, 1, newMachine)
     }
   }
 
   // set cyan machines
-  function setCyanMachines(payload) {
-    machinesCyan.value = payload
+  function setCyanMachines(newMachines: Machine[]): void {
+    machinesCyan.value = newMachines
     cyanMachinesFlag.value = true
   }
 
   // set magente machines
-  function setMagentaMachines(payload) {
-    machinesMagenta.value = payload
+  function setMagentaMachines(newMachines: Machine[]): void {
+    machinesMagenta.value = newMachines
     magentaMachinesFlag.value = true
   }
 
   // add ring specs
-  function addRingspecs(payload) {
-    if (payload.index === -1) {
-      ringspecs.value.push(payload.payload)
+  function addRingspecs({newRingspec, index}: {newRingspec: RingSpec, index: number}): void {
+    if (index === -1) {
+      ringspecs.value.push(newRingspec)
     } else {
-      ringspecs.value.splice(payload.index, 1, payload.payload)
+      ringspecs.value.splice(index, 1, newRingspec)
     }
   }
 
   // set machines ring specs
-  function setMachinesRingspecs(payload) {
-    ringspecs.value = payload
+  function setRingSpecs(newRingspecs: RingSpec[]): void {
+    ringspecs.value = newRingspecs
   }
 
   // set cyan machines info
-  function setCyanMachinesInfo(payload) {
+  function setCyanMachinesInfo(newMachine: Machine): void {
 
     // if there wasn't information at connect populate in setup
     if (machinesCyan.value.length < 7) {
 
       // check if there is already that machine in the array so it doesn"t duplicate it
-      const index = machinesCyan.value.findIndex(machine => machine.name === payload.name)
+      const index = machinesCyan.value.findIndex(machine => machine.name === newMachine.name)
 
       if (index === -1) { 
-        addMachinesCyan({payload, index})
+        addMachinesCyan({newMachine, index})
         sortAlphabetically(machinesCyan.value)
       }
 
     } else {
 
-      const index = machinesCyan.value.findIndex(machine => machine.name === payload.name)
+      const index = machinesCyan.value.findIndex(machine => machine.name === newMachine.name)
 
       if (index !== -1) {
-        addMachinesCyan({payload, index})
+        addMachinesCyan({newMachine, index})
       }
     }
   }
 
   // set magenta machines info
-  function setMagentaMachinesInfo(payload) {
+  function setMagentaMachinesInfo(newMachine: Machine): void {
 
     // if there wasn't information at connect populate in setup
     if (machinesMagenta.value.length < 7) {
 
       // check if there is already that machine in the array so it doesn"t duplicate it
-      const index = machinesMagenta.value.findIndex(machine => machine.name === payload.name)
+      const index = machinesMagenta.value.findIndex(machine => machine.name === newMachine.name)
 
       if (index === -1) { 
-        addMachinesMagenta({payload, index})
+        addMachinesMagenta({newMachine, index})
         sortAlphabetically(machinesMagenta.value)
       }
 
     } else {
 
-      const index = machinesMagenta.value.findIndex(machine => machine.name === payload.name)
+      const index = machinesMagenta.value.findIndex(machine => machine.name === newMachine.name)
 
       if (index !== -1) {
-        addMachinesMagenta({payload, index})
+        addMachinesMagenta({newMachine, index})
       }
     }
   }
 
   // set cyan machines info at reconnect
-  function setCyanMachinesInfoAtReconnect(payload) {
+  function setCyanMachinesInfoAtReconnect(machines: Machine[]): void {
 
     if (!cyanMachinesFlag.value) {
-      setCyanMachines(payload)
+      setCyanMachines(machines)
       sortAlphabetically(machinesCyan.value)
     }
   }
 
   // set magenta machines info at reconnect
-  function setMagentaMachinesInfoAtReconnect(payload) {
+  function setMagentaMachinesInfoAtReconnect(machines: Machine[]): void {
 
     if (!magentaMachinesFlag.value) {
-      setMagentaMachines(payload)
+      setMagentaMachines(machines)
       sortAlphabetically(machinesMagenta.value)
     }
   }
 
-  // set ringspecs
-  function setRingspecs(payload) {
-    setMachinesRingspecs(payload)
-  }
-
   // sort alphabetically
-  function sortAlphabetically(payload) {
+  function sortAlphabetically(machines: Machine[]): void {
 
-    payload.sort((machineA, machineB) => {
-      let nameA = machineA.name;
-      let nameB = machineB.name;
-      if (nameA < nameB) {
+    machines.sort((machineA, machineB) => {
+      if (machineA.name < machineB.name) {
         return -1;
       } 
-      if (nameA > nameB) {
+      if (machineA.name > machineB.name) {
         return 1;
       }
       // names must be equal
@@ -145,5 +137,5 @@ export const useMachineStore = defineStore('machineStore', () => {
     })
   }
 
-  return {machinesCyan, machinesMagenta, ringspecs, cyanMachinesFlag, magentaMachinesFlag, machinesRingspecsFlag, addMachinesCyan, addMachinesMagenta, setCyanMachines, setMagentaMachines, addRingspecs, setMachinesRingspecs, setCyanMachinesInfo, setMagentaMachinesInfo, setCyanMachinesInfoAtReconnect, setMagentaMachinesInfoAtReconnect, setRingspecs, sortAlphabetically}
+  return {machinesCyan, machinesMagenta, ringspecs, cyanMachinesFlag, magentaMachinesFlag, addMachinesCyan, addMachinesMagenta, setCyanMachines, setMagentaMachines, addRingspecs, setCyanMachinesInfo, setMagentaMachinesInfo, setCyanMachinesInfoAtReconnect, setMagentaMachinesInfoAtReconnect, setRingSpecs, sortAlphabetically}
 })
