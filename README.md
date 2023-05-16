@@ -16,9 +16,9 @@ A web frontend for the RCLL RefBox
 
    Install it globally via npm (should be automatically installed with nodejs)
 
-   '''
+   ```
    npm install --g yarn
-   '''
+   ```
 
 3. the [rcll refbox](https://github.com/robocup-logistics/rcll-refbox/wiki/Install)
 
