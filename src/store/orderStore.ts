@@ -3,7 +3,6 @@ import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useOrderStore = defineStore('orderStore', () => {
-  
   const allOrders: Ref<any[]> = ref([])
   const products: Ref<any[]> = ref([])
   const populated: Ref<boolean> = ref(false)
@@ -12,17 +11,17 @@ export const useOrderStore = defineStore('orderStore', () => {
 
   // set orders array
   function setOrdersArray(payload): void {
-
-    console.log("set orders array")
+    console.log('set orders array')
     console.log(payload)
     allOrders.value = payload
     ordersFlag.value = true
   }
 
   // add order
-  function addOrder({payload, index}): void {
-
-    if (payload.index === -1) {
+  function addOrder({ payload, index }): void {
+    console.log('adding order at index ' + index)
+    console.log(allOrders.value)
+    if (index === -1) {
       allOrders.value.push(payload)
     } else {
       allOrders.value.splice(index, 1, payload)
@@ -31,32 +30,30 @@ export const useOrderStore = defineStore('orderStore', () => {
 
   // set orders at reconnect
   function setOrdersAtReconnect(payload): void {
-
     setOrdersArray(payload)
     populateProducts()
   }
 
   // set order infos
   function setOrderInfos(payload): void {
-
+    console.log('settings order info')
     if (allOrders.value.length < orderCount.value) {
-
       // check if there is already that order in the array so it doesn"t duplicate it
-      const index = allOrders.value.findIndex(order => order.id === payload.id)
-      if (index === -1) { 
-        addOrder({payload, index})
+      const index = allOrders.value.findIndex(
+        (order) => order.id === payload.id
+      )
+      if (index === -1) {
+        addOrder({ payload, index })
       }
-
     } else {
-
-      const index = allOrders.value.findIndex(order => order.id === payload.id)
+      const index = allOrders.value.findIndex(
+        (order) => order.id === payload.id
+      )
       if (index !== -1) {
-        addOrder({payload, index})
+        addOrder({ payload, index })
       }
-
     }
     if (allOrders.value.length === orderCount.value) {
-
       sortById(allOrders.value)
       populateProducts()
     }
@@ -64,7 +61,6 @@ export const useOrderStore = defineStore('orderStore', () => {
 
   // populate products
   function populateProducts(): void {
-
     if (allOrders.value && !populated.value) {
       populateProductsArray(allOrders.value)
       populated.value = true
@@ -78,19 +74,18 @@ export const useOrderStore = defineStore('orderStore', () => {
       "id": order.id
       "product-img-url": 'c0_black_blue-orange_gray.svg' (name of the svg)
     },]
-  */  
+  */
   function populateProductsArray(orders): void {
-
-    console.log("populating producst array")
+    console.log('populating producst array')
     console.log(orders)
 
     // iterate through all orders
     const newProducts: {
-      "id": number,
-      "product-img-url": string
+      id: number
+      'product-img-url': string
     }[] = []
 
-    orders.forEach(order => {
+    orders.forEach((order) => {
       const complexity = order.complexity.toLowerCase()
       // fetched Information Format: base-color: "BASE_RED"
       // split the string to extract: 'red, grey...'
@@ -103,20 +98,23 @@ export const useOrderStore = defineStore('orderStore', () => {
       if (capColor === 'grey') {
         capColor = 'gray'
       }
-      let ringColors = '';
+      let ringColors = ''
       order['ring_colors'].forEach((color: string) => {
         ringColors += color.split('_')[1].toLowerCase() + '-'
-      });
+      })
 
       const newProduct: {
-        "id": number,
-        "product-img-url": string
+        id: number
+        'product-img-url': string
       } = {
-        "id": order.id,
-        "product-img-url": `${complexity}_${baseColor}_${ringColors.substring(0,ringColors.length-1)}_${capColor}.svg` // format: 'c0_black_blue-orange_gray.svg'
+        id: order.id,
+        'product-img-url': `${complexity}_${baseColor}_${ringColors.substring(
+          0,
+          ringColors.length - 1
+        )}_${capColor}.svg`, // format: 'c0_black_blue-orange_gray.svg'
       }
-      
-      newProducts.push(newProduct) 
+
+      newProducts.push(newProduct)
     })
 
     products.value = newProducts
@@ -127,7 +125,7 @@ export const useOrderStore = defineStore('orderStore', () => {
     orders.sort((order1, order2) => {
       if (order1.id < order2.id) {
         return -1
-      } 
+      }
       if (order1.id > order2.id) {
         return 1
       }
@@ -136,6 +134,18 @@ export const useOrderStore = defineStore('orderStore', () => {
     })
   }
 
-  return {allOrders, products, populated, ordersFlag, orderCount, setOrdersArray, addOrder, setOrdersAtReconnect, setOrderInfos, populateProducts, populateProductsArray, sortById}
-  
+  return {
+    allOrders,
+    products,
+    populated,
+    ordersFlag,
+    orderCount,
+    setOrdersArray,
+    addOrder,
+    setOrdersAtReconnect,
+    setOrderInfos,
+    populateProducts,
+    populateProductsArray,
+    sortById,
+  }
 })

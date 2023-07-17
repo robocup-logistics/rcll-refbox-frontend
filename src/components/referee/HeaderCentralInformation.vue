@@ -1,13 +1,16 @@
 <template>
-  <div class="col-md-2 border">
-    <div v-if="phase !== 'PRE_GAME'" />
-    <div class="pause-play-time mt-2">
-      <div class="radio-pause-play row justify-content-center align-items-center">
-        <div class="pause-play-container mr-2">
+  <div
+    class="col-md-2 border d-flex flex-column justify-content-center align-items-center"
+  >
+    <div
+      class="pause-play-time d-flex justify-content-center align-items-center mt-2"
+    >
+      <div class="radio-pause-play">
+        <div class="pause-play-container me-2">
           <a
             v-if="gamestate === 'PAUSED' || gamestate === 'WAIT_START'"
-            v-shortkey.once="{down:['f2']}"
-            class="btn  p-0"
+            v-shortkey.once="{ down: ['f2'] }"
+            class="btn p-0"
             data-toggle="tooltip"
             data-placement="top"
             title="start/resume game"
@@ -15,36 +18,35 @@
             @shortkey="setGameState('RUNNING')"
           >
             <font-awesome-icon
-              :icon="['fas','play-circle']"
+              :icon="['fas', 'play-circle']"
               class="fa-2x play-btn"
             />
           </a>
           <a
             v-if="gamestate === 'RUNNING'"
-            v-shortkey.once="{down:['f2']}"
+            v-shortkey.once="{ down: ['f2'] }"
             class="btn p-0"
             data-toggle="tooltip"
             data-placement="top"
             title="pause game"
             @click="setGameState('PAUSED')"
             @shortkey="setGameState('PAUSED')"
-          > 
+          >
             <font-awesome-icon
-              :icon="['fas','pause-circle']"
+              :icon="['fas', 'pause-circle']"
               class="fa-2x pause-btn"
             />
           </a>
         </div>
       </div>
       <div class="time">
-        <!-- <h3>{{formatSeconds(getGametime)}}</h3> -->
         <h4 class="marg-bot-0 time-heading">
-          {{ formatSeconds(gametime) }}
+          {{ formattedGametime }}
         </h4>
       </div>
     </div>
 
-    <div class="phase row justify-content-center align-items-center mt-1">
+    <div class="phase d-flex justify-content-center align-items-center mt-1">
       <a
         class="btn p-0"
         data-toggle="tooltip"
@@ -53,15 +55,15 @@
         @click.prevent="setPreviousPhase"
       >
         <font-awesome-icon
-          :icon="['fas','chevron-left']"
+          :icon="['fas', 'chevron-left']"
           class="fa-2x previous-btn"
         />
       </a>
       <div class="dropdown fixedSizeGamestate text-center">
         <a
-          ref="firstOne" 
+          ref="firstOne"
           v-shortkey.once="['f3']"
-          class=" btn dropdown-toggle current-phase-anchor "
+          class="btn dropdown-toggle current-phase-anchor"
           data-toggle="dropdown"
           href="#"
           role="button"
@@ -76,49 +78,54 @@
           v-shortkey.once="['esc']"
           class="dropdown-menu"
           :style="showPhaseSubmenus ? 'display:block' : 'display:none'"
-          @shortkey="togglePhaseSubmenus()"
+          @shortkey="showPhaseSubmenus = false"
         >
           <a
             v-show="phase !== 'PRE_GAME'"
-            class="dropdown-item" 
-            href="#" 
+            class="dropdown-item"
+            href="#"
             @click.prevent="switchGamestate('PRE_GAME')"
-          >PRE_GAME</a>    
+            >PRE_GAME</a
+          >
           <a
             v-show="phase !== 'SETUP'"
             class="dropdown-item"
             href="#"
             @click.prevent="switchGamestate('SETUP')"
-          >SETUP</a>
+            >SETUP</a
+          >
           <a
             v-show="phase !== 'EXPLORATION'"
-            class="dropdown-item" 
+            class="dropdown-item"
             href="#"
             @click.prevent="switchGamestate('EXPLORATION')"
-          >EXPLORATION</a>
+            >EXPLORATION</a
+          >
           <a
             v-show="phase !== 'PRODUCTION'"
             class="dropdown-item"
-            href="#" 
+            href="#"
             @click.prevent="switchGamestate('PRODUCTION')"
-          >PRODUCTION</a>
+            >PRODUCTION</a
+          >
           <a
             v-show="phase !== 'POST_GAME'"
             class="dropdown-item"
             href="#"
             @click.prevent="switchGamestate('POST_GAME')"
-          >POST_GAME</a>
+            >POST_GAME</a
+          >
         </div>
       </div>
       <a
-        class="btn  p-0"
+        class="btn p-0"
         data-toggle="tooltip"
         data-placement="top"
         title="change to next phase"
         @click.prevent="setNextPhase"
       >
         <font-awesome-icon
-          :icon="['fas','chevron-right']"
+          :icon="['fas', 'chevron-right']"
           class="fa-2x next-btn"
         />
       </a>
@@ -127,23 +134,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, nextTick } from 'vue'
+import { ref, Ref, nextTick, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import formatSeconds from '@/utils/formatSeconds'
 import { useMainStore } from '@/store/mainStore'
 
 const mainStore = useMainStore()
-const { phase, gametime, gamestate, showPhaseSubmenus, formattedGametime } = storeToRefs(mainStore)
+const { phase, gamestate, formattedGametime } = storeToRefs(mainStore)
 
 const firstOne: Ref<HTMLAnchorElement | null> = ref(null)
 
+const showPhaseSubmenus: Ref<boolean> = ref(false)
+
+watch(showPhaseSubmenus, (newShowPhaseSubmenus) => {
+  if (newShowPhaseSubmenus === true) {
+    document.addEventListener('click', closeSubmenusForPhases)
+  } else {
+    document.removeEventListener('click', closeSubmenusForPhases)
+  }
+})
+
+function closeSubmenusForPhases(e: MouseEvent) {
+  // check if anything other than the phase is clicked and close the submenu
+  if (!(<HTMLElement>e.target).classList.contains('current-phase-anchor')) {
+    showPhaseSubmenus.value = false
+  }
+}
+
 function switchGamestate(state: string) {
   mainStore.setPhase(state)
-  mainStore.togglePhaseSubmenus()
+  showPhaseSubmenus.value = false
 }
 
 function togglePhaseMenuAndFocus() {
-  mainStore.togglePhaseSubmenus()
+  showPhaseSubmenus.value = !showPhaseSubmenus.value
   nextTick(() => {
     if (firstOne.value) firstOne.value.focus()
   })
@@ -161,11 +185,19 @@ function setNextPhase() {
   mainStore.setNextPhase()
 }
 
-function togglePhaseSubmenus() {
-  mainStore.togglePhaseSubmenus()
-}
-
-defineExpose({ formatSeconds, phase, gametime, gamestate, showPhaseSubmenus, firstOne, formattedGametime, switchGamestate, togglePhaseMenuAndFocus, setGameState, setPreviousPhase, setNextPhase, togglePhaseSubmenus })
+defineExpose({
+  formatSeconds,
+  phase,
+  gamestate,
+  showPhaseSubmenus,
+  firstOne,
+  formattedGametime,
+  switchGamestate,
+  togglePhaseMenuAndFocus,
+  setGameState,
+  setPreviousPhase,
+  setNextPhase,
+})
 </script>
 
 <style scoped>
@@ -173,41 +205,47 @@ defineExpose({ formatSeconds, phase, gametime, gamestate, showPhaseSubmenus, fir
   margin-bottom: 0px !important;
 }
 
-.next-btn:hover, .previous-btn:hover, .play-btn:hover, .pause-btn:hover{
+.next-btn:hover,
+.previous-btn:hover,
+.play-btn:hover,
+.pause-btn:hover {
   color: #00bc8c;
 }
-.current-phase-anchor:hover{
+.current-phase-anchor:hover {
   color: #00bc8c;
 }
-.current-phase-anchor:hover, .current-phase-anchor:focus{
+.current-phase-anchor:hover,
+.current-phase-anchor:focus {
   box-shadow: none;
 }
-.dropdown-item:hover, .dropdown-item:focus {
+.dropdown-item:hover,
+.dropdown-item:focus {
   background-color: rgba(133, 230, 205, 0.5) !important;
 }
 
-@media (min-width: 1200px){
-  .fixedSizeGamestate{
+@media (min-width: 1200px) {
+  .fixedSizeGamestate {
     width: 155px !important;
   }
-  .current-phase-anchor{
+  .current-phase-anchor {
     padding: 0.5rem 0rem;
   }
 }
 
-@media (max-width: 1540px){
-  .previous-btn, .next-btn {
+@media (max-width: 1540px) {
+  .previous-btn,
+  .next-btn {
     width: 1em;
     height: 0.7em;
   }
-  .time-heading{
+  .time-heading {
     font-size: 1.2rem !important;
   }
-  .current-phase-anchor{
+  .current-phase-anchor {
     font-size: 0.85rem;
     padding: 0.5rem 0rem;
   }
-  .fixedSizeGamestate{
+  .fixedSizeGamestate {
     width: 130px !important;
   }
 }

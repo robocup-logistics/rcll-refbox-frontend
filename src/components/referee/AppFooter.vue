@@ -5,9 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import FooterOrders from '@/components/FooterOrders.vue'
+import FooterOrders from '@/components/referee/FooterOrders.vue'
 </script>
 
-<style>
-
-</style>
+<style scoped></style>

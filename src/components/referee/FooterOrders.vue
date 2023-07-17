@@ -1,8 +1,8 @@
 <template>
   <div>
     <div>
-      <FootersOrdersGenerator 
-        v-if="(phase === 'PRODUCTION' || phase === 'POST_GAME')"
+      <FootersOrdersGenerator
+        v-if="phase === 'PRODUCTION' || phase === 'POST_GAME'"
         class="d-flex justify-content-around align-items-center px-4 py-2"
       />
     </div>
@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store/mainStore'
-import FootersOrdersGenerator from '@/components/FooterOrdersGenerator.vue'
+import FootersOrdersGenerator from '@/components/referee/FooterOrdersGenerator.vue'
 
 const mainStore = useMainStore()
 const { phase } = storeToRefs(mainStore)
@@ -20,6 +20,4 @@ const { phase } = storeToRefs(mainStore)
 defineExpose({ phase })
 </script>
 
-<style>
-
-</style>
+<style scoped></style>

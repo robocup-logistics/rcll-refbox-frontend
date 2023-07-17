@@ -1,18 +1,10 @@
 <template>
   <div>
-    <div
-      class="modal"
-      style="display:block"
-    >
-      <div
-        class="modal-dialog"
-        role="document"
-      >
+    <div class="modal" style="display: block">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">
-              Confirm Field Randomization?
-            </h5>
+            <h5 class="modal-title">Confirm Field Randomization?</h5>
             <button
               type="button"
               class="close"
@@ -36,7 +28,7 @@
             <button
               v-shortkey.once="['esc']"
               type="button"
-              class="btn btn-secondary" 
+              class="btn btn-secondary"
               data-dismiss="modal"
               @click.prevent="closeModal()"
               @shortkey="closeModal()"
@@ -71,6 +63,4 @@ function confirmedRandomize() {
 defineExpose({ closeModal, confirmedRandomize })
 </script>
 
-<style>
-
-</style>
+<style scoped></style>

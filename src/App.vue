@@ -1,59 +1,55 @@
 <template>
-  <div
-    id="app"
-    ref="root"
-  >
-    <div class="container-fluid">
+  <div id="app">
+    <!-- referee view -->
+    <div id="refereeView" class="container-fluid" v-if="refereeView">
       <AppHeader />
       <AppBody />
       <AppFooter />
+    </div>
+    <!-- spectator view -->
+    <div id="spectatorView" v-else>
+      <ScoreBoard />
+      <PlayingField />
+      <Player color="cyan" />
+      <Player color="magenta" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, watch } from 'vue'
-import { storeToRefs } from 'pinia'
-import AppHeader from '@/components/AppHeader.vue'
-import AppBody from '@/components/AppBody.vue'
-import AppFooter from '@/components/AppFooter.vue'
+import { ref, Ref } from 'vue'
 import { useMainStore } from '@/store/mainStore'
 
-const root: Ref<HTMLElement | null> = ref(null)
+// referee components
+import AppHeader from '@/components/referee/AppHeader.vue'
+import AppBody from '@/components/referee/AppBody.vue'
+import AppFooter from '@/components/referee/AppFooter.vue'
 
+// specator components
+import ScoreBoard from '@/components/spectator/ScoreBoard.vue'
+import PlayingField from '@/components/spectator/PlayingField.vue'
+import Player from '@/components/spectator/Player.vue'
+
+// variable whether the referee view or the spectator view is active
+const refereeView: Ref<boolean> = ref(true)
+
+// connect to websocket
 const mainStore = useMainStore()
-const { showPhaseSubmenus } = storeToRefs(mainStore)
+mainStore.connectToWebsocket()
 
-watch(showPhaseSubmenus, (newShowPhaseSubmenus) => {
-
-  if (root.value) {
-    if (newShowPhaseSubmenus === true) {
-      root.value.addEventListener('click', closeSubmenusForPhases)
-    } else {
-      root.value.removeEventListener('click', closeSubmenusForPhases)
-    }
-  }
-})
-
-function closeSubmenusForPhases(e) {
-
-  // check if anything other than the phase is clicked and close the submenu 
-  if (!(e.target.classList.contains('current-phase-anchor')) ) {
-    mainStore.closePhaseSubmenus()
-  }
-}
-defineExpose({root})
+defineExpose({ refereeView })
 </script>
 
-<style>
+<style scoped lang="scss">
 #app {
-  /* Css Primary color Variables */
-  --main-cyan-color: #0FF;
-  --main-magenta-color: #F0F;
-  
-  font-family:   'DejaVu Sans Mono', monospace;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  #refereeView {
+    font-family: 'DejaVu Sans Mono', monospace;
+  }
+
+  #spectatorView {
+    background-color: #252525;
+    height: 100vh;
+    width: 100vw;
+  }
 }
 </style>

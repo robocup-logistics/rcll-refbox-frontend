@@ -9,23 +9,27 @@
             </h6>
             <div class="d-flex align-items-center justify-content-between">
               <p class="delivery-infos">
-                <span>
-                  Complexity: {{ order.complexity }}
-                </span>
-                <span>
-                  base-color: {{ order['base_color'] }}
-                </span>
+                <span> Complexity: {{ order.complexity }} </span>
+                <span> base-color: {{ order['base_color'] }} </span>
                 <span v-if="order['ring_colors']">
                   ring colors: {{ order['ring_colors'] }}
                 </span>
-                <span>
-                  cap-color: {{ order['cap_color'] }}
+                <span> cap-color: {{ order['cap_color'] }} </span>
+                <span
+                  v-if="
+                    typeof order['unconfirmed_deliveries'][0]['game_time'] !==
+                    'undefined'
+                  "
+                >
+                  Gametime:
+                  {{
+                    formatSeconds(
+                      order['unconfirmed_deliveries'][0]['game_time']
+                    )
+                  }}
                 </span>
-                <span v-if="typeof order['unconfirmed_deliveries'][0]['game_time'] !== 'undefined'">
-                  Gametime: {{ formatSeconds(order['unconfirmed_deliveries'][0]['game_time']) }}
-                </span>
                 <span>
-                  delivery period: 
+                  delivery period:
                   {{ formatSeconds(order['delivery_period'][0]) }}
                   -
                   {{ formatSeconds(order['delivery_period'][1]) }}
@@ -34,18 +38,18 @@
               <img
                 :src="`/products/generated/${getProductsImg(order.id)}`"
                 class="img-fluid"
-              >
+              />
             </div>
             <div class="modal-buttons">
               <button
-                class="btn btn-outline-info yes-btn "
-                @click.prevent="orderAcceptance(order,true)"
+                class="btn btn-outline-info yes-btn"
+                @click.prevent="orderAcceptance(order, true)"
               >
                 Yes
               </button>
               <button
                 class="btn btn-outline-info no-btn"
-                @click.prevent="orderAcceptance(order,false)"
+                @click.prevent="orderAcceptance(order, false)"
               >
                 No
               </button>
@@ -67,16 +71,16 @@ import { useOrderStore } from '@/store/orderStore'
 const props = defineProps({
   order: {
     type: Object,
-    required: true
+    required: true,
   },
   team: {
     type: String,
-    required: true
+    required: true,
   },
   color: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const mainStore = useMainStore()
@@ -90,29 +94,33 @@ function closeModal(): void {
 }
 
 function getProductsImg(orderID: number): string {
-  return products.value.find(({id} : {id: number}) => id === orderID)['product-img-url']
+  return products.value.find(({ id }: { id: number }) => id === orderID)[
+    'product-img-url'
+  ]
 }
 
 function orderAcceptance(order, bool: boolean): void {
   const msg = {
-    "command" : "confirm_delivery",
-    "correctness" : false,
-    "delivery_id": null,
-    "order_id" : null,
-    "color" : ""
+    command: 'confirm_delivery',
+    correctness: false,
+    delivery_id: null,
+    order_id: null,
+    color: '',
   }
   msg.correctness = bool
   msg.color = props.color.toUpperCase()
   msg['order_id'] = props.order.id
-  
+
   if (order['unconfirmed_deliveries'].length > 0) {
-    if ( typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined') {
+    if (
+      typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined'
+    ) {
       msg['delivery_id'] = order['unconfirmed_deliveries'][0]['delivery_id']
     }
   } else {
-      msg['delivery_id'] = msg['order_id']
+    msg['delivery_id'] = msg['order_id']
   }
-  
+
   mainStore.SOCKET_SEND(msg)
   closeModal()
   // this.$destroy()
@@ -121,14 +129,16 @@ function orderAcceptance(order, bool: boolean): void {
 defineExpose({ formatSeconds, isOpen, getProductsImg, orderAcceptance })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use '@/assets/global.scss';
+
 .modal-container {
   width: 400px;
   margin: auto 0px;
   padding: 20px;
   border-radius: 2px;
   box-shadow: 0 2px 8px 3px;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0, 0, 0, 0.7);
   transition: all 0.2s ease-in;
 }
 .fadeIn-enter {
@@ -151,9 +161,9 @@ defineExpose({ formatSeconds, isOpen, getProductsImg, orderAcceptance })
 }
 
 .modal-title-h6 {
-  color: var(--main-cyan-color);
+  color: global.$main-cyan-color;
 }
-.delivery-infos{
+.delivery-infos {
   color: orangered !important;
 }
 button {
@@ -178,7 +188,7 @@ button {
   transition: opacity 0.2s ease;
 }
 
-.delivery-infos{
+.delivery-infos {
   display: flex;
   flex-direction: column;
 }

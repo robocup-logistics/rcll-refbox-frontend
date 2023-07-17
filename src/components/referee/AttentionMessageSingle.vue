@@ -1,10 +1,8 @@
 <template>
   <div v-if="elementVisible">
-    <span 
-      class="attention-msg-text text-center"
-    >
-      <font-awesome-icon 
-        :icon="['fas','exclamation-triangle']"
+    <span class="attention-msg-text text-center">
+      <font-awesome-icon
+        :icon="['fas', 'exclamation-triangle']"
         class="fa-1x"
       />
       {{ msg.text }}
@@ -18,8 +16,8 @@ import { ref, onMounted } from 'vue'
 defineProps({
   msg: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const elementVisible = ref(true)
@@ -35,7 +33,7 @@ defineExpose(elementVisible)
 
 <style scoped>
 .attention-msg-text {
-  color:red;
+  color: red;
   font-size: 18px !important;
 }
 </style>

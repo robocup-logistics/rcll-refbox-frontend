@@ -1,16 +1,16 @@
 <template>
   <div class="add-points-container">
-    <form 
+    <form
       class="add-points-form"
       @submit.prevent="formatAndSendInputToWebsocket"
     >
-      <input 
+      <input
         ref="pointsAndReason"
-        type="text" 
+        type="text"
         class="p-0 add-points-input"
         required
         placeholder="Format: points, reason"
-      >
+      />
     </form>
   </div>
 </template>
@@ -22,8 +22,8 @@ import { useMainStore } from '@/store/mainStore'
 const props = defineProps({
   color: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const emit = defineEmits(['toggleShowAddPoints'])
@@ -34,57 +34,56 @@ const pointsAndReason: Ref<HTMLInputElement | null> = ref(null)
 
 onMounted(() => {
   nextTick(() => {
-    if(pointsAndReason.value) pointsAndReason.value.focus()
+    if (pointsAndReason.value) pointsAndReason.value.focus()
   })
 })
 
-function formatAndSendInputToWebsocket(){
-
+function formatAndSendInputToWebsocket() {
   // Input Format: points, Reason
   if (!pointsAndReason.value) return
   const splitInput = pointsAndReason.value.value.split(/,(.+)/)
   const points = parseInt(splitInput[0])
   const reason = splitInput[1]
-  
+
   const msg = {
-    "command": "add_points_team",
-    "points": points,
-    "team_color": `${props.color.toUpperCase()}`,
-    "game_time": mainStore.gametime,
-    "phase": `${mainStore.phase}`,
-    "reason": `${reason}`
+    command: 'add_points_team',
+    points: points,
+    team_color: `${props.color.toUpperCase()}`,
+    game_time: mainStore.gametime,
+    phase: `${mainStore.phase}`,
+    reason: `${reason}`,
   }
 
-  mainStore.sendAddPointsTeam(msg)
+  mainStore.SOCKET_SEND(msg)
   emit('toggleShowAddPoints')
 }
 
-defineExpose({pointsAndReason, formatAndSendInputToWebsocket})
+defineExpose({ pointsAndReason, formatAndSendInputToWebsocket })
 </script>
 
 <style scoped>
-.add-points-container{
+.add-points-container {
   margin: auto !important;
 }
-.add-points-form{
- border-left: 0 !important;
+.add-points-form {
+  border-left: 0 !important;
   border-right: 0 !important;
   border-top: 0 !important;
   border-bottom: 1px solid !important;
   border-radius: 2px !important;
   outline: 0 !important;
-  background-color: #2B3E50 !important;
+  background-color: #2b3e50 !important;
 }
-.add-points-input{
-    border-left: 0 !important;
+.add-points-input {
+  border-left: 0 !important;
   border-right: 0 !important;
   border-top: 0 !important;
   border-bottom: 0 !important;
   border-radius: 2px !important;
   outline: 0 !important;
-  background-color: #2B3E50 !important;
+  background-color: #2b3e50 !important;
   text-align: center !important;
-  color: #FFF;
+  color: #fff;
   min-width: 25vw;
 }
 </style>

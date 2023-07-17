@@ -1,23 +1,19 @@
 <template>
   <div class="awarded-points-parent-container">
-    <div :class="['awarded-points-container-'+ color]">
-      <div class="row m-0 text-left ">
+    <div :class="['awarded-points-container-' + color]">
+      <div class="row m-0 text-start">
         <div
-          v-for="(award,index) in selectPointsArray(color)"
+          v-for="(award, index) in selectPointsArray(color)"
           :key="index"
-          class="col-md-6 " 
+          class="col-md-6"
         >
           <div v-if="selectPointsArray(color).length !== 0">
-            <h6 style="font-size: 13px;">
-              {{ index + 1 }}.
-              [{{ formatSeconds(award['game_time']) }}]
-              {{ award.phase.substring(0,3) }}
+            <h6 style="font-size: 13px">
+              {{ index + 1 }}. [{{ formatSeconds(award['game_time']) }}]
+              {{ award.phase.substring(0, 3) }}
               <span class="text-light">{{ award.points }}</span> point(s)
-              <br>
-              <span
-                class="text-success"
-                style="font-weight:300"
-              >
+              <br />
+              <span class="text-success" style="font-weight: 300">
                 {{ award.reason }}
               </span>
               <!-- If the rest of the reason isn`t needed -->
@@ -39,8 +35,8 @@ import { useMainStore } from '@/store/mainStore'
 const props = defineProps({
   color: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const mainStore = useMainStore()
@@ -53,7 +49,7 @@ onMounted(() => {
     scrollToEndOfMagentaPointsDiv()
   }
 })
- 
+
 watch(cyanAwardedPoints, () => {
   if (props.color === 'cyan') {
     setTimeout(scrollToEndOfCyanPointsDiv, 500)
@@ -68,17 +64,17 @@ watch(magentaAwardedPoints, () => {
 
 // scroll to end of cyan points div
 function scrollToEndOfCyanPointsDiv() {
-  let container = document.querySelector('.awarded-points-container-cyan');
-  if (container) container.scrollTop = container.scrollHeight;
+  let container = document.querySelector('.awarded-points-container-cyan')
+  if (container) container.scrollTop = container.scrollHeight
 }
 
 // scroll to end of magenta points div
 function scrollToEndOfMagentaPointsDiv() {
-  let container = document.querySelector('.awarded-points-container-magenta');
-  if (container) container.scrollTop = container.scrollHeight;
+  let container = document.querySelector('.awarded-points-container-magenta')
+  if (container) container.scrollTop = container.scrollHeight
 }
 
-function selectPointsArray(color: string){
+function selectPointsArray(color: string) {
   if (color === 'cyan') {
     return cyanAwardedPoints.value
   } else {
@@ -90,9 +86,9 @@ defineExpose({ formatSeconds, selectPointsArray })
 </script>
 
 <style scoped>
-.awarded-points-container-magenta, .awarded-points-container-cyan{
+.awarded-points-container-magenta,
+.awarded-points-container-cyan {
   overflow: auto !important;
   height: 33vh !important;
 }
-
 </style>
