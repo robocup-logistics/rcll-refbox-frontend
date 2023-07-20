@@ -1,0 +1,21 @@
+root: true
+env:
+  node: true
+extends:
+  - plugin:vue/vue3-recommended
+  - plugin:@typescript-eslint/recommended
+  - plugin:@typescript-eslint/recommended-requiring-type-checking
+  - eslint:recommended
+parser: vue-eslint-parser
+parserOptions:
+  ecmaVersion: latest
+  parser: '@typescript-eslint/parser'
+plugins:
+  - '@typescript-eslint'
+rules:
+  no-unused-vars: off
+  '@typescript-eslint/no-unused-vars':
+    - error
+    - argsIgnorePattern: '^_'
+      varsIgnorePattern: '^_'
+      caughtErrorsIgnorePattern: '^_'

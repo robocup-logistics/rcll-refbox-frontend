@@ -1,76 +1,55 @@
 <template>
-  <div id="app" >
-    <div class="container-fluid"  >
-      <Header />
-      <Body />
-      <Footer />
+  <div id="app">
+    <!-- referee view -->
+    <div id="refereeView" class="container-fluid" v-if="refereeView">
+      <AppHeader />
+      <AppBody />
+      <AppFooter />
+    </div>
+    <!-- spectator view -->
+    <div id="spectatorView" v-else>
+      <ScoreBoard />
+      <PlayingField />
+      <Player color="cyan" />
+      <Player color="magenta" />
     </div>
   </div>
 </template>
 
-<script>
-import Header from './components/Header.vue'
-import Body from './components/Body.vue'
-import Footer from './components/Footer.vue'
-import { mapActions, mapState } from 'vuex';
+<script setup lang="ts">
+import { ref, Ref } from 'vue'
+import { useMainStore } from '@/store/mainStore'
 
-export default {
-  name: 'App',
-  components: {
-    Header,
-    Body,
-    Footer
-  },
-  computed: {
-    ...mapState(['showPhaseSubmenus']),
-    phaseSubmenus () {
-      return this.$store.getters.getPhaseSubmenusStatus
-    },
-    teamMenuCyan () {
-      return this.$store.getters.getTeamMenuCyanTriggerStatus
-    },
-    cyanTeamName(){
-      return this.$store.getters.getCyanTeamName
-    }
-  },
-  watch: {
-    phaseSubmenus(){
-      if (this.$store.getters.getPhaseSubmenusStatus === true) {
-        this.$el.addEventListener('click', this.closeSubmenusForPhases)
-      } else {
-        this.$el.removeEventListener('click', this.closeSubmenusForPhases)
-      }
-    },
-  },
-  methods: {
-    ...mapActions(['closePhaseSubmenus', 'closeTeamMenuCyan']),
-    closeSubmenusForPhases(e) {
-      // check if anything other than the phase is clicked and close the submenu 
-      if (!(e.target.classList.contains('current-phase-anchor')) ) {
-        this.closePhaseSubmenus()
-      }
-    },
-    closeTeamMenuCyanMethod(e) {
-      // check if anything other than the menu is clicked and close the submenu
-      console.log();
-      
-      if (!(e.target.classList.contains('cyanSelectArrow')) || (e.target.classList.contains('btn-cyan-header'))) {
-        this.closeTeamMenuCyan()
-      }
-    }
-  }
-}
+// referee components
+import AppHeader from '@/components/referee/AppHeader.vue'
+import AppBody from '@/components/referee/AppBody.vue'
+import AppFooter from '@/components/referee/AppFooter.vue'
+
+// specator components
+import ScoreBoard from '@/components/spectator/ScoreBoard.vue'
+import PlayingField from '@/components/spectator/PlayingField.vue'
+import Player from '@/components/spectator/Player.vue'
+
+// variable whether the referee view or the spectator view is active
+const refereeView: Ref<boolean> = ref(true)
+
+// connect to websocket
+const mainStore = useMainStore()
+mainStore.connectToWebsocket()
+
+defineExpose({ refereeView })
 </script>
 
-<style>
+<style scoped lang="scss">
 #app {
-  /* Css Primary color Variables */
-  --main-cyan-color: #0FF;
-  --main-magenta-color: #F0F;
-  
-  font-family:   'DejaVu Sans Mono', monospace;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  #refereeView {
+    font-family: 'DejaVu Sans Mono', monospace;
+  }
+
+  #spectatorView {
+    background-color: #252525;
+    height: 100vh;
+    width: 100vw;
+  }
 }
 </style>
