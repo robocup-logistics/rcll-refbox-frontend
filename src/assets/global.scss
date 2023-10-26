@@ -1,2 +1,163 @@
-$main-cyan-color: #0ff;
-$main-magenta-color: #f0f;
+@import '@/assets/variables.scss';
+
+* {
+  font-family: 'Lucida Console', 'Courier New', monospace;
+  box-sizing: border-box;
+  scrollbar-color: $bgColorDarker transparent;
+
+  ::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: $bgColorDarker;
+    border-radius: 3px;
+
+    &:active {
+      background: $bgColorLighter;
+    }
+  }
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+button {
+  border: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+p {
+  padding: unset;
+  margin: 0;
+  line-height: 1.3em;
+  overflow: hidden;
+}
+
+p,
+span {
+  text-transform: none;
+  font-size: 15px;
+}
+
+.uppercase {
+  text-transform: uppercase;
+  * {
+    text-transform: uppercase;
+  }
+}
+
+.clickable:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.horizontal-flex {
+  display: flex;
+  flex-direction: row !important;
+  gap: 10px !important;
+  align-items: center; // @TODO is currently ignored e.g. in orders board, p stretches to full height and thus stays on top
+
+  max-width: 100%;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  > .item {
+    height: 100% !important;
+  }
+}
+
+.form-row {
+  > * {
+    flex-grow: 1;
+  }
+}
+
+.section {
+  text-align: center;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.item {
+  flex-grow: 1;
+  width: 100%;
+  height: fit-content;
+  border-radius: 5px;
+  padding: 0 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
+  color: white;
+  background-color: $bgColor;
+  overflow: hidden;
+
+  &.grow {
+    height: 100%;
+  }
+
+  &.transparent {
+    background-color: unset;
+    padding: 0;
+    box-shadow: unset;
+  }
+
+  &.CYAN {
+    color: black;
+    background-color: $cyanColor;
+  }
+
+  &.MAGENTA {
+    color: black;
+    background-color: $magentaColor;
+  }
+}
+
+.CYAN-text {
+  color: $cyanColor;
+}
+
+.MAGENTA-text {
+  color: $magentaColor;
+}
+
+.text-danger {
+  color: red;
+}
+
+.text-warning {
+  color: orange;
+}
+
+.text-success {
+  color: green;
+}

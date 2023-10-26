@@ -1,55 +1,72 @@
+// TEMPLATE --------------------------------------------------------------------
 <template>
   <div id="app">
-    <!-- referee view -->
-    <div id="refereeView" class="container-fluid" v-if="refereeView">
-      <AppHeader />
-      <AppBody />
-      <AppFooter />
+    <div id="startMenuView" v-if="!socket && !gameReport">
+      <startMenu></startMenu>
     </div>
+    <!-- referee view -->
+    <RefereeApp v-else-if="refereeView && socket"></RefereeApp>
     <!-- spectator view -->
     <div id="spectatorView" v-else>
-      <ScoreBoard />
-      <PlayingField />
-      <Player color="cyan" />
-      <Player color="magenta" />
+      <div id="outerWrapper">
+        <div id="innerWrapper">
+          <TopBar />
+          <PlayingField />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
+// SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
-import { ref, Ref } from 'vue'
-import { useMainStore } from '@/store/mainStore'
-
-// referee components
-import AppHeader from '@/components/referee/AppHeader.vue'
-import AppBody from '@/components/referee/AppBody.vue'
-import AppFooter from '@/components/referee/AppFooter.vue'
-
-// specator components
-import ScoreBoard from '@/components/spectator/ScoreBoard.vue'
+// imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+import { useSocketStore } from '@/store/socketStore'
+import { useViewStore } from '@/store/viewStore'
+import TopBar from '@/components/spectator/TopBar.vue'
 import PlayingField from '@/components/spectator/PlayingField.vue'
-import Player from '@/components/spectator/Player.vue'
+import { storeToRefs } from 'pinia'
+import startMenu from '@/components/start-menu/StartMenu.vue'
+import { useReportStore } from '@/store/reportStore'
+import RefereeApp from '@/components/referee/RefereeApp.vue'
 
-// variable whether the referee view or the spectator view is active
-const refereeView: Ref<boolean> = ref(true)
-
-// connect to websocket
-const mainStore = useMainStore()
-mainStore.connectToWebsocket()
-
-defineExpose({ refereeView })
+// use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const reportStore = useReportStore()
+const { gameReport } = storeToRefs(reportStore)
+const socketStore = useSocketStore()
+const { socket } = storeToRefs(socketStore)
+const viewStore = useViewStore()
+const { refereeView } = storeToRefs(viewStore)
 </script>
 
+// STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
+@use '@/assets/global.scss';
+
 #app {
-  #refereeView {
-    font-family: 'DejaVu Sans Mono', monospace;
-  }
+  background-color: global.$bgColorDarker;
+  overflow: hidden;
 
   #spectatorView {
-    background-color: #252525;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     height: 100vh;
     width: 100vw;
+    overflow: hidden;
+
+    #outerWrapper {
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      max-width: 100vw;
+      max-height: 100vh;
+      overflow: hidden;
+
+      #innerWrapper {
+        border-radius: 5px;
+      }
+    }
   }
 }
 </style>

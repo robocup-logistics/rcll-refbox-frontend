@@ -8,13 +8,14 @@
     "dev": "vite"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@fortawesome/free-brands-svg-icons": "^5.15.1",
-    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@floating-ui/vue": "^1.0.2",
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-brands-svg-icons": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "axios": "^1.4.0",
-    "bootswatch": "^5.2.3",
     "jquery": "^3.5.1",
+    "mongodb": "^6.1.0",
     "pinia": "^2.0.36",
     "vue": "^3.3.2",
     "vue3-shortkey": "^4.0.0"

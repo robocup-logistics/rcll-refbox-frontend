@@ -1,134 +1,91 @@
-import { ref } from 'vue'
-import type { Ref } from 'vue'
+import { ref, computed } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
 import { defineStore } from 'pinia'
+import type Robot from '@/types/Robot'
 
-import { useMainStore } from '@/store/mainStore'
+import { useGameStore } from '@/store/gameStore'
 
 export const useRobotStore = defineStore('robotStore', () => {
-  // use other stores
-  const mainStore = useMainStore()
+  // USE OTHER STORES  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  const gameStore = useGameStore()
 
-  const robotsCyan: Ref<any[]> = ref([])
-  const robotsMagenta: Ref<any[]> = ref([])
+  // CONSTANTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  const MAX_MAINTENANCE_CYCLES = 2
 
-  function addCyanRobot({ newRobot, index }) {
+  // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  const robots: Ref<Robot[]> = ref([])
+
+  // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // robots by color
+  const robotsByColor: ComputedRef<(color: string) => Robot[]> = computed(
+    () => {
+      return (color: string) => {
+        return robots.value.filter((robot) => robot.team_color == color)
+      }
+    }
+  )
+
+  // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  function addRobot(robotArg: Robot, index: number) {
     if (index === -1) {
-      robotsCyan.value.push(newRobot)
+      robots.value.push(robotArg)
     } else {
-      // replace the information of the corresponding robot object in the array with the payload coming from the websocket
-      robotsCyan.value.splice(index, 1, newRobot)
+      robots.value.splice(index, 1, robotArg)
     }
   }
 
-  function addMagentaRobot({ newRobot, index }) {
-    if (index === -1) {
-      robotsMagenta.value.push(newRobot)
-    } else {
-      // replace the information of the corresponding robot object in the array with the payload coming from the websocket
-      robotsMagenta.value.splice(index, 1, newRobot)
-    }
+  function setRobotsAtReconnect(newRobots: Robot[]) {
+    robots.value = newRobots
+    sortRobotsByNumber()
   }
 
-  function setCyanRobotsAtReconnect(newRobots) {
-    robotsCyan.value = newRobots
-    sortByRobotsNumber(robotsCyan.value)
-  }
+  function setRobotInformation(robotArg: Robot) {
+    if (robotsByColor.value(robotArg['team_color']).length < 3) {
+      // populate and make sure that there arent any duplicates
+      const index = robots.value.findIndex(
+        (robotFi) => robotFi.name === robotArg.name
+      )
 
-  function setMagentaRobotsAtReconnect(newRobots) {
-    robotsMagenta.value = newRobots
-    sortByRobotsNumber(robotsMagenta.value)
-  }
-
-  function setRobotInformation(robot) {
-    if (robot['team_color'] === 'CYAN') {
-      if (robotsCyan.value.length < 3) {
-        // populate and make sure that there arent any duplicates
-        const index = robotsCyan.value.findIndex(
-          (robotCyan) => robotCyan.name === robot.name
-        )
-
-        if (index === -1) {
-          addCyanRobot({ newRobot: robot, index })
-          sortByRobotsNumber(robotsCyan.value)
-        }
-
-        if (
-          (mainStore.phase !== 'PRE_GAME' || mainStore.phase !== 'SETUP') &&
-          index !== -1
-        ) {
-          addCyanRobot({ newRobot: robot, index })
-        }
-      } else {
-        const index = robotsCyan.value.findIndex(
-          (robotCyan) => robotCyan.name === robot.name
-        )
-
-        if (index !== -1) {
-          addCyanRobot({ newRobot: robot, index })
-        }
+      if (index === -1) {
+        addRobot(robotArg, index)
+        sortRobotsByNumber()
+      } else if (gameStore.phase !== 'PRE_GAME') {
+        addRobot(robotArg, index)
       }
     } else {
-      if (robotsMagenta.value.length < 3) {
-        // populate and make sure that there arent any duplicates
-        const index = robotsMagenta.value.findIndex(
-          (robotMagenta) => robotMagenta.name === robot.name
-        )
+      const index = robots.value.findIndex(
+        (robotFi) => robotFi.name === robotArg.name
+      )
 
-        if (index === -1) {
-          addMagentaRobot({ newRobot: robot, index })
-          sortByRobotsNumber(robotsMagenta.value)
-        }
-
-        if (
-          (mainStore.phase !== 'PRE_GAME' || mainStore.phase !== 'SETUP') &&
-          index !== -1
-        ) {
-          addMagentaRobot({ newRobot: robot, index })
-        }
-      } else {
-        const index = robotsMagenta.value.findIndex(
-          (robotMagenta) => robotMagenta.name === robot.name
-        )
-
-        if (index !== -1) {
-          addMagentaRobot({ newRobot: robot, index })
-        }
+      if (index !== -1) {
+        addRobot(robotArg, index)
       }
     }
   }
 
-  function setRobotMaintenanceStatus({ robot, bool }) {
-    const msg = {
-      command: 'set_robot_maintenance',
-      robot_number: robot.number,
-      team_color: robot['team_color'],
-      maintenance: bool,
-    }
-    mainStore.SOCKET_SEND(msg)
-  }
-
-  function sortByRobotsNumber(robots) {
-    robots.sort((robot1, robot2) => {
+  function sortRobotsByNumber() {
+    robots.value.sort((robot1, robot2) => {
       if (robot1.number < robot2.number) {
         return -1
       }
       if (robot1.number > robot2.number) {
         return 1
       }
-      // names must be equal
       return 0
     })
   }
 
+  function reset() {
+    robots.value = []
+  }
+
+  // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   return {
-    robotsCyan,
-    robotsMagenta,
-    addCyanRobot,
-    addMagentaRobot,
-    setCyanRobotsAtReconnect,
-    setMagentaRobotsAtReconnect,
+    MAX_MAINTENANCE_CYCLES,
+    robots,
+    robotsByColor,
+    setRobotsAtReconnect,
     setRobotInformation,
-    setRobotMaintenanceStatus,
-    sortByRobotsNumber,
+    reset,
   }
 })
