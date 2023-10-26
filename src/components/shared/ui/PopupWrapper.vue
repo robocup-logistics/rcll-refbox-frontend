@@ -67,7 +67,7 @@ function placePopupOnTop() {
 // -> open/close logic
 const popupOpen = ref(false)
 function togglePopup() {
-  if ((popupOpen.value = false)) {
+  if (popupOpen.value == false) {
     placePopupOnTop()
   }
   popupOpen.value = !popupOpen.value
