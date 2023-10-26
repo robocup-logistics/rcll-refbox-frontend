@@ -5,6 +5,7 @@ export default interface Gamestate {
   _id: string // MongoDB ObjectId
   'agent-task-history': any[] // TODO
   config: any[] // TODO ?
+  'end-time'?: string
   'gamestate/POST_GAME': any // TODO ?
   'gamestate/PRODUCTION': any // TODO ?
   'gamestate/SETUP': any // TODO ?

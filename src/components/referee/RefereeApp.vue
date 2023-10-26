@@ -32,16 +32,17 @@
     >
       <!-- Confirm Delivery Modal -->
       <div class="modal-bg"></div>
-      <ConfirmDeliveryPopup
-        v-for="unconfirmedDeliveryElement in unconfirmedOrder[
-          'unconfirmed_deliveries'
-        ]"
-        :order="unconfirmedOrder"
-        :team="teamNameByColor(unconfirmedDeliveryElement.team)"
-        :color="unconfirmedDeliveryElement.team"
-        class="modal"
-        permanent
-      />
+      <div class="modal">
+        <ConfirmDeliveryPopup
+          v-for="unconfirmedDeliveryElement in unconfirmedOrder[
+            'unconfirmed_deliveries'
+          ]"
+          :order="unconfirmedOrder"
+          :team="teamNameByColor(unconfirmedDeliveryElement.team)"
+          :color="unconfirmedDeliveryElement.team"
+          permanent
+        />
+      </div>
       <!-- / End Confirm Delivery Modal -->
     </template>
   </div>

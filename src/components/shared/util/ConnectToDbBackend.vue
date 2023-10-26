@@ -3,7 +3,7 @@
   <p>Connect to the MongoDB backend</p>
   <div class="horizontal-flex" style="align-items: stretch">
     <Input
-      ref="input"
+      ref="backendUrlInput"
       type="url"
       :value="backendUrl"
       @input="(newUrl) => (backendUrl = newUrl)"
@@ -17,10 +17,17 @@
       >Connect</Button
     >
   </div>
-  <div class="report-selection" v-if="gameReportsList?.length">
+  <template class="report-selection" v-if="gameReportsList?.length">
     <p>Select a game report:</p>
+    <Input
+      :value="filter"
+      @input="(newFilter) => (filter = newFilter)"
+      placeholder="filter"
+      style="position: sticky; top: 0"
+    />
     <div
-      v-for="reportItem in gameReportsList"
+      v-if="filteredGameReportsList.length"
+      v-for="reportItem in filteredGameReportsList"
       class="report-item clickable"
       @click="selectGameReport(reportItem._id)"
     >
@@ -32,19 +39,45 @@
         }}
       </p>
       <p>{{ new Date(reportItem['start-time']).toLocaleString() }}</p>
+      <p v-if="reportItem['end-time']">
+        Duration:
+        {{
+          formatTime(
+            (new Date(reportItem['end-time']).getTime() -
+              new Date(reportItem['start-time']).getTime()) /
+              1000,
+            true
+          )
+        }}
+        minutes
+      </p>
+      <p v-else>Not ended</p>
     </div>
-  </div>
+    <template v-else>
+      <p v-if="filter">No game reports matching your filter</p>
+      <p v-else>DB does not contain any game reports</p>
+    </template>
+  </template>
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import { ref, onMounted, nextTick, type Ref, watch } from 'vue'
+import {
+  ref,
+  onMounted,
+  nextTick,
+  type Ref,
+  type ComputedRef,
+  watch,
+  computed,
+} from 'vue'
 import { storeToRefs } from 'pinia'
 import { useReportStore } from '@/store/reportStore'
-import { useSocketStore } from '@/store/socketStore'
 import Button from '@/components/shared/ui/Button.vue'
 import Input from '@/components/shared/ui/Input.vue'
+import formatTime from '@/utils/formatTime'
+import GameReport from '@/types/GameReport'
 
 // define emits  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const emit = defineEmits<{
@@ -60,27 +93,29 @@ const {
   gameReportsList,
   gameReport,
 } = storeToRefs(reportStore)
-const socketStore = useSocketStore()
 
-// review previous game  - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// request reports list  - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const backendUrl: Ref<string> = ref(DEFAULT_BACKEND_URL.value)
 async function requestGameReportsList() {
-  // then connect to db backend
   void reportStore.requestGameReportsList(backendUrl.value)
-
-  // notify parent
-  /* emit('connected') */
 }
 
+// select report - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const filter: Ref<string> = ref('')
+const filteredGameReportsList: ComputedRef<GameReport[]> = computed(() => {
+  return gameReportsList.value.filter((report) =>
+    report['report-name'].includes(filter.value)
+  )
+})
 async function selectGameReport(reportId: string) {
   void reportStore.requestGameReport(backendUrl.value, reportId)
 }
 
-// focus input on open - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const input: Ref<HTMLInputElement | null> = ref(null)
+// focus backend url input on open - - - - - - - - - - - - - - - - - - - - - - -
+const backendUrlInput: Ref<HTMLInputElement | null> = ref(null)
 onMounted(() => {
   nextTick(() => {
-    if (input.value) input.value.focus()
+    if (backendUrlInput.value) backendUrlInput.value.focus()
   })
 })
 
@@ -95,14 +130,9 @@ watch(gameReport, (newReport, oldReport) => {
 // STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
 @use '@/assets/global.scss';
-.report-selection {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  .report-item {
-    padding: 10px;
-    border-radius: 5px;
-    background-color: black;
-  }
+.report-item {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: black;
 }
 </style>

@@ -9,6 +9,7 @@
       ]"
       ref="tabGroup"
       class="order-tabs"
+      style="position: sticky; top: 0"
     >
       <template #0>
         <div class="item transparent">

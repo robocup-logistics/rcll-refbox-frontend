@@ -90,22 +90,22 @@ export const useOrderStore = defineStore('orderStore', () => {
 
   // set one order
   function setOrder(orderArg: Order): void {
-    // add the order to the array (if not full) or replace existing order with
-    // same id
     const index = orders.value.findIndex((order) => order.id === orderArg.id)
+    // add the order to the array if it does not exist yet
     if (index === -1 && orders.value.length < orderCount.value) {
       orders.value.push(orderArg)
+      // if we have received all orders, sort them and populate products array if
+      // this has not been already done
+      if (orders.value.length === orderCount.value) {
+        sortOrdersById()
+        if (!products.value.length) {
+          populateProducts()
+        }
+      }
     }
+    // if the order already exists, replace it
     if (index !== -1) {
       orders.value.splice(index, 1, orderArg)
-    }
-    // if we have received all orders, sort them and populate products array if
-    // this has not been already done
-    if (orders.value.length === orderCount.value) {
-      sortOrdersById()
-      if (!products.value.length) {
-        populateProducts()
-      }
     }
   }
 

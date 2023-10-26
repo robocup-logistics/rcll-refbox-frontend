@@ -10,8 +10,10 @@
         v-if="!permanent"
       />
     </div>
-    <div class="popup-body">
-      <slot></slot>
+    <div class="wrapper">
+      <div class="popup-content">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -47,36 +49,40 @@ const togglePopup = inject('togglePopup') as Function
   text-align: left;
   color: white;
 
-  overflow: auto;
+  /* * {
+    flex-shrink: 0;
+  } */
+
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
   .popup-header {
+    width: 100%;
     /* so items in the body do not appear on top */
     z-index: 2;
+    background-color: rgba(global.$accentColor, 0.8);
 
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
-    height: 60px;
-    padding: 0 15px 0 15px;
+    border-radius: 5px;
+    padding: 10px 15px;
     text-transform: unset;
-
-    background-color: rgba(global.$accentColor, 0.8);
-
-    position: sticky;
-    top: 0;
 
     h1 {
       font-size: 20px;
     }
   }
-  .popup-body {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 
-    max-width: 100%;
-    padding: 15px;
+  .wrapper {
+    overflow: auto;
+    .popup-content {
+      display: grid;
+      gap: 10px;
+    }
   }
 }
 </style>

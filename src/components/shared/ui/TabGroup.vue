@@ -46,5 +46,7 @@ defineExpose({ active })
 .tab-group {
   align-items: stretch !important;
   padding-bottom: 5px;
+  border-radius: 5px;
+  background-color: global.$bgColor;
 }
 </style>

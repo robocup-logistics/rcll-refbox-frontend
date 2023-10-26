@@ -93,12 +93,7 @@ function confirmOrder(order: Order, bool: boolean): void {
   }
 
   socketStore.SOCKET_SEND(msg)
-  togglePopup()
 }
-
-// popup - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// -> close
-const togglePopup = inject('togglePopup') as Function
 </script>
 
 // STYLE -----------------------------------------------------------------------
