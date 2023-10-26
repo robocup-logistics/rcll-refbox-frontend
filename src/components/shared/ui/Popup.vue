@@ -44,7 +44,7 @@ const togglePopup = inject('togglePopup') as Function
   max-height: 50vh;
 
   border-radius: 5px;
-  background-color: rgba(global.$bgColor, 0.9);
+  background-color: rgba(global.$bgColor, 0.95);
   box-shadow: 0 0 6px 3px rgba(global.$bgColor, 0.8);
   text-align: left;
   color: white;
