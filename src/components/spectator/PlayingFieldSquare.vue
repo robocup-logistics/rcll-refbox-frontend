@@ -54,7 +54,7 @@ const machine: ComputedRef<Machine | undefined> = computed(() => {
     right: 10px;
 
     font-size: 10px;
-    color: global.$bgColorDarker;
+    color: global.$bgColor;
   }
 
   &:hover {

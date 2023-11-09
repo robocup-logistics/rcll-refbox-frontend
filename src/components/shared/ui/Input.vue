@@ -63,9 +63,16 @@ defineExpose({ getValue, focus })
     outline: none;
     width: 100%;
     height: 100%;
+    background-color: global.$bgColorLighter;
+    color: white;
+    font-size: 15px;
 
     &:focus + .underline {
       width: calc(100% - 10px);
+    }
+
+    &::placeholder {
+      color: #909090;
     }
   }
 

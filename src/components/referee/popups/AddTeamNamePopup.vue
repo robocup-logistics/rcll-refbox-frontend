@@ -32,7 +32,7 @@ import Color from '@/types/Color'
 import Input from '@/components/shared/ui/Input.vue'
 import Button from '@/components/shared/ui/Button.vue'
 import { storeToRefs } from 'pinia'
-import SetTeamNameOutMsg from '@/types/messages/SetTeamNameOutMsg'
+import SetTeamNameOutMsg from '@/types/messages/outgoing/SetTeamNameOutMsg'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const props = defineProps({

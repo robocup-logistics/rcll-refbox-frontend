@@ -6,7 +6,7 @@
       <span>Type: {{ machineTypeNames.get(machine.mtype) }}</span>
       <PopupWrapper>
         <template #reference>
-          <font-awesome-icon class="clickable" icon="fa-solid fa-info-circle" />
+          <font-awesome-icon class="clickable" icon="fa-info-circle" />
         </template>
         <Popup :title="machineTypeNames.get(machine.mtype)"
           ><p>{{ machineTypeDescriptions.get(machine.mtype) }}</p></Popup
@@ -23,7 +23,7 @@
       >
         <img :src="`/rings/${ringColor}.svg`" :alt="ringColor" />
         <div class="horizontal-flex">
-          <font-awesome-icon icon="fa-solid fa-coins" />
+          <font-awesome-icon icon="fa-coins" />
           <p>
             {{
               ringspecs.find((ringspec) => ringspec.color == ringColor)

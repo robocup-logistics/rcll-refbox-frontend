@@ -1,6 +1,6 @@
 <template>
-  <AutoScrollContainer :watch-data="infoMessages" class="item refbox-log">
-    <div v-for="(msg, index) in infoMessages" :key="index">
+  <AutoScrollContainer :watch-data="messagesToDisplay" class="item refbox-log">
+    <div v-for="(msg, index) in messagesToDisplay" :key="index">
       <p v-if="msg.level === 'attention'" class="message text-danger">
         <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
         {{ msg.text }}
@@ -27,7 +27,7 @@ import AutoScrollContainer from '@/components/shared/ui/AutoScrollContainer.vue'
 import '@/assets/global.scss'
 
 const socketStore = useSocketStore()
-const { infoMessages } = storeToRefs(socketStore)
+const { messagesToDisplay } = storeToRefs(socketStore)
 </script>
 
 <style scoped lang="scss">

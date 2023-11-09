@@ -1,10 +1,10 @@
-import AddPointsTeamOutMsg from '@/types/messages/AddPointsTeamOutMsg'
-import ConfirmDeliveryOutMsg from '@/types/messages/ConfirmDeliveryOutMsg'
-import SetTeamNameOutMsg from '@/types/messages/SetTeamNameOutMsg'
-import SetGamephaseOutMsg from '@/types/messages/SetGamephaseOutMsg'
-import SetGamestateOutMsg from '@/types/messages/SetGamestateOutMsg'
-import RandomizeFieldOutMsg from '@/types/messages/RandomizeFieldOutMsg'
-import SetRobotMaintenanceOutMsg from '@/types/messages/RobotMainenanceOutMsg'
+import AddPointsTeamOutMsg from '@/types/messages/outgoing/AddPointsTeamOutMsg'
+import ConfirmDeliveryOutMsg from '@/types/messages/outgoing/ConfirmDeliveryOutMsg'
+import SetTeamNameOutMsg from '@/types/messages/outgoing/SetTeamNameOutMsg'
+import SetGamephaseOutMsg from '@/types/messages/outgoing/SetGamephaseOutMsg'
+import SetGamestateOutMsg from '@/types/messages/outgoing/SetGamestateOutMsg'
+import RandomizeFieldOutMsg from '@/types/messages/outgoing/RandomizeFieldOutMsg'
+import SetRobotMaintenanceOutMsg from '@/types/messages/outgoing/RobotMainenanceOutMsg'
 
 type OutgoingMessage =
   | AddPointsTeamOutMsg

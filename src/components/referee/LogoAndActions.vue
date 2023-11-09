@@ -4,49 +4,50 @@
     <div class="horizontal-flex">
       <PopupWrapper popup-position="bottom">
         <template #reference>
-          <font-awesome-icon
-            icon="fa-link"
-            style="color: green"
-            v-if="socket"
-            class="clickable"
-            title="[Connection established] Connect"
-          />
+          <PillButton description="Connect" title="Connect">
+            <font-awesome-icon
+              icon="fa-link"
+              style="color: green"
+              v-if="socket"
+              class="clickable"
+              title="[Connection established]"
+            />
 
-          <font-awesome-icon
-            icon="fa-unlink"
-            style="color: red"
-            v-else
-            class="clickable"
-            title="[No connection] Connect"
-          />
+            <font-awesome-icon
+              icon="fa-unlink"
+              style="color: red"
+              v-else
+              class="clickable"
+              title="[No connection]"
+            />
+          </PillButton>
         </template>
         <ConnectToWebsocketPopup></ConnectToWebsocketPopup>
       </PopupWrapper>
       <PopupWrapper popup-position="bottom">
         <template #reference>
-          <font-awesome-icon
-            icon="fa-random"
-            class="clickable"
-            v-shortkey.once="['f1']"
-            title="Randomize Field"
-          />
+          <PillButton description="Field" title="Randomize Field">
+            <font-awesome-icon
+              icon="fa-random"
+              class="clickable"
+              v-shortkey.once="['f1']"
+            />
+          </PillButton>
         </template>
         <ConfirmFieldRandomizationPopup></ConfirmFieldRandomizationPopup>
       </PopupWrapper>
-      <font-awesome-icon
-        icon="fa-eye"
-        class="clickable"
-        title="Switch to spectator view"
-        @click.prevent="switchToSpectatorView"
-        @shortkey="switchToSpectatorView"
-      />
+      <PillButton description="View" title="Switch to spectator view">
+        <font-awesome-icon
+          icon="fa-eye"
+          class="clickable"
+          @click.prevent="switchToSpectatorView"
+          @shortkey="switchToSpectatorView"
+      /></PillButton>
       <PopupWrapper popup-position="bottom">
         <template #reference>
-          <font-awesome-icon
-            icon="fa-question"
-            class="clickable"
-            title="Help"
-          />
+          <PillButton description="help" title="Help">
+            <font-awesome-icon icon="fa-question" class="clickable" />
+          </PillButton>
         </template>
         <HelpPopup></HelpPopup>
       </PopupWrapper>
@@ -62,6 +63,7 @@ import ConnectToWebsocketPopup from '@/components/spectator/popups/ConnectToWebs
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import ConfirmFieldRandomizationPopup from '@/components/referee/popups/ConfirmFieldRandomizationPopup.vue'
 import HelpPopup from '@/components/referee/popups/HelpPopup.vue'
+import PillButton from '@/components/shared/ui/PillButton.vue'
 
 const socketStore = useSocketStore()
 const { socket } = storeToRefs(socketStore)

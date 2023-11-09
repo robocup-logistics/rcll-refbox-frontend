@@ -102,18 +102,6 @@ export const useGameStore = defineStore('gameStore', () => {
       )
   })
 
-  const totalTime: ComputedRef<number> = computed(() => {
-    if (phase.value == 'PRE_GAME') {
-      return 0
-    } else if (phase.value == 'SETUP') {
-      return gametime.value
-    } else if (phase.value == 'PRODUCTION' || phase.value == 'POST_GAME') {
-      return ruleStore.SETUP_DURATION + gametime.value
-    } else {
-      return 999999999999999
-    }
-  })
-
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // set gamestate information
   function setGamestateInformation(gamestateArg: Gamestate) {
@@ -155,7 +143,6 @@ export const useGameStore = defineStore('gameStore', () => {
     scoreByColor,
     awardedPointsByColor,
     awardedPointsByColorAndOrder,
-    totalTime,
     setGamestateInformation,
     reset,
   }

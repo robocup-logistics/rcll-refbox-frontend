@@ -7,10 +7,10 @@
         @click="handlePhaseClick('PRE_GAME')"
       >
         <div v-if="phase == 'PRE_GAME'">
-          <font-awesome-icon icon="fa-solid fa-play" />
+          <font-awesome-icon icon="fa-play" />
           <p>Start game</p>
         </div>
-        <font-awesome-icon v-else icon="fa-solid fa-clock" />
+        <font-awesome-icon v-else icon="fa-clock" />
 
         <div class="after"></div>
       </div>
@@ -28,11 +28,11 @@
               {{ formatTime(gametime) }}
             </span>
             <template v-if="gamestate == 'RUNNING'">
-              <font-awesome-icon icon="fa-solid fa-pause" />
+              <font-awesome-icon icon="fa-pause" />
             </template>
             <template v-else>
               <span> (PAUSED) </span>
-              <font-awesome-icon icon="fa-solid fa-play" />
+              <font-awesome-icon icon="fa-play" />
             </template>
           </div>
         </div>
@@ -59,11 +59,11 @@
               {{ formatTime(gametime) }}
             </span>
             <template v-if="gamestate == 'RUNNING'">
-              <font-awesome-icon icon="fa-solid fa-pause" />
+              <font-awesome-icon icon="fa-pause" />
             </template>
             <template v-else>
               <span> (PAUSED) </span>
-              <font-awesome-icon icon="fa-solid fa-play" />
+              <font-awesome-icon icon="fa-play" />
             </template>
           </div>
         </div>
@@ -76,7 +76,7 @@
         @click="handlePhaseClick('POST_GAME')"
       >
         <div class="before"></div>
-        <font-awesome-icon icon="fa-solid fa-flag-checkered" />
+        <font-awesome-icon icon="fa-flag-checkered" />
       </div>
     </div>
   </div>
@@ -87,7 +87,6 @@ import { storeToRefs } from 'pinia'
 import formatTime from '@/utils/formatTime'
 import { useGameStore } from '@/store/gameStore'
 import { useSocketStore } from '@/store/socketStore'
-import State from '@/types/State'
 import Phase from '@/types/Phase'
 import { useRuleStore } from '@/store/ruleStore'
 import { ComputedRef, computed } from 'vue'
@@ -135,8 +134,8 @@ function handlePhaseClick(newPhase: Phase) {
 
   .phase-bar {
     $arrowWidth: 15px;
-    $bgColor: global.$bgColorDarker;
-    $neutralColor: global.$bgColor;
+    $bgColor: global.$bgColor;
+    $neutralColor: global.$itemColor;
     $activeColor: global.$accentColor;
     $activeColorDarker: global.$accentColorDarker;
     flex-grow: 1;

@@ -31,18 +31,15 @@
       :key="unconfirmedOrder.id"
     >
       <!-- Confirm Delivery Modal -->
-      <div class="modal-bg"></div>
-      <div class="modal">
-        <ConfirmDeliveryPopup
-          v-for="unconfirmedDeliveryElement in unconfirmedOrder[
-            'unconfirmed_deliveries'
-          ]"
-          :order="unconfirmedOrder"
-          :team="teamNameByColor(unconfirmedDeliveryElement.team)"
-          :color="unconfirmedDeliveryElement.team"
-          permanent
-        />
-      </div>
+      <ConfirmDeliveryPopup
+        v-for="unconfirmedDeliveryElement in unconfirmedOrder[
+          'unconfirmed_deliveries'
+        ]"
+        :order="unconfirmedOrder"
+        :team="teamNameByColor(unconfirmedDeliveryElement.team)"
+        :color="unconfirmedDeliveryElement.team"
+        permanent
+      />
       <!-- / End Confirm Delivery Modal -->
     </template>
   </div>
@@ -97,24 +94,6 @@ const { unconfirmedOrders } = storeToRefs(orderStore)
   .footer {
     flex-grow: 1;
     min-height: 0;
-  }
-
-  .modal-bg {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background-color: black;
-    opacity: 0.7;
-    z-index: 999;
-  }
-  .modal {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
   }
 }
 </style>

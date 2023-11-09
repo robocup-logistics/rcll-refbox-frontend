@@ -12,19 +12,13 @@
         >
           <template #spectator>
             <div class="horizontal-flex">
-              <font-awesome-icon
-                icon="fa-solid fa-eye"
-                style="font-size: 12px"
-              />
+              <font-awesome-icon icon="fa-eye" />
               <span>Spectator</span>
             </div>
           </template>
           <template #referee
             ><div class="horizontal-flex">
-              <font-awesome-icon
-                icon="fa-solid fa-user-tie"
-                style="font-size: 12px"
-              />
+              <font-awesome-icon icon="fa-user-tie" />
               <span>Referee</span>
             </div></template
           >

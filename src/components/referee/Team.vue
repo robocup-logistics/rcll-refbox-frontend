@@ -1,7 +1,7 @@
 <template>
-  <div :class="['item transparent team', color]">
+  <div class="item team">
     <!-- TEAM NAME / ADD TEAM NAME -->
-    <div class="item transparent team-name">
+    <div :class="['item transparent team team-name', color]">
       <h4 v-if="teamName">
         {{ teamName }}
       </h4>
@@ -65,6 +65,7 @@ const { phase } = storeToRefs(gameStore)
   .team-name {
     padding: 5px;
     color: black;
+    flex-grow: none;
   }
   .team-assets {
     padding-top: 10px;

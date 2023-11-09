@@ -25,7 +25,7 @@
       <span>This order is competitive</span>
       <PopupWrapper>
         <template #reference>
-          <font-awesome-icon class="clickable" icon="fa-solid fa-info-circle" />
+          <font-awesome-icon class="clickable" icon="fa-info-circle" />
         </template>
         <Popup title="Competitive orders">
           <p>

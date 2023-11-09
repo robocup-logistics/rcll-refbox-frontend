@@ -101,7 +101,6 @@ watch(playingField, (newPlayingField, _) => {
 @use '@/assets/global.scss';
 
 #playingFieldWrapper {
-  padding: 10px;
   height: fit-content;
   width: fit-content;
 

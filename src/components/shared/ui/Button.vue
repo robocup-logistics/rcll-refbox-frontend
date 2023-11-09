@@ -7,11 +7,11 @@
   >
     <template v-if="loading">
       <span>Loading</span>
-      <font-awesome-icon icon="fa-solid fa-spinner" spin />
+      <font-awesome-icon icon="fa-spinner" spin />
     </template>
     <template v-else>
       <slot></slot>
-      <font-awesome-icon v-if="icon" :icon="`fa-solid ${icon}`" />
+      <font-awesome-icon v-if="icon" :icon="icon" />
     </template>
   </button>
 </template>
@@ -38,6 +38,7 @@ button {
   padding: 7px 10px;
   border-radius: 5px;
   color: white;
+  font-size: 15px;
   background-color: global.$bgColorLighter;
   flex-grow: 0 !important;
   overflow-x: hidden !important;

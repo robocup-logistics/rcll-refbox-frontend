@@ -6,13 +6,13 @@
         <!-- TITLE (depending on live or review mode) -->
         <template v-if="socket">
           <div class="horizontal-flex" style="color: green">
-            <font-awesome-icon icon="fa-solid fa-circle" />
+            <font-awesome-icon icon="fa-circle" />
             <span>Live</span>
           </div>
         </template>
         <template v-else-if="gameReport">
           <div class="horizontal-flex">
-            <font-awesome-icon icon="fa-solid fa-folder-open" />
+            <font-awesome-icon icon="fa-folder-open" />
             <div>
               <span>{{
                 gameReport['report-name'].length
@@ -29,40 +29,46 @@
         <!-- TOP MENU ROW -->
         <div class="horizontal-flex">
           <!-- CONNECT TO A LIVE GAME -->
+
           <PopupWrapper popup-position="bottom">
             <template #reference>
-              <font-awesome-icon
-                class="clickable"
-                icon="fa-solid fa-link"
-                title="Connect to live game"
-              />
+              <PillButton description="Live" title="Connect to live game">
+                <font-awesome-icon class="clickable" icon="fa-link" />
+              </PillButton>
             </template>
             <ConnectToWebsocketPopup></ConnectToWebsocketPopup>
           </PopupWrapper>
+
           <!-- REVIEW A PREVIOUSLY PLAYED AND RECORDED GAME -->
+
           <PopupWrapper popup-position="bottom">
             <template #reference>
-              <font-awesome-icon
-                class="clickable"
-                icon="fa-solid fa-folder-open"
+              <PillButton
+                description="DB"
                 title="Connect to previous game summary"
-              />
+              >
+                <font-awesome-icon class="clickable" icon="fa-folder-open" />
+              </PillButton>
             </template>
             <ConnectToDbBackendPopup></ConnectToDbBackendPopup>
           </PopupWrapper>
+
           <!-- AUTHENTICATE AS REFEREE AND SWITCH VIEW -->
-          <font-awesome-icon
-            @click="authenticateAndSwitchView"
-            class="clickable"
-            icon="fa-solid fa-user-tie"
-            title="Switch to referee mode"
+          <PillButton
+            description="View"
             v-if="socket"
-          />
+            title="Switch to referee mode"
+          >
+            <font-awesome-icon
+              @click="authenticateAndSwitchView"
+              class="clickable"
+              icon="fa-user-tie"
+          /></PillButton>
           <!--  <PopupWrapper popup-position="bottom">
             <template #reference>
               <font-awesome-icon
                 class="clickable"
-                icon="fa-solid fa-user-tie"
+                icon="fa-user-tie"
                 title="Switch to referee mode"
               />
             </template>
@@ -76,7 +82,7 @@
                 <font-awesome-icon
                   @click="authenticateAndSwitchView"
                   class="clickable"
-                  icon="fa-solid fa-paper-plane"
+                  icon="fa-paper-plane"
                 />
               </div>
             </Popup>
@@ -97,6 +103,7 @@ import { useViewStore } from '@/store/viewStore'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import ConnectToDbBackendPopup from '@/components/spectator/popups/ConnectToDbBackendPopup.vue'
 import ConnectToWebsocketPopup from '@/components/spectator/popups/ConnectToWebsocketPopup.vue'
+import PillButton from '@/components/shared/ui/PillButton.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const reportStore = useReportStore()
@@ -116,16 +123,10 @@ function authenticateAndSwitchView() {
 @use '@/assets/global.scss';
 
 #menuBoard {
-  height: 100%;
-
   .item {
     display: flex;
     flex-direction: column;
     gap: 15px;
-
-    .clickable {
-      font-size: 1.5em;
-    }
   }
 }
 </style>

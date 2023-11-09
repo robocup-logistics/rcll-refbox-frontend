@@ -4,13 +4,13 @@
     <div class="popup-header">
       <h1 v-html="title" class="uppercase"></h1>
       <font-awesome-icon
-        icon="fa-solid fa-xmark"
+        icon="fa-xmark"
         class="clickable"
         @click="togglePopup"
         v-if="!permanent"
       />
     </div>
-    <div class="wrapper">
+    <div class="wrapper" ref="scrollContainer">
       <div class="popup-content">
         <slot></slot>
       </div>
@@ -21,7 +21,7 @@
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import { inject } from 'vue'
+import { type Ref, inject, ref, provide } from 'vue'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 defineProps({
@@ -30,6 +30,16 @@ defineProps({
 })
 
 // popup - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// -> scroll to top
+const scrollContainer: Ref<HTMLDivElement | null> = ref(null)
+function scrollToTop() {
+  if (scrollContainer.value) {
+    console.log(scrollContainer.value)
+    scrollContainer.value.scrollTo({ top: 0 })
+  }
+}
+provide('scrollToTop', scrollToTop)
+
 // -> close
 const togglePopup = inject('togglePopup') as Function
 </script>
@@ -62,18 +72,22 @@ const togglePopup = inject('togglePopup') as Function
     width: 100%;
     /* so items in the body do not appear on top */
     z-index: 2;
-    background-color: rgba(global.$accentColor, 0.8);
 
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
-    border-radius: 5px;
-    padding: 10px 15px;
+
     text-transform: unset;
 
     h1 {
       font-size: 20px;
+      background-color: global.$accentColor;
+      border-radius: 5px;
+    }
+
+    * {
+      padding: 5px 10px;
     }
   }
 

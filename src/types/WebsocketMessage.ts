@@ -12,7 +12,8 @@ export default interface WebsocketMessage {
     | 'known-teams'
   // level != clips
   message?: string
-  time?: string
+  time_to_display?: string
+  game_time?: number
   component?: string
   text?: string
   // special info depending on type

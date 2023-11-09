@@ -1,7 +1,4 @@
-import type Phase from '@/types/Phase'
-import type State from '@/types/State'
-
-export default interface Gamestate {
+export default interface GameReport {
   _id: string // MongoDB ObjectId
   'agent-task-history': any[] // TODO
   config: any[] // TODO ?

@@ -1,18 +1,10 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <div id="topBar">
-    <div class="board-wrapper">
-      <GameInfoBoard></GameInfoBoard>
-    </div>
-    <div class="board-wrapper">
-      <ScoreBoard></ScoreBoard>
-    </div>
-    <div class="board-wrapper" v-if="['PRODUCTION'].includes(phase)">
-      <OrdersBoard></OrdersBoard>
-    </div>
-    <div class="board-wrapper">
-      <MenuBoard></MenuBoard>
-    </div>
+    <GameInfoBoard />
+    <ScoreBoard />
+    <OrdersBoard v-if="['PRODUCTION'].includes(phase)" />
+    <MenuBoard />
   </div>
 </template>
 
@@ -41,13 +33,6 @@ const { phase } = storeToRefs(gameStore)
 
   display: flex;
   justify-content: space-between;
-
-  .board-wrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    padding: 10px;
-    gap: 10px;
-  }
+  gap: 10px;
 }
 </style>

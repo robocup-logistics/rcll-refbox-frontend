@@ -62,10 +62,7 @@
         >
         <PopupWrapper popup-position="bottom">
           <template #reference>
-            <font-awesome-icon
-              class="clickable"
-              icon="fa-solid fa-info-circle"
-            />
+            <font-awesome-icon class="clickable" icon="fa-info-circle" />
           </template>
           <OrderPopup
             :order="<Order>orderById(parseInt(tabGroup.active))"

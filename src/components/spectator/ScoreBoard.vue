@@ -28,19 +28,16 @@
         <div class="section left">
           <div class="item CYAN">
             <div class="horizontal-flex">
-              <font-awesome-icon icon="fa-solid fa-truck" />
+              <font-awesome-icon icon="fa-truck" />
               <p>{{ ordersDeliveredByTeam(teamNameByColor('CYAN')).length }}</p>
-              <font-awesome-icon icon="fa-solid fa-trophy" />
+              <font-awesome-icon icon="fa-trophy" />
               <p>{{ scoreByColor('CYAN') }}</p>
               <PopupWrapper
                 v-if="scoreByColor('CYAN') != 0"
                 popup-position="bottom"
               >
                 <template #reference>
-                  <font-awesome-icon
-                    class="clickable"
-                    icon="fa-solid fa-info-circle"
-                  />
+                  <font-awesome-icon class="clickable" icon="fa-info-circle" />
                 </template>
                 <ScoreDetailsPopup
                   team="CYAN"
@@ -53,22 +50,19 @@
           </div>
           <div class="item MAGENTA">
             <div class="horizontal-flex">
-              <font-awesome-icon icon="fa-solid fa-truck" />
+              <font-awesome-icon icon="fa-truck" />
               <p>
                 {{ ordersDeliveredByTeam(teamNameByColor('MAGENTA')).length }}
               </p>
 
-              <font-awesome-icon icon="fa-solid fa-trophy" />
+              <font-awesome-icon icon="fa-trophy" />
               <p>{{ scoreByColor('MAGENTA') }}</p>
               <PopupWrapper
                 v-if="scoreByColor('MAGENTA') != 0"
                 popup-position="bottom"
               >
                 <template #reference>
-                  <font-awesome-icon
-                    class="clickable"
-                    icon="fa-solid fa-info-circle"
-                  />
+                  <font-awesome-icon class="clickable" icon="fa-info-circle" />
                 </template>
                 <ScoreDetailsPopup
                   team="MAGENTA"
@@ -107,8 +101,6 @@ const { ordersDeliveredByTeam } = storeToRefs(orderStore)
 @use '@/assets/global.scss';
 
 #teamsBoard {
-  height: 100%;
-
   display: flex;
   align-items: left;
   gap: 10px;

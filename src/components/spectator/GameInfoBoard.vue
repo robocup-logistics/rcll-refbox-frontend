@@ -1,13 +1,14 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div id="gameInfoBoard">
+  <div id="gameInfoBoard" class="horizontal-flex">
+    <ReportOptionsBar v-if="gameReport" />
     <div class="section">
       <!-- TOP PHASE DISPLAY -->
       <div class="item transparent">
         <div class="horizontal-flex phase-bar">
           <!-- PRE GAME -->
           <div :class="['arrow', { active: phase == 'PRE_GAME' }]">
-            <font-awesome-icon icon="fa-solid fa-clock" />
+            <font-awesome-icon icon="fa-clock" />
             <div class="after"></div>
           </div>
           <!-- SETUP -->
@@ -20,7 +21,7 @@
                   <template #reference>
                     <font-awesome-icon
                       class="clickable"
-                      icon="fa-solid fa-info-circle"
+                      icon="fa-info-circle"
                     />
                   </template>
                   <Popup title="Setup phase">
@@ -58,7 +59,7 @@
                   <template #reference>
                     <font-awesome-icon
                       class="clickable"
-                      icon="fa-solid fa-info-circle"
+                      icon="fa-info-circle"
                     />
                   </template>
                   <Popup title="Production phase">
@@ -96,7 +97,7 @@
                   <template #reference>
                     <font-awesome-icon
                       class="clickable"
-                      icon="fa-solid fa-info-circle"
+                      icon="fa-info-circle"
                     />
                   </template>
                   <OvertimePopup></OvertimePopup>
@@ -118,7 +119,7 @@
           <!-- POST GAME -->
           <div :class="['arrow', { active: phase == 'POST_GAME' }]">
             <div class="before"></div>
-            <font-awesome-icon icon="fa-solid fa-flag-checkered" />
+            <font-awesome-icon icon="fa-flag-checkered" />
           </div>
         </div>
       </div>
@@ -140,7 +141,7 @@
           </template>
           <!-- POST GAME: WINNER -->
           <template v-else-if="phase == 'POST_GAME'">
-            <font-awesome-icon icon="fa-solid fa-trophy" />
+            <font-awesome-icon icon="fa-trophy" />
             <p v-html="winnerText"></p>
           </template>
           <template v-else>
@@ -159,16 +160,20 @@ import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGameStore } from '@/store/gameStore'
+import { useReportStore } from '@/store/reportStore'
 import { useRuleStore } from '@/store/ruleStore'
 import formatTime from '@/utils/formatTime'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import Popup from '@/components/shared/ui/Popup.vue'
 import OvertimePopup from '@/components/spectator/popups/OvertimePopup.vue'
+import ReportOptionsBar from '@/components/spectator/ReportOptionsBar.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
 const { phase, gamestate, gametime, overtime, teamNameByColor, scoreByColor } =
   storeToRefs(gameStore)
+const reportStore = useReportStore()
+const { gameReport } = storeToRefs(reportStore)
 const ruleStore = useRuleStore()
 const { SETUP_DURATION, PRODUCTION_DURATION, OVERTIME_DURATION } =
   storeToRefs(ruleStore)
@@ -210,12 +215,10 @@ const winnerText: ComputedRef<string> = computed(() => {
 @use '@/assets/global.scss';
 
 #gameInfoBoard {
-  height: 100%;
-
   .phase-bar {
     $arrowWidth: 15px;
-    $bgColor: global.$bgColorDarker;
-    $neutralColor: global.$bgColor;
+    $bgColor: global.$bgColor;
+    $neutralColor: global.$itemColor;
     $activeColor: global.$accentColor;
     $activeColorDarker: global.$accentColorDarker;
     flex-grow: 1;

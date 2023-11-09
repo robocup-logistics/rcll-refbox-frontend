@@ -9,7 +9,7 @@
           }`"
           alt="img"
         />
-        <font-awesome-icon class="info-icon" icon="fa-solid fa-info-circle" />
+        <font-awesome-icon class="info-icon" icon="fa-info-circle" />
       </div>
     </template>
     <OrderPopup :order="order"></OrderPopup>

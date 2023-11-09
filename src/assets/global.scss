@@ -3,7 +3,9 @@
 * {
   font-family: 'Lucida Console', 'Courier New', monospace;
   box-sizing: border-box;
-  scrollbar-color: $bgColorDarker transparent;
+  scrollbar-color: $bgColor transparent;
+  -webkit-user-select: none;
+  user-select: none;
 
   ::-webkit-scrollbar {
     height: 6px;
@@ -16,11 +18,11 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: $bgColorDarker;
+    background-color: $bgColorLighter;
     border-radius: 3px;
 
     &:active {
-      background: $bgColorLighter;
+      background: $bgColor;
     }
   }
 }
@@ -89,6 +91,7 @@ span {
 }
 
 .form-row {
+  align-items: stretch;
   > * {
     flex-grow: 1;
   }
@@ -118,7 +121,7 @@ span {
   gap: 2px;
 
   color: white;
-  background-color: $bgColor;
+  background-color: $itemColor;
   overflow: hidden;
 
   &.grow {
@@ -139,6 +142,10 @@ span {
   &.MAGENTA {
     color: black;
     background-color: $magentaColor;
+  }
+
+  &.item-in-item {
+    background-color: $bgColorLighter;
   }
 }
 

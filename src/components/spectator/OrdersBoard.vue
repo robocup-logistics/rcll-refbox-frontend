@@ -27,7 +27,7 @@
               >
                 <font-awesome-icon
                   v-show="parseInt(order.delivery_period[1]) - gametime <= 60"
-                  icon="fa-solid fa-hourglass"
+                  icon="fa-hourglass"
                   shake
                   style="--fa-animation-duration: 5s"
                 />
@@ -51,10 +51,7 @@
           upcoming
           <PopupWrapper popup-position="bottom" v-if="upcomingOrders.length">
             <template #reference>
-              <font-awesome-icon
-                class="clickable"
-                icon="fa-solid fa-info-circle"
-              />
+              <font-awesome-icon class="clickable" icon="fa-info-circle" />
             </template>
             <UpcomingOrdersPopup></UpcomingOrdersPopup>
           </PopupWrapper>
@@ -67,10 +64,7 @@
           expired
           <PopupWrapper popup-position="bottom" v-if="expiredOrders.length">
             <template #reference>
-              <font-awesome-icon
-                class="clickable"
-                icon="fa-solid fa-info-circle"
-              />
+              <font-awesome-icon class="clickable" icon="fa-info-circle" />
             </template>
             <ExpiredOrdersPopup></ExpiredOrdersPopup>
           </PopupWrapper>
@@ -109,8 +103,6 @@ const expiredSection: Ref<HTMLElement | null> = ref(null)
 @use '@/assets/global.scss';
 
 #ordersBoard {
-  height: 100%;
-
   .open-orders-section {
     .order-list {
       display: flex;

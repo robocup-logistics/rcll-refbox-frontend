@@ -2,8 +2,7 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import type { ComputedRef, Ref } from 'vue'
-import type WebsocketMessage from '@/types/WebsocketMessage'
-import type InfoMessage from '@/types/InfoMessage'
+import type MessageToDisplay from '@/types/messages/incoming/MessageToDisplay'
 import type AwardedPoints from '@/types/AwardedPoints'
 import type Machine from '@/types/Machine'
 import type OrderCount from '@/types/OrderCount'
@@ -11,11 +10,12 @@ import type Order from '@/types/Order'
 import type RingSpec from '@/types/Ringspec'
 import type Robot from '@/types/Robot'
 import type Gamestate from '@/types/Gamestate'
+import type IncomingMessage from '@/types/messages/IncomingMessage'
 import type OutgoingMessage from '@/types/messages/OutgoingMessage'
-import type SetGamephaseOutMsg from '@/types/messages/SetGamephaseOutMsg'
-import type SetGamestateOutMsg from '@/types/messages/SetGamestateOutMsg'
-import type RandomizeFieldOutMsg from '@/types/messages/RandomizeFieldOutMsg'
-import type SetRobotMaintenanceOutMsg from '@/types/messages/RobotMainenanceOutMsg'
+import type SetGamephaseOutMsg from '@/types/messages/outgoing/SetGamephaseOutMsg'
+import type SetGamestateOutMsg from '@/types/messages/outgoing/SetGamestateOutMsg'
+import type RandomizeFieldOutMsg from '@/types/messages/outgoing/RandomizeFieldOutMsg'
+import type SetRobotMaintenanceOutMsg from '@/types/messages/outgoing/RobotMainenanceOutMsg'
 import type Phase from '@/types/Phase'
 import type State from '@/types/State'
 
@@ -25,6 +25,7 @@ import { useOrderStore } from '@/store/orderStore'
 import { useRobotStore } from '@/store/robotStore'
 import { useReportStore } from '@/store/reportStore'
 import { useViewStore } from '@/store/viewStore'
+import ClipsMessage from '@/types/messages/incoming/ClipsMessage'
 
 // main pinia store
 export const useSocketStore = defineStore('socketStore', () => {
@@ -42,11 +43,17 @@ export const useSocketStore = defineStore('socketStore', () => {
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   const socket: Ref<WebSocket | null> = ref(null)
   const attemptingConnection: Ref<boolean> = ref(false)
-  const infoMessages: Ref<InfoMessage[]> = ref([])
+  const messagesToDisplay: Ref<MessageToDisplay[]> = ref([])
 
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  const attentionMessages: ComputedRef<InfoMessage[]> = computed(() =>
-    infoMessages.value.filter((msg) => msg.level === 'attention')
+  const attentionMessages: ComputedRef<MessageToDisplay[]> = computed(() =>
+    messagesToDisplay.value.filter(
+      (msg) =>
+        msg.level === 'attention' &&
+        gameStore.gametime >= msg['game_time'] &&
+        gameStore.gametime <=
+          msg['game_time'] + parseFloat(msg['time_to_display'])
+    )
   )
 
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -78,10 +85,10 @@ export const useSocketStore = defineStore('socketStore', () => {
 
       // configure on message
       socket.value.onmessage = (e: { data: string }) => {
-        const msg: WebsocketMessage | WebsocketMessage[] = JSON.parse(e.data)
+        const msg: IncomingMessage | IncomingMessage[] = JSON.parse(e.data)
         // first case: received message is an array of message objects
         if (Array.isArray(msg)) {
-          const msgArr = <WebsocketMessage[]>msg
+          const msgArr = <ClipsMessage[]>msg
           if (msgArr.length) {
             if (msgArr[0].type === 'machine-info') {
               machineStore.setMachineInfosAtReconnect(msgArr as Machine[])
@@ -105,12 +112,12 @@ export const useSocketStore = defineStore('socketStore', () => {
         }
         // other case: received message is a single message object
         else {
-          const msgObj = <WebsocketMessage>msg
+          const msgObj = <IncomingMessage>msg
 
           // if the level of the message object is not 'clips' it is a message
           // that is meant to be displayed (to the referee), so add it is
           if (msgObj.level !== 'clips') {
-            infoMessages.value.push(msgObj as InfoMessage)
+            messagesToDisplay.value.push(msgObj as MessageToDisplay)
           }
           // else process the messages as usual
           else if (msgObj.type === 'gamestate') {
@@ -205,7 +212,7 @@ export const useSocketStore = defineStore('socketStore', () => {
     }
     socket.value = null
     attemptingConnection.value = false
-    infoMessages.value = []
+    messagesToDisplay.value = []
   }
 
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -213,7 +220,7 @@ export const useSocketStore = defineStore('socketStore', () => {
     DEFAULT_WS_URL,
     socket,
     attemptingConnection,
-    infoMessages,
+    messagesToDisplay,
     attentionMessages,
     connectToWebsocket,
     SOCKET_DISCONNECT,
@@ -222,5 +229,6 @@ export const useSocketStore = defineStore('socketStore', () => {
     setGameState,
     randomizeField,
     setRobotMaintenanceStatus,
+    reset,
   }
 })

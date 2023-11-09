@@ -12,7 +12,5 @@ export default interface Gamestate {
   phase: Phase
   points_cyan: string // e.g. '129'
   points_magenta: string
-  prev_phase: Phase
   state: State
-  type: 'gamestate'
 }

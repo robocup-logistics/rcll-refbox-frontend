@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['item', 'machines-container', color == 'MAGENTA' ? 'rtl' : '']"
+    :class="['item', 'machines-container', 'darker', color == 'MAGENTA' ? 'rtl' : '']"
   >
         <div style="display: grid; grid-template-columns: 55px 1fr; gap: 20px;" >
           <template

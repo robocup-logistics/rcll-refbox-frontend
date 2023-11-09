@@ -1,10 +1,7 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <p>Connect to the Websocket:</p>
-  <div
-    class="horizontal-flex form-row"
-    style="width: 100%; align-items: stretch"
-  >
+  <div class="horizontal-flex form-row">
     <Input
       ref="input"
       type="url"

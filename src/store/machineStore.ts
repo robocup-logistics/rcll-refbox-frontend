@@ -21,13 +21,7 @@ export const useMachineStore = defineStore('machineStore', () => {
 
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // add machine
-  function addMachine({
-    newMachine,
-    index,
-  }: {
-    newMachine: Machine
-    index: number
-  }): void {
+  function addMachine(newMachine: Machine, index: number = -1): void {
     if (index === -1) {
       machines.value.push(newMachine)
     } else {
@@ -53,7 +47,7 @@ export const useMachineStore = defineStore('machineStore', () => {
       )
 
       if (index === -1) {
-        addMachine({ newMachine, index })
+        addMachine(newMachine)
         sortMachinesAlphabetically()
       }
     } else {
@@ -62,7 +56,7 @@ export const useMachineStore = defineStore('machineStore', () => {
       )
 
       if (index !== -1) {
-        addMachine({ newMachine, index })
+        addMachine(newMachine, index)
       }
     }
   }
@@ -97,6 +91,7 @@ export const useMachineStore = defineStore('machineStore', () => {
     machines,
     ringspecs,
     machinesByColor,
+    addMachine,
     setRingSpecs,
     setMachineInfo,
     setMachineInfosAtReconnect,

@@ -12,7 +12,7 @@
               : 'unset',
         }"
       >
-        <font-awesome-icon icon="fa-solid fa-screwdriver-wrench" />
+        <font-awesome-icon icon="fa-screwdriver-wrench" />
         <span>{{ robot.maintenance_cylces }}/2</span>
       </div>
 
@@ -23,17 +23,17 @@
       >
         <font-awesome-icon
           v-if="robot.warning_sent"
-          icon="fa-solid fa-triangle-exclamation"
+          icon="fa-triangle-exclamation"
         />
         <font-awesome-icon
           v-else-if="robot.state == 'ACTIVE'"
-          icon="fa-solid fa-circle"
+          icon="fa-circle"
           beat
           style="--fa-animation-duration: 2s"
         />
         <font-awesome-icon
           v-else-if="robot.state == 'MAINTENANCE'"
-          icon="fa-solid fa-screwdriver-wrench"
+          icon="fa-screwdriver-wrench"
           shake
           style="--fa-animation-duration: 5s"
         />
@@ -43,10 +43,7 @@
           popup-position="bottom"
         >
           <template #reference>
-            <font-awesome-icon
-              class="clickable"
-              icon="fa-solid fa-info-circle"
-            />
+            <font-awesome-icon class="clickable" icon="fa-info-circle" />
           </template>
           <Popup title="Reason">
             <p

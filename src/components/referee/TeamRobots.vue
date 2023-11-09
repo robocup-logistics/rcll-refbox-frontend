@@ -8,7 +8,8 @@
     >
       <font-awesome-icon
         v-if="robot.warning_sent"
-        icon="fa-solid fa-unlink"
+        icon="fa-unlink"
+        title="DISCONNECTED"
         class="text-danger"
       />
       <!-- ROBOT NUMBER -->
@@ -78,10 +79,10 @@ defineProps({
 })
 
 const gameStore = useGameStore()
+const { gametime } = storeToRefs(gameStore)
 const robotStore = useRobotStore()
 const ruleStore = useRuleStore()
 const socketStore = useSocketStore()
-const { totalTime } = storeToRefs(gameStore)
 const { robotsByColor } = storeToRefs(robotStore)
 const { MAINTENANCE_DURATION } = storeToRefs(ruleStore)
 
@@ -90,11 +91,12 @@ function getMaintenanceLeft(robot: Robot) {
   let res =
     robot['maintenance_start-time'] +
     MAINTENANCE_DURATION.value -
-    totalTime.value
+    gametime.value
   if (res <= 0) {
-    robot.state = 'DISQUALIFIED'
+    return '0s'
+  } else {
+    return `${res.toString().split('.')[0]}s`
   }
-  return `${res.toString().split('.')[0]}s`
 }
 
 // -> send the refbox the current maintenance status

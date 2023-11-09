@@ -16,7 +16,7 @@
 
     <AutoScrollContainer
       :watch-data="() => awardedPointsByColor(props.color)"
-      class="item"
+      class="item item-in-item"
       style="height: 100px"
     >
       <div class="points-grid">
