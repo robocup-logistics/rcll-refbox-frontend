@@ -1,5 +1,4 @@
 import Color from '@/types/Color'
-import AgentTask from '@/types/AgentTask'
 
 export default interface Robot {
   host: string // e.g. "127.0.0.1"

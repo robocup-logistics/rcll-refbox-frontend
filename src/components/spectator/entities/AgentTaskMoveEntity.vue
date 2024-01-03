@@ -6,7 +6,7 @@
         id="arrow"
         markerWidth="10"
         markerHeight="10"
-        refX="30"
+        :refX="viewStore.squareDiameterPixels * 0.3"
         refY="3"
         orient="auto"
         markerUnits="strokeWidth"
@@ -48,21 +48,27 @@ function drawArrow() {
     const robotPos = viewStore.positionOfRobot(props.robot)
     const waypointPos = viewStore.positionOfZone('M_Z34')
 
+    // set the line position
     line.value.setAttribute('x1', `${robotPos[0]}`)
     line.value.setAttribute('y1', `${robotPos[1]}`)
     line.value.setAttribute('x2', `${waypointPos[0]}`)
     line.value.setAttribute('y2', `${waypointPos[1]}`)
+
+    // make the line end appear like it stops before its real end (only pointing
+    // at it)
     line.value.setAttribute(
       'stroke-dasharray',
-      `${line.value.getTotalLength() - 50}`
+      `${line.value.getTotalLength() - viewStore.squareDiameterPixels / 2}`
     )
   }
 }
 
+// redraw arrow when window size or the robot's position changes and once
+// initially after the line element has been created
+window.addEventListener('resize', () => drawArrow())
 watch(
   () => props.robot,
   () => {
-    console.log('drawing arrow')
     drawArrow()
   },
   { immediate: true, deep: true }
@@ -70,7 +76,6 @@ watch(
 watch(
   () => line.value,
   () => {
-    console.log('drawing arrow')
     drawArrow()
   },
   { immediate: true }
