@@ -24,17 +24,12 @@
                       icon="fa-info-circle"
                     />
                   </template>
-                  <Popup title="Setup phase">
-                    <p>
-                      Duration:
-                      {{ formatTime(SETUP_DURATION) }} minutes
-                    </p>
-                  </Popup>
+                  <SetupPhasePopup />
                 </PopupWrapper>
               </div>
               <div v-if="phase == 'SETUP'">
                 <span>
-                  {{ formatTime(SETUP_DURATION - gametime) }}
+                  {{ formatTime(SETUP_DURATION - game_time) }}
                 </span>
                 <span v-if="gamestate == 'PAUSED'"> (PAUSED) </span>
               </div>
@@ -47,7 +42,7 @@
               'arrow',
               {
                 active:
-                  phase == 'PRODUCTION' && gametime <= PRODUCTION_DURATION,
+                  phase == 'PRODUCTION' && game_time <= PRODUCTION_DURATION,
               },
             ]"
           >
@@ -62,17 +57,12 @@
                       icon="fa-info-circle"
                     />
                   </template>
-                  <Popup title="Production phase">
-                    <p>
-                      Duration:
-                      {{ formatTime(PRODUCTION_DURATION) }} minutes
-                    </p>
-                  </Popup>
+                  <ProductionPhasePopup />
                 </PopupWrapper>
               </div>
               <div v-if="phase == 'PRODUCTION' && !overtime">
                 <span>
-                  {{ formatTime(PRODUCTION_DURATION - gametime) }}
+                  {{ formatTime(PRODUCTION_DURATION - game_time) }}
                 </span>
                 <span v-if="gamestate == 'PAUSED'"> (PAUSED) </span>
               </div>
@@ -85,7 +75,8 @@
             :class="[
               'arrow',
               {
-                active: phase == 'PRODUCTION' && gametime > PRODUCTION_DURATION,
+                active:
+                  phase == 'PRODUCTION' && game_time > PRODUCTION_DURATION,
               },
             ]"
           >
@@ -100,14 +91,14 @@
                       icon="fa-info-circle"
                     />
                   </template>
-                  <OvertimePopup></OvertimePopup>
+                  <OvertimePopup />
                 </PopupWrapper>
               </div>
               <div v-if="phase == 'PRODUCTION' && overtime">
                 <span>
                   {{
                     formatTime(
-                      PRODUCTION_DURATION + OVERTIME_DURATION - gametime
+                      PRODUCTION_DURATION + OVERTIME_DURATION - game_time
                     )
                   }}
                 </span>
@@ -164,13 +155,14 @@ import { useReportStore } from '@/store/reportStore'
 import { useRuleStore } from '@/store/ruleStore'
 import formatTime from '@/utils/formatTime'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
-import Popup from '@/components/shared/ui/Popup.vue'
+import SetupPhasePopup from '@/components/spectator/popups/SetupPhasePopup.vue'
+import ProductionPhasePopup from '@/components/spectator/popups/ProductionPhasePopup.vue'
 import OvertimePopup from '@/components/spectator/popups/OvertimePopup.vue'
 import ReportOptionsBar from '@/components/spectator/ReportOptionsBar.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
-const { phase, gamestate, gametime, overtime, teamNameByColor, scoreByColor } =
+const { phase, gamestate, game_time, overtime, teamNameByColor, scoreByColor } =
   storeToRefs(gameStore)
 const reportStore = useReportStore()
 const { gameReport } = storeToRefs(reportStore)
@@ -184,9 +176,9 @@ const progress: ComputedRef<string> = computed(() => {
     return Math.round(progress * 100).toString() + '%'
   }
   if (phase.value == 'SETUP') {
-    return floatToPercentageString(gametime.value / SETUP_DURATION.value)
+    return floatToPercentageString(game_time.value / SETUP_DURATION.value)
   } else if (phase.value == 'PRODUCTION') {
-    return floatToPercentageString(gametime.value / PRODUCTION_DURATION.value)
+    return floatToPercentageString(game_time.value / PRODUCTION_DURATION.value)
   } else {
     return '100%'
   }

@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 import { defineStore } from 'pinia'
+import type Robot from '@/types/Robot'
 
 export const useViewStore = defineStore('viewStore', () => {
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -31,6 +32,42 @@ export const useViewStore = defineStore('viewStore', () => {
     () => fieldHeightPixels.value / verticalFieldSize.value
   )
 
+  const positionOfZone: ComputedRef<(zone: String) => [number, number]> =
+    computed(() => {
+      return (zone: String) => {
+        const zoneArr = Array.from(zone)
+        const pos = [
+          squareDiameterPixels.value / 2,
+          fieldHeightPixels.value -
+            squareDiameterPixels.value / 2 -
+            (parseInt(zoneArr[4]) - 1) * squareDiameterPixels.value,
+        ]
+        if (isFieldMirrored.value) {
+          pos[0] += fieldWidthPixels.value / 2
+        }
+        if (zoneArr[0] == 'M') {
+          pos[0] -= parseInt(zoneArr[3]) * squareDiameterPixels.value
+        } else if (zoneArr[0] == 'C') {
+          pos[0] += (parseInt(zoneArr[3]) - 1) * squareDiameterPixels.value
+        } else {
+          throw new Error('incorrect zone string - parsing error')
+        }
+        return <[number, number]>pos
+      }
+    })
+
+  const positionOfRobot: ComputedRef<(robot: Robot) => [number, number]> =
+    computed(() => {
+      return (robot: Robot) => {
+        return [
+          fieldWidthPixels.value / 2 +
+            parseFloat(robot.pose[0]) * squareDiameterPixels.value,
+          fieldHeightPixels.value -
+            parseFloat(robot.pose[1]) * squareDiameterPixels.value,
+        ]
+      }
+    })
+
   // FUNCTIONS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   function reset() {
     // do not change referee boolean value
@@ -51,6 +88,8 @@ export const useViewStore = defineStore('viewStore', () => {
     fieldWidthPixels,
     fieldHeightPixels,
     squareDiameterPixels,
+    positionOfZone,
+    positionOfRobot,
     reset,
   }
 })

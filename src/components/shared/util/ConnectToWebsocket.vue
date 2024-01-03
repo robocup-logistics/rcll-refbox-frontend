@@ -49,12 +49,15 @@ function connectToWebsocket() {
   socketStore.connectToWebsocket(websocketURL.value)
 }
 
-watch(attemptingConnection, (newConnectionState, oldConnectionState) => {
-  // notify parent
-  if (newConnectionState == false && oldConnectionState == true) {
-    emit('connected')
+watch(
+  () => attemptingConnection.value,
+  (newConnectionState, oldConnectionState) => {
+    // notify parent
+    if (newConnectionState == false && oldConnectionState == true) {
+      emit('connected')
+    }
   }
-})
+)
 
 // focus input on open - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const input: Ref<HTMLInputElement | null> = ref(null)

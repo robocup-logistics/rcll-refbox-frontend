@@ -20,8 +20,8 @@ export const useOrderStore = defineStore('orderStore', () => {
   const openOrders: ComputedRef<Order[]> = computed(() =>
     orders.value.filter(
       (order) =>
-        gameStore.gametime >= parseInt(order.delivery_period[0]) - 1 &&
-        gameStore.gametime < parseInt(order.delivery_period[1]) + 1 &&
+        gameStore.game_time >= parseInt(order.delivery_period[0]) - 1 &&
+        gameStore.game_time < parseInt(order.delivery_period[1]) + 1 &&
         gameStore.phase == 'PRODUCTION'
     )
   )
@@ -30,7 +30,7 @@ export const useOrderStore = defineStore('orderStore', () => {
     orders.value.filter(
       (order) =>
         (['PRE_GAME', 'SETUP', 'EXPLORATION'].includes(gameStore.phase) ||
-          gameStore.gametime < parseInt(order.delivery_period[0])) &&
+          gameStore.game_time < parseInt(order.delivery_period[0])) &&
         parseInt(order.delivery_period[0]) < ruleStore.PRODUCTION_DURATION
     )
   )
@@ -39,7 +39,7 @@ export const useOrderStore = defineStore('orderStore', () => {
     orders.value.filter(
       (order) =>
         (gameStore.phase == 'POST_GAME' || gameStore.phase == 'PRODUCTION') &&
-        gameStore.gametime >= parseInt(order.delivery_period[1])
+        gameStore.game_time >= parseInt(order.delivery_period[1])
     )
   )
 
@@ -127,7 +127,7 @@ export const useOrderStore = defineStore('orderStore', () => {
   // match the name of the svg in assets.
   /* Format: products[{ 
        "id": order.id
-       "product-img-url": 'c0_black_blue-orange_gray.svg'
+       "workpiece_url": e.g. 'BASE_RED_RING_ORANGE_CAP_BLACK.svg'
      },] 
   */
   function populateProducts(): void {
@@ -135,32 +135,19 @@ export const useOrderStore = defineStore('orderStore', () => {
 
     // iterate through all orders
     orders.value.forEach((order) => {
-      const complexity = order.complexity.toLowerCase()
-      // fetched Information Format: base-color: "BASE_RED"
-      // split the string to extract: 'red, grey...'
-      let baseColor = order['base_color'].split('_')[1].toLowerCase()
-      // grey in fetched data / Gray in name of SVGs
-      if (baseColor === 'grey') {
-        baseColor = 'gray'
+      const items = []
+      if (order.base_color) items.push(order.base_color)
+      for (const ringColor of order.ring_colors) {
+        items.push(ringColor)
       }
-      let capColor = order['cap_color'].split('_')[1].toLowerCase()
-      if (capColor === 'grey') {
-        capColor = 'gray'
-      }
-      let ringColors = ''
-      order['ring_colors'].forEach((color: string) => {
-        ringColors += color.split('_')[1].toLowerCase() + '-'
-      })
+      if (order.cap_color) items.push(order.cap_color)
 
       const newProduct: {
         id: number
-        'product-img-url': string
+        workpiece_url: string
       } = {
         id: order.id,
-        'product-img-url': `${complexity}_${baseColor}_${ringColors.substring(
-          0,
-          ringColors.length - 1
-        )}_${capColor}.svg`,
+        workpiece_url: `${items.join('-')}.svg`,
       }
 
       newProducts.push(newProduct)

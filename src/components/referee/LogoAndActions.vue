@@ -4,49 +4,43 @@
     <div class="horizontal-flex">
       <PopupWrapper popup-position="bottom">
         <template #reference>
-          <PillButton description="Connect" title="Connect">
-            <font-awesome-icon
-              icon="fa-link"
-              style="color: green"
-              v-if="socket"
-              class="clickable"
-              title="[Connection established]"
-            />
-
-            <font-awesome-icon
-              icon="fa-unlink"
-              style="color: red"
-              v-else
-              class="clickable"
-              title="[No connection]"
-            />
+          <PillButton
+            description="Connect"
+            title="[Connection established]"
+            v-if="socket"
+          >
+            <font-awesome-icon icon="fa-link" style="color: green" />
+          </PillButton>
+          <PillButton description="Connect" title="[No connection]" v-else>
+            <font-awesome-icon icon="fa-unlink" style="color: red" />
           </PillButton>
         </template>
         <ConnectToWebsocketPopup></ConnectToWebsocketPopup>
       </PopupWrapper>
       <PopupWrapper popup-position="bottom">
         <template #reference>
-          <PillButton description="Field" title="Randomize Field">
-            <font-awesome-icon
-              icon="fa-random"
-              class="clickable"
-              v-shortkey.once="['f1']"
-            />
+          <PillButton
+            description="Field"
+            title="Randomize Field"
+            v-shortkey.once="['f1']"
+          >
+            <font-awesome-icon icon="fa-random" />
           </PillButton>
         </template>
         <ConfirmFieldRandomizationPopup></ConfirmFieldRandomizationPopup>
       </PopupWrapper>
-      <PillButton description="View" title="Switch to spectator view">
-        <font-awesome-icon
-          icon="fa-eye"
-          class="clickable"
-          @click.prevent="switchToSpectatorView"
-          @shortkey="switchToSpectatorView"
+      <PillButton
+        description="View"
+        title="Switch to spectator view"
+        @click.prevent="switchToSpectatorView"
+        @shortkey="switchToSpectatorView"
+      >
+        <font-awesome-icon icon="fa-eye"
       /></PillButton>
       <PopupWrapper popup-position="bottom">
         <template #reference>
           <PillButton description="help" title="Help">
-            <font-awesome-icon icon="fa-question" class="clickable" />
+            <font-awesome-icon icon="fa-question" />
           </PillButton>
         </template>
         <HelpPopup></HelpPopup>

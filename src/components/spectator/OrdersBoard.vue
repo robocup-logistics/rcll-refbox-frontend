@@ -9,9 +9,9 @@
             <div
               v-if="order != overtimeOrder || overtime"
               :class="[
-                gametime <= parseInt(order.delivery_period[0]) ? 'appear' : '',
+                game_time <= parseInt(order.delivery_period[0]) ? 'appear' : '',
 
-                gametime >= parseInt(order.delivery_period[1])
+                game_time >= parseInt(order.delivery_period[1])
                   ? 'disappear'
                   : '',
                 'order',
@@ -21,19 +21,19 @@
               <div
                 class="horizontal-flex"
                 v-if="
-                  parseInt(order.delivery_period[1]) - gametime >= 0 &&
-                  parseInt(order.delivery_period[0]) - gametime <= 0
+                  parseInt(order.delivery_period[1]) - game_time >= 0 &&
+                  parseInt(order.delivery_period[0]) - game_time <= 0
                 "
               >
                 <font-awesome-icon
-                  v-show="parseInt(order.delivery_period[1]) - gametime <= 60"
+                  v-show="parseInt(order.delivery_period[1]) - game_time <= 60"
                   icon="fa-hourglass"
                   shake
                   style="--fa-animation-duration: 5s"
                 />
                 <p>
                   {{
-                    formatTime(parseInt(order.delivery_period[1]) - gametime)
+                    formatTime(parseInt(order.delivery_period[1]) - game_time)
                   }}
                 </p>
               </div>
@@ -90,7 +90,7 @@ import UpcomingOrdersPopup from '@/components/spectator/popups/UpcomingOrdersPop
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
-const { gametime, overtime } = storeToRefs(gameStore)
+const { game_time, overtime } = storeToRefs(gameStore)
 const orderStore = useOrderStore()
 const { openOrders, upcomingOrders, expiredOrders, overtimeOrder } =
   storeToRefs(orderStore)

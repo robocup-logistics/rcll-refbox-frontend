@@ -15,12 +15,12 @@
             <font-awesome-icon icon="fa-folder-open" />
             <div>
               <span>{{
-                gameReport['report-name'].length
-                  ? gameReport['report-name'].length
+                gameReport['report_name'].length
+                  ? gameReport['report_name'].length
                   : 'Unnamed game'
               }}</span
               ><br /><span>{{
-                new Date(gameReport['start-time']).toLocaleDateString()
+                new Date(gameReport['start_time']).toLocaleDateString()
               }}</span>
             </div>
           </div>
@@ -33,7 +33,7 @@
           <PopupWrapper popup-position="bottom">
             <template #reference>
               <PillButton description="Live" title="Connect to live game">
-                <font-awesome-icon class="clickable" icon="fa-link" />
+                <font-awesome-icon icon="fa-link" />
               </PillButton>
             </template>
             <ConnectToWebsocketPopup></ConnectToWebsocketPopup>
@@ -47,7 +47,7 @@
                 description="DB"
                 title="Connect to previous game summary"
               >
-                <font-awesome-icon class="clickable" icon="fa-folder-open" />
+                <font-awesome-icon icon="fa-folder-open" />
               </PillButton>
             </template>
             <ConnectToDbBackendPopup></ConnectToDbBackendPopup>
@@ -58,11 +58,9 @@
             description="View"
             v-if="socket"
             title="Switch to referee mode"
+            @click="authenticateAndSwitchView"
           >
-            <font-awesome-icon
-              @click="authenticateAndSwitchView"
-              class="clickable"
-              icon="fa-user-tie"
+            <font-awesome-icon icon="fa-user-tie"
           /></PillButton>
           <!--  <PopupWrapper popup-position="bottom">
             <template #reference>

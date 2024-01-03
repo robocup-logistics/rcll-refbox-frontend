@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div class="playing-field-square">
+  <div :class="['playing-field-square', withDot ? 'with-dot' : '']">
     <p class="zone-info">{{ zone }}</p>
     <template v-if="machine">
       <MachineEntity :machine="machine"></MachineEntity>
@@ -27,6 +27,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  withDot: {
+    type: Boolean,
+    required: false,
+  },
 })
 
 // associated machine  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -43,11 +47,26 @@ const machine: ComputedRef<Machine | undefined> = computed(() => {
   aspect-ratio: 1;
   background-color: global.$bgColorLighter;
   border-radius: 5px;
+
   position: relative;
+  transition: background-color 400ms;
+
+  &.with-dot {
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 5px;
+      width: 5px;
+      border-radius: 5px;
+      background-color: global.$bgColor;
+      transform: translate(-50%, -50%);
+    }
+  }
 
   .zone-info {
     display: none;
-    z-index: 3;
 
     position: absolute;
     bottom: 2px;

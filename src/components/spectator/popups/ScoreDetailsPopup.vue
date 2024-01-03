@@ -30,8 +30,8 @@
       >
         <div>
           <img
-            :src="`/products/${
-              orderStore.productByOrder(order)?.['product-img-url']
+            :src="`/workpieces/${
+              orderStore.productByOrder(order)?.['workpiece_url']
             }`"
           />
           <!-- sum of points related to this order -->

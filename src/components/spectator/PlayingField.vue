@@ -13,6 +13,7 @@
                   verticalFieldSize - vIndex + 1
                 )
               "
+              :with-dot="vIndex != 1 && hIndex != 1"
             />
           </template>
         </template>
@@ -20,16 +21,15 @@
         <template v-for="hIndex in horizontalFieldSize">
           <PlayingFieldSquare
             :zone="getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)"
+            :with-dot="vIndex != 1"
           />
         </template>
       </template>
-      <template
-        v-for="robot in robots"
-        :key="robot.team + '-' + robot.number.toString()"
-      >
-        <RobotEntity :robot="robot"></RobotEntity>
-      </template>
     </div>
+    <template v-for="robot in robots">
+      <AgentTaskMoveEntity :robot="robot" waypoint="C-BS"></AgentTaskMoveEntity>
+      <RobotEntity :robot="robot"></RobotEntity>
+    </template>
   </div>
 </template>
 
@@ -41,9 +41,10 @@ import { useGameStore } from '@/store/gameStore'
 import { useViewStore } from '@/store/viewStore'
 import PlayingFieldSquare from '@/components/spectator/PlayingFieldSquare.vue'
 import { useRobotStore } from '@/store/robotStore'
-import RobotEntity from './entities/RobotEntity.vue'
+import RobotEntity from '@/components/spectator/entities/RobotEntity.vue'
 import type { Ref } from 'vue'
 import { ref, watch } from 'vue'
+import AgentTaskMoveEntity from '@/components/spectator/entities/AgentTaskMoveEntity.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
@@ -103,22 +104,15 @@ watch(playingField, (newPlayingField, _) => {
 #playingFieldWrapper {
   height: fit-content;
   width: fit-content;
+  position: relative;
 
   #playingField {
-    position: relative;
-
     $square-gap: 10px;
     $square-size: min(
       calc(
-        (
-            100vh - global.$scoreBoardHeight - 40px - $square-gap *
-              (v-bind('verticalFieldSize') - 1)
-          ) / v-bind('verticalFieldSize')
+        (100vh - global.$scoreBoardHeight - 40px) / v-bind('verticalFieldSize')
       ),
-      calc(
-        (100vw - 40px - $square-gap * (v-bind('fullHorizontalFieldSize') - 1)) /
-          v-bind('fullHorizontalFieldSize')
-      )
+      calc((100vw - 40px) / v-bind('fullHorizontalFieldSize'))
     );
 
     display: grid;
@@ -127,10 +121,11 @@ watch(playingField, (newPlayingField, _) => {
       $square-size
     );
 
-    grid-gap: $square-gap;
-
     max-width: 100%;
     max-height: 100%;
+
+    border-radius: 5px;
+    background-color: global.$bgColorLighter;
   }
 }
 </style>

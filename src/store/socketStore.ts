@@ -50,8 +50,8 @@ export const useSocketStore = defineStore('socketStore', () => {
     messagesToDisplay.value.filter(
       (msg) =>
         msg.level === 'attention' &&
-        gameStore.gametime >= msg['game_time'] &&
-        gameStore.gametime <=
+        gameStore.game_time >= msg['game_time'] &&
+        gameStore.game_time <=
           msg['game_time'] + parseFloat(msg['time_to_display'])
     )
   )
@@ -102,11 +102,13 @@ export const useSocketStore = defineStore('socketStore', () => {
               gameStore.awardedPoints = msgArr as AwardedPoints[]
             } else if (msgArr[0].type === 'known-teams') {
               // this array always contains a single message containing an array
-              // of known teams strings (@TODO: single message instead of array
-              // - needs to be done on backend)
+              // of known teams strings
               gameStore.knownTeams = msgArr[0][
                 'known_teams'
               ]?.sort() as string[]
+            } else {
+              console.log('Unknown message type! - Message array:')
+              console.log(msgArr)
             }
           }
         }
@@ -125,11 +127,14 @@ export const useSocketStore = defineStore('socketStore', () => {
           } else if (msgObj.type === 'machine-info') {
             machineStore.setMachineInfo(msgObj as Machine)
           } else if (msgObj.type === 'robot-info') {
-            robotStore.setRobotInformation(msgObj as Robot)
+            robotStore.setRobot(msgObj as Robot)
           } else if (msgObj.type === 'order-count') {
             orderStore.orderCount = (msgObj as OrderCount).count
           } else if (msgObj.type === 'order-info') {
             orderStore.setOrder(msgObj as Order)
+          } else {
+            console.log('Unknown message type! - Message:')
+            console.log(msgObj)
           }
         }
       }

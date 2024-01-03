@@ -79,7 +79,7 @@ defineProps({
 })
 
 const gameStore = useGameStore()
-const { gametime } = storeToRefs(gameStore)
+const { game_time } = storeToRefs(gameStore)
 const robotStore = useRobotStore()
 const ruleStore = useRuleStore()
 const socketStore = useSocketStore()
@@ -91,7 +91,7 @@ function getMaintenanceLeft(robot: Robot) {
   let res =
     robot['maintenance_start-time'] +
     MAINTENANCE_DURATION.value -
-    gametime.value
+    game_time.value
   if (res <= 0) {
     return '0s'
   } else {

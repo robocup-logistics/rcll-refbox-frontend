@@ -2,12 +2,17 @@
 <template>
   <Popup :title="`Add ${color} team name`">
     <div class="horizontal-flex known-teams">
-      <Button
-        v-for="knownTeam in knownTeams"
-        @click.prevent="setTeamName(knownTeam)"
-      >
-        {{ knownTeam }}
-      </Button>
+      <template v-for="knownTeam in knownTeams">
+        <Button
+          v-if="
+            !teamNameByColor(oppositeColor(color)) ||
+            teamNameByColor(oppositeColor(color)) != knownTeam
+          "
+          @click.prevent="setTeamName(knownTeam)"
+        >
+          {{ knownTeam }}
+        </Button>
+      </template>
     </div>
     <form
       class="horizontal-flex"
@@ -44,7 +49,7 @@ const props = defineProps({
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
-const { knownTeams } = storeToRefs(gameStore)
+const { knownTeams, oppositeColor, teamNameByColor } = storeToRefs(gameStore)
 const socketStore = useSocketStore()
 
 // set team name - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

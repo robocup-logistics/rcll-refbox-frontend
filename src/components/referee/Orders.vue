@@ -5,13 +5,13 @@
         :class="[
           'item horizontal-flex order',
           activeDeliveryPeriod(order) ? '' : 'transparent',
-          order.active ? 'active' : 'active',
+          order.activate_at >= game_time ? 'active' : '',
         ]"
       >
         <!-- PRODUCT IMAGE -->
         <img
-          :src="`/products/${
-            orderStore.productByOrder(order)?.['product-img-url']
+          :src="`/workpieces/${
+            orderStore.productByOrder(order)?.['workpiece_url']
           }`"
           alt="img"
         />
@@ -30,14 +30,14 @@
               :class="[
                 'form-check-input',
                 'CYAN',
-                order['quantity_delivered'][0] == '1' ? 'checked' : '',
+                order['quantity_delivered'][0] == 1 ? 'checked' : '',
               ]"
             ></div>
             <div
               :class="[
                 'form-check-input',
                 'MAGENTA',
-                order['quantity_delivered'][1] == '1' ? 'checked' : '',
+                order['quantity_delivered'][1] == 1 ? 'checked' : '',
               ]"
             ></div>
             <!-- competitive indicator -->
@@ -71,14 +71,14 @@ import Order from '@/types/Order'
 
 const gameStore = useGameStore()
 const orderStore = useOrderStore()
-const { gametime } = storeToRefs(gameStore)
+const { game_time } = storeToRefs(gameStore)
 const { orders } = storeToRefs(orderStore)
 
 // check if current time is inside delivery period of order
 function activeDeliveryPeriod(order: Order): boolean {
   return (
-    parseInt(order['delivery_period'][0]) <= gametime.value &&
-    parseInt(order['delivery_period'][1]) >= gametime.value
+    order['delivery_period'][0] <= game_time.value &&
+    order['delivery_period'][1] >= game_time.value
   )
 }
 </script>

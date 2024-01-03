@@ -6,14 +6,12 @@ import type AwardedPoints from '@/types/AwardedPoints'
 import type Gamestate from '@/types/Gamestate'
 import type Phase from '@/types/Phase'
 import type State from '@/types/State'
-import { useRuleStore } from '@/store/ruleStore'
 import Color from '@/types/Color'
 import { useViewStore } from '@/store/viewStore'
 
 // game store
 export const useGameStore = defineStore('gameStore', () => {
   // USE OTHER STORES  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  const ruleStore = useRuleStore()
   const viewStore = useViewStore()
 
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -30,34 +28,31 @@ export const useGameStore = defineStore('gameStore', () => {
   const scoreMagenta: Ref<number> = ref(0)
   const awardedPoints: Ref<AwardedPoints[]> = ref([])
 
-  // game state (todo: game state is currently used for the gamestate (e.g.
-  // WAIT_START) but also used as a term to describe the whole state of the game
-  // including e.g. phase - find better terms!)
+  // game state
   const phase: Ref<Phase> = ref('PRE_GAME')
-  const gametime: Ref<number> = ref(0)
+  // overall time
+  const cont_time: Ref<number> = ref(0)
+  // the time within in the current phase
+  const game_time: Ref<number> = ref(0)
   // the overtime boolean indicates whether a overtime is taking place. It is
-  // initially undefined and is set at when the overtime starts (resp. would but
-  // does not start)
+  // initially undefined and is set at when the overtime starts
   const overtime: Ref<boolean> = ref(false)
   const gamestate: Ref<State> = ref('WAIT_START')
 
-  // WATCH - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // determine whether an overtime is taking place at the end of the production
-  // phase
-  /* watch(gametime, (newGametime) => {
-    if (
-      newGametime >= ruleStore.PRODUCTION_DURATION &&
-      overtime.value == undefined
-    ) {
-      if (scoreCyan.value == scoreMagenta.value) {
-        overtime.value = true
+  // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // other color
+  const oppositeColor: ComputedRef<(color: Color) => Color> = computed(() => {
+    return (color: Color) => {
+      if (color == 'CYAN') {
+        return 'MAGENTA'
+      } else if (color == 'MAGENTA') {
+        return 'CYAN'
       } else {
-        overtime.value = false
+        throw new Error('request opposite of unknown color')
       }
     }
-  }) */
+  })
 
-  // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // team name by color
   const teamNameByColor: ComputedRef<(color: Color) => string> = computed(
     () => {
@@ -109,7 +104,7 @@ export const useGameStore = defineStore('gameStore', () => {
     viewStore.verticalFieldSize = gamestateArg['field_height']
     viewStore.isFieldMirrored = gamestateArg['field_mirrored']
     viewStore.horizontalFieldSize = gamestateArg['field_width']
-    gametime.value = Math.trunc(gamestateArg['game_time'])
+    game_time.value = Math.trunc(gamestateArg['game_time'])
     nameTeamMagenta.value = gamestateArg.magenta
     overtime.value = gamestateArg['over_time']
     phase.value = gamestateArg.phase
@@ -126,7 +121,7 @@ export const useGameStore = defineStore('gameStore', () => {
     scoreMagenta.value = 0
     awardedPoints.value = []
     phase.value = 'PRE_GAME'
-    gametime.value = 0
+    game_time.value = 0
     overtime.value = false
     gamestate.value = 'WAIT_START'
   }
@@ -136,9 +131,11 @@ export const useGameStore = defineStore('gameStore', () => {
     knownTeams,
     awardedPoints,
     phase,
-    gametime,
+    cont_time,
+    game_time,
     overtime,
     gamestate,
+    oppositeColor,
     teamNameByColor,
     scoreByColor,
     awardedPointsByColor,

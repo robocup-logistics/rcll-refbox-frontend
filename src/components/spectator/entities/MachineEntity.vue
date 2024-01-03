@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div class="machine-entity">
+  <div class="machine-entity" :id="`machine-${machine.name}`">
     <div class="machine">
       <PopupWrapper>
         <template #reference>
@@ -43,7 +43,7 @@ function getMachineFileName(): string {
   switch (props.machine.mtype) {
     case 'CS': {
       fileName += '-'
-      fileName += (<MachineCS>props.machine).cs_cap_color
+      fileName += (<MachineCS>props.machine).cs_color
       break
     }
     case 'RS': {
@@ -71,15 +71,19 @@ function getMachineFileName(): string {
   justify-content: center;
   align-items: center;
 
+  /* z-index: 2; */
+
   .machine {
     height: 80%;
     width: 80%;
-  }
-}
+    border-radius: 20px;
 
-img {
-  height: 100%;
-  width: 100%;
-  transform: rotate(calc((v-bind('machine?.rotation') + 90) * 1deg));
+    img {
+      height: 100%;
+      width: 100%;
+      transform: rotate(calc((v-bind('machine?.rotation') - 90) * 1deg));
+      transition: all 400ms;
+    }
+  }
 }
 </style>

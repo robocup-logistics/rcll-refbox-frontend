@@ -25,7 +25,7 @@
           <p>Setup</p>
           <div v-if="phase == 'SETUP'" class="horizontal-flex">
             <span>
-              {{ formatTime(gametime) }}
+              {{ formatTime(game_time) }}
             </span>
             <template v-if="gamestate == 'RUNNING'">
               <font-awesome-icon icon="fa-pause" />
@@ -56,7 +56,7 @@
           <p>Production</p>
           <div v-if="phase == 'PRODUCTION'" class="horizontal-flex">
             <span>
-              {{ formatTime(gametime) }}
+              {{ formatTime(game_time) }}
             </span>
             <template v-if="gamestate == 'RUNNING'">
               <font-awesome-icon icon="fa-pause" />
@@ -94,7 +94,7 @@ import { ComputedRef, computed } from 'vue'
 const gameStore = useGameStore()
 const ruleStore = useRuleStore()
 const socketStore = useSocketStore()
-const { phase, gamestate, gametime } = storeToRefs(gameStore)
+const { phase, gamestate, game_time } = storeToRefs(gameStore)
 const { SETUP_DURATION, PRODUCTION_DURATION } = storeToRefs(ruleStore)
 
 const progress: ComputedRef<string> = computed(() => {
@@ -102,9 +102,9 @@ const progress: ComputedRef<string> = computed(() => {
     return Math.round(progress * 100).toString() + '%'
   }
   if (phase.value == 'SETUP') {
-    return floatToPercentageString(gametime.value / SETUP_DURATION.value)
+    return floatToPercentageString(game_time.value / SETUP_DURATION.value)
   } else if (phase.value == 'PRODUCTION') {
-    return floatToPercentageString(gametime.value / PRODUCTION_DURATION.value)
+    return floatToPercentageString(game_time.value / PRODUCTION_DURATION.value)
   } else {
     return '100%'
   }

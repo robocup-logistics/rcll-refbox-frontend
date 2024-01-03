@@ -18,5 +18,4 @@ export default interface WebsocketMessage {
   text?: string
   // special info depending on type
   known_teams?: string[]
-  // outgoing message
 }

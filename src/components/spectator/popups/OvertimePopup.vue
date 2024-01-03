@@ -1,13 +1,15 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <Popup title="Overtime">
-    <p>
-      If both teams have the same score at the end of the production phase, an
-      additional overtime of
-      {{ formatTime(OVERTIME_DURATION) }} minutes takes place in which both
-      teams race against fulfilling the following order:
-    </p>
-    <OrderEntity :order="overtimeOrder" v-if="overtimeOrder"></OrderEntity>
+    <div>
+      <OvertimeExplainable />
+    </div>
+    <p>Duration: {{ formatTime(OVERTIME_DURATION) }}</p>
+    <template v-if="overtimeOrder">
+      <p>Order:</p>
+      <OrderEntity :order="overtimeOrder"></OrderEntity>
+    </template>
+
     <p v-else>Order not yet announced!</p>
   </Popup>
 </template>
@@ -21,6 +23,7 @@ import OrderEntity from '@/components/spectator/entities/OrderEntity.vue'
 import { useRuleStore } from '@/store/ruleStore'
 import { useOrderStore } from '@/store/orderStore'
 import formatTime from '@/utils/formatTime'
+import OvertimeExplainable from '@/components/spectator/explainables/OvertimeExplainable.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const orderStore = useOrderStore()

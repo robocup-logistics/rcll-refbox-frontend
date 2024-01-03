@@ -32,9 +32,12 @@ function select(tab: string): void {
   active.value = tab
 }
 
-watch(active, () => {
-  emit('activeChanged', active.value)
-})
+watch(
+  () => active.value,
+  () => {
+    emit('activeChanged', active.value)
+  }
+)
 
 // define expose - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 defineExpose({ active })

@@ -7,7 +7,7 @@
           <OrderEntity :order="order"></OrderEntity>
           <p v-if="phase == 'PRODUCTION'">
             in
-            {{ formatTime(parseInt(order.delivery_period[0]) - gametime) }}
+            {{ formatTime(parseInt(order.delivery_period[0]) - game_time) }}
           </p>
         </div>
       </template>
@@ -31,7 +31,7 @@ import { useGameStore } from '@/store/gameStore'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
-const { gametime, phase } = storeToRefs(gameStore)
+const { game_time, phase } = storeToRefs(gameStore)
 const orderStore = useOrderStore()
 const { upcomingOrders } = storeToRefs(orderStore)
 </script>

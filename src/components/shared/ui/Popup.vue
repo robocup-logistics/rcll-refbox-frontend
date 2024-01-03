@@ -63,10 +63,10 @@ const togglePopup = inject('togglePopup') as Function
     flex-shrink: 0;
   } */
 
-  padding: 8px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 
   .popup-header {
     width: 100%;
@@ -82,12 +82,8 @@ const togglePopup = inject('togglePopup') as Function
 
     h1 {
       font-size: 20px;
-      background-color: global.$accentColor;
-      border-radius: 5px;
-    }
-
-    * {
-      padding: 5px 10px;
+      text-decoration: underline;
+      text-decoration-color: global.$accentColor;
     }
   }
 

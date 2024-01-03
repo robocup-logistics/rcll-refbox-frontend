@@ -3,18 +3,19 @@
 * {
   font-family: 'Lucida Console', 'Courier New', monospace;
   box-sizing: border-box;
-  scrollbar-color: $bgColor transparent;
+
   -webkit-user-select: none;
   user-select: none;
 
+  // scrollbars ...
+  // ... for firefox
+  scrollbar-color: $bgColorLighter transparent;
+
+  // ... for chromium/safari
   ::-webkit-scrollbar {
-    height: 6px;
+    height: 6px; // for vertical scrollbars!
     width: 6px;
     background-color: transparent;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
@@ -22,7 +23,7 @@
     border-radius: 3px;
 
     &:active {
-      background: $bgColor;
+      background-color: $bgColorLightest;
     }
   }
 }
@@ -81,9 +82,10 @@ span {
   align-items: center; // @TODO is currently ignored e.g. in orders board, p stretches to full height and thus stays on top
 
   max-width: 100%;
+  min-width: 0;
 
   overflow-x: auto;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 
   > .item {
     height: 100% !important;
@@ -143,10 +145,6 @@ span {
     color: black;
     background-color: $magentaColor;
   }
-
-  &.item-in-item {
-    background-color: $bgColorLighter;
-  }
 }
 
 .CYAN-text {
@@ -167,4 +165,16 @@ span {
 
 .text-success {
   color: green;
+}
+
+.highlight {
+  filter: drop-shadow(0 0 10px white);
+}
+
+.content-box {
+  border-radius: 5px;
+  border: 2px solid $bgColorLighter;
+  padding: 10px;
+
+  flex-wrap: wrap;
 }

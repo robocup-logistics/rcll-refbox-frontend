@@ -35,8 +35,8 @@
       <div class="horizontal-flex">
         <h2 style="flex-grow: 1">
           {{
-            reportItem['report-name'].length
-              ? reportItem['report-name'].length
+            reportItem['report_name'].length
+              ? reportItem['report_name'].length
               : 'Unnamed game'
           }}
         </h2>
@@ -52,7 +52,7 @@
       <div>
         <span>
           {{
-            new Date(reportItem['start-time']).toLocaleString([], {
+            new Date(reportItem['start_time']).toLocaleString([], {
               year: '2-digit',
               month: 'numeric',
               day: 'numeric',
@@ -61,12 +61,12 @@
             })
           }}
         </span>
-        <span v-if="reportItem['end-time']">
+        <span v-if="reportItem['end_time']">
           for
           {{
             formatTime(
-              (new Date(reportItem['end-time']).getTime() -
-                new Date(reportItem['start-time']).getTime()) /
+              (new Date(reportItem['end_time']).getTime() -
+                new Date(reportItem['start_time']).getTime()) /
                 1000,
               true
             )
@@ -79,7 +79,8 @@
         <div
           :class="[
             'item',
-            reportItem['total-points'][0] > reportItem['total-points'][1]
+            pointsByTeam('CYAN', reportItem.points) >
+            pointsByTeam('MAGENTA', reportItem.points)
               ? 'CYAN'
               : '',
           ]"
@@ -88,14 +89,15 @@
           <p>{{ reportItem['teams'][0] }}</p>
           <div class="horizontal-flex">
             <font-awesome-icon icon="fa-trophy" />
-            <span>{{ reportItem['total-points'][0] }}</span>
+            <span>{{ pointsByTeam('CYAN', reportItem.points) }}</span>
           </div>
         </div>
         <p>vs</p>
         <div
           :class="[
             'item',
-            reportItem['total-points'][0] < reportItem['total-points'][1]
+            pointsByTeam('CYAN', reportItem.points) <
+            pointsByTeam('MAGENTA', reportItem.points)
               ? 'MAGENTA'
               : '',
           ]"
@@ -104,7 +106,7 @@
           <p>{{ reportItem['teams'][1] }}</p>
           <div class="horizontal-flex">
             <font-awesome-icon icon="fa-trophy" />
-            <span>{{ reportItem['total-points'][1] }}</span>
+            <span>{{ pointsByTeam('MAGENTA', reportItem.points) }}</span>
           </div>
         </div>
       </div>
@@ -147,9 +149,9 @@ const reportStore = useReportStore()
 const {
   DEFAULT_BACKEND_URL,
   loadingReportsList,
-  loadingReport,
   gameReportsList,
   gameReport,
+  pointsByTeam,
 } = storeToRefs(reportStore)
 
 // request reports list  - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -163,7 +165,7 @@ const filter: Ref<string> = ref('')
 const filteredGameReportsList: ComputedRef<GameReport[]> = computed(() => {
   return gameReportsList.value.filter(
     (report) =>
-      report['report-name'].includes(filter.value) ||
+      report['report_name'].includes(filter.value) ||
       report['teams'][0].includes(filter.value) ||
       report['teams'][1].includes(filter.value)
   )
@@ -186,11 +188,14 @@ onMounted(() => {
 })
 
 // emit event to close the popup when game report was selected - - - - - - - - -
-watch(gameReport, (newReport, oldReport) => {
-  if (newReport && (!oldReport || oldReport != newReport)) {
-    emit('connected')
+watch(
+  () => gameReport.value,
+  (newReport, oldReport) => {
+    if (newReport && (!oldReport || oldReport != newReport)) {
+      emit('connected')
+    }
   }
-})
+)
 </script>
 
 // STYLE -----------------------------------------------------------------------

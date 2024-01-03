@@ -70,7 +70,8 @@ function updateViewSelection(newActive: string | undefined) {
   background-image: url('@/assets/wallpaper.jpeg');
   background-size: cover;
   background-position: center;
-  opacity: 0.8;
+  opacity: 0.5;
+  /* background-color: global.$itemColor; */
 
   &::after {
     content: '';

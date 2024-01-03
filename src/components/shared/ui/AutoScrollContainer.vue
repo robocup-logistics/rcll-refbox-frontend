@@ -64,7 +64,7 @@ function scrollToEnd() {
 
 // scroll to the end of the container whenever data changes
 watch(
-  props.watchData,
+  () => props.watchData,
   () => {
     if (autoscroll.value) {
       setTimeout(scrollToEnd, 500)
@@ -101,7 +101,7 @@ watch(
     left: 10px;
     right: 10px;
     margin: 0 auto;
-    bottom: 10px;
+    bottom: 15px;
     max-width: fit-content;
   }
 }

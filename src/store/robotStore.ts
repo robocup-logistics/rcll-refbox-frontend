@@ -1,9 +1,10 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { Ref, ComputedRef } from 'vue'
-import { defineStore } from 'pinia'
-import type Robot from '@/types/Robot'
-
+import { defineStore, storeToRefs } from 'pinia'
+import Robot from '@/types/Robot'
 import { useGameStore } from '@/store/gameStore'
+import type AgentTask from '@/types/AgentTask'
+import type Color from '@/types/Color'
 
 export const useRobotStore = defineStore('robotStore', () => {
   // USE OTHER STORES  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -14,6 +15,7 @@ export const useRobotStore = defineStore('robotStore', () => {
 
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   const robots: Ref<Robot[]> = ref([])
+  const agentTasks: Ref<AgentTask[]> = ref([])
 
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // robots by color
@@ -26,7 +28,7 @@ export const useRobotStore = defineStore('robotStore', () => {
   )
 
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  function addRobot(robotArg: Robot, index: number) {
+  function addRobotAtIndex(robotArg: Robot, index: number) {
     if (index === -1) {
       robots.value.push(robotArg)
     } else {
@@ -39,7 +41,7 @@ export const useRobotStore = defineStore('robotStore', () => {
     sortRobotsByNumber()
   }
 
-  function setRobotInformation(robotArg: Robot) {
+  function setRobot(robotArg: Robot) {
     if (robotsByColor.value(robotArg['team_color']).length < 3) {
       // populate and make sure that there arent any duplicates
       const index = robots.value.findIndex(
@@ -47,10 +49,10 @@ export const useRobotStore = defineStore('robotStore', () => {
       )
 
       if (index === -1) {
-        addRobot(robotArg, index)
+        addRobotAtIndex(robotArg, index)
         sortRobotsByNumber()
       } else if (gameStore.phase !== 'PRE_GAME') {
-        addRobot(robotArg, index)
+        addRobotAtIndex(robotArg, index)
       }
     } else {
       const index = robots.value.findIndex(
@@ -58,7 +60,7 @@ export const useRobotStore = defineStore('robotStore', () => {
       )
 
       if (index !== -1) {
-        addRobot(robotArg, index)
+        addRobotAtIndex(robotArg, index)
       }
     }
   }
@@ -83,9 +85,10 @@ export const useRobotStore = defineStore('robotStore', () => {
   return {
     MAX_MAINTENANCE_CYCLES,
     robots,
+    agentTasks,
     robotsByColor,
     setRobotsAtReconnect,
-    setRobotInformation,
+    setRobot,
     reset,
   }
 })

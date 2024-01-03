@@ -1,10 +1,9 @@
 import Color from '@/types/Color'
+import AgentTask from '@/types/AgentTask'
 
 export default interface Robot {
-  has_pose: boolean // e.g. true
   host: string // e.g. "127.0.0.1"
   last_seen: string[] // [unix time stamp, ms] e.g. [ "1694714658", "393161" ]
-  level: 'clips'
   maintenance_cylces: number // e.g. 0
   'maintenance_start-time': number // e.g. 0
   maintenance_warning_sent: boolean // e.g. false
@@ -15,6 +14,5 @@ export default interface Robot {
   state: string // e.g. "ACTIVE"
   team: string // e.g. "CAROLOGISTICS"
   team_color: Color
-  type: 'robot-info'
   warning_sent: boolean // true = away, false = there again
 }

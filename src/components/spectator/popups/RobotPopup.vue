@@ -64,21 +64,53 @@
         </PopupWrapper>
       </div>
     </div>
+
+    <!-- agent task -->
+    <div v-if="robotAgentTask" class="horizontal-flex content-box">
+      <template v-if="robotAgentTask.task_type == 'MOVE'">
+        <span>I am <b>MOVING</b> to</span>
+        <EntityHighlighter
+          type="machine"
+          name="the base station"
+          target="machine_C-BS"
+        />
+      </template>
+      <template v-else-if="robotAgentTask.task_type == 'RETRIEVE'">
+        <span>I am <b>RETRIEVING</b> at</span>
+        <EntityHighlighter
+          type="machine"
+          name="the base station"
+          target="machine_C-BS"
+        />
+      </template>
+      <template v-else-if="robotAgentTask.task_type == 'DELIVER'">
+        <span>I am <b>DELIVERING</b> at</span>
+        <EntityHighlighter
+          type="machine"
+          name="the base station"
+          target="machine_C-BS"
+        />
+      </template>
+    </div>
   </Popup>
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import { computed } from 'vue'
+import { computed, watch, ref, type Ref } from 'vue'
 import type { PropType, ComputedRef } from 'vue'
 import type Robot from '@/types/Robot'
 import { useRobotStore } from '@/store/robotStore'
 import Popup from '@/components/shared/ui/Popup.vue'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
+import EntityHighlighter from '@/components/shared/util/EntityHighlighter.vue'
+import { storeToRefs } from 'pinia'
+import type AgentTask from '@/types/AgentTask'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const robotStore = useRobotStore()
+const { agentTasks } = storeToRefs(robotStore)
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const props = defineProps({
@@ -87,6 +119,18 @@ const props = defineProps({
     required: true,
   },
 })
+
+// watch agent tasks - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const robotAgentTask: Ref<AgentTask | undefined> = ref(undefined)
+watch(
+  () => agentTasks.value,
+  (newAgentTasks, _) => {
+    robotAgentTask.value = newAgentTasks.find(
+      (agentTask) => agentTask.robot_id == props.robot.number
+    )
+  },
+  { immediate: true }
+)
 
 // state styling - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const color: ComputedRef<string> = computed(() => {

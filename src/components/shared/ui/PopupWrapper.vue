@@ -72,6 +72,7 @@ function togglePopup() {
   }
   popupOpen.value = !popupOpen.value
 }
+
 provide('togglePopup', togglePopup)
 </script>
 

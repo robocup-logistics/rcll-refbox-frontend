@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div class="robot-entity">
+  <div class="robot-entity" :id="`robot-${robot.team_color}-${robot.number}`">
     <div class="robot">
       <PopupWrapper>
         <template #reference>
@@ -18,13 +18,14 @@
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import { computed } from 'vue'
-import type { PropType, ComputedRef, StyleValue } from 'vue'
+import { onMounted, ref } from 'vue'
+import type { PropType, Ref } from 'vue'
 import type Robot from '@/types/Robot'
 import { storeToRefs } from 'pinia'
 import { useViewStore } from '@/store/viewStore'
 import RobotPopup from '@/components/spectator/popups/RobotPopup.vue'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
+import AgentTaskMoveEntity from '@/components/spectator/entities/AgentTaskMoveEntity.vue'
 
 // define props  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const props = defineProps({
@@ -43,6 +44,15 @@ const {
   fieldHeightPixels,
   squareDiameterPixels,
 } = storeToRefs(viewStore)
+
+// agent tasks
+// -> move
+const agentTaskMoveEntity: Ref<typeof AgentTaskMoveEntity | null> = ref(null)
+onMounted(() => {
+  if (agentTaskMoveEntity.value) {
+    agentTaskMoveEntity.value.drawArrow()
+  }
+})
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -51,28 +61,28 @@ const {
 
 .robot-entity {
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: calc((v-bind('squareDiameterPixels') * 0.7) * 1px);
-  height: calc((v-bind('squareDiameterPixels') * 0.7) * 1px);
-  transform: translate(
-    calc(
-      -50% + (v-bind('parseFloat(robot.pose[0])') *
-            v-bind('fieldWidthPixels / fullHorizontalFieldSize') * 1px)
-    ),
-    calc(
-      50% -
-        (
-          v-bind('parseFloat(robot.pose[1])') *
-            v-bind('fieldHeightPixels / verticalFieldSize') * 1px
-        )
-    )
+  width: calc((v-bind('squareDiameterPixels') * 0.6) * 1px);
+  height: calc((v-bind('squareDiameterPixels') * 0.6) * 1px);
+  left: calc(
+    (v-bind('fieldWidthPixels') / 2 * 1px) +
+      (
+        v-bind('parseFloat(robot.pose[0])') *
+          v-bind('fieldWidthPixels / fullHorizontalFieldSize') * 1px
+      ) - (v-bind('squareDiameterPixels') * 0.3) * 1px
   );
+  bottom: calc(
+    v-bind('parseFloat(robot.pose[1])') *
+      v-bind('fieldHeightPixels / verticalFieldSize') * 1px -
+      (v-bind('squareDiameterPixels') * 0.3) * 1px
+  );
+  /* z-index: 2; */
 
-  img {
-    height: 80%;
-    width: 80%;
-    transform: rotate(calc((v-bind('robot.pose[2]') + 90) * 1deg));
+  .robot {
+    img {
+      height: 100%;
+      width: 100%;
+      transform: rotate(calc((v-bind('robot.pose[2]') + 90) * 1deg));
+    }
   }
 }
 </style>

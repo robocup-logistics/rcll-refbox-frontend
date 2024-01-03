@@ -1,32 +1,50 @@
+import type AwardedPoints from '@/types/AwardedPoints'
+import type Order from '@/types/Order'
+import type Phase from '@/types/Phase'
+import type RingSpec from '@/types/Ringspec'
+import type State from '@/types/State'
+import AgentTask from '@/types/AgentTask'
+
 export default interface GameReport {
   _id: string // MongoDB ObjectId
-  'agent-task-history': any[] // TODO
-  config: any[] // TODO ?
-  'end-time'?: string
-  'gamestate/POST_GAME': any // TODO ?
-  'gamestate/PRODUCTION': any // TODO ?
-  'gamestate/SETUP': any // TODO ?
-  'machine-history': any[] // TODO
-  'machine-meta': any[] // TODO
-  'machine-ss-shelf-slots': any[] // TODO
-  machines: any[] // TODO has other properties than Machine, e.g. actual_lights is missing
-  orders: any[] // TODO has other properties than Order ...
-  'phase-points-cyan': {
-    EXPLORATION: number
-    PRODUCTION: number
-  }
-  'phase-points-magents': {
-    EXPLORATION: number
-    PRODUCTION: number
-  }
-  points: any[] // TODO has other properties than AwardedPoints
-  'report-name': string
-  'report-version': number
-  'ring-specs': any[] // TODO differs from RingSpecs because it is req-bases and not req_bases
-  'robot-pose-history': any[] // TODO larger object
-  'start-time': string // standard time string that can be used to create a Date
-  'start-timestamp': [number, number] // TODO ?
+  report_version: number
+  report_name: string
+
+  // game
+  config: Array<{
+    path: string
+    type: 'BOOL' | 'UINT' | 'STRING'
+    value: any
+    is_list: boolean
+    list_value: any[]
+  }>
+  start_time: string // standard time string that can be used to create a Date
+  end_time: string
   teams: [string, string]
-  'total-points': [number, number]
-  'workpiece-history': any[] // TODO
+  points: AwardedPoints[]
+  gamestate_history: Array<{
+    is_latest: boolean
+    state: State
+    phase: Phase
+    game_time: number
+    cont_time: number
+    over_time: boolean
+  }>
+
+  // orders
+  orders: Order[]
+
+  // machines
+  machine_history: any[] // TODO
+  machine_meta: any[] // TODO
+  machine_ss_shelf_slots: any[] // TODO
+  machines: any[] // TODO has other properties than Machine
+  ring_specs: RingSpec[]
+
+  // robots
+  robot_pose_history: any[] // TODO larger object
+  agent_task_history: AgentTask[]
+
+  // workpieces
+  workpiece_history: any[] // TODO
 }

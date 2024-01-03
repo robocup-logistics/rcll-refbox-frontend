@@ -1,7 +1,7 @@
 <template>
   <AutoScrollContainer
     v-if="attentionMessages.length"
-    :watch-data="() => attentionMessages"
+    :watch-data="attentionMessages"
     class="item attmsg-log"
   >
     <p

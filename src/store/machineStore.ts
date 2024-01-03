@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 import type Machine from '@/types/Machine'
 import type RingSpec from '@/types/Ringspec'
 import Color from '@/types/Color'
+import MachineCS from '@/types/MachineCS'
 
 export const useMachineStore = defineStore('machineStore', () => {
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -22,6 +23,16 @@ export const useMachineStore = defineStore('machineStore', () => {
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // add machine
   function addMachine(newMachine: Machine, index: number = -1): void {
+    // as of 2023, the color information is not available. This will change with
+    // the new rules but for now, this has to be set manually
+    if (newMachine.mtype == 'CS') {
+      const machine = <MachineCS>newMachine
+      if (newMachine.name.includes('CS1')) {
+        machine.cs_color = 'CAP_GREY'
+      } else if (newMachine.name.includes('CS2')) {
+        machine.cs_color = 'CAP_BLACK'
+      }
+    }
     if (index === -1) {
       machines.value.push(newMachine)
     } else {
@@ -63,7 +74,9 @@ export const useMachineStore = defineStore('machineStore', () => {
 
   // set cyan machines info at reconnect
   function setMachineInfosAtReconnect(newMachines: Machine[]): void {
-    machines.value = newMachines
+    for (const machine of newMachines) {
+      addMachine(machine)
+    }
     sortMachinesAlphabetically()
   }
 

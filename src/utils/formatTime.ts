@@ -1,15 +1,15 @@
 export default function formatTime(
-  gametimeArg: number | string,
+  gameTimeArg: number | string,
   round: boolean = false
 ): string {
-  let gametime: number
-  if (typeof gametimeArg === 'string') {
-    gametime = parseInt(gametimeArg)
+  let gameTime: number
+  if (typeof gameTimeArg === 'string') {
+    gameTime = parseInt(gameTimeArg)
   } else {
-    gametime = gametimeArg
+    gameTime = gameTimeArg
   }
-  const minutes: number = Math.floor(gametime / 60)
-  let seconds: number = gametime % 60
+  const minutes: number = Math.floor(gameTime / 60)
+  let seconds: number = gameTime % 60
   if (round) {
     seconds = Math.round(seconds)
   }

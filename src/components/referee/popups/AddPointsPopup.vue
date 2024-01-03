@@ -52,13 +52,12 @@ function addPoints() {
     command: 'add_points_team',
     points: points,
     team_color: `${props.color}`,
-    game_time: gameStore.gametime,
+    game_time: gameStore.game_time,
     phase: `${gameStore.phase}`,
     reason: `${reason}`,
   }
 
   socketStore.SOCKET_SEND(msg)
-  console.log('SHOULD TOGGLE')
   togglePopup()
 }
 

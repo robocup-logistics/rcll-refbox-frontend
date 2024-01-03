@@ -8,6 +8,7 @@
       </div>
     </div>
   </div>
+  <FirstTimeDialog />
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
@@ -15,13 +16,7 @@
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import TopBar from '@/components/spectator/TopBar.vue'
 import PlayingField from '@/components/spectator/PlayingField.vue'
-import { storeToRefs } from 'pinia'
-import { useReportStore } from '@/store/reportStore'
-import ReportOptionsBar from '@/components/spectator/ReportOptionsBar.vue'
-
-// use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const reportStore = useReportStore()
-const { gameReport } = storeToRefs(reportStore)
+import FirstTimeDialog from '@/components/spectator/FirstTimeDialog.vue'
 </script>
 
 // STYLE -----------------------------------------------------------------------
