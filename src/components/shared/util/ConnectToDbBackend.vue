@@ -10,7 +10,7 @@
       :placeholder="DEFAULT_BACKEND_URL"
     />
     <Button
-      icon="fa-paper-plane"
+      icon="fa-link"
       primary
       @click="requestGameReportsList"
       :loading="loadingReportsList"
@@ -49,31 +49,39 @@
         </Button>
       </div>
 
-      <div>
-        <span>
-          {{
-            new Date(reportItem['start_time']).toLocaleString([], {
-              year: '2-digit',
-              month: 'numeric',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-            })
-          }}
-        </span>
-        <span v-if="reportItem['end_time']">
-          for
-          {{
-            formatTime(
-              (new Date(reportItem['end_time']).getTime() -
-                new Date(reportItem['start_time']).getTime()) /
-                1000,
-              true
-            )
-          }}
-          minutes
-        </span>
-        <span v-else> - aborted</span>
+      <div class="horizontal-flex">
+        <div class="horizontal-flex">
+          <font-awesome-icon icon="fa-clock" />
+          <span>
+            {{
+              new Date(reportItem['start_time']).toLocaleString([], {
+                year: '2-digit',
+                month: 'numeric',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+              })
+            }}
+          </span>
+        </div>
+
+        <div v-if="reportItem['end_time']" class="horizontal-flex inline">
+          <font-awesome-icon icon="fa-hourglass" />
+          <span>
+            {{
+              formatTime(
+                (new Date(reportItem['end_time']).getTime() -
+                  new Date(reportItem['start_time']).getTime()) /
+                  1000,
+                true
+              )
+            }}
+          </span>
+        </div>
+        <div v-else class="horizontal-flex inline text-warning">
+          <font-awesome-icon icon="fa-triangle-exclamation" />
+          <span>Aborted</span>
+        </div>
       </div>
       <div class="horizontal-flex">
         <div
@@ -163,6 +171,7 @@ async function requestGameReportsList() {
 // select report - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const filter: Ref<string> = ref('')
 const filteredGameReportsList: ComputedRef<GameReport[]> = computed(() => {
+  console.log(gameReportsList.value)
   return gameReportsList.value.filter(
     (report) =>
       report['report_name'].includes(filter.value) ||
@@ -206,13 +215,15 @@ watch(
   position: sticky;
   top: 0;
   z-index: 2;
-  background-color: global.$bgColor;
+
+  /* to simulate some padding between the sticky search field and the reports */
+  background-color: global.$surfaceColor;
   padding-bottom: 5px;
 }
 .report-item {
   padding: 10px;
-  border-radius: 5px;
-  background-color: global.$itemColor;
+  border-radius: 8px;
+  background-color: global.$lighterColor;
   display: flex;
   flex-direction: column;
   gap: 10px;

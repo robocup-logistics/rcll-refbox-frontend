@@ -40,10 +40,10 @@ const props = defineProps({
 
 .entity-highlighter {
   padding: 2px 5px;
-  border-radius: 5px;
+  border-radius: 8px;
   color: white;
   font-size: 15px;
-  background-color: global.$bgColorLighter;
+  background-color: global.$lighterColor;
   flex-grow: 0 !important;
   overflow-x: hidden !important;
   width: fit-content;

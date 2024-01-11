@@ -21,26 +21,29 @@ defineProps({
 @use '@/assets/global.scss';
 
 .pill-button {
+  flex-grow: 0;
+
   text-align: center;
-  width: 100%;
+  width: fit-content;
   min-width: 50px;
+  height: fit-content;
 
   display: flex;
   flex-direction: column;
   gap: 5px;
 
   p {
-    font-size: 12px;
+    font-size: 13px;
     text-transform: uppercase;
   }
   .pill {
     width: 100%;
     height: 26px;
     border-radius: 13px;
-    background-color: global.$bgColorLighter;
+    background-color: global.$lighterColor;
     color: white;
 
-    font-size: 15px;
+    font-size: 13px;
   }
 }
 </style>

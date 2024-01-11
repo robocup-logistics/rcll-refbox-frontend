@@ -29,14 +29,6 @@
         </template>
         <ConfirmFieldRandomizationPopup></ConfirmFieldRandomizationPopup>
       </PopupWrapper>
-      <PillButton
-        description="View"
-        title="Switch to spectator view"
-        @click.prevent="switchToSpectatorView"
-        @shortkey="switchToSpectatorView"
-      >
-        <font-awesome-icon icon="fa-eye"
-      /></PillButton>
       <PopupWrapper popup-position="bottom">
         <template #reference>
           <PillButton description="help" title="Help">
@@ -45,6 +37,24 @@
         </template>
         <HelpPopup></HelpPopup>
       </PopupWrapper>
+      <p>•</p>
+      <PillButton
+        description="View"
+        title="Switch to spectator view"
+        @click.prevent="switchToSpectatorView"
+        @shortkey="switchToSpectatorView"
+      >
+        <font-awesome-icon icon="fa-eye"
+      /></PillButton>
+
+      <PillButton
+        description="Lock"
+        title="Disable referee functionality and advanced options like changing the socket or viewing game reports (switches to spectator mode)"
+        @click.prevent="lockOptions"
+        @shortkey="lockOptions"
+      >
+        <font-awesome-icon icon="fa-lock"
+      /></PillButton>
     </div>
   </div>
 </template>
@@ -58,13 +68,18 @@ import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import ConfirmFieldRandomizationPopup from '@/components/referee/popups/ConfirmFieldRandomizationPopup.vue'
 import HelpPopup from '@/components/referee/popups/HelpPopup.vue'
 import PillButton from '@/components/shared/ui/PillButton.vue'
+import { useGameStore } from '@/store/gameStore'
 
 const socketStore = useSocketStore()
 const { socket } = storeToRefs(socketStore)
 const viewStore = useViewStore()
+const gameStore = useGameStore()
 
 function switchToSpectatorView() {
   viewStore.refereeView = false
+}
+function lockOptions() {
+  viewStore.adminActivated = false
 }
 </script>
 

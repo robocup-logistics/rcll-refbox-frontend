@@ -1,96 +1,97 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <Popup :title="'Score details for ' + teamName">
-    <!-- ORDER TABS -->
-    <TabGroup
-      :tabs="[
-        '0',
-        ...ordersDeliveredByTeam(teamName).map((order) => `${order.id}`),
-      ]"
-      ref="tabGroup"
-      class="order-tabs"
-      style="position: sticky; top: 0"
-    >
-      <template #0>
-        <div class="item transparent">
-          <p>No order</p>
-          <!-- sum of points related to this order -->
-          <p>
-            {{
-              awardedPointsByColorAndOrder(team, 0)
-                .map((awardedPoints) => awardedPoints.points)
-                .reduce((acc, cur) => acc + cur, 0)
-            }}
-          </p>
-        </div></template
-      >
-      <template
-        #[`${order.id}`]
-        v-for="order in ordersDeliveredByTeam(teamName)"
-      >
-        <div>
-          <img
-            :src="`/workpieces/${
-              orderStore.productByOrder(order)?.['workpiece_url']
-            }`"
-          />
-          <!-- sum of points related to this order -->
-          <p>
-            {{
-              awardedPointsByColorAndOrder(team, order.id)
-                .map((awardedPoints) => awardedPoints.points)
-                .reduce((acc, cur) => acc + cur, 0)
-            }}
-          </p>
-        </div>
-      </template>
-    </TabGroup>
-
-    <!-- AWARDED POINTS LIST FOR SELECTED ORDER -->
-    <template v-if="tabGroup">
-      <div
-        class="horizontal-flex"
-        v-show="
-          tabGroup &&
-          tabGroup.active != 0 &&
-          orderById(parseInt(tabGroup.active))
-        "
-      >
-        <span>
-          Awarded points for order {{ tabGroup.active }}
-          {{ orderById(tabGroup.active) }}</span
-        >
-        <PopupWrapper popup-position="bottom">
-          <template #reference>
-            <font-awesome-icon class="clickable" icon="fa-info-circle" />
-          </template>
-          <OrderPopup
-            :order="<Order>orderById(parseInt(tabGroup.active))"
-          ></OrderPopup>
-        </PopupWrapper>
-      </div>
-      <p v-show="tabGroup.active == 0">
-        Awarded points not associated with an order
-      </p>
+    <template v-if="scoreByColor(team) == 0">
+      <p>{{ teamName }} has not scored any points yet.</p>
     </template>
-    <div class="awarded-points-list">
-      <template
-        v-for="awardedPoints in awardedPointsByColorAndOrder(
-          team,
-          tabGroup?.active
-        )"
+    <template v-else>
+      <!-- ORDER TABS -->
+      <TabGroup
+        :tabs="[
+          '0',
+          ...ordersDeliveredByTeam(teamName).map((order) => `${order.id}`),
+        ]"
+        ref="tabGroup"
+        class="order-tabs"
       >
-        <div class="awarded-points-points">
-          {{ awardedPoints.points }}
-        </div>
-        <div class="awarded-points-time">
-          <div>{{ formatTime(awardedPoints.game_time, true) }}</div>
-        </div>
-        <div class="awarded-points-reason">
-          <div>{{ awardedPoints.reason }}</div>
+        <template #0>
+          <div class="item transparent">
+            <p>No order</p>
+            <!-- sum of points related to this order -->
+            <p>
+              {{
+                awardedPointsByColorAndOrder(team, 0)
+                  .map((awardedPoints) => awardedPoints.points)
+                  .reduce((acc, cur) => acc + cur, 0)
+              }}
+            </p>
+          </div></template
+        >
+        <template
+          #[`${order.id}`]
+          v-for="order in ordersDeliveredByTeam(teamName)"
+        >
+          <div>
+            <img
+              :src="`/workpieces/${
+                orderStore.productByOrder(order)?.['workpiece_url']
+              }`"
+            />
+            <!-- sum of points related to this order -->
+            <p>
+              {{
+                awardedPointsByColorAndOrder(team, order.id)
+                  .map((awardedPoints) => awardedPoints.points)
+                  .reduce((acc, cur) => acc + cur, 0)
+              }}
+            </p>
+          </div>
+        </template>
+      </TabGroup>
+
+      <!-- AWARDED POINTS LIST FOR SELECTED ORDER -->
+      <template v-if="tabGroup">
+        <p v-show="tabGroup.active == 0">
+          Awarded points not associated with an order:
+        </p>
+        <div
+          class="horizontal-flex"
+          v-show="tabGroup.active != 0 && orderById(parseInt(tabGroup.active))"
+        >
+          <span>Awarded points for</span>
+          <PopupWrapper popup-position="bottom">
+            <template #reference>
+              <div class="item lighter horizontal-flex">
+                <span> Order {{ tabGroup.active }} </span>
+                <font-awesome-icon class="clickable" icon="fa-info-circle" />
+              </div>
+            </template>
+            <OrderPopup
+              :order="<Order>orderById(parseInt(tabGroup.active))"
+            ></OrderPopup>
+          </PopupWrapper>
+          <span>:</span>
         </div>
       </template>
-    </div>
+      <div class="awarded-points-list">
+        <template
+          v-for="awardedPoints in awardedPointsByColorAndOrder(
+            team,
+            tabGroup?.active
+          )"
+        >
+          <div class="awarded-points-points">
+            {{ awardedPoints.points }}
+          </div>
+          <div class="awarded-points-time">
+            <div>{{ formatTime(awardedPoints.game_time) }}</div>
+          </div>
+          <div class="awarded-points-reason">
+            <div>{{ awardedPoints.reason }}</div>
+          </div>
+        </template>
+      </div>
+    </template>
   </Popup>
 </template>
 
@@ -124,7 +125,7 @@ defineProps({
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
-const { awardedPointsByColorAndOrder } = storeToRefs(gameStore)
+const { scoreByColor, awardedPointsByColorAndOrder } = storeToRefs(gameStore)
 const orderStore = useOrderStore()
 const { ordersDeliveredByTeam, orderById } = storeToRefs(orderStore)
 
@@ -136,6 +137,10 @@ const tabGroup: Ref<typeof TabGroup | undefined> = ref()
 <style scoped lang="scss">
 @use '@/assets/global.scss';
 .order-tabs {
+  position: sticky;
+  top: 0;
+  background-color: global.$surfaceColor;
+
   img {
     height: 80px;
     aspect-ratio: 1;

@@ -3,29 +3,28 @@ import { defineStore } from 'pinia'
 
 import type { ComputedRef, Ref } from 'vue'
 
-import { useSocketStore } from '@/store/socketStore'
 import { useGameStore } from '@/store/gameStore'
 import { useMachineStore } from '@/store/machineStore'
 import { useOrderStore } from '@/store/orderStore'
 import { useRobotStore } from '@/store/robotStore'
-import { useViewStore } from '@/store/viewStore'
 import type GameReport from '@/types/GameReport'
 import type AwardedPoints from '@/types/AwardedPoints'
 import type AgentTask from '@/types/AgentTask'
+import type Workpiece from '@/types/Workpiece'
 
 // this report store is used to access data and methods related to a database
 // connection instead of a live game
 export const useReportStore = defineStore('reportStore', () => {
   // use other stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  const socketStore = useSocketStore()
   const gameStore = useGameStore()
   const machineStore = useMachineStore()
   const orderStore = useOrderStore()
   const robotStore = useRobotStore()
-  const viewStore = useViewStore()
 
   // CONSTS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   const DEFAULT_BACKEND_URL: Ref<string> = ref('http://localhost:8085')
+  const MIN_VERSION: Ref<string> = ref('2')
+  const MAX_VERSION: Ref<string> = ref('2')
 
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> general settings
@@ -47,9 +46,6 @@ export const useReportStore = defineStore('reportStore', () => {
       team: String,
       awardedPoints: AwardedPoints[] | undefined = gameReport.value?.points
     ) => {
-      console.log('POINTS FOR')
-      console.log(team)
-      console.log(awardedPoints)
       return (
         awardedPoints
           ?.filter((points: AwardedPoints) => points.team == team)
@@ -69,13 +65,29 @@ export const useReportStore = defineStore('reportStore', () => {
       : []
   })
 
+  const activeWorkpieces: ComputedRef<Workpiece[]> = computed(() => {
+    return gameStore.phase == 'PRODUCTION'
+      ? gameReport.value?.workpiece_history.filter(
+          (workpiece) =>
+            gameStore.game_time >= workpiece.start_time &&
+            gameStore.game_time <= workpiece.end_time
+        ) || []
+      : []
+  })
+
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   async function requestGameReportsList(baseUrl: string) {
     loadingReportsList.value = true
     gameReportsList.value = []
     let response
     try {
-      response = await fetch(`${baseUrl}/api/getReportsList`)
+      response = await fetch(
+        `${baseUrl}/api/getReportsList?` +
+          new URLSearchParams({
+            min_version: MIN_VERSION.value,
+            max_version: MAX_VERSION.value,
+          })
+      )
       console.log(response)
       gameReportsList.value = <GameReport[]>await response.json()
     } catch (err) {
@@ -120,13 +132,7 @@ export const useReportStore = defineStore('reportStore', () => {
     // apply the information of the new game report throughout the app
     if (newGameReport) {
       // reset the stores
-      reset()
-      socketStore.reset()
-      gameStore.reset()
-      machineStore.reset()
-      orderStore.reset()
-      robotStore.reset()
-      viewStore.reset()
+      gameStore.resetAll()
       // select the new game report
       gameReport.value = newGameReport
       // set gamestate information
@@ -143,6 +149,7 @@ export const useReportStore = defineStore('reportStore', () => {
           (cfg) => cfg.path == '/llsfrb/game/field/width'
         ).value,
         game_time: 0,
+        cont_time: 0,
         magenta: newGameReport.teams[1],
         over_time: false,
         phase: 'PRE_GAME',
@@ -161,7 +168,7 @@ export const useReportStore = defineStore('reportStore', () => {
         const machineMeta = newGameReport['machine_meta'].find(
           (machineFi) => machineFi['name'] == machine['name']
         )
-        machineStore.addMachine({
+        machineStore.setMachine({
           mtype: machine['mtype'],
           name: machine['name'],
           rotation: machine['rotation'],
@@ -182,7 +189,7 @@ export const useReportStore = defineStore('reportStore', () => {
         })
       }
       // set ring specs
-      machineStore.setRingSpecs(newGameReport['ring_specs'])
+      machineStore.setringSpecs(newGameReport['ring_specs'])
     }
   }
 
@@ -227,18 +234,41 @@ export const useReportStore = defineStore('reportStore', () => {
           gameReport.value.robot_pose_history[robotPoseIndex.value].time <=
           gameStore.game_time
         ) {
-          /* robotStore.setRobot() */
+          const historyItem =
+            gameReport.value.robot_pose_history[robotPoseIndex.value]
+          robotStore.setRobot({
+            host: '', // @TODO - backend
+            last_seen: ['0', '0'], // @TODO - backend
+            maintenance_cylces: 0, // @TODO - backend
+            'maintenance_start-time': 0, // @TODO - backend
+            maintenance_warning_sent: false, // @TODO - backend
+            name: 'robot', // @TODO - backend
+            number: historyItem.robot_id,
+            port: 4444, // @TODO - backend
+            pose: [
+              historyItem.x.toString(),
+              historyItem.y.toString(),
+              historyItem.ori.toString(),
+            ],
+            state: 'ACTIVE', // @TODO - backend
+            team: gameStore.teamNameByColor(historyItem.team_color), // maybe @TODO - backend
+            team_color: historyItem.team_color,
+            warning_sent: false, //@TODO - backend
+          })
           robotPoseIndex.value += 1
         }
       }
-
-      // check workpiece news
-      // @todo
     }
   }
 
   function reset() {
+    gameSpeed.value = 1
+    loadingReportsList.value = false
+    gameReportsList.value = []
+    loadingReport.value = false
     gameReport.value = undefined
+    gameStateIndex.value = 0
+    robotPoseIndex.value = 0
   }
 
   // WATCH - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -251,6 +281,15 @@ export const useReportStore = defineStore('reportStore', () => {
     }
   )
 
+  // whenever the computed property `activeWorkpieces` changes, update the
+  // current workpieces
+  watch(
+    () => activeWorkpieces.value,
+    (newWorkpieces, _) => {
+      orderStore.workpieces = newWorkpieces
+    }
+  )
+
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   return {
     DEFAULT_BACKEND_URL,
@@ -260,7 +299,6 @@ export const useReportStore = defineStore('reportStore', () => {
     gameReport,
     gameSpeed,
     pointsByTeam,
-    activeAgentTasks,
     requestGameReportsList,
     requestGameReport,
     runGame,

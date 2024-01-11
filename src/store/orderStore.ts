@@ -5,6 +5,7 @@ import type Order from '@/types/Order'
 import type Product from '@/types/Product'
 import { useGameStore } from '@/store/gameStore'
 import { useRuleStore } from '@/store/ruleStore'
+import type Workpiece from '@/types/Workpiece'
 
 export const useOrderStore = defineStore('orderStore', () => {
   // USE OTHER STORES  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -15,13 +16,14 @@ export const useOrderStore = defineStore('orderStore', () => {
   const orders: Ref<Order[]> = ref([])
   const products: Ref<Product[]> = ref([])
   const orderCount: Ref<number> = ref(11)
+  const workpieces: Ref<Workpiece[]> = ref([])
 
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   const openOrders: ComputedRef<Order[]> = computed(() =>
     orders.value.filter(
       (order) =>
-        gameStore.game_time >= parseInt(order.delivery_period[0]) - 1 &&
-        gameStore.game_time < parseInt(order.delivery_period[1]) + 1 &&
+        gameStore.game_time >= order.delivery_period[0] - 1 &&
+        gameStore.game_time < order.delivery_period[1] + 1 &&
         gameStore.phase == 'PRODUCTION'
     )
   )
@@ -30,8 +32,8 @@ export const useOrderStore = defineStore('orderStore', () => {
     orders.value.filter(
       (order) =>
         (['PRE_GAME', 'SETUP', 'EXPLORATION'].includes(gameStore.phase) ||
-          gameStore.game_time < parseInt(order.delivery_period[0])) &&
-        parseInt(order.delivery_period[0]) < ruleStore.PRODUCTION_DURATION
+          gameStore.game_time < order.delivery_period[0]) &&
+        order.delivery_period[0] < ruleStore.PRODUCTION_DURATION
     )
   )
 
@@ -39,14 +41,13 @@ export const useOrderStore = defineStore('orderStore', () => {
     orders.value.filter(
       (order) =>
         (gameStore.phase == 'POST_GAME' || gameStore.phase == 'PRODUCTION') &&
-        gameStore.game_time >= parseInt(order.delivery_period[1])
+        gameStore.game_time >= order.delivery_period[1]
     )
   )
 
   const overtimeOrder: ComputedRef<Order | undefined> = computed(() =>
     orders.value.find(
-      (order) =>
-        parseInt(order.delivery_period[0]) == ruleStore.PRODUCTION_DURATION
+      (order) => order.delivery_period[0] == ruleStore.PRODUCTION_DURATION
     )
   )
 
@@ -71,7 +72,7 @@ export const useOrderStore = defineStore('orderStore', () => {
           return []
         }
         return orders.value.filter(
-          (order) => parseInt(order.quantity_delivered[index]) >= 1
+          (order) => order.quantity_delivered[index] >= 1
         )
       }
     })
@@ -156,10 +157,20 @@ export const useOrderStore = defineStore('orderStore', () => {
     products.value = newProducts
   }
 
+  function setWorkpiece(workpiece: Workpiece) {
+    const index = workpieces.value.indexOf(workpiece)
+    if (index === -1) {
+      workpieces.value.push(workpiece)
+    } else {
+      workpieces.value[index] = workpiece
+    }
+  }
+
   function reset() {
     orders.value = []
     products.value = []
     orderCount.value = 11
+    workpieces.value = []
   }
 
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -167,6 +178,7 @@ export const useOrderStore = defineStore('orderStore', () => {
     orders,
     products,
     orderCount,
+    workpieces,
     openOrders,
     upcomingOrders,
     expiredOrders,
@@ -177,6 +189,7 @@ export const useOrderStore = defineStore('orderStore', () => {
     orderById,
     setOrders,
     setOrder,
+    setWorkpiece,
     reset,
   }
 })

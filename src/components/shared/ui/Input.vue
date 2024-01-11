@@ -57,15 +57,14 @@ defineExpose({ getValue, focus })
   position: relative;
 
   input {
-    border-radius: 5px;
-    padding: 5px;
+    border-radius: 8px;
+    padding: 10px;
     border: none;
     outline: none;
     width: 100%;
     height: 100%;
-    background-color: global.$bgColorLighter;
+    background-color: global.$lighterColor;
     color: white;
-    font-size: 15px;
 
     &:focus + .underline {
       width: calc(100% - 10px);

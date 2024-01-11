@@ -27,7 +27,9 @@ import { ref, type Ref, watch, onMounted } from 'vue'
 import Button from '@/components/shared/ui/Button.vue'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const props = defineProps(['watchData'])
+const props = defineProps({
+  watchData: Array,
+})
 
 // scroll  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the container
@@ -103,6 +105,7 @@ watch(
     margin: 0 auto;
     bottom: 15px;
     max-width: fit-content;
+    background-color: global.$lightestColor;
   }
 }
 </style>

@@ -35,14 +35,17 @@ const props = defineProps({
 @use '@/assets/global.scss';
 
 button {
-  padding: 7px 10px;
-  border-radius: 5px;
+  padding: 10px 15px;
+  border-radius: 8px;
   color: white;
-  font-size: 15px;
-  background-color: global.$bgColorLighter;
+  background-color: global.$lighterColor;
   flex-grow: 0 !important;
+  flex-shrink: 0 !important;
   overflow-x: hidden !important;
-  min-width: fit-content;
+  width: fit-content;
+  height: fit-content;
+  /* for tab groups */
+  transition: background-color 00ms;
 
   &.primary {
     background-color: global.$accentColor;

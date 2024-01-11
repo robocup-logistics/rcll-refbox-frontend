@@ -2,7 +2,9 @@ import Color from '@/types/Color'
 
 export default interface AgentTask {
   task_type: 'MOVE' | 'RETRIEVE' | 'DELIVER' | 'BUFFER' | 'EXPLORE_ZONE'
-  task_paramters: any // @TODO
+  task_parameters: ({ machine_id: string } | { waypoint: string }) & {
+    machine_point?: string
+  }
   task_id: number // unique per robot
   robot_id: number
   team_color: Color

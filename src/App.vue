@@ -1,8 +1,12 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div id="app">
+  <div
+    id="app"
+    v-shortkey="['ctrl', 'alt', 'o']"
+    @shortkey.native="unlockOptions()"
+  >
     <StartMenu v-if="!socket && !gameReport" />
-    <RefereeApp v-else-if="refereeView && socket" />
+    <RefereeApp v-else-if="adminActivated && refereeView && socket" />
     <SpectatorApp v-else />
   </div>
 </template>
@@ -24,7 +28,12 @@ const { gameReport } = storeToRefs(reportStore)
 const socketStore = useSocketStore()
 const { socket } = storeToRefs(socketStore)
 const viewStore = useViewStore()
-const { refereeView } = storeToRefs(viewStore)
+const { adminActivated, refereeView } = storeToRefs(viewStore)
+
+// unlock options  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+function unlockOptions() {
+  adminActivated.value = !adminActivated.value
+}
 </script>
 
 // STYLE -----------------------------------------------------------------------

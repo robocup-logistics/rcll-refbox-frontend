@@ -1,8 +1,9 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <p>Connect to the Websocket:</p>
+  <p>Connect to the game:</p>
   <div class="horizontal-flex form-row">
     <Input
+      v-if="adminActivated"
       ref="input"
       type="url"
       :value="websocketURL"
@@ -10,7 +11,7 @@
       :placeholder="DEFAULT_WS_URL"
     />
     <Button
-      icon="fa-paper-plane"
+      icon="fa-link"
       primary
       @click="connectToWebsocket"
       :loading="attemptingConnection"
@@ -28,6 +29,7 @@ import { useSocketStore } from '@/store/socketStore'
 import Button from '@/components/shared/ui/Button.vue'
 import Input from '@/components/shared/ui/Input.vue'
 import { watch } from 'vue'
+import { useViewStore } from '@/store/viewStore'
 
 // define emits  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const emit = defineEmits<{
@@ -37,6 +39,8 @@ const emit = defineEmits<{
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const socketStore = useSocketStore()
 const { DEFAULT_WS_URL, attemptingConnection } = storeToRefs(socketStore)
+const viewStore = useViewStore()
+const { adminActivated } = storeToRefs(viewStore)
 
 // connect to websocket  - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const websocketURL: Ref<string> = ref(DEFAULT_WS_URL.value)

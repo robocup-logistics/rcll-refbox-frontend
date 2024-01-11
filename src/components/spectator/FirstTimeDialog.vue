@@ -96,14 +96,19 @@
       </p>
     </template>
     <div class="horizontal-flex">
-      <Button v-if="step < numberOfSteps" @click="close()">
+      <Button v-if="step < numberOfSteps" icon="fa-forward" @click="close()">
         Skip introduction
       </Button>
       <div style="flex-grow: 1"></div>
-      <Button v-if="step < numberOfSteps" primary @click="step += 1">
+      <Button
+        v-if="step < numberOfSteps"
+        primary
+        icon="fa-chevron-right"
+        @click="step += 1"
+      >
         Next step
       </Button>
-      <Button v-else primary @click="close()">Finish</Button>
+      <Button v-else primary icon="fa-check" @click="close()">Finish</Button>
     </div>
   </Modal>
 </template>
@@ -148,29 +153,28 @@ function close() {
 @use '@/assets/global.scss';
 
 .step-chooser {
+  margin-bottom: 40px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
 
-  margin-bottom: 40px;
-
   .step-item {
     width: 100%;
     position: relative;
 
-    &::after {
+    &:after {
       content: '';
       position: absolute;
       width: 100%;
       height: 2px;
-      background-color: global.$itemColor;
+      background-color: global.$lighterColor;
       top: 14px;
       right: -50%;
     }
 
     &:last-child {
-      &::after {
+      &:after {
         content: none;
       }
     }
@@ -188,7 +192,8 @@ function close() {
 
       border-radius: 50%;
       text-align: center;
-      background-color: global.$bgColorLighter;
+      background-color: global.$lighterColor;
+      color: black;
 
       &.active {
         background-color: global.$accentColor;
@@ -199,13 +204,15 @@ function close() {
       }
 
       &:disabled {
-        background-color: global.$itemColor;
+        color: global.$lighterColor;
       }
     }
   }
 }
 
 .machines-grid {
+  overflow: hidden;
+
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 10px;

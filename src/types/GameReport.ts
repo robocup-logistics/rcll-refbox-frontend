@@ -1,7 +1,7 @@
 import type AwardedPoints from '@/types/AwardedPoints'
 import type Order from '@/types/Order'
 import type Phase from '@/types/Phase'
-import type RingSpec from '@/types/Ringspec'
+import type RingSpec from '@/types/RingSpec'
 import type State from '@/types/State'
 import AgentTask from '@/types/AgentTask'
 

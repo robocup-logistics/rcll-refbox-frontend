@@ -68,28 +68,21 @@
     <!-- agent task -->
     <div v-if="robotAgentTask" class="horizontal-flex content-box">
       <template v-if="robotAgentTask.task_type == 'MOVE'">
-        <span>I am <b>MOVING</b> to</span>
-        <EntityHighlighter
-          type="machine"
-          name="the base station"
-          target="machine_C-BS"
-        />
+        <span
+          >I am <b>MOVING</b> to {{ robotAgentTask.task_parameters[1] }}</span
+        >
       </template>
       <template v-else-if="robotAgentTask.task_type == 'RETRIEVE'">
-        <span>I am <b>RETRIEVING</b> at</span>
-        <EntityHighlighter
-          type="machine"
-          name="the base station"
-          target="machine_C-BS"
-        />
+        <span
+          >I am <b>RETRIEVING</b> at
+          {{ robotAgentTask.task_parameters[1] }}</span
+        >
       </template>
       <template v-else-if="robotAgentTask.task_type == 'DELIVER'">
-        <span>I am <b>DELIVERING</b> at</span>
-        <EntityHighlighter
-          type="machine"
-          name="the base station"
-          target="machine_C-BS"
-        />
+        <span
+          >I am <b>DELIVERING</b> at
+          {{ robotAgentTask.task_parameters[1] }}</span
+        >
       </template>
     </div>
   </Popup>
@@ -104,7 +97,6 @@ import type Robot from '@/types/Robot'
 import { useRobotStore } from '@/store/robotStore'
 import Popup from '@/components/shared/ui/Popup.vue'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
-import EntityHighlighter from '@/components/shared/util/EntityHighlighter.vue'
 import { storeToRefs } from 'pinia'
 import type AgentTask from '@/types/AgentTask'
 

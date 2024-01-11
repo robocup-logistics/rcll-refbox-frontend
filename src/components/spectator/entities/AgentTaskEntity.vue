@@ -1,20 +1,23 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <svg id="svg">
+  <svg class="svg">
     <defs>
       <marker
         id="arrow"
         markerWidth="10"
         markerHeight="10"
-        :refX="viewStore.squareDiameterPixels * 0.3"
+        :refX="viewStore.squareDiameterPixels * 0.2"
         refY="3"
         orient="auto"
         markerUnits="strokeWidth"
       >
-        <path id="arrowPath" d="M0,0 L0,6 L9,3 z"></path>
+        <path class="arrow-path" d="M0,0 L0,6 L9,3 z"></path>
       </marker>
     </defs>
-    <line id="line" ref="line" />
+    <line
+      :class="['line', task.task_type == 'MOVE' ? 'arrow' : '']"
+      ref="line"
+    />
   </svg>
 </template>
 
@@ -23,17 +26,18 @@
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { ref, watch } from 'vue'
 import type { PropType, Ref } from 'vue'
-import type Robot from '@/types/Robot'
+import type AgentTask from '@/types/AgentTask'
 import { useViewStore } from '@/store/viewStore'
+import Robot from '@/types/Robot'
 
 // define props  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const props = defineProps({
-  robot: {
-    type: Object as PropType<Robot>,
+  task: {
+    type: Object as PropType<AgentTask>,
     required: true,
   },
-  waypoint: {
-    type: String,
+  robot: {
+    type: Object as PropType<Robot | null>,
     required: true,
   },
 })
@@ -43,10 +47,12 @@ const viewStore = useViewStore()
 
 // draw arrow  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const line: Ref<SVGLineElement | null> = ref(null)
-function drawArrow() {
-  if (line.value) {
+function drawLine() {
+  if (line.value && props.robot) {
     const robotPos = viewStore.positionOfRobot(props.robot)
-    const waypointPos = viewStore.positionOfZone('M_Z34')
+    const waypointPos = viewStore.positionOfWaypoint(
+      props.task.task_parameters[1]
+    )
 
     // set the line position
     line.value.setAttribute('x1', `${robotPos[0]}`)
@@ -58,25 +64,31 @@ function drawArrow() {
     // at it)
     line.value.setAttribute(
       'stroke-dasharray',
-      `${line.value.getTotalLength() - viewStore.squareDiameterPixels / 2}`
+      `${line.value.getTotalLength() - viewStore.squareDiameterPixels / 3}`
     )
   }
 }
 
-// redraw arrow when window size or the robot's position changes and once
-// initially after the line element has been created
-window.addEventListener('resize', () => drawArrow())
+// redraw arrow when window size, playing field size or the robot's position
+// changes and once initially after the line element has been created
+window.addEventListener('resize', () => drawLine())
+watch(
+  () => viewStore.squareDiameterPixels,
+  () => {
+    drawLine()
+  }
+)
 watch(
   () => props.robot,
   () => {
-    drawArrow()
+    drawLine()
   },
-  { immediate: true, deep: true }
+  { deep: true }
 )
 watch(
   () => line.value,
   () => {
-    drawArrow()
+    drawLine()
   },
   { immediate: true }
 )
@@ -86,7 +98,7 @@ watch(
 <style scoped lang="scss">
 @use '@/assets/global.scss';
 
-#svg {
+.svg {
   position: absolute;
   top: 0;
   left: 0;
@@ -95,13 +107,16 @@ watch(
   pointer-events: none;
 }
 
-#line {
+.line {
   stroke-width: 2px;
-  stroke: global.$accentColor;
-  marker-end: url(#arrow);
+  stroke: global.$surfaceColor;
+
+  &.arrow {
+    marker-end: url(#arrow);
+  }
 }
 
-#arrowPath {
-  fill: global.$accentColor;
+.arrow-path {
+  fill: global.$surfaceColor;
 }
 </style>

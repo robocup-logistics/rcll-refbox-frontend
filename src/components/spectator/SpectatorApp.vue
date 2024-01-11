@@ -1,11 +1,17 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
+  <div class="bg"></div>
   <div id="spectatorView">
-    <div id="outerWrapper">
-      <div id="innerWrapper">
-        <TopBar />
-        <PlayingField />
-      </div>
+    <div id="topBar">
+      <ScoreBoard />
+      <GameInfoBoard />
+
+      <OrdersBoard v-if="['PRODUCTION', 'POST_GAME'].includes(phase)" />
+      <MenuBoard v-if="adminActivated" />
+    </div>
+    <div id="fieldAndEvents">
+      <EventBoard />
+      <PlayingField />
     </div>
   </div>
   <FirstTimeDialog />
@@ -14,9 +20,22 @@
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import TopBar from '@/components/spectator/TopBar.vue'
 import PlayingField from '@/components/spectator/PlayingField.vue'
 import FirstTimeDialog from '@/components/spectator/FirstTimeDialog.vue'
+import EventBoard from '@/components/spectator/EventBoard.vue'
+import ScoreBoard from '@/components/spectator/ScoreBoard.vue'
+import GameInfoBoard from '@/components/spectator/GameInfoBoard.vue'
+import OrdersBoard from '@/components/spectator/OrdersBoard.vue'
+import MenuBoard from '@/components/spectator/MenuBoard.vue'
+import { useGameStore } from '@/store/gameStore'
+import { storeToRefs } from 'pinia'
+import { useViewStore } from '@/store/viewStore'
+
+// use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const gameStore = useGameStore()
+const { phase } = storeToRefs(gameStore)
+const viewStore = useViewStore()
+const { adminActivated } = storeToRefs(viewStore)
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -24,27 +43,31 @@ import FirstTimeDialog from '@/components/spectator/FirstTimeDialog.vue'
 @use '@/assets/global.scss';
 
 #spectatorView {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
   height: 100vh;
   width: 100vw;
+  padding: 10px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
-  #outerWrapper {
+  #topBar {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 100%;
+    height: global.$topBarHeight;
+
     display: flex;
-    justify-content: center;
+    justify-content: left;
+    gap: 10px;
+  }
+
+  #fieldAndEvents {
+    height: calc(100vh - global.$topBarHeight - 30px);
+
+    display: flex;
     flex-direction: row;
     gap: 10px;
-    max-width: 100vw;
-    max-height: 100vh;
-    overflow: hidden;
-
-    #innerWrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
   }
 }
 </style>

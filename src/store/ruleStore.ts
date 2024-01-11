@@ -12,11 +12,15 @@ export const useRuleStore = defineStore('ruleStore', () => {
   const OVERTIME_DURATION: Ref<number> = ref(300)
   const MAINTENANCE_DURATION: Ref<number> = ref(120)
 
+  // limits
+  const MAX_NUMBER_OF_ROBOTS: Ref<number> = ref(3)
+
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   return {
     SETUP_DURATION,
     PRODUCTION_DURATION,
     OVERTIME_DURATION,
     MAINTENANCE_DURATION,
+    MAX_NUMBER_OF_ROBOTS,
   }
 })

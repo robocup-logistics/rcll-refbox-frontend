@@ -36,26 +36,53 @@
     </template>
 
     <!-- DELIVERY STATION -->
-    <template v-else-if="machine.mtype == 'DS'"> </template>
+    <template v-else-if="machine.mtype == 'DS'">
+      <template
+        v-if="ordersDeliveredByTeam(teamNameByColor(machine.team)).length"
+      >
+        <p>Delivered orders (by {{ teamNameByColor(machine.team) }}):</p>
+        <div class="horizontal-flex content-box">
+          <OrderEntity
+            v-for="order in ordersDeliveredByTeam(
+              teamNameByColor(machine.team)
+            )"
+            :order="order"
+          >
+          </OrderEntity>
+        </div>
+      </template>
+      <template v-else>
+        <p>
+          {{ teamNameByColor(machine.team) }} has not delivered any order yet.
+        </p>
+      </template>
+    </template>
 
     <!-- RING STATION -->
     <template v-else-if="machine.mtype == 'RS'">
       <p>Available rings:</p>
       <div
         v-for="ringColor in (<MachineRS>machine)['rs_ring_colors']"
-        class="horizontal-flex content-box"
+        class="content-box"
       >
-        <img :src="`/workpieces/${ringColor}.svg`" :alt="ringColor" />
         <div class="horizontal-flex">
-          <font-awesome-icon icon="fa-coins" />
-          <p>
-            {{
-              ringspecs.find((ringspec) => ringspec.color == ringColor)
-                ?.req_bases
-            }}
-            bases
-          </p>
+          <img :src="`/workpieces/${ringColor}.svg`" :alt="ringColor" />
+          <div class="horizontal-flex">
+            <font-awesome-icon icon="fa-coins" />
+            <p>
+              {{
+                ringSpecs.find((ringspec) => ringspec.color == ringColor)
+                  ?.req_bases
+              }}
+              bases
+            </p>
+          </div>
         </div>
+        <p class="text-warning" v-if="(<RingSpec>ringSpecs.find((ringspec) => ringspec.color == ringColor))
+                .req_bases - ((<MachineRS>machine).bases_added - (<MachineRS>machine).bases_used) > 0">
+                Remaining payment:
+                {{ (<RingSpec>ringSpecs.find((ringspec) => ringspec.color == ringColor))
+                .req_bases - ((<MachineRS>machine).bases_added - (<MachineRS>machine).bases_used) }}</p>
       </div>
     </template>
 
@@ -84,18 +111,16 @@ import type MachineRS from '@/types/MachineRS'
 import Popup from '@/components/shared/ui/Popup.vue'
 import { useMachineStore } from '@/store/machineStore'
 import { storeToRefs } from 'pinia'
-import {
-  RING_BLUE,
-  RING_GREEN,
-  RING_ORANGE,
-  RING_YELLOW,
-} from '@/assets/exports.module.scss'
 import BaseStationExplainable from '@/components/spectator/explainables/BaseStationExplainable.vue'
 import CapStationExplainable from '@/components/spectator/explainables/CapStationExplainable.vue'
 import DeliveryStationExplainable from '@/components/spectator/explainables/DeliveryStationExplainable.vue'
 import RingStationExplainable from '@/components/spectator/explainables/RingStationExplainable.vue'
 import StorageStationExplainable from '@/components/spectator/explainables/StorageStationExplainable.vue'
 import type MachineCS from '@/types/MachineCS'
+import { useOrderStore } from '@/store/orderStore'
+import { useGameStore } from '@/store/gameStore'
+import OrderEntity from '@/components/spectator/entities/OrderEntity.vue'
+import RingSpec from '@/types/RingSpec'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 defineProps({
@@ -106,39 +131,12 @@ defineProps({
 })
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const gameStore = useGameStore()
 const machineStore = useMachineStore()
-const { ringspecs } = storeToRefs(machineStore)
-
-// type info - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const machineTypeNames: Map<string, string> = new Map([
-  ['BS', 'Base station'],
-  ['CS', 'Cap station'],
-  ['DS', 'Delivery station'],
-  ['RS', 'Ring station'],
-  ['SS', 'Storage station'],
-])
-
-const machineTypeDescriptions: Map<string, string> = new Map([
-  ['BS', 'Base station'],
-  ['CS', 'Cap station'],
-  ['DS', 'Delivery station'],
-  ['RS', 'Ring station'],
-  ['SS', 'Storage station'],
-])
-
-// ring stations - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-function getColor(ring: string) {
-  switch (ring) {
-    case 'RING_BLUE':
-      return RING_BLUE
-    case 'RING_GREEN':
-      return RING_GREEN
-    case 'RING_ORANGE':
-      return RING_ORANGE
-    case 'RING_YELLOW':
-      return RING_YELLOW
-  }
-}
+const orderStore = useOrderStore()
+const { teamNameByColor } = storeToRefs(gameStore)
+const { ringSpecs } = storeToRefs(machineStore)
+const { ordersDeliveredByTeam } = storeToRefs(orderStore)
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -146,18 +144,21 @@ function getColor(ring: string) {
 @use '@/assets/global.scss';
 
 .shelf {
-  display: block;
-  padding: 60px 50px;
   position: relative;
 
-  &:before {
+  padding: 60px 50px;
+
+  display: block;
+
+  &:after {
     content: 'SHELF';
     position: absolute;
     top: 10px;
     left: 10px;
-    background-color: global.$itemColor;
+
     padding: 0 5px;
-    border-radius: 5px;
+    background-color: global.$surfaceColor;
+    border-radius: 8px;
   }
 
   .shelf-level {
@@ -171,13 +172,14 @@ function getColor(ring: string) {
       grid-template-columns: 1fr 1fr 1fr;
 
       &:after {
-        content: 'Sample shelf, not live';
+        content: 'Not live | sample';
         position: absolute;
         top: -30px;
         right: 0px;
-        background-color: global.$itemColor;
+
         padding: 0 5px;
-        border-radius: 5px;
+        background-color: global.$surfaceColor;
+        border-radius: 8px;
       }
     }
 
@@ -187,8 +189,8 @@ function getColor(ring: string) {
 
     .shelf-item {
       aspect-ratio: 1;
-      background-color: global.$bgColorLighter;
-      border-radius: 5px;
+      background-color: global.$lighterColor;
+      border-radius: 8px;
 
       img {
         transform: rotateX(-30deg) rotateZ(-30deg);

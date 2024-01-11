@@ -1,77 +1,79 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div id="ordersBoard" class="horizontal-flex">
-    <!-- OPEN ORDERS -->
-    <div class="section open-orders-section" v-if="openOrders.length">
-      <div class="item">
-        <div class="order-list">
-          <template v-for="order in openOrders" :key="order.id">
-            <div
-              v-if="order != overtimeOrder || overtime"
-              :class="[
-                game_time <= parseInt(order.delivery_period[0]) ? 'appear' : '',
-
-                game_time >= parseInt(order.delivery_period[1])
-                  ? 'disappear'
-                  : '',
-                'order',
-              ]"
-            >
-              <OrderEntity :order="order"></OrderEntity>
+  <Accordion id="ordersBoard" title="Orders">
+    <div class="horizontal-flex">
+      <!-- OPEN ORDERS -->
+      <div
+        class="vertical-flex open-orders-vertical-flex"
+        v-if="openOrders.length"
+      >
+        <div class="item lighter">
+          <div class="order-list">
+            <template v-for="order in openOrders" :key="order.id">
               <div
-                class="horizontal-flex"
-                v-if="
-                  parseInt(order.delivery_period[1]) - game_time >= 0 &&
-                  parseInt(order.delivery_period[0]) - game_time <= 0
-                "
+                v-if="order != overtimeOrder || overtime"
+                :class="[
+                  game_time <= order.delivery_period[0] ? 'appear' : '',
+
+                  game_time >= order.delivery_period[1] ? 'disappear' : '',
+                  'order',
+                ]"
               >
-                <font-awesome-icon
-                  v-show="parseInt(order.delivery_period[1]) - game_time <= 60"
-                  icon="fa-hourglass"
-                  shake
-                  style="--fa-animation-duration: 5s"
-                />
-                <p>
-                  {{
-                    formatTime(parseInt(order.delivery_period[1]) - game_time)
-                  }}
-                </p>
+                <OrderEntity :order="order"></OrderEntity>
+                <div
+                  class="horizontal-flex desc"
+                  v-if="
+                    order.delivery_period[1] - game_time >= 0 &&
+                    order.delivery_period[0] - game_time <= 0
+                  "
+                >
+                  <font-awesome-icon
+                    v-show="order.delivery_period[1] - game_time <= 60"
+                    icon="fa-hourglass"
+                    shake
+                    style="--fa-animation-duration: 5s"
+                  />
+                  <p>
+                    {{ formatTime(order.delivery_period[1] - game_time) }}
+                  </p>
+                </div>
               </div>
-            </div>
-          </template>
+            </template>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- ADDITIONAL ORDERS -->
-    <div class="section">
-      <!-- UPCOMING ORDERS -->
-      <div class="item">
-        <p>{{ upcomingOrders.length }} orders</p>
-        <p class="horizontal-flex">
-          upcoming
-          <PopupWrapper popup-position="bottom" v-if="upcomingOrders.length">
-            <template #reference>
-              <font-awesome-icon class="clickable" icon="fa-info-circle" />
-            </template>
-            <UpcomingOrdersPopup></UpcomingOrdersPopup>
-          </PopupWrapper>
-        </p>
+      <!-- ADDITIONAL ORDERS -->
+      <div class="vertical-flex">
+        <!-- UPCOMING ORDERS -->
+        <PopupWrapper popup-position="bottom" v-if="upcomingOrders.length">
+          <template #reference>
+            <div class="item lighter">
+              <p>{{ upcomingOrders.length }} orders</p>
+              <p class="horizontal-flex">
+                upcoming
+                <font-awesome-icon icon="fa-info-circle" />
+              </p>
+            </div>
+          </template>
+          <UpcomingOrdersPopup></UpcomingOrdersPopup>
+        </PopupWrapper>
+
+        <!-- EXPIRED ORDERS -->
+        <PopupWrapper popup-position="bottom" v-if="expiredOrders.length">
+          <template #reference>
+            <div class="item lighter" ref="expiredSection">
+              <p>{{ expiredOrders.length }} orders</p>
+              <p class="horizontal-flex">
+                expired
+                <font-awesome-icon icon="fa-info-circle" />
+              </p>
+            </div>
+          </template>
+          <ExpiredOrdersPopup></ExpiredOrdersPopup>
+        </PopupWrapper>
       </div>
-      <!-- EXPIRED ORDERS -->
-      <div class="item" ref="expiredSection">
-        <p>{{ expiredOrders.length }} orders</p>
-        <p class="horizontal-flex">
-          expired
-          <PopupWrapper popup-position="bottom" v-if="expiredOrders.length">
-            <template #reference>
-              <font-awesome-icon class="clickable" icon="fa-info-circle" />
-            </template>
-            <ExpiredOrdersPopup></ExpiredOrdersPopup>
-          </PopupWrapper>
-        </p>
-      </div>
     </div>
-  </div>
+  </Accordion>
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
@@ -87,6 +89,7 @@ import formatTime from '@/utils/formatTime'
 import OrderEntity from '@/components/spectator/entities/OrderEntity.vue'
 import ExpiredOrdersPopup from '@/components/spectator/popups/ExpiredOrdersPopup.vue'
 import UpcomingOrdersPopup from '@/components/spectator/popups/UpcomingOrdersPopup.vue'
+import Accordion from '@/components/shared/ui/Accordion.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
@@ -103,7 +106,7 @@ const expiredSection: Ref<HTMLElement | null> = ref(null)
 @use '@/assets/global.scss';
 
 #ordersBoard {
-  .open-orders-section {
+  .open-orders-vertical-flex {
     .order-list {
       display: flex;
       gap: 10px;
@@ -117,6 +120,14 @@ const expiredSection: Ref<HTMLElement | null> = ref(null)
         justify-content: space-between;
         align-items: center;
 
+        .desc {
+          background-color: global.$surfaceColor;
+          border-radius: 8px 8px 0 0;
+          padding: 2px 4px;
+          margin-bottom: 0px;
+          z-index: 2;
+        }
+
         &.appear {
           animation: moveFromUpcomingSection 1s 1;
         }
@@ -128,7 +139,7 @@ const expiredSection: Ref<HTMLElement | null> = ref(null)
         @keyframes moveFromUpcomingSection {
           0% {
             width: 0;
-            transform: scale(0.5) translateX(250px) translateY(-50px);
+            transform: scale(0.5) translateX(250px);
             opacity: 0;
           }
 
@@ -146,7 +157,7 @@ const expiredSection: Ref<HTMLElement | null> = ref(null)
 
           100% {
             width: 0;
-            transform: scale(0.5) translateX(250px) translateY(50px);
+            transform: scale(0.5) translateX(250px);
             opacity: 0;
           }
         }

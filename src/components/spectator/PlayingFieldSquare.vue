@@ -45,8 +45,8 @@ const machine: ComputedRef<Machine | undefined> = computed(() => {
 
 .playing-field-square {
   aspect-ratio: 1;
-  background-color: global.$bgColorLighter;
-  border-radius: 5px;
+  background-color: global.$lighterColor;
+  border-radius: 8px;
 
   position: relative;
   transition: background-color 400ms;
@@ -72,7 +72,7 @@ const machine: ComputedRef<Machine | undefined> = computed(() => {
     bottom: 2px;
     right: 10px;
 
-    font-size: 10px;
+    font-size: 12px;
     color: global.$bgColor;
   }
 

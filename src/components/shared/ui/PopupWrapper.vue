@@ -1,7 +1,7 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <div class="popup-wrapper">
-    <div class="reference" ref="reference" @click="togglePopup">
+    <div class="reference clickable" ref="reference" @click="togglePopup">
       <slot name="reference"></slot>
     </div>
     <div
@@ -11,7 +11,20 @@
       :style="[floatingStyles, { 'z-index': zIndex }]"
       @click="placePopupOnTop"
     >
-      <slot></slot>
+      <div
+        ref="floatingArrow"
+        :class="[
+          'arrow-wrapper',
+          placement == 'right' ? 'left' : '',
+          placement == 'left' ? 'right' : '',
+          placement == 'bottom' ? 'top' : '',
+          placement == 'top' ? 'bottom' : '',
+        ]"
+      >
+        <div class="arrow"></div>
+      </div>
+
+      <slot class="clickable"></slot>
     </div>
   </div>
 </template>
@@ -22,7 +35,14 @@
 import { ref, provide } from 'vue'
 import type { PropType, Ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useFloating, autoUpdate, offset, flip, shift } from '@floating-ui/vue'
+import {
+  useFloating,
+  autoUpdate,
+  offset,
+  flip,
+  shift,
+  arrow,
+} from '@floating-ui/vue'
 import type { Placement } from '@floating-ui/vue'
 import { useViewStore } from '@/store/viewStore'
 
@@ -31,7 +51,7 @@ const props = defineProps({
   popupPosition: {
     type: String as PropType<Placement>,
     required: false,
-    default: 'right-start',
+    default: 'right',
   },
 })
 
@@ -43,11 +63,21 @@ const { popupCounter } = storeToRefs(viewStore)
 // -> setting up floating ui
 const reference: Ref<HTMLElement | null> = ref(null)
 const popup: Ref<HTMLElement | null> = ref(null)
-const { floatingStyles } = useFloating(reference, popup, {
-  placement: props.popupPosition,
-  middleware: [offset(5), flip(), shift({ padding: 10 })],
-  whileElementsMounted: autoUpdate,
-})
+const floatingArrow: Ref<HTMLElement | null> = ref(null)
+const { floatingStyles, middlewareData, placement } = useFloating(
+  reference,
+  popup,
+  {
+    placement: props.popupPosition,
+    middleware: [
+      offset(15),
+      flip(),
+      shift({ padding: 10 }),
+      arrow({ element: floatingArrow }),
+    ],
+    whileElementsMounted: autoUpdate,
+  }
+)
 
 // -> correct z-index
 const zIndex: Ref<number> = ref(0)
@@ -81,12 +111,80 @@ provide('togglePopup', togglePopup)
 @use '@/assets/global.scss';
 
 .popup-wrapper {
-  height: 100%;
+  height: fit-content;
 
   .reference {
-    height: 100%;
+    height: fit-content;
     /* to make sure items in horizontal flex containers are well aligned */
     display: flex;
+  }
+
+  .popup {
+    .arrow-wrapper {
+      $arrowSize: 20px;
+      $hideFactor: -1;
+      position: absolute;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+
+      .arrow {
+        position: absolute;
+        width: calc($arrowSize * 2);
+        height: calc($arrowSize * 2);
+        background-color: global.$lighterColor;
+        box-shadow: 0 0 6px 1px global.$bgColor;
+        border-radius: 2px;
+      }
+
+      &.top {
+        top: calc($arrowSize * $hideFactor * 2);
+        left: calc(v-bind('middlewareData?.arrow?.x') * 1px);
+        width: calc($arrowSize * 4);
+        height: calc($arrowSize * 2);
+
+        .arrow {
+          left: $arrowSize;
+          transform: translateY(calc($arrowSize * 1)) scale(0.7) rotate(45deg);
+        }
+      }
+
+      &.right {
+        right: calc($arrowSize * $hideFactor * 2);
+        top: calc(v-bind('middlewareData?.arrow?.y') * 1px);
+        width: calc($arrowSize * 2);
+        height: calc($arrowSize * 4);
+
+        .arrow {
+          top: $arrowSize;
+          transform: translateX(calc($arrowSize * -1)) scale(0.7) rotate(45deg);
+        }
+      }
+
+      &.bottom {
+        bottom: calc($arrowSize * $hideFactor * 2);
+        left: calc(v-bind('middlewareData?.arrow?.x') * 1px);
+        width: calc($arrowSize * 4);
+        height: calc($arrowSize * 2);
+
+        .arrow {
+          left: $arrowSize;
+          transform: translateY(calc($arrowSize * -1)) scale(0.7) rotate(45deg);
+        }
+      }
+
+      &.left {
+        left: calc($arrowSize * $hideFactor * 2);
+        top: calc(v-bind('middlewareData?.arrow?.y') * 1px);
+        width: calc($arrowSize * 2);
+        height: calc($arrowSize * 4);
+
+        .arrow {
+          top: $arrowSize;
+          transform: translateX(calc($arrowSize * 1)) scale(0.7) rotate(45deg);
+        }
+      }
+    }
   }
 }
 </style>

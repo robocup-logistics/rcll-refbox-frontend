@@ -4,9 +4,11 @@
     <div class="robot">
       <PopupWrapper>
         <template #reference>
+          <font-awesome-icon icon="fa-info-circle" class="info" />
           <img
             :src="`/robots/robot-${robot.team_color}.svg`"
             class="clickable"
+            draggable="false"
           />
         </template>
         <RobotPopup :robot="robot"></RobotPopup>
@@ -25,10 +27,9 @@ import { storeToRefs } from 'pinia'
 import { useViewStore } from '@/store/viewStore'
 import RobotPopup from '@/components/spectator/popups/RobotPopup.vue'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
-import AgentTaskMoveEntity from '@/components/spectator/entities/AgentTaskMoveEntity.vue'
 
 // define props  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const props = defineProps({
+defineProps({
   robot: {
     type: Object as PropType<Robot>,
     required: true,
@@ -45,14 +46,7 @@ const {
   squareDiameterPixels,
 } = storeToRefs(viewStore)
 
-// agent tasks
-// -> move
-const agentTaskMoveEntity: Ref<typeof AgentTaskMoveEntity | null> = ref(null)
-onMounted(() => {
-  if (agentTaskMoveEntity.value) {
-    agentTaskMoveEntity.value.drawArrow()
-  }
-})
+// watch holding workpieces  - - - - - - - - - - - - - - - - - - - - - - - - - -
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -82,6 +76,14 @@ onMounted(() => {
       height: 100%;
       width: 100%;
       transform: rotate(calc((v-bind('robot.pose[2]') + 90) * 1deg));
+    }
+
+    .info {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 2;
+      color: white;
     }
   }
 }

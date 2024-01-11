@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Explainable term="Storage Station">
+  <Explainable term="Storage Station" icon="fa-gears">
     <p>
       <span>
         At a storage station, a robot can either deposit or withdraw any

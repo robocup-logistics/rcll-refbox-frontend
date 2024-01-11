@@ -6,8 +6,7 @@
         <div class="order">
           <OrderEntity :order="order"></OrderEntity>
           <p v-if="phase == 'PRODUCTION'">
-            in
-            {{ formatTime(parseInt(order.delivery_period[0]) - game_time) }}
+            {{ formatTime(order.delivery_period[0] - game_time) }}
           </p>
         </div>
       </template>

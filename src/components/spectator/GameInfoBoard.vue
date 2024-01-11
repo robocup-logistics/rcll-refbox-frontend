@@ -1,9 +1,7 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div id="gameInfoBoard" class="horizontal-flex">
-    <ReportOptionsBar v-if="gameReport" />
-    <div class="section">
-      <!-- TOP PHASE DISPLAY -->
+  <Accordion title="Game" id="gameInfoBoard">
+    <div class="vertical-flex">
       <div class="item transparent">
         <div class="horizontal-flex phase-bar">
           <!-- PRE GAME -->
@@ -14,26 +12,22 @@
           <!-- SETUP -->
           <div :class="['arrow', { active: phase == 'SETUP' }]">
             <div class="before"></div>
-            <div class="item transparent">
-              <div class="horizontal-flex">
-                <span>Setup</span>
-                <PopupWrapper popup-position="bottom">
-                  <template #reference>
-                    <font-awesome-icon
-                      class="clickable"
-                      icon="fa-info-circle"
-                    />
-                  </template>
-                  <SetupPhasePopup />
-                </PopupWrapper>
-              </div>
-              <div v-if="phase == 'SETUP'">
-                <span>
-                  {{ formatTime(SETUP_DURATION - game_time) }}
-                </span>
-                <span v-if="gamestate == 'PAUSED'"> (PAUSED) </span>
-              </div>
-            </div>
+            <PopupWrapper popup-position="bottom">
+              <template #reference>
+                <div class="item transparent">
+                  <div class="horizontal-flex">
+                    <span>Setup</span>
+                    <font-awesome-icon icon="fa-info-circle" />
+                  </div>
+                  <div v-if="phase == 'SETUP'">
+                    <span>
+                      {{ formatTime(game_time) }}
+                    </span>
+                  </div>
+                </div>
+              </template>
+              <SetupPhasePopup />
+            </PopupWrapper>
             <div class="after"></div>
           </div>
           <!-- PRODUCTION (NOT OVERTIME) -->
@@ -47,28 +41,25 @@
             ]"
           >
             <div class="before"></div>
-            <div class="item transparent">
-              <div class="horizontal-flex">
-                <span>Production</span>
-                <PopupWrapper popup-position="bottom">
-                  <template #reference>
-                    <font-awesome-icon
-                      class="clickable"
-                      icon="fa-info-circle"
-                    />
-                  </template>
-                  <ProductionPhasePopup />
-                </PopupWrapper>
-              </div>
-              <div v-if="phase == 'PRODUCTION' && !overtime">
-                <span>
-                  {{ formatTime(PRODUCTION_DURATION - game_time) }}
-                </span>
-                <span v-if="gamestate == 'PAUSED'"> (PAUSED) </span>
-              </div>
-            </div>
+            <PopupWrapper popup-position="bottom">
+              <template #reference>
+                <div class="item transparent">
+                  <div class="horizontal-flex">
+                    <span>Production</span>
+                    <font-awesome-icon icon="fa-info-circle" />
+                  </div>
+                  <div v-if="phase == 'PRODUCTION' && !overtime">
+                    <span>
+                      {{ formatTime(game_time) }}
+                    </span>
+                  </div>
+                </div>
+              </template>
+              <ProductionPhasePopup />
+            </PopupWrapper>
             <div class="after"></div>
           </div>
+
           <!-- PRODUCTION (OVERTIME) -->
           <div
             v-if="overtime == true"
@@ -81,30 +72,22 @@
             ]"
           >
             <div class="before"></div>
-            <div class="item transparent">
-              <div class="horizontal-flex">
-                Overtime
-                <PopupWrapper popup-position="bottom">
-                  <template #reference>
-                    <font-awesome-icon
-                      class="clickable"
-                      icon="fa-info-circle"
-                    />
-                  </template>
-                  <OvertimePopup />
-                </PopupWrapper>
-              </div>
-              <div v-if="phase == 'PRODUCTION' && overtime">
-                <span>
-                  {{
-                    formatTime(
-                      PRODUCTION_DURATION + OVERTIME_DURATION - game_time
-                    )
-                  }}
-                </span>
-                <span v-if="gamestate == 'PAUSED'"> (PAUSED) </span>
-              </div>
-            </div>
+            <PopupWrapper popup-position="bottom">
+              <template #reference>
+                <div class="item transparent">
+                  <div class="horizontal-flex">
+                    Overtime
+                    <font-awesome-icon icon="fa-info-circle" />
+                  </div>
+                  <div v-if="phase == 'PRODUCTION' && overtime">
+                    <span>
+                      {{ formatTime(game_time) }}
+                    </span>
+                  </div>
+                </div>
+              </template>
+              <OvertimePopup />
+            </PopupWrapper>
             <div class="after"></div>
           </div>
           <!-- POST GAME -->
@@ -114,34 +97,77 @@
           </div>
         </div>
       </div>
+
       <!-- BOTTOM BANNER -->
-      <div
-        :class="[
-          'item',
-          {
-            CYAN: phase == 'POST_GAME' && winner == teamNameByColor('CYAN'),
-            MAGENTA:
-              phase == 'POST_GAME' && winner == teamNameByColor('MAGENTA'),
-          },
-        ]"
-      >
-        <div class="horizontal-flex" style="font-size: 20px">
-          <!-- PRE GAME: STATIC TEXT -->
-          <template v-if="phase == 'PRE_GAME'">
-            The game will start soon!
+      <div class="item transparent">
+        <div class="horizontal-flex">
+          <template v-if="socket">
+            <font-awesome-icon icon="fa-circle" style="color: green" />
+            <span style="color: green">Live</span>
+
+            <span v-if="phase == 'PRE_GAME'"> • Waiting for game start </span>
+            <span v-if="phase == 'SETUP'">
+              •
+              {{ formatTime(SETUP_DURATION - game_time) }} until
+              <ProductionPhaseExplainable />
+            </span>
+            <span v-if="phase == 'PRODUCTION' && !overtime">
+              • {{ formatTime(PRODUCTION_DURATION - game_time) }} remaining
+            </span>
+            <span v-if="phase == 'PRODUCTION' && overtime">
+              •
+              {{
+                formatTime(PRODUCTION_DURATION + OVERTIME_DURATION - game_time)
+              }}
+              remaining
+            </span>
+            <div
+              v-if="
+                gamestate == 'PAUSED' && ['SETUP', 'PRODUCTION'].includes(phase)
+              "
+              class="horizontal-flex"
+            >
+              <span>•</span>
+              <font-awesome-icon icon="fa-pause" class="text-warning" />
+              <span class="text-warning">PAUSED</span>
+            </div>
           </template>
-          <!-- POST GAME: WINNER -->
-          <template v-else-if="phase == 'POST_GAME'">
-            <font-awesome-icon icon="fa-trophy" />
-            <p v-html="winnerText"></p>
-          </template>
-          <template v-else>
-            <p>What's happening placeholder</p>
+          <template v-else-if="gameReport">
+            <div class="horizontal-flex">
+              <font-awesome-icon icon="fa-folder-open" />
+              <div>
+                <span>{{
+                  gameReport['report_name'].length
+                    ? gameReport['report_name'].length
+                    : 'Unnamed game'
+                }}</span
+                ><br /><span>{{
+                  new Date(gameReport['start_time']).toLocaleDateString()
+                }}</span>
+              </div>
+              <PillButton
+                :description="gamestate == 'RUNNING' ? 'Pause' : 'Run'"
+                :title="gamestate == 'RUNNING' ? 'Pause game' : 'Run game'"
+                @click="toggleState"
+              >
+                <font-awesome-icon
+                  :icon="gamestate == 'RUNNING' ? 'fa-pause' : 'fa-play'"
+                />
+              </PillButton>
+              <PillButton
+                description="Speed"
+                title="toggle speed"
+                @click="toggleSpeed"
+              >
+                {{ gameSpeed }}x
+              </PillButton>
+            </div>
+            <p></p>
           </template>
         </div>
       </div>
     </div>
-  </div>
+  </Accordion>
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
@@ -158,19 +184,23 @@ import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import SetupPhasePopup from '@/components/spectator/popups/SetupPhasePopup.vue'
 import ProductionPhasePopup from '@/components/spectator/popups/ProductionPhasePopup.vue'
 import OvertimePopup from '@/components/spectator/popups/OvertimePopup.vue'
-import ReportOptionsBar from '@/components/spectator/ReportOptionsBar.vue'
+import { useSocketStore } from '@/store/socketStore'
+import Accordion from '@/components/shared/ui/Accordion.vue'
+import PillButton from '@/components/shared/ui/PillButton.vue'
+import ProductionPhaseExplainable from '@/components/spectator/explainables/ProductionPhaseExplainable.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const socketStore = useSocketStore()
+const { socket } = storeToRefs(socketStore)
 const gameStore = useGameStore()
-const { phase, gamestate, game_time, overtime, teamNameByColor, scoreByColor } =
-  storeToRefs(gameStore)
+const { phase, gamestate, game_time, overtime } = storeToRefs(gameStore)
 const reportStore = useReportStore()
-const { gameReport } = storeToRefs(reportStore)
+const { gameReport, gameSpeed } = storeToRefs(reportStore)
 const ruleStore = useRuleStore()
 const { SETUP_DURATION, PRODUCTION_DURATION, OVERTIME_DURATION } =
   storeToRefs(ruleStore)
 
-// progress  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// game progress - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const progress: ComputedRef<string> = computed(() => {
   function floatToPercentageString(progress: number): string {
     return Math.round(progress * 100).toString() + '%'
@@ -184,22 +214,26 @@ const progress: ComputedRef<string> = computed(() => {
   }
 })
 
-// winner  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const winner: ComputedRef<string | undefined> = computed(() => {
-  if (scoreByColor.value('CYAN') > scoreByColor.value('MAGENTA')) {
-    return teamNameByColor.value('CYAN')
-  } else if (scoreByColor.value('MAGENTA') > scoreByColor.value('CYAN')) {
-    return teamNameByColor.value('MAGENTA')
-  }
-})
+// report  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// -> speed
+const nextSpeeds = new Map([
+  [0.5, 1],
+  [1, 2],
+  [2, 4],
+  [4, 0.5],
+])
+function toggleSpeed() {
+  gameSpeed.value = <number>nextSpeeds.get(gameSpeed.value)
+}
 
-const winnerText: ComputedRef<string> = computed(() => {
-  if (winner.value) {
-    return `<span>${winner.value}</span> has won`
-  } else {
-    return 'The game has ended with a DRAW'
+// -> run/pause
+function toggleState() {
+  if (gamestate.value == 'WAIT_START' || gamestate.value == 'PAUSED') {
+    reportStore.runGame()
+  } else if (gamestate.value == 'RUNNING') {
+    gamestate.value = 'PAUSED'
   }
-})
+}
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -209,8 +243,8 @@ const winnerText: ComputedRef<string> = computed(() => {
 #gameInfoBoard {
   .phase-bar {
     $arrowWidth: 15px;
-    $bgColor: global.$bgColor;
-    $neutralColor: global.$itemColor;
+    $bgColor: global.$surfaceColor;
+    $neutralColor: global.$lighterColor;
     $activeColor: global.$accentColor;
     $activeColorDarker: global.$accentColorDarker;
     flex-grow: 1;
@@ -222,6 +256,14 @@ const winnerText: ComputedRef<string> = computed(() => {
       padding: 0 $arrowWidth;
       background-color: $neutralColor;
       align-items: center;
+
+      &:first-child {
+        border-radius: 8px 0 0 8px;
+      }
+
+      &:last-child {
+        border-radius: 0 8px 8px 0;
+      }
 
       .before,
       .after {

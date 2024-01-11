@@ -9,7 +9,7 @@
       :key="index"
       class="attention-msg"
     >
-      <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+      <font-awesome-icon icon="fa-triangle-exclamation" />
       {{ msg.text }}
     </p>
   </AutoScrollContainer>

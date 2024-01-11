@@ -7,9 +7,12 @@
   -webkit-user-select: none;
   user-select: none;
 
+  text-transform: none;
+  font-size: 18px;
+
   // scrollbars ...
   // ... for firefox
-  scrollbar-color: $bgColorLighter transparent;
+  scrollbar-color: $lightestColor transparent;
 
   // ... for chromium/safari
   ::-webkit-scrollbar {
@@ -19,11 +22,11 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: $bgColorLighter;
+    background-color: $lightestColor;
     border-radius: 3px;
 
     &:active {
-      background-color: $bgColorLightest;
+      background-color: $lighterColor;
     }
   }
 }
@@ -42,6 +45,10 @@ button {
   border: none;
 }
 
+a {
+  color: white;
+}
+
 h1,
 h2,
 h3,
@@ -54,12 +61,6 @@ p {
   margin: 0;
   line-height: 1.3em;
   overflow: hidden;
-}
-
-p,
-span {
-  text-transform: none;
-  font-size: 15px;
 }
 
 .uppercase {
@@ -75,23 +76,6 @@ span {
   transition: opacity 0.3s;
 }
 
-.horizontal-flex {
-  display: flex;
-  flex-direction: row !important;
-  gap: 10px !important;
-  align-items: center; // @TODO is currently ignored e.g. in orders board, p stretches to full height and thus stays on top
-
-  max-width: 100%;
-  min-width: 0;
-
-  overflow-x: auto;
-  /* overflow-y: hidden; */
-
-  > .item {
-    height: 100% !important;
-  }
-}
-
 .form-row {
   align-items: stretch;
   > * {
@@ -99,21 +83,41 @@ span {
   }
 }
 
-.section {
-  text-align: center;
-  height: 100%;
+.horizontal-flex {
+  display: flex;
+  flex-direction: row !important;
+  gap: 10px !important;
+  align-items: center;
 
+  max-width: 100%;
+  min-width: 0;
+
+  overflow-x: auto;
+  /* overflow-y: hidden; */
+
+  &.inline {
+    display: inline-flex;
+  }
+
+  > .item {
+    height: 100% !important;
+  }
+}
+
+.vertical-flex {
   display: flex;
   flex-direction: column;
   gap: 10px;
   align-items: stretch;
+
+  height: 100%;
 }
 
 .item {
   flex-grow: 1;
   width: 100%;
   height: fit-content;
-  border-radius: 5px;
+  border-radius: 8px;
   padding: 0 10px;
 
   display: flex;
@@ -123,7 +127,9 @@ span {
   gap: 2px;
 
   color: white;
-  background-color: $itemColor;
+  text-align: center;
+  background-color: $surfaceColor;
+  box-shadow: 0 0 6px 1px rgba($bgColor, 0.8);
   overflow: hidden;
 
   &.grow {
@@ -131,28 +137,46 @@ span {
   }
 
   &.transparent {
-    background-color: unset;
-    padding: 0;
+    background-color: unset !important;
+    padding: 0 !important;
     box-shadow: unset;
+  }
+
+  &.lighter {
+    background-color: $lighterColor;
   }
 
   &.CYAN {
     color: black;
-    background-color: $cyanColor;
+    background-color: $cyanColor !important;
   }
 
   &.MAGENTA {
     color: black;
-    background-color: $magentaColor;
+    background-color: $magentaColor !important;
   }
 }
 
+.content-box {
+  border-radius: 8px;
+  background-color: $bgColor;
+  padding: 5px;
+}
+
 .CYAN-text {
-  color: $cyanColor;
+  color: $cyanColor !important;
 }
 
 .MAGENTA-text {
-  color: $magentaColor;
+  color: $magentaColor !important;
+}
+
+.CYAN-bg {
+  background-color: $cyanColor !important;
+}
+
+.MAGENTA-bg {
+  background-color: $magentaColor !important;
 }
 
 .text-danger {
@@ -169,12 +193,4 @@ span {
 
 .highlight {
   filter: drop-shadow(0 0 10px white);
-}
-
-.content-box {
-  border-radius: 5px;
-  border: 2px solid $bgColorLighter;
-  padding: 10px;
-
-  flex-wrap: wrap;
 }

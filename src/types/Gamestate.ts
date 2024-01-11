@@ -7,6 +7,7 @@ export default interface Gamestate {
   field_mirrored: boolean
   field_width: number
   game_time: number // game time in seconds (including miliseconds after the comma)
+  cont_time: number
   magenta: string
   over_time: boolean
   phase: Phase

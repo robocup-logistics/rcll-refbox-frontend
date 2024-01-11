@@ -20,7 +20,7 @@
       @submit.prevent="setTeamName(input?.getValue())"
     >
       <Input ref="input" placeholder="Custom team name" :value="teamName" />
-      <Button icon="fa-paper-plane" primary submit>Confirm</Button>
+      <Button icon="fa-check" primary submit>Confirm</Button>
     </form>
   </Popup>
 </template>

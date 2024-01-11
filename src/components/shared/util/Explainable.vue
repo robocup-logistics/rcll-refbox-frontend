@@ -1,16 +1,17 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <span class="explainable">
-    <span class="term">{{ term }}</span>
-    <PopupWrapper>
-      <template #reference>
-        <font-awesome-icon class="clickable" icon="fa-info-circle" />
-      </template>
-      <Popup :title="term">
-        <slot></slot>
-      </Popup>
-    </PopupWrapper>
-  </span>
+  <PopupWrapper style="display: inline-block">
+    <template #reference>
+      <span class="explainable clickable">
+        <font-awesome-icon v-if="icon" :icon="icon" />
+        <span class="term">{{ term }}</span>
+        <font-awesome-icon icon="fa-info-circle" />
+      </span>
+    </template>
+    <Popup :title="term">
+      <slot></slot>
+    </Popup>
+  </PopupWrapper>
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
@@ -21,6 +22,10 @@ import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 defineProps({
+  icon: {
+    type: String,
+    required: false,
+  },
   term: {
     type: String,
     required: true,
@@ -33,7 +38,7 @@ defineProps({
 @use '@/assets/global.scss';
 
 .explainable {
-  border-radius: 5px;
+  border-radius: 8px;
   padding: 0 5px;
   background-image: linear-gradient(
     global.$accentColor 0%,

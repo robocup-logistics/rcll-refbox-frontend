@@ -5,7 +5,7 @@
         :class="[
           'item horizontal-flex order',
           activeDeliveryPeriod(order) ? '' : 'transparent',
-          order.activate_at >= game_time ? 'active' : '',
+          game_time >= order.activate_at ? 'active' : '',
         ]"
       >
         <!-- PRODUCT IMAGE -->
@@ -16,7 +16,6 @@
           alt="img"
         />
 
-        <!-- / PRODUCT IMAGE END -->
         <!-- ORDER INFO -->
         <div class="order-infos" style="text-align: left">
           <!-- ID, DELIVERY STATUS AND COMPETITIVE INDICATOR -->
@@ -56,7 +55,6 @@
             {{ order.complexity }}
           </span>
         </div>
-        <!-- / ORDER INFO END -->
       </div>
     </div>
   </div>
@@ -103,7 +101,7 @@ this, we use flex-direction row which is supported and misuse writing-mode */
     writing-mode: horizontal-tb;
     .order {
       height: 100%;
-      opacity: 0.5;
+      opacity: 0.2;
       transition: opacity 1s ease-in-out;
 
       &.active {

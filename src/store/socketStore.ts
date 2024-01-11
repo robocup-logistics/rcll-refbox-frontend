@@ -5,11 +5,9 @@ import type { ComputedRef, Ref } from 'vue'
 import type MessageToDisplay from '@/types/messages/incoming/MessageToDisplay'
 import type AwardedPoints from '@/types/AwardedPoints'
 import type Machine from '@/types/Machine'
-import type OrderCount from '@/types/OrderCount'
 import type Order from '@/types/Order'
-import type RingSpec from '@/types/Ringspec'
+import type RingSpec from '@/types/RingSpec'
 import type Robot from '@/types/Robot'
-import type Gamestate from '@/types/Gamestate'
 import type IncomingMessage from '@/types/messages/IncomingMessage'
 import type OutgoingMessage from '@/types/messages/OutgoingMessage'
 import type SetGamephaseOutMsg from '@/types/messages/outgoing/SetGamephaseOutMsg'
@@ -18,6 +16,7 @@ import type RandomizeFieldOutMsg from '@/types/messages/outgoing/RandomizeFieldO
 import type SetRobotMaintenanceOutMsg from '@/types/messages/outgoing/RobotMainenanceOutMsg'
 import type Phase from '@/types/Phase'
 import type State from '@/types/State'
+import type ClipsMessage from '@/types/messages/incoming/ClipsMessage'
 
 import { useGameStore } from '@/store/gameStore'
 import { useMachineStore } from '@/store/machineStore'
@@ -25,7 +24,7 @@ import { useOrderStore } from '@/store/orderStore'
 import { useRobotStore } from '@/store/robotStore'
 import { useReportStore } from '@/store/reportStore'
 import { useViewStore } from '@/store/viewStore'
-import ClipsMessage from '@/types/messages/incoming/ClipsMessage'
+import AttentionMessage from '@/types/messages/incoming/AttentionMessage'
 
 // main pinia store
 export const useSocketStore = defineStore('socketStore', () => {
@@ -46,14 +45,15 @@ export const useSocketStore = defineStore('socketStore', () => {
   const messagesToDisplay: Ref<MessageToDisplay[]> = ref([])
 
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  const attentionMessages: ComputedRef<MessageToDisplay[]> = computed(() =>
-    messagesToDisplay.value.filter(
-      (msg) =>
-        msg.level === 'attention' &&
-        gameStore.game_time >= msg['game_time'] &&
-        gameStore.game_time <=
-          msg['game_time'] + parseFloat(msg['time_to_display'])
-    )
+  const attentionMessages: ComputedRef<AttentionMessage[]> = computed(
+    () =>
+      messagesToDisplay.value.filter(
+        (msg) =>
+          msg.level === 'attention' &&
+          gameStore.game_time >= msg['game_time'] &&
+          gameStore.game_time <=
+            msg['game_time'] + parseFloat(msg['time_to_display'])
+      ) as AttentionMessage[]
   )
 
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -72,13 +72,7 @@ export const useSocketStore = defineStore('socketStore', () => {
     newSocket.onopen = (e) => {
       // reset info from previous connection (also sets attemtingConnection to
       // false)
-      reset()
-      reportStore.reset()
-      gameStore.reset()
-      machineStore.reset()
-      orderStore.reset()
-      robotStore.reset()
-      viewStore.reset()
+      gameStore.resetAll()
 
       // set the socket as the new socket
       socket.value = newSocket
@@ -91,11 +85,11 @@ export const useSocketStore = defineStore('socketStore', () => {
           const msgArr = <ClipsMessage[]>msg
           if (msgArr.length) {
             if (msgArr[0].type === 'machine-info') {
-              machineStore.setMachineInfosAtReconnect(msgArr as Machine[])
+              machineStore.setMachinesAtReconnect(msgArr as Machine[])
             } else if (msgArr[0].type === 'robot-info') {
               robotStore.setRobotsAtReconnect(msgArr as Robot[])
             } else if (msgArr[0].type === 'ring-spec') {
-              machineStore.setRingSpecs(msgArr as RingSpec[])
+              machineStore.setringSpecs(msgArr as RingSpec[])
             } else if (msgArr[0].type === 'order-info') {
               orderStore.setOrders(msgArr as Order[])
             } else if (msgArr[0].type === 'points') {
@@ -123,15 +117,19 @@ export const useSocketStore = defineStore('socketStore', () => {
           }
           // else process the messages as usual
           else if (msgObj.type === 'gamestate') {
-            gameStore.setGamestateInformation(msgObj as Gamestate)
+            gameStore.setGamestateInformation(msgObj)
           } else if (msgObj.type === 'machine-info') {
-            machineStore.setMachineInfo(msgObj as Machine)
+            machineStore.setMachine(msgObj)
           } else if (msgObj.type === 'robot-info') {
-            robotStore.setRobot(msgObj as Robot)
+            robotStore.setRobot(msgObj)
+          } else if (msgObj.type === 'agent-task') {
+            robotStore.setAgentTask(msgObj)
           } else if (msgObj.type === 'order-count') {
-            orderStore.orderCount = (msgObj as OrderCount).count
+            orderStore.orderCount = msgObj.count
           } else if (msgObj.type === 'order-info') {
-            orderStore.setOrder(msgObj as Order)
+            orderStore.setOrder(msgObj)
+          } else if (msgObj.type === 'workpiece-info') {
+            orderStore.setWorkpiece(msgObj)
           } else {
             console.log('Unknown message type! - Message:')
             console.log(msgObj)
@@ -178,7 +176,6 @@ export const useSocketStore = defineStore('socketStore', () => {
       phase: `${newPhase}`,
     }
     SOCKET_SEND(msg)
-    gameStore.phase = newPhase
   }
 
   // set game state
@@ -188,7 +185,6 @@ export const useSocketStore = defineStore('socketStore', () => {
       state: `${newGamestate}`,
     }
     SOCKET_SEND(msg)
-    gameStore.gamestate = newGamestate
   }
 
   // randomize field

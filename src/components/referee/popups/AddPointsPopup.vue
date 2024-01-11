@@ -7,7 +7,7 @@
       @submit.prevent="addPoints"
     >
       <Input type="text" ref="pointsAndReason" placeholder="points, reason" />
-      <Button icon="fa-paper-plane" primary @click="addPoints">Add</Button>
+      <Button icon="fa-square-plus" primary @click="addPoints">Add</Button>
     </form>
   </Popup>
 </template>
@@ -43,7 +43,6 @@ const pointsAndReason: Ref<typeof Input | null> = ref(null)
 function addPoints() {
   // Input Format: points, Reason
   if (!pointsAndReason.value) return
-  console.log(pointsAndReason.value.getValue())
   const splitInput = pointsAndReason.value.getValue().split(/,(.+)/)
   const points = parseInt(splitInput[0])
   const reason = splitInput[1]

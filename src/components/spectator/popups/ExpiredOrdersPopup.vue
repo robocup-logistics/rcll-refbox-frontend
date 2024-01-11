@@ -6,9 +6,9 @@
         <OrderEntity :order="order"></OrderEntity>
       </template>
     </div>
-    <p>
+    <p v-if="phase == 'PRODUCTION'">
       Expired orders may still be fulfilled for a certain time span but reward
-      less points. Click on an order to view more.
+      less points.
     </p>
   </Popup>
 </template>
@@ -20,8 +20,11 @@ import { storeToRefs } from 'pinia'
 import Popup from '@/components/shared/ui/Popup.vue'
 import OrderEntity from '@/components/spectator/entities/OrderEntity.vue'
 import { useOrderStore } from '@/store/orderStore'
+import { useGameStore } from '@/store/gameStore'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const gameStore = useGameStore()
+const { phase } = storeToRefs(gameStore)
 const orderStore = useOrderStore()
 const { expiredOrders } = storeToRefs(orderStore)
 </script>

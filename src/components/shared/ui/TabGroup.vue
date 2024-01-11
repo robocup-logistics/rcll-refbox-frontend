@@ -22,7 +22,7 @@ const props = defineProps({
 
 // emits - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const emit = defineEmits<{
-  (e: 'activeChanged', active: string | undefined): void
+  (e: 'activeChanged', active: string): void
 }>()
 
 // active tab  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -35,7 +35,9 @@ function select(tab: string): void {
 watch(
   () => active.value,
   () => {
-    emit('activeChanged', active.value)
+    if (active.value) {
+      emit('activeChanged', active.value)
+    }
   }
 )
 
@@ -49,7 +51,10 @@ defineExpose({ active })
 .tab-group {
   align-items: stretch !important;
   padding-bottom: 5px;
-  border-radius: 5px;
-  background-color: global.$bgColor;
+  border-radius: 8px;
+
+  Button {
+    height: 100%;
+  }
 }
 </style>

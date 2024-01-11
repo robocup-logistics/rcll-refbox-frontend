@@ -1,8 +1,8 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div id="refereeView" class="section" style="padding: 10px">
+  <div id="refereeView" class="vertical-flex" style="padding: 10px">
     <!-- HEADER -->
-    <div class="section header">
+    <div class="vertical-flex header">
       <div class="horizontal-flex">
         <!-- LOGO AND ACTIONS (LEFT) -->
         <LogoAndActions />
@@ -14,8 +14,8 @@
     </div>
     <!-- TEAMS -->
     <div class="teams">
-      <Team color="CYAN" :teamName="teamNameByColor('CYAN')" />
-      <Team color="MAGENTA" :teamName="teamNameByColor('MAGENTA')" />
+      <Team color="CYAN" :teamName="nameTeamCyan" />
+      <Team color="MAGENTA" :teamName="nameTeamMagenta" />
     </div>
     <!-- FOOTER -->
     <div class="footer horizontal-flex">
@@ -62,7 +62,8 @@ import { useOrderStore } from '@/store/orderStore'
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
 const orderStore = useOrderStore()
-const { phase, teamNameByColor } = storeToRefs(gameStore)
+const { phase, nameTeamCyan, nameTeamMagenta, teamNameByColor } =
+  storeToRefs(gameStore)
 const { unconfirmedOrders } = storeToRefs(orderStore)
 </script>
 

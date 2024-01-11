@@ -1,47 +1,31 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <PopupWrapper popup-position="bottom">
-    <template #reference>
-      <div class="order-entity clickable">
-        <img
-          :src="`/workpieces/${
-            orderStore.productByOrder(order)?.['workpiece_url']
-          }`"
-          alt="img"
-        />
-        <font-awesome-icon class="info-icon" icon="fa-info-circle" />
-      </div>
-    </template>
-    <OrderPopup :order="order"></OrderPopup>
-  </PopupWrapper>
+  <div class="workpiece-entity">
+    <img :src="`/workpieces/${workpieceFileName}`" alt="img" />
+  </div>
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import type { PropType } from 'vue'
-import type Order from '@/types/Order'
-import OrderPopup from '@/components/spectator/popups/OrderPopup.vue'
-import { useOrderStore } from '@/store/orderStore'
-import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
-
-// use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const orderStore = useOrderStore()
+import { computed, type ComputedRef, type PropType } from 'vue'
+import type Workpiece from '@/types/Workpiece'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-defineProps({
-  baseColor: {
-    type: String,
-    required: false,
+const props = defineProps({
+  workpiece: {
+    type: Object as PropType<Workpiece>,
+    required: true,
   },
-  ringColors: {
-    type: Array<String>,
-    required: false,
-  },
-  capColor: {
-    type: String,
-    required: false,
-  },
+})
+
+// get workpiece file name - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const workpieceFileName: ComputedRef<string> = computed(() => {
+  const parts = []
+  if (props.workpiece.base_color) parts.push(props.workpiece.base_color)
+  parts.push(...props.workpiece.ring_colors)
+  if (props.workpiece.cap_color) parts.push(props.workpiece.cap_color)
+  return `${parts.join('-')}.svg`
 })
 </script>
 
@@ -49,18 +33,12 @@ defineProps({
 <style scoped lang="scss">
 @use '@/assets/global.scss';
 
-.order-entity {
+.workpiece-entity {
   position: relative;
 
   img {
-    height: 80px;
+    height: 20px;
     aspect-ratio: 1;
-  }
-
-  .info-icon {
-    position: absolute;
-    top: 0;
-    right: 0;
   }
 }
 </style>

@@ -73,7 +73,7 @@ defineProps({
 const gameStore = useGameStore()
 const machineStore = useMachineStore()
 const { phase } = storeToRefs(gameStore)
-const { ringspecs, machinesByColor } = storeToRefs(machineStore)
+const { ringSpecs, machinesByColor } = storeToRefs(machineStore)
 
 // set classname depending on the state of the machine
 function setStateClass(state: string) {
@@ -89,7 +89,7 @@ function setStateClass(state: string) {
 // display how much bases the ring needs
 function showPreparedColorInfo(ringColor: string) {
   let reqBases = 0
-  ringspecs.value.forEach((ringspec) => {
+  ringSpecs.value.forEach((ringspec) => {
     if (ringspec.color === ringColor) {
       reqBases = ringspec['req_bases']
     }
@@ -156,7 +156,7 @@ function setMachineBackground(machine: Machine) {
     .rs-color-container {
       text-align: center;
       width: 20px;
-      border-radius: 5px;
+      border-radius: 8px;
     }
   }
 }

@@ -135,7 +135,7 @@ function handlePhaseClick(newPhase: Phase) {
   .phase-bar {
     $arrowWidth: 15px;
     $bgColor: global.$bgColor;
-    $neutralColor: global.$itemColor;
+    $neutralColor: global.$surfaceColor;
     $activeColor: global.$accentColor;
     $activeColorDarker: global.$accentColorDarker;
     flex-grow: 1;

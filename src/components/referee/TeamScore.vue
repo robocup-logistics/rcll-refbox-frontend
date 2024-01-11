@@ -1,5 +1,5 @@
 <template>
-  <div class="section">
+  <div class="vertical-flex">
     <!-- ADD POINTS SECTION -->
     <div class="item" style="max-height: 50px">
       <div class="horizontal-flex">

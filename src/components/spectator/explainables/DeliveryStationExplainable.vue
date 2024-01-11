@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Explainable term="Delivery Station">
+  <Explainable term="Delivery Station" icon="fa-gears">
     <p>
       <span> At a delivery station, a robot can deliver a fabricated </span>
       <ProductExplainable />

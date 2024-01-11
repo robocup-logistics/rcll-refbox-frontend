@@ -40,20 +40,16 @@
         <Button
           v-if="robot.state === 'ACTIVE'"
           icon="fa-robot"
-          class="clickable"
           title="Start maintenance"
           @click="setRobotMaintenanceStatus(robot, true)"
-          >Start</Button
-        >
+        ></Button>
 
         <Button
           v-else-if="robot.state === 'MAINTENANCE'"
           icon="fa-robot"
-          class="clickable"
           title="End maintenance"
           @click="setRobotMaintenanceStatus(robot, false)"
-          >End</Button
-        >
+        ></Button>
       </template>
     </div>
     <span v-else>No robots conneted</span>

@@ -1,81 +1,72 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div id="teamsBoard">
-    <div class="section">
-      <div class="item" style="height: 30%">Score board</div>
-      <div class="item transparent horizontal-flex grow">
+  <Accordion title="Score" id="scoreBoard">
+    <div class="vertical-flex">
+      <div class="item transparent horizontal-flex">
         <!-- TEAM NAMES SECTION -->
-        <div class="section left">
-          <div class="item CYAN">
-            <p>
-              {{
-                teamNameByColor('CYAN') ? teamNameByColor('CYAN') : 'CYAN (tbd)'
-              }}
+        <div class="vertical-flex left">
+          <div class="item transparent">
+            <p class="team-name">
+              {{ teamNameByColor('CYAN') }}
             </p>
           </div>
-          <div class="item MAGENTA">
-            <p>
-              {{
-                teamNameByColor('MAGENTA')
-                  ? teamNameByColor('MAGENTA')
-                  : 'MAGENTA (tbd)'
-              }}
+          <div class="item transparent">
+            <p class="team-name">
+              {{ teamNameByColor('MAGENTA') }}
             </p>
           </div>
         </div>
 
         <!-- SCORES SECTION -->
-        <div class="section left">
+        <div class="vertical-flex left">
           <div class="item CYAN">
-            <div class="horizontal-flex">
-              <font-awesome-icon icon="fa-truck" />
-              <p>{{ ordersDeliveredByTeam(teamNameByColor('CYAN')).length }}</p>
-              <font-awesome-icon icon="fa-trophy" />
-              <p>{{ scoreByColor('CYAN') }}</p>
-              <PopupWrapper
-                v-if="scoreByColor('CYAN') != 0"
-                popup-position="bottom"
+            <PopupWrapper popup-position="bottom" class="team-score">
+              <template #reference>
+                <div class="horizontal-flex">
+                  <font-awesome-icon icon="fa-truck" />
+                  <p>
+                    {{ ordersDeliveredByTeam(teamNameByColor('CYAN')).length }}
+                  </p>
+                  <font-awesome-icon icon="fa-trophy" />
+                  <p>{{ scoreByColor('CYAN') }}</p>
+                  <font-awesome-icon icon="fa-info-circle" />
+                </div>
+              </template>
+              <ScoreDetailsPopup
+                team="CYAN"
+                :teamName="teamNameByColor('CYAN')"
+                :color="cyanColor"
               >
-                <template #reference>
-                  <font-awesome-icon class="clickable" icon="fa-info-circle" />
-                </template>
-                <ScoreDetailsPopup
-                  team="CYAN"
-                  :teamName="teamNameByColor('CYAN')"
-                  :color="cyanColor"
-                >
-                </ScoreDetailsPopup>
-              </PopupWrapper>
-            </div>
+              </ScoreDetailsPopup>
+            </PopupWrapper>
           </div>
           <div class="item MAGENTA">
-            <div class="horizontal-flex">
-              <font-awesome-icon icon="fa-truck" />
-              <p>
-                {{ ordersDeliveredByTeam(teamNameByColor('MAGENTA')).length }}
-              </p>
+            <PopupWrapper popup-position="bottom" class="team-score">
+              <template #reference>
+                <div class="horizontal-flex team-score">
+                  <font-awesome-icon icon="fa-truck" />
+                  <p>
+                    {{
+                      ordersDeliveredByTeam(teamNameByColor('MAGENTA')).length
+                    }}
+                  </p>
 
-              <font-awesome-icon icon="fa-trophy" />
-              <p>{{ scoreByColor('MAGENTA') }}</p>
-              <PopupWrapper
-                v-if="scoreByColor('MAGENTA') != 0"
-                popup-position="bottom"
-              >
-                <template #reference>
-                  <font-awesome-icon class="clickable" icon="fa-info-circle" />
-                </template>
-                <ScoreDetailsPopup
-                  team="MAGENTA"
-                  :teamName="teamNameByColor('MAGENTA')"
-                  :color="magentaColor"
-                ></ScoreDetailsPopup>
-              </PopupWrapper>
-            </div>
+                  <font-awesome-icon icon="fa-trophy" />
+                  <p>{{ scoreByColor('MAGENTA') }}</p>
+                  <font-awesome-icon icon="fa-info-circle" />
+                </div>
+              </template>
+              <ScoreDetailsPopup
+                team="MAGENTA"
+                :teamName="teamNameByColor('MAGENTA')"
+                :color="magentaColor"
+              ></ScoreDetailsPopup>
+            </PopupWrapper>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </Accordion>
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
@@ -87,6 +78,7 @@ import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import ScoreDetailsPopup from '@/components/spectator/popups/ScoreDetailsPopup.vue'
 import { cyanColor, magentaColor } from '@/assets/exports.module.scss'
 import { useOrderStore } from '@/store/orderStore'
+import Accordion from '@/components/shared/ui/Accordion.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
@@ -100,9 +92,15 @@ const { ordersDeliveredByTeam } = storeToRefs(orderStore)
 <style scoped lang="scss">
 @use '@/assets/global.scss';
 
-#teamsBoard {
-  display: flex;
-  align-items: left;
-  gap: 10px;
+#scoreBoard {
+  .team-name {
+    white-space: nowrap;
+    align-self: flex-end;
+  }
+
+  .team-score {
+    align-self: flex-start;
+    text-align: left;
+  }
 }
 </style>

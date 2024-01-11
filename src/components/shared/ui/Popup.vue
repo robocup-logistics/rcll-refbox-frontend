@@ -1,11 +1,12 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <div class="popup">
-    <div class="popup-header">
+    <div class="popup-header horizontal-flex">
       <h1 v-html="title" class="uppercase"></h1>
+      <div class="divider"></div>
       <font-awesome-icon
         icon="fa-xmark"
-        class="clickable"
+        class="clickable close-icon"
         @click="togglePopup"
         v-if="!permanent"
       />
@@ -34,7 +35,6 @@ defineProps({
 const scrollContainer: Ref<HTMLDivElement | null> = ref(null)
 function scrollToTop() {
   if (scrollContainer.value) {
-    console.log(scrollContainer.value)
     scrollContainer.value.scrollTo({ top: 0 })
   }
 }
@@ -53,8 +53,8 @@ const togglePopup = inject('togglePopup') as Function
   max-width: 30vw;
   max-height: 50vh;
 
-  border-radius: 5px;
-  background-color: rgba(global.$bgColor, 0.95);
+  border-radius: 8px;
+  background-color: rgba(global.$surfaceColor, 0.95);
   box-shadow: 0 0 6px 3px rgba(global.$bgColor, 0.8);
   text-align: left;
   color: white;
@@ -63,27 +63,33 @@ const togglePopup = inject('togglePopup') as Function
     flex-shrink: 0;
   } */
 
-  padding: 12px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 
   .popup-header {
+    flex-shrink: 0;
     width: 100%;
     /* so items in the body do not appear on top */
     z-index: 2;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-
-    text-transform: unset;
+    overflow: hidden;
 
     h1 {
+      flex-shrink: 0;
       font-size: 20px;
-      text-decoration: underline;
-      text-decoration-color: global.$accentColor;
+    }
+
+    .divider {
+      flex-shrink: 1;
+      width: 100%;
+      height: 1px;
+      background-color: global.$lighterColor;
+    }
+
+    .close-icon {
+      padding: 10px;
+      margin: -10px;
     }
   }
 

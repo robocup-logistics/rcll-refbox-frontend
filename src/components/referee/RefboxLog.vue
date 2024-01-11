@@ -2,7 +2,7 @@
   <AutoScrollContainer :watch-data="messagesToDisplay" class="item refbox-log">
     <div v-for="(msg, index) in messagesToDisplay" :key="index">
       <p v-if="msg.level === 'attention'" class="message text-danger">
-        <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
+        <font-awesome-icon icon="fa-triangle-exclamation" />
         {{ msg.text }}
       </p>
       <p

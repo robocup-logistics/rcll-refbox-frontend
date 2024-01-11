@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Explainable term="Cap Station">
+  <Explainable term="Cap Station" icon="fa-gears">
     <p>At a cap station, a robot can perform two different actions:</p>
     <p>
       <span> - The first is to put a </span>

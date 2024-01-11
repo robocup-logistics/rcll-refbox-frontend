@@ -25,7 +25,6 @@ defineProps({
 // is visible? - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const visible: Ref<boolean> = ref(true)
 function close() {
-  console.log('closing modal')
   visible.value = false
 }
 defineExpose({ close })

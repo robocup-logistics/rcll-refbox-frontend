@@ -4,7 +4,14 @@
     <div class="machine">
       <PopupWrapper>
         <template #reference>
-          <img :src="`/machines/${getMachineFileName()}`" class="clickable" />
+          <div class="img-wrapper">
+            <font-awesome-icon icon="fa-info-circle" class="info" />
+            <img
+              :src="`/machines/${getMachineFileName()}`"
+              class="clickable"
+              draggable="false"
+            />
+          </div>
         </template>
         <MachinePopup :machine="machine"></MachinePopup>
       </PopupWrapper>
@@ -15,12 +22,13 @@
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import type { PropType } from 'vue'
+import { type PropType, watch } from 'vue'
 import type Machine from '@/types/Machine'
 import MachinePopup from '@/components/spectator/popups/MachinePopup.vue'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import type MachineCS from '@/types/MachineCS'
 import type MachineRS from '@/types/MachineRS'
+import { useEventStore } from '@/store/eventStore'
 
 // define props  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const props = defineProps({
@@ -29,6 +37,9 @@ const props = defineProps({
     required: true,
   },
 })
+
+// use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const eventStore = useEventStore()
 
 // get file name - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function getMachineFileName(): string {
@@ -56,6 +67,22 @@ function getMachineFileName(): string {
   fileName += '.svg'
   return fileName
 }
+
+// events  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// -> watch the machine property to create events on certain changes
+watch(
+  () => props.machine,
+  (newMachine, oldMachine) => {
+    if (newMachine.state != oldMachine.state) {
+      eventStore.createEvent({
+        category: 'machine',
+        icon: 'fa-people-group',
+        msg: `${props.machine.name} is ${props.machine.state}`,
+        team: `${props.machine.team}`,
+      })
+    }
+  }
+)
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -76,13 +103,26 @@ function getMachineFileName(): string {
   .machine {
     height: 80%;
     width: 80%;
-    border-radius: 20px;
 
-    img {
+    .img-wrapper {
       height: 100%;
       width: 100%;
-      transform: rotate(calc((v-bind('machine?.rotation') - 90) * 1deg));
-      transition: all 400ms;
+      transform: rotate(calc((v-bind('machine?.rotation') - 90) * -1deg));
+      img {
+        height: 100%;
+        width: 100%;
+
+        transition: all 400ms;
+      }
+
+      .info {
+        position: absolute;
+        top: 20%;
+        right: -10%;
+        z-index: 2;
+        color: white;
+        transform: rotate(calc((v-bind('machine?.rotation') - 90) * 1deg));
+      }
     }
   }
 }

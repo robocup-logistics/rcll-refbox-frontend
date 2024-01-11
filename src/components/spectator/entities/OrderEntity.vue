@@ -7,7 +7,8 @@
           :src="`/workpieces/${
             orderStore.productByOrder(order)?.['workpiece_url']
           }`"
-          alt="img"
+          alt="Order img"
+          draggable="false"
         />
         <font-awesome-icon class="info-icon" icon="fa-info-circle" />
       </div>
