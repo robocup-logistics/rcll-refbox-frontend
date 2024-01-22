@@ -1,52 +1,45 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <div class="input">
-    <input
-      v-model="inputModel"
-      :type="type"
-      :placeholder="placeholder"
-      ref="input"
-    />
+    <input v-bind="$attrs" ref="input" v-model="value" />
     <span class="underline"></span>
+    <div
+      v-if="clearable && value && value.length"
+      class="clear clickable"
+      @click="clearInput"
+    >
+      <font-awesome-icon icon="fa-xmark" />
+    </div>
   </div>
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // import  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import { ref, computed, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const props = defineProps({
-  value: String,
-  placeholder: String,
-  type: String,
+defineProps({
+  clearable: {
+    type: Boolean,
+    default: false,
+  },
 })
-
-// emits - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const emit = defineEmits(['input'])
 
 // v-model input - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const input: Ref<HTMLInputElement | null> = ref(null)
-const inputModel = computed({
-  get() {
-    return props.value
-  },
-  set(newValue) {
-    emit('input', newValue)
-  },
-})
-function getValue() {
-  return input.value?.value
+const value: Ref<string | undefined> = defineModel()
+function clearInput() {
+  value.value = ''
 }
 
 // -> focus input when focus is called - - - - - - - - - - - - - - - - - - - - -
+const input: Ref<HTMLInputElement | null> = ref(null)
 function focus() {
   if (input.value) input.value.focus()
 }
 
 // expose  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-defineExpose({ getValue, focus })
+defineExpose({ focus })
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -57,7 +50,7 @@ defineExpose({ getValue, focus })
   position: relative;
 
   input {
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 10px;
     border: none;
     outline: none;
@@ -65,6 +58,7 @@ defineExpose({ getValue, focus })
     height: 100%;
     background-color: global.$lighterColor;
     color: white;
+    filter: drop-shadow(0px 1px 3px rgba(global.$bgColor, 0.8));
 
     &:focus + .underline {
       width: calc(100% - 10px);
@@ -84,6 +78,18 @@ defineExpose({ getValue, focus })
     width: 0;
     height: 2px;
     background-color: global.$accentColor;
+  }
+
+  .clear {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    bottom: 0;
+    margin: -10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }
 </style>

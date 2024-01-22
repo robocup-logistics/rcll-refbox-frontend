@@ -11,8 +11,6 @@ This component is deprecated but might be used for other purposes in the future
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // import  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import { useViewStore } from '@/store/viewStore'
-import { storeToRefs } from 'pinia'
 import { PropType } from 'vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -28,7 +26,7 @@ const props = defineProps({
     required: true,
   },
   target: {
-    type: String, // in the `highlighted` format, see viewStore
+    type: String, // in the `highlighted` format, see appStore
     required: true,
   },
 })

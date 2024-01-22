@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Modal title="Welcome" ref="modal">
+  <Modal title="Welcome" icon="fa-face-smile" ref="modal">
     <div class="step-chooser">
       <div class="step-item" v-for="i in numberOfSteps" :key="i">
         <button
@@ -95,7 +95,11 @@
         </span>
       </p>
     </template>
-    <div class="horizontal-flex">
+    <div
+      class="horizontal-flex"
+      v-shortkey="(shortcuts.get('dismissPopup') as Shortcut).keys"
+      @shortkey.native="close"
+    >
       <Button v-if="step < numberOfSteps" icon="fa-forward" @click="close()">
         Skip introduction
       </Button>
@@ -120,7 +124,7 @@ import { ref, type Ref } from 'vue'
 import Modal from '@/components/shared/ui/Modal.vue'
 import Button from '@/components/shared/ui/Button.vue'
 import ExplainablesExplainable from '@/components/spectator/explainables/ExplainablesExplainable.vue'
-import { useRuleStore } from '@/store/ruleStore'
+import { useGameStore } from '@/store/gameStore'
 import { storeToRefs } from 'pinia'
 import SetupPhaseExplainable from '@/components/spectator/explainables/SetupPhaseExplainable.vue'
 import ProductionPhaseExplainable from '@/components/spectator/explainables/ProductionPhaseExplainable.vue'
@@ -131,11 +135,15 @@ import CapStationExplainable from '@/components/spectator/explainables/CapStatio
 import DeliveryStationExplainable from '@/components/spectator/explainables/DeliveryStationExplainable.vue'
 import RingStationExplainable from '@/components/spectator/explainables/RingStationExplainable.vue'
 import StorageStationExplainable from '@/components/spectator/explainables/StorageStationExplainable.vue'
+import type Shortcut from '@/types/Shortcut'
+import { useKeyboardStore } from '@/store/keyboardStore'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const ruleStore = useRuleStore()
+const gameStore = useGameStore()
 const { SETUP_DURATION, PRODUCTION_DURATION, OVERTIME_DURATION } =
-  storeToRefs(ruleStore)
+  storeToRefs(gameStore)
+const keyboardStore = useKeyboardStore()
+const { shortcuts } = storeToRefs(keyboardStore)
 
 // current step  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const step: Ref<number> = ref(1)

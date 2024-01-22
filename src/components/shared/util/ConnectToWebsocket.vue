@@ -1,20 +1,18 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <p>Connect to the game:</p>
   <div class="horizontal-flex form-row">
     <Input
-      v-if="adminActivated"
+      v-if="advancedOptions"
       ref="input"
       type="url"
-      :value="websocketURL"
-      @input="(newUrl) => (websocketURL = newUrl)"
+      v-model="websocketURL"
       :placeholder="DEFAULT_WS_URL"
     />
     <Button
       icon="fa-link"
       primary
       @click="connectToWebsocket"
-      :loading="attemptingConnection"
+      :loading="loading"
       >Connect</Button
     >
   </div>
@@ -29,7 +27,7 @@ import { useSocketStore } from '@/store/socketStore'
 import Button from '@/components/shared/ui/Button.vue'
 import Input from '@/components/shared/ui/Input.vue'
 import { watch } from 'vue'
-import { useViewStore } from '@/store/viewStore'
+import { useAppStore } from '@/store/appStore'
 
 // define emits  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const emit = defineEmits<{
@@ -38,30 +36,40 @@ const emit = defineEmits<{
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const socketStore = useSocketStore()
-const { DEFAULT_WS_URL, attemptingConnection } = storeToRefs(socketStore)
-const viewStore = useViewStore()
-const { adminActivated } = storeToRefs(viewStore)
+const { DEFAULT_WS_URL, attemptingConnection, socket } =
+  storeToRefs(socketStore)
+const appStore = useAppStore()
+const { advancedOptions } = storeToRefs(appStore)
 
 // connect to websocket  - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const websocketURL: Ref<string> = ref(DEFAULT_WS_URL.value)
-
+const loading: Ref<boolean> = ref(false)
 function connectToWebsocket() {
-  // first remove potential loaded game
-  // TODO
+  console.log('connecting to websocket')
+  console.log(websocketURL)
 
-  // then connect to websocket
+  loading.value = true
   socketStore.connectToWebsocket(websocketURL.value)
-}
 
-watch(
-  () => attemptingConnection.value,
-  (newConnectionState, oldConnectionState) => {
-    // notify parent
-    if (newConnectionState == false && oldConnectionState == true) {
-      emit('connected')
+  watch(
+    () => socket.value,
+    (newSocket) => {
+      // notify parent
+      if (newSocket) {
+        emit('connected')
+      }
     }
-  }
-)
+  )
+
+  watch(
+    () => attemptingConnection.value,
+    (attempting) => {
+      if (!attempting) {
+        loading.value = false
+      }
+    }
+  )
+}
 
 // focus input on open - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const input: Ref<HTMLInputElement | null> = ref(null)

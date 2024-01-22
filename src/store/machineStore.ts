@@ -1,18 +1,23 @@
 import { ref, computed } from 'vue'
 import type { Ref, ComputedRef } from 'vue'
-import { Store, _UnwrapAll, defineStore } from 'pinia'
+import { defineStore } from 'pinia'
 import type Machine from '@/types/Machine'
 import type RingSpec from '@/types/RingSpec'
-import Color from '@/types/Color'
-import MachineCS from '@/types/MachineCS'
+import type Color from '@/types/Color'
+import type ShelfSlot from '@/types/ShelfSlot'
+import { useConfigStore } from '@/store/configStore'
 
+// MACHINE STORE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the machine stores stores the machines and related information and provides
+// methods to interact with them
 export const useMachineStore = defineStore('machineStore', () => {
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   const machines: Ref<Machine[]> = ref([])
+  const shelfSlots: Ref<ShelfSlot[]> = ref([])
   const ringSpecs: Ref<RingSpec[]> = ref([])
 
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // machines by color
+  // -> machines by color
   const machinesByColor: ComputedRef<(color: Color) => Machine[]> = computed(
     () => {
       return (color: Color) =>
@@ -20,7 +25,7 @@ export const useMachineStore = defineStore('machineStore', () => {
     }
   )
 
-  // payment by ring
+  // -> payment by ring
   const paymentByRing: ComputedRef<(ring: string) => number | undefined> =
     computed(() => {
       return (ring: string) => {
@@ -43,27 +48,25 @@ export const useMachineStore = defineStore('machineStore', () => {
     })
 
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // prepare machine by adding information to it that is not yet communicated via the websocket
+  // -> prepare machine by adding information to it that is not yet communicated
+  // via the websocket
   function prepareMachine(newMachine: Machine): Machine {
-    // as of 2023, the color information is not available. This will change with
-    // the new rules but for now, this has to be set manually
+    // as of 2023, the color information is not available (the cs_color is not a
+    // suitable replacement since it is not permanent and can become null). This
+    // will change with the new rules but for now, this has to be set manually
     if (newMachine.mtype == 'CS') {
-      const machine = <MachineCS>newMachine
+      const machine = newMachine
       if (newMachine.name.includes('CS1')) {
-        machine.cs_color = 'CAP_GREY'
+        machine.available_color = 'CAP_GREY'
       } else if (newMachine.name.includes('CS2')) {
-        machine.cs_color = 'CAP_BLACK'
+        machine.available_color = 'CAP_BLACK'
       }
+      return machine
     }
     return newMachine
   }
 
-  // set machines ring specs
-  function setringSpecs(newringSpecs: RingSpec[]): void {
-    ringSpecs.value = newringSpecs
-  }
-
-  // sets a machine (either adds a new one or replaces a existing one if it
+  // -> set one machine (either add a new one or replace a existing one if it
   // already exists)
   function setMachine(machineArg: Machine): void {
     // try to find the machine
@@ -73,7 +76,7 @@ export const useMachineStore = defineStore('machineStore', () => {
 
     // if we have found a machine, replace it
     if (index !== -1) {
-      machines.value.splice(index, 1, prepareMachine(machineArg))
+      machines.value[index] = prepareMachine(machineArg)
     }
     // else, we have a new machine and add it to our list of machines
     else {
@@ -82,15 +85,7 @@ export const useMachineStore = defineStore('machineStore', () => {
     }
   }
 
-  // set cyan machines info at reconnect
-  function setMachinesAtReconnect(newMachines: Machine[]): void {
-    for (const machine of newMachines) {
-      machines.value.push(prepareMachine(machine))
-    }
-    sortMachinesAlphabetically()
-  }
-
-  // sort alphabetically
+  // -> sort machines alphabetically
   function sortMachinesAlphabetically(): void {
     machines.value.sort((machineA, machineB) => {
       if (machineA.name < machineB.name) {
@@ -104,68 +99,61 @@ export const useMachineStore = defineStore('machineStore', () => {
     })
   }
 
+  // -> set one shelf slot
+  function setShelfSlot(slotArg: ShelfSlot): void {
+    // try to find the shelf slot
+    const index = shelfSlots.value.findIndex(
+      (slotFi) =>
+        slotFi.name == slotArg.name &&
+        slotFi.shelf == slotArg.shelf &&
+        slotFi.slot == slotArg.slot
+    )
+
+    // if we have found a shelf slot, replace it
+    if (index !== -1) {
+      shelfSlots.value[index] = slotArg
+    }
+    // else, we have a new shelf slot and add it to our list of shelf slot
+    else {
+      shelfSlots.value.push(slotArg)
+    }
+  }
+
+  // -> set one ring spec
+  function setRingSpec(ringSpecArg: RingSpec): void {
+    // try to find the shelf slot
+    const index = ringSpecs.value.findIndex(
+      (ringSpecFi) => ringSpecFi.color == ringSpecArg.color
+    )
+
+    // if we have found a shelf slot, replace it
+    if (index !== -1) {
+      ringSpecs.value[index] = ringSpecArg
+    }
+    // else, we have a new shelf slot and add it to our list of shelf slot
+    else {
+      ringSpecs.value.push(ringSpecArg)
+    }
+  }
+
+  // -> reset
   function reset() {
     machines.value = []
+    shelfSlots.value = []
     ringSpecs.value = []
   }
 
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   return {
     machines,
+    shelfSlots,
     ringSpecs,
     machinesByColor,
     paymentByRing,
     colorByWorkpieceItem,
-    setringSpecs,
     setMachine,
-    setMachinesAtReconnect,
+    setShelfSlot,
+    setRingSpec,
     reset,
   }
 })
-function storeToRefs(
-  ruleStore: Store<
-    'ruleStore',
-    _UnwrapAll<
-      Pick<
-        {
-          SETUP_DURATION: Ref<number>
-          PRODUCTION_DURATION: Ref<number>
-          OVERTIME_DURATION: Ref<number>
-          MAINTENANCE_DURATION: Ref<number>
-          MAX_NUMBER_OF_ROBOTS: Ref<number>
-          MAX_NUMBER_OF_MACHINES: Ref<number>
-        },
-        | 'SETUP_DURATION'
-        | 'PRODUCTION_DURATION'
-        | 'OVERTIME_DURATION'
-        | 'MAINTENANCE_DURATION'
-        | 'MAX_NUMBER_OF_ROBOTS'
-        | 'MAX_NUMBER_OF_MACHINES'
-      >
-    >,
-    Pick<
-      {
-        SETUP_DURATION: Ref<number>
-        PRODUCTION_DURATION: Ref<number>
-        OVERTIME_DURATION: Ref<number>
-        MAINTENANCE_DURATION: Ref<number>
-        MAX_NUMBER_OF_ROBOTS: Ref<number>
-        MAX_NUMBER_OF_MACHINES: Ref<number>
-      },
-      never
-    >,
-    Pick<
-      {
-        SETUP_DURATION: Ref<number>
-        PRODUCTION_DURATION: Ref<number>
-        OVERTIME_DURATION: Ref<number>
-        MAINTENANCE_DURATION: Ref<number>
-        MAX_NUMBER_OF_ROBOTS: Ref<number>
-        MAX_NUMBER_OF_MACHINES: Ref<number>
-      },
-      never
-    >
-  >
-): { MAX_NUMBER_OF_ROBOTS: any } {
-  throw new Error('Function not implemented.')
-}

@@ -1,12 +1,15 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Accordion title="Game" id="gameInfoBoard">
+  <Accordion horizontal title="Game" expanded-default id="gameInfoBoard">
     <div class="vertical-flex">
-      <div class="item transparent">
+      <div class="flex-item transparent">
         <div class="horizontal-flex phase-bar">
           <!-- PRE GAME -->
           <div :class="['arrow', { active: phase == 'PRE_GAME' }]">
-            <font-awesome-icon icon="fa-clock" />
+            <div class="vertical-flex center">
+              <font-awesome-icon icon="fa-clock" />
+            </div>
+
             <div class="after"></div>
           </div>
           <!-- SETUP -->
@@ -14,16 +17,14 @@
             <div class="before"></div>
             <PopupWrapper popup-position="bottom">
               <template #reference>
-                <div class="item transparent">
+                <div class="vertical-flex center">
                   <div class="horizontal-flex">
                     <span>Setup</span>
                     <font-awesome-icon icon="fa-info-circle" />
                   </div>
-                  <div v-if="phase == 'SETUP'">
-                    <span>
-                      {{ formatTime(game_time) }}
-                    </span>
-                  </div>
+                  <p v-if="phase == 'SETUP'">
+                    {{ formatTime(game_time) }}
+                  </p>
                 </div>
               </template>
               <SetupPhasePopup />
@@ -43,16 +44,15 @@
             <div class="before"></div>
             <PopupWrapper popup-position="bottom">
               <template #reference>
-                <div class="item transparent">
+                <div class="vertical-flex center">
                   <div class="horizontal-flex">
                     <span>Production</span>
                     <font-awesome-icon icon="fa-info-circle" />
                   </div>
-                  <div v-if="phase == 'PRODUCTION' && !overtime">
-                    <span>
-                      {{ formatTime(game_time) }}
-                    </span>
-                  </div>
+
+                  <p v-if="phase == 'PRODUCTION' && !overtime">
+                    {{ formatTime(game_time) }}
+                  </p>
                 </div>
               </template>
               <ProductionPhasePopup />
@@ -74,16 +74,14 @@
             <div class="before"></div>
             <PopupWrapper popup-position="bottom">
               <template #reference>
-                <div class="item transparent">
+                <div class="vertical-flex center">
                   <div class="horizontal-flex">
                     Overtime
                     <font-awesome-icon icon="fa-info-circle" />
                   </div>
-                  <div v-if="phase == 'PRODUCTION' && overtime">
-                    <span>
-                      {{ formatTime(game_time) }}
-                    </span>
-                  </div>
+                  <p v-if="phase == 'PRODUCTION' && overtime">
+                    {{ formatTime(game_time) }}
+                  </p>
                 </div>
               </template>
               <OvertimePopup />
@@ -93,74 +91,110 @@
           <!-- POST GAME -->
           <div :class="['arrow', { active: phase == 'POST_GAME' }]">
             <div class="before"></div>
-            <font-awesome-icon icon="fa-flag-checkered" />
+            <div class="vertical-flex center">
+              <font-awesome-icon icon="fa-flag-checkered" />
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- BOTTOM BANNER -->
-      <div class="item transparent">
+      <!-- BOTTOM BANNER ... -->
+      <div class="flex-item transparent">
         <div class="horizontal-flex">
-          <template v-if="socket">
-            <font-awesome-icon icon="fa-circle" style="color: green" />
-            <span style="color: green">Live</span>
+          <!-- ... FOR SOCKET MODE ... -->
+          <template v-if="currentMode == 'socket'">
+            <!-- ... AND CONNECTED -->
+            <template v-if="socket">
+              <font-awesome-icon icon="fa-circle" class="text-success" />
+              <span class="text-success">Live</span>
 
-            <span v-if="phase == 'PRE_GAME'"> • Waiting for game start </span>
-            <span v-if="phase == 'SETUP'">
-              •
-              {{ formatTime(SETUP_DURATION - game_time) }} until
-              <ProductionPhaseExplainable />
-            </span>
-            <span v-if="phase == 'PRODUCTION' && !overtime">
-              • {{ formatTime(PRODUCTION_DURATION - game_time) }} remaining
-            </span>
-            <span v-if="phase == 'PRODUCTION' && overtime">
-              •
-              {{
-                formatTime(PRODUCTION_DURATION + OVERTIME_DURATION - game_time)
-              }}
-              remaining
-            </span>
-            <div
-              v-if="
-                gamestate == 'PAUSED' && ['SETUP', 'PRODUCTION'].includes(phase)
-              "
-              class="horizontal-flex"
-            >
-              <span>•</span>
-              <font-awesome-icon icon="fa-pause" class="text-warning" />
-              <span class="text-warning">PAUSED</span>
-            </div>
-          </template>
-          <template v-else-if="gameReport">
-            <div class="horizontal-flex">
-              <font-awesome-icon icon="fa-folder-open" />
-              <div>
-                <span>{{
-                  gameReport['report_name'].length
-                    ? gameReport['report_name'].length
-                    : 'Unnamed game'
-                }}</span
-                ><br /><span>{{
-                  new Date(gameReport['start_time']).toLocaleDateString()
-                }}</span>
+              <span v-if="phase == 'PRE_GAME'"> • Waiting for game start </span>
+              <span v-if="phase == 'SETUP'">
+                •
+                {{ formatTime(SETUP_DURATION - game_time) }} until
+                <ProductionPhaseExplainable />
+              </span>
+              <span v-if="phase == 'PRODUCTION' && !overtime">
+                • {{ formatTime(PRODUCTION_DURATION - game_time) }} remaining
+              </span>
+              <span v-if="phase == 'PRODUCTION' && overtime">
+                •
+                {{
+                  formatTime(
+                    PRODUCTION_DURATION + OVERTIME_DURATION - game_time
+                  )
+                }}
+                remaining
+              </span>
+              <div
+                v-if="
+                  state == 'PAUSED' && ['SETUP', 'PRODUCTION'].includes(phase)
+                "
+                class="horizontal-flex"
+              >
+                <span>•</span>
+                <font-awesome-icon icon="fa-pause" class="text-warning" />
+                <span class="text-warning">PAUSED</span>
               </div>
+            </template>
+            <!-- ... AND NOT CURRENTLY CONNECTED -->
+            <template v-else>
+              <font-awesome-icon
+                icon="fa-unlink"
+                class="text-danger"
+                style="flex-shrink: 0"
+              />
+              <span class="text-danger" style="flex-shrink: 0"
+                >Disconnected</span
+              >
+              <ConnectToWebsocket />
+            </template>
+          </template>
+          <!-- ... FOR GAME REPORT MODE -->
+          <template v-else-if="currentMode == 'gameReport' && gameReport">
+            <div class="horizontal-flex">
               <PillButton
-                :description="gamestate == 'RUNNING' ? 'Pause' : 'Run'"
-                :title="gamestate == 'RUNNING' ? 'Pause game' : 'Run game'"
+                :description="state == 'RUNNING' ? 'Pause' : 'Run'"
+                :title="state == 'RUNNING' ? 'Pause game' : 'Run game'"
                 @click="toggleState"
               >
                 <font-awesome-icon
-                  :icon="gamestate == 'RUNNING' ? 'fa-pause' : 'fa-play'"
+                  :icon="state == 'RUNNING' ? 'fa-pause' : 'fa-play'"
                 />
               </PillButton>
-              <PillButton
-                description="Speed"
-                title="toggle speed"
-                @click="toggleSpeed"
-              >
-                {{ gameSpeed }}x
-              </PillButton>
+              <PopupWrapper popup-position="bottom">
+                <template #reference>
+                  <PillButton description="Speed" title="Toggle speed">
+                    {{ gameSpeed }}x
+                  </PillButton>
+                </template>
+                <GameSpeedPopup />
+              </PopupWrapper>
+
+              <PopupWrapper popup-position="bottom">
+                <template #reference>
+                  <PillButton description="Jump" title="Set time">
+                    <font-awesome-icon icon="fa-timeline" />
+                  </PillButton>
+                </template>
+                <TimelinePopup />
+              </PopupWrapper>
+              <div>•</div>
+              <div class="vertical-flex">
+                <div class="horizontal-flex">
+                  <font-awesome-icon icon="fa-folder-open" />
+                  <div>
+                    {{
+                      gameReport.report_name.length
+                        ? gameReport.report_name.length
+                        : 'Unnamed game'
+                    }}
+                  </div>
+                </div>
+                <div class="text-subtle">
+                  {{ new Date(gameReport.start_time).toLocaleString() }}
+                </div>
+              </div>
             </div>
             <p></p>
           </template>
@@ -178,7 +212,6 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGameStore } from '@/store/gameStore'
 import { useReportStore } from '@/store/reportStore'
-import { useRuleStore } from '@/store/ruleStore'
 import formatTime from '@/utils/formatTime'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import SetupPhasePopup from '@/components/spectator/popups/SetupPhasePopup.vue'
@@ -188,17 +221,28 @@ import { useSocketStore } from '@/store/socketStore'
 import Accordion from '@/components/shared/ui/Accordion.vue'
 import PillButton from '@/components/shared/ui/PillButton.vue'
 import ProductionPhaseExplainable from '@/components/spectator/explainables/ProductionPhaseExplainable.vue'
+import GameSpeedPopup from '@/components/spectator/popups/GameSpeedPopup.vue'
+import TimelinePopup from '@/components/spectator/popups/TimelinePopup.vue'
+import { useAppStore } from '@/store/appStore'
+import ConnectToWebsocket from '@/components/shared/util/ConnectToWebsocket.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const socketStore = useSocketStore()
 const { socket } = storeToRefs(socketStore)
 const gameStore = useGameStore()
-const { phase, gamestate, game_time, overtime } = storeToRefs(gameStore)
+const {
+  phase,
+  state,
+  game_time,
+  overtime,
+  SETUP_DURATION,
+  PRODUCTION_DURATION,
+  OVERTIME_DURATION,
+} = storeToRefs(gameStore)
 const reportStore = useReportStore()
 const { gameReport, gameSpeed } = storeToRefs(reportStore)
-const ruleStore = useRuleStore()
-const { SETUP_DURATION, PRODUCTION_DURATION, OVERTIME_DURATION } =
-  storeToRefs(ruleStore)
+const appStore = useAppStore()
+const { currentMode } = storeToRefs(appStore)
 
 // game progress - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const progress: ComputedRef<string> = computed(() => {
@@ -215,23 +259,12 @@ const progress: ComputedRef<string> = computed(() => {
 })
 
 // report  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// -> speed
-const nextSpeeds = new Map([
-  [0.5, 1],
-  [1, 2],
-  [2, 4],
-  [4, 0.5],
-])
-function toggleSpeed() {
-  gameSpeed.value = <number>nextSpeeds.get(gameSpeed.value)
-}
-
 // -> run/pause
 function toggleState() {
-  if (gamestate.value == 'WAIT_START' || gamestate.value == 'PAUSED') {
+  if (state.value == 'WAIT_START' || state.value == 'PAUSED') {
     reportStore.runGame()
-  } else if (gamestate.value == 'RUNNING') {
-    gamestate.value = 'PAUSED'
+  } else if (state.value == 'RUNNING') {
+    state.value = 'PAUSED'
   }
 }
 </script>
@@ -255,7 +288,7 @@ function toggleState() {
       display: flex;
       padding: 0 $arrowWidth;
       background-color: $neutralColor;
-      align-items: center;
+      align-items: stretch;
 
       &:first-child {
         border-radius: 8px 0 0 8px;

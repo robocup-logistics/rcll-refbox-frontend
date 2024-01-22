@@ -1,50 +1,43 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Accordion id="menuBoard" title="Menu">
-    <div class="horizontal-flex">
-      <div class="menu item transparent">
-        <!-- CONNECT TO A LIVE GAME -->
-        <PopupWrapper popup-position="bottom">
-          <template #reference>
-            <PillButton description="Live" title="Connect to live game">
-              <font-awesome-icon icon="fa-link" />
-            </PillButton>
-          </template>
-          <ConnectToWebsocketPopup></ConnectToWebsocketPopup>
-        </PopupWrapper>
+  <Accordion horizontal title="Menu" expanded-default id="menuBoard">
+    <div class="menu">
+      <!-- SWITCH VIEW -->
+      <PillButton
+        description="Menu"
+        title="Go back to the start menu"
+        @click.prevent="currentView = 'start'"
+      >
+        <font-awesome-icon icon="fa-arrow-left"
+      /></PillButton>
+      <PillButton
+        description="Referee"
+        v-if="socket"
+        title="Switch to referee mode"
+        @click="currentView = 'referee'"
+      >
+        <font-awesome-icon icon="fa-user-tie"
+      /></PillButton>
 
-        <!-- REVIEW A PREVIOUSLY PLAYED AND RECORDED GAME -->
-        <PopupWrapper popup-position="bottom">
-          <template #reference>
-            <PillButton
-              description="DB"
-              title="Connect to previous game summary"
-            >
-              <font-awesome-icon icon="fa-folder-open" />
-            </PillButton>
-          </template>
-          <ConnectToDbBackendPopup></ConnectToDbBackendPopup>
-        </PopupWrapper>
+      <!-- CONNECT TO A LIVE GAME -->
+      <PopupWrapper popup-position="bottom">
+        <template #reference>
+          <PillButton description="Live" title="Connect to live game">
+            <font-awesome-icon icon="fa-link" />
+          </PillButton>
+        </template>
+        <WatchGameLivePopup></WatchGameLivePopup>
+      </PopupWrapper>
 
-        <!-- AUTHENTICATE AS REFEREE AND SWITCH VIEW -->
-        <PillButton
-          description="View"
-          v-if="socket"
-          title="Switch to referee mode"
-          @click="authenticateAndSwitchView"
-        >
-          <font-awesome-icon icon="fa-user-tie"
-        /></PillButton>
-
-        <PillButton
-          description="Lock"
-          title="Disable referee functionality and advanced options like changing the socket or viewing game reports"
-          @click.prevent="lockOptions"
-          @shortkey="lockOptions"
-        >
-          <font-awesome-icon icon="fa-lock"
-        /></PillButton>
-      </div>
+      <!-- REVIEW A PREVIOUSLY PLAYED AND RECORDED GAME -->
+      <PopupWrapper popup-position="bottom">
+        <template #reference>
+          <PillButton description="DB" title="Connect to previous game summary">
+            <font-awesome-icon icon="fa-folder-open" />
+          </PillButton>
+        </template>
+        <ReviewGameReportPopup></ReviewGameReportPopup>
+      </PopupWrapper>
     </div>
   </Accordion>
 </template>
@@ -53,27 +46,19 @@
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { storeToRefs } from 'pinia'
-import { useReportStore } from '@/store/reportStore'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import PillButton from '@/components/shared/ui/PillButton.vue'
 import { useSocketStore } from '@/store/socketStore'
-import ConnectToDbBackendPopup from '@/components/spectator/popups/ConnectToDbBackendPopup.vue'
-import ConnectToWebsocketPopup from '@/components/spectator/popups/ConnectToWebsocketPopup.vue'
-import { useViewStore } from '@/store/viewStore'
+import ReviewGameReportPopup from '@/components/spectator/popups/ReviewGameReportPopup.vue'
+import WatchGameLivePopup from '@/components/spectator/popups/WatchGameLivePopup.vue'
+import { useAppStore } from '@/store/appStore'
 import Accordion from '@/components/shared/ui/Accordion.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const socketStore = useSocketStore()
 const { socket } = storeToRefs(socketStore)
-const viewStore = useViewStore()
-
-// switch to referee view  - - - - - - - - - - - - - - - - - - - - - - - - - - -
-function authenticateAndSwitchView() {
-  viewStore.refereeView = true
-}
-function lockOptions() {
-  viewStore.adminActivated = false
-}
+const appStore = useAppStore()
+const { currentView } = storeToRefs(appStore)
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -85,7 +70,6 @@ function lockOptions() {
     display: inline-grid;
     grid-template-columns: 50px 50px;
     gap: 10px;
-    overflow: hidden;
   }
 }
 </style>

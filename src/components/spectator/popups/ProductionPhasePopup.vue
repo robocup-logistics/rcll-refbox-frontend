@@ -13,14 +13,13 @@
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { storeToRefs } from 'pinia'
 import Popup from '@/components/shared/ui/Popup.vue'
-import OrderEntity from '@/components/spectator/entities/OrderEntity.vue'
-import { useRuleStore } from '@/store/ruleStore'
+import { useGameStore } from '@/store/gameStore'
 import formatTime from '@/utils/formatTime'
 import ProductionPhaseExplainable from '@/components/spectator/explainables/ProductionPhaseExplainable.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const ruleStore = useRuleStore()
-const { PRODUCTION_DURATION } = storeToRefs(ruleStore)
+const gameStore = useGameStore()
+const { PRODUCTION_DURATION } = storeToRefs(gameStore)
 </script>
 
 // STYLE -----------------------------------------------------------------------

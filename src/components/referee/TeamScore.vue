@@ -1,31 +1,32 @@
+// TEMPLATE --------------------------------------------------------------------
 <template>
   <div class="vertical-flex">
-    <!-- ADD POINTS SECTION -->
-    <div class="item" style="max-height: 50px">
+    <!-- SCORE + ADD REWARD SECTION -->
+    <div class="flex-item" style="height: 60px; padding: 10px; flex-grow: 0">
       <div class="horizontal-flex">
         <h4 v-if="phase !== 'PRE_GAME'">Score: {{ scoreByColor(color) }}</h4>
-        <PopupWrapper>
+        <PopupWrapper v-if="phase == 'PRODUCTION'">
           <template #reference>
-            <Button primary title="Add Points manually" icon="fa-plus">
-            </Button>
+            <Button primary title="Add reward" icon="fa-plus"> </Button>
           </template>
-          <AddPointsPopup :color="color" />
+          <AddRewardPopup :color="color" />
         </PopupWrapper>
       </div>
     </div>
 
+    <!-- REWARDS LIST -->
     <AutoScrollContainer
-      :watch-data="awardedPointsByColor(props.color)"
-      class="item"
+      :watch-data="rewardsByColor(props.color)"
+      class="flex-item"
       style="height: 100px"
     >
-      <div class="points-grid">
+      <div class="rewards-grid">
         <h6
-          v-for="(award, index) in awardedPointsByColor(color)"
+          v-for="(award, index) in rewardsByColor(color)"
           :key="index"
-          class="point"
+          class="reward"
         >
-          {{ index + 1 }}. [{{ formatTime(award['game_time']) }}]
+          {{ index + 1 }}. [{{ formatTime(award.game_time) }}]
           {{ award.phase.substring(0, 3) }}
           <span class="text-light">{{ award.points }}</span> point(s)
           <br />
@@ -38,12 +39,13 @@
   </div>
 </template>
 
+// SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { storeToRefs } from 'pinia'
 import formatTime from '@/utils/formatTime'
 import { useGameStore } from '@/store/gameStore'
-import AddPointsPopup from '@/components/referee/popups/AddPointsPopup.vue'
+import AddRewardPopup from '@/components/referee/popups/AddRewardPopup.vue'
 import Color from '@/types/Color'
 import AutoScrollContainer from '@/components/shared/ui/AutoScrollContainer.vue'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
@@ -58,16 +60,17 @@ const props = defineProps({
 })
 
 const gameStore = useGameStore()
-const { phase, awardedPointsByColor, scoreByColor } = storeToRefs(gameStore)
+const { phase, rewardsByColor, scoreByColor } = storeToRefs(gameStore)
 </script>
 
+// STYLE -----------------------------------------------------------------------
 <style scoped>
-.points-grid {
+.rewards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 10px;
 
-  .point {
+  .reward {
     font-size: 13px;
     text-align: left;
   }

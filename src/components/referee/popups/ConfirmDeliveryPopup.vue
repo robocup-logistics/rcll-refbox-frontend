@@ -7,37 +7,32 @@
     <div class="horizontal-flex" style="justify-content: space-between">
       <div>
         <p>complexity: {{ order.complexity }}</p>
-        <p>base-color: {{ order['base_color'] }}</p>
-        <p v-if="order['ring_colors']">
-          ring colors: {{ order['ring_colors'] }}
-        </p>
-        <p>cap-color: {{ order['cap_color'] }}</p>
+        <p>base-color: {{ order.base_color }}</p>
+        <p v-if="order.ring_colors">ring colors: {{ order.ring_colors }}</p>
+        <p>cap-color: {{ order.cap_color }}</p>
         <p
           v-if="
-            typeof order['unconfirmed_deliveries'][0]['game_time'] !==
-            'undefined'
+            typeof order.unconfirmed_deliveries[0].game_time !== 'undefined'
           "
         >
           game time:
-          {{ formatTime(order['unconfirmed_deliveries'][0]['game_time']) }}
+          {{ formatTime(order.unconfirmed_deliveries[0].game_time) }}
         </p>
         <p>
           delivery period:
-          {{ formatTime(order['delivery_period'][0]) }}
+          {{ formatTime(order.delivery_period[0]) }}
           -
-          {{ formatTime(order['delivery_period'][1]) }}
+          {{ formatTime(order.delivery_period[1]) }}
         </p>
       </div>
       <img
-        :src="`/workpieces/${
-          orderStore.productByOrder(order)?.['workpiece_url']
-        }`"
+        :src="`/workpieces/${orderStore.fileNameByWorkpiece(order)}`"
         class="img-fluid"
       />
     </div>
     <div class="horizontal-flex">
-      <Button primary @click.prevent="confirmOrder(order, true)"> Yes </Button>
-      <Button @click.prevent="confirmOrder(order, false)"> No </Button>
+      <Button primary @click.prevent="confirmOrder(true)"> Yes </Button>
+      <Button @click.prevent="confirmOrder(false)"> No </Button>
     </div>
   </Modal>
 </template>
@@ -47,11 +42,9 @@
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import Modal from '@/components/shared/ui/Modal.vue'
 import { PropType, type Ref, ref } from 'vue'
-import { useSocketStore } from '@/store/socketStore'
 import Button from '@/components/shared/ui/Button.vue'
 import Order from '@/types/Order'
 import Color from '@/types/Color'
-import ConfirmDeliveryOutMsg from '@/types/messages/outgoing/ConfirmDeliveryOutMsg'
 import formatTime from '@/utils/formatTime'
 import { useOrderStore } from '@/store/orderStore'
 
@@ -72,31 +65,21 @@ const props = defineProps({
 })
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const socketStore = useSocketStore()
 const orderStore = useOrderStore()
 
 // accept order (or not) - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const modal: Ref<typeof Modal | null> = ref(null)
-function confirmOrder(order: Order, bool: boolean): void {
-  const msg: ConfirmDeliveryOutMsg = {
-    command: 'confirm_delivery',
-    correctness: bool,
-    delivery_id: null,
-    order_id: props.order.id,
+function confirmOrder(bool: boolean): void {
+  orderStore.sendConfirmDelivery({
     color: props.color,
-  }
-
-  if (order['unconfirmed_deliveries'].length > 0) {
-    if (
-      typeof order['unconfirmed_deliveries'][0]['delivery_id'] !== 'undefined'
-    ) {
-      msg['delivery_id'] = order['unconfirmed_deliveries'][0]['delivery_id']
-    }
-  } else {
-    msg['delivery_id'] = msg['order_id']
-  }
-
-  socketStore.SOCKET_SEND(msg)
+    correctness: bool,
+    delivery_id:
+      props.order.unconfirmed_deliveries.length > 0 &&
+      props.order.unconfirmed_deliveries[0].delivery_id !== undefined
+        ? props.order.unconfirmed_deliveries[0].delivery_id
+        : props.order.id,
+    order_id: props.order.id,
+  })
 
   // we do not want to wait for the refbox to confirm the delivery until the
   // popup closes, so we hide it.

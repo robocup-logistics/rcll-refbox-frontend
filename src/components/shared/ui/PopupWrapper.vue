@@ -6,7 +6,7 @@
     </div>
     <div
       v-if="popupOpen"
-      class="popup"
+      class="inner-popup-wrapper"
       ref="popup"
       :style="[floatingStyles, { 'z-index': zIndex }]"
       @click="placePopupOnTop"
@@ -24,7 +24,7 @@
         <div class="arrow"></div>
       </div>
 
-      <slot class="clickable"></slot>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -44,7 +44,7 @@ import {
   arrow,
 } from '@floating-ui/vue'
 import type { Placement } from '@floating-ui/vue'
-import { useViewStore } from '@/store/viewStore'
+import { useAppStore } from '@/store/appStore'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const props = defineProps({
@@ -56,8 +56,8 @@ const props = defineProps({
 })
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const viewStore = useViewStore()
-const { popupCounter } = storeToRefs(viewStore)
+const appStore = useAppStore()
+const { popupCounter } = storeToRefs(appStore)
 
 // floating popup  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // -> setting up floating ui
@@ -70,8 +70,8 @@ const { floatingStyles, middlewareData, placement } = useFloating(
   {
     placement: props.popupPosition,
     middleware: [
-      offset(15),
       flip(),
+      offset(15),
       shift({ padding: 10 }),
       arrow({ element: floatingArrow }),
     ],
@@ -111,15 +111,17 @@ provide('togglePopup', togglePopup)
 @use '@/assets/global.scss';
 
 .popup-wrapper {
-  height: fit-content;
+  height: inherit;
+  width: inherit;
 
   .reference {
-    height: fit-content;
+    height: inherit;
+    width: inherit;
     /* to make sure items in horizontal flex containers are well aligned */
     display: flex;
   }
 
-  .popup {
+  .inner-popup-wrapper {
     .arrow-wrapper {
       $arrowSize: 20px;
       $hideFactor: -1;

@@ -1,6 +1,10 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Popup :title="'Machine ' + machine.name">
+  <Popup
+    :title="`<span class='${machine.team}-text'>Machine ${machine.name}</span>`"
+    icon="fa-gears"
+    class="machine-popup"
+  >
     <!-- ABOUT MACHINE TYPE -->
     <div>
       <span>Type: </span>
@@ -11,7 +15,8 @@
       <StorageStationExplainable v-else-if="machine.mtype == 'SS'" />
     </div>
 
-    <!-- BASE STATION -->
+    <!-- STATION-SPECIFIC INFORMATION -->
+    <!-- -> base station -->
     <template v-if="machine.mtype == 'BS'">
       <p>Available bases:</p>
       <div class="content-box horizontal-flex">
@@ -21,21 +26,21 @@
       </div>
     </template>
 
-    <!-- CAP STATION -->
+    <!-- -> cap station -->
     <template v-else-if="machine.mtype == 'CS'">
       <div class="content-box shelf">
-        <div class="shelf-level cs">
-          <div class="shelf-item" v-for="i in 3">
+        <div class="shelf-shelf cs">
+          <div class="shelf-slot" v-for="_slot in 3">
             <img
-              :src="`/workpieces/BASE_TRANSPARENT-${(<MachineCS>machine).cs_color}.svg`"
-              :alt="`BASE_TRANSPARENT-${(<MachineCS>machine).cs_color}`"
+              :src="`/workpieces/BASE_CLEAR-${machine.available_color}.svg`"
+              :alt="`BASE_CLEAR-${machine.available_color}`"
             />
           </div>
         </div>
       </div>
     </template>
 
-    <!-- DELIVERY STATION -->
+    <!-- -> delivery station -->
     <template v-else-if="machine.mtype == 'DS'">
       <template
         v-if="ordersDeliveredByTeam(teamNameByColor(machine.team)).length"
@@ -53,50 +58,134 @@
       </template>
       <template v-else>
         <p>
-          {{ teamNameByColor(machine.team) }} has not delivered any order yet.
+          <span :class="`${machine.team}-text`">{{
+            teamNameByColor(machine.team)
+          }}</span>
+          has not delivered any order yet.
         </p>
       </template>
     </template>
 
-    <!-- RING STATION -->
+    <!-- -> ring station -->
     <template v-else-if="machine.mtype == 'RS'">
       <p>Available rings:</p>
-      <div
-        v-for="ringColor in (<MachineRS>machine)['rs_ring_colors']"
-        class="content-box"
-      >
+      <div v-for="ringColor in machine.available_colors" class="content-box">
         <div class="horizontal-flex">
           <img :src="`/workpieces/${ringColor}.svg`" :alt="ringColor" />
           <div class="horizontal-flex">
             <font-awesome-icon icon="fa-coins" />
-            <p>
-              {{
+            <span>:</span>
+            <p
+              v-if="
                 ringSpecs.find((ringspec) => ringspec.color == ringColor)
-                  ?.req_bases
-              }}
-              bases
+                  ?.req_bases == 0
+              "
+            >
+              free
+            </p>
+            <p v-else>
+              <template
+                v-if="
+                  machine.bases_added != undefined &&
+                  machine.bases_used != undefined
+                "
+              >
+                <span
+                  :class="[(<RingSpec>ringSpecs.find((ringspec) => ringspec.color == ringColor))
+                .req_bases - (machine.bases_added - machine.bases_used) > 0 ? 'text-warning' : 'text-success']"
+                >
+                  {{ machine.bases_added - machine.bases_used }}
+                </span>
+                <span>/</span>
+              </template>
+              <span
+                >{{
+                  ringSpecs.find((ringspec) => ringspec.color == ringColor)
+                    ?.req_bases
+                }}
+                bases</span
+              >
             </p>
           </div>
         </div>
-        <p class="text-warning" v-if="(<RingSpec>ringSpecs.find((ringspec) => ringspec.color == ringColor))
-                .req_bases - ((<MachineRS>machine).bases_added - (<MachineRS>machine).bases_used) > 0">
-                Remaining payment:
-                {{ (<RingSpec>ringSpecs.find((ringspec) => ringspec.color == ringColor))
-                .req_bases - ((<MachineRS>machine).bases_added - (<MachineRS>machine).bases_used) }}</p>
       </div>
     </template>
 
-    <!-- STORAGE STATION -->
+    <!-- -> storage station -->
     <template v-else-if="machine.mtype == 'SS'">
-      <div class="content-box shelf">
-        <div class="shelf-level ss" v-for="l in 6">
-          <div class="shelf-item" v-for="i in 8">
+      <div class="horizontal-flex text-warning">
+        <font-awesome-icon icon="fa-warning" />
+        <span>
+          The storage station shelf can not be displayed because this feature is
+          not yet implemented in the current version of the RefBox!
+        </span>
+      </div>
+      <!-- Replace the upper part of the part below as soon as base_color, ring_colors and cap_color are available -->
+      <!-- <div class="content-box shelf">
+        <div class="shelf-shelf ss" v-for="shelf in 6">
+          <div class="shelf-slot" v-for="slot in 8">
             <img
-              :src="`/workpieces/BASE_RED-CAP_GREY.svg`"
-              alt="BASE_RED - CAP_GREY"
+              v-if="
+                shelfSlots.find(
+                  (slotFi) =>
+                    slotFi.name == machine.name &&
+                    slotFi.shelf == shelf &&
+                    slotFi.slot == slot
+                )
+              "
+              :src="`/workpieces/${fileNameByWorkpiece(<ShelfSlot>shelfSlots.find(slotFi => slotFi.name == machine.name && slotFi.shelf == shelf && slotFi.slot == slot))}`"
             />
           </div>
         </div>
+      </div> -->
+    </template>
+
+    <!-- WORKPIECES -->
+    <template v-if="workpieces && workpieces.length">
+      <p>Workpieces:</p>
+      <div
+        class="content-box horizontal-flex workpiece-box"
+        v-if="workpiecesAtInput.length"
+      >
+        <p>at the input:</p>
+        <WorkpieceEntity
+          v-for="workpiece in workpiecesAtInput"
+          :workpiece="workpiece"
+          clickable
+        />
+      </div>
+      <div
+        class="content-box horizontal-flex workpiece-box"
+        v-if="workpiecesAtOutput.length"
+      >
+        <p>at the output:</p>
+        <WorkpieceEntity
+          v-for="workpiece in workpiecesAtOutput"
+          :workpiece="workpiece"
+          clickable
+        />
+      </div>
+      <div
+        class="content-box horizontal-flex workpiece-box"
+        v-if="workpiecesAtShelf.length"
+      >
+        <p>at the shelf:</p>
+        <WorkpieceEntity
+          v-for="workpiece in workpiecesAtShelf"
+          :workpiece="workpiece"
+          clickable
+        />
+      </div>
+      <div
+        class="content-box horizontal-flex workpiece-box"
+        v-if="workpiecesAtSlide.length"
+      >
+        <p>in the payment slideeeeee:</p>
+        <WorkpieceEntity
+          v-for="workpiece in workpiecesAtSlide"
+          :workpiece="workpiece"
+          clickable
+        />
       </div>
     </template>
   </Popup>
@@ -105,9 +194,8 @@
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import type { PropType } from 'vue'
+import { computed, type ComputedRef, type PropType } from 'vue'
 import type Machine from '@/types/Machine'
-import type MachineRS from '@/types/MachineRS'
 import Popup from '@/components/shared/ui/Popup.vue'
 import { useMachineStore } from '@/store/machineStore'
 import { storeToRefs } from 'pinia'
@@ -116,17 +204,23 @@ import CapStationExplainable from '@/components/spectator/explainables/CapStatio
 import DeliveryStationExplainable from '@/components/spectator/explainables/DeliveryStationExplainable.vue'
 import RingStationExplainable from '@/components/spectator/explainables/RingStationExplainable.vue'
 import StorageStationExplainable from '@/components/spectator/explainables/StorageStationExplainable.vue'
-import type MachineCS from '@/types/MachineCS'
 import { useOrderStore } from '@/store/orderStore'
 import { useGameStore } from '@/store/gameStore'
 import OrderEntity from '@/components/spectator/entities/OrderEntity.vue'
-import RingSpec from '@/types/RingSpec'
+import type RingSpec from '@/types/RingSpec'
+import WorkpieceEntity from '@/components/spectator/entities/WorkpieceEntity.vue'
+import type Workpiece from '@/types/Workpiece'
+import type ShelfSlot from '@/types/ShelfSlot'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-defineProps({
+const props = defineProps({
   machine: {
     type: Object as PropType<Machine>,
     required: true,
+  },
+  workpieces: {
+    type: Array as PropType<Workpiece[]>,
+    required: false,
   },
 })
 
@@ -135,13 +229,42 @@ const gameStore = useGameStore()
 const machineStore = useMachineStore()
 const orderStore = useOrderStore()
 const { teamNameByColor } = storeToRefs(gameStore)
-const { ringSpecs } = storeToRefs(machineStore)
-const { ordersDeliveredByTeam } = storeToRefs(orderStore)
+const { shelfSlots, ringSpecs } = storeToRefs(machineStore)
+const { ordersDeliveredByTeam, fileNameByWorkpiece } = storeToRefs(orderStore)
+
+// workpieces  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const workpiecesAtInput: ComputedRef<Workpiece[]> = computed(
+  () =>
+    props.workpieces?.filter((workpiece) => workpiece.at_side == 'INPUT') || []
+)
+const workpiecesAtOutput: ComputedRef<Workpiece[]> = computed(
+  () =>
+    props.workpieces?.filter((workpiece) => workpiece.at_side == 'OUTPUT') || []
+)
+const workpiecesAtSlide: ComputedRef<Workpiece[]> = computed(
+  () =>
+    props.workpieces?.filter((workpiece) => workpiece.at_side == 'SLIDE') || []
+)
+const workpiecesAtShelf: ComputedRef<Workpiece[]> = computed(
+  () =>
+    props.workpieces?.filter((workpiece) =>
+      ['LEFT', 'MIDDLE', 'RIGHT'].includes(workpiece.at_side)
+    ) || []
+)
 </script>
 
 // STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
 @use '@/assets/global.scss';
+
+.machine-popup {
+  .workpiece-box {
+    flex-wrap: wrap;
+    * {
+      flex-shrink: 0;
+    }
+  }
+}
 
 .shelf {
   position: relative;
@@ -161,7 +284,7 @@ const { ordersDeliveredByTeam } = storeToRefs(orderStore)
     border-radius: 8px;
   }
 
-  .shelf-level {
+  .shelf-shelf {
     margin: -30px 0;
     transform: rotateX(50deg) rotateZ(30deg);
 
@@ -187,12 +310,14 @@ const { ordersDeliveredByTeam } = storeToRefs(orderStore)
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 
-    .shelf-item {
+    .shelf-slot {
+      width: 80px;
       aspect-ratio: 1;
       background-color: global.$lighterColor;
       border-radius: 8px;
 
       img {
+        width: 100%;
         transform: rotateX(-30deg) rotateZ(-30deg);
       }
     }

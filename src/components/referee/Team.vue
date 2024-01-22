@@ -1,17 +1,18 @@
+// TEMPLATE --------------------------------------------------------------------
 <template>
-  <div class="item team">
+  <div class="flex-item team">
     <!-- TEAM NAME / ADD TEAM NAME -->
-    <div :class="['item transparent team-name', color]">
+    <div :class="['flex-item transparent team-name', color]">
       <h4 v-if="teamName">
         {{ teamName }}
       </h4>
-      <PopupWrapper v-else>
+      <PopupWrapper v-else style="width: fit-content">
         <template #reference>
-          <Button v-shortkey.once="['f5']" icon="fa-plus">
-            Add Team {{ color }}
+          <Button v-shortkey.once="['f5']" icon="fa-pen-nib">
+            Set <span :class="`${color}-text`">{{ color }}</span> team name
           </Button>
         </template>
-        <AddTeamNamePopup :color="color"></AddTeamNamePopup>
+        <SetTeamNamePopup :color="color"></SetTeamNamePopup>
       </PopupWrapper>
     </div>
     <!-- MACHINES/ROBOTS/SCORE -->
@@ -29,18 +30,21 @@
   </div>
 </template>
 
+// SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
+// imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import type { PropType } from 'vue'
 import Color from '@/types/Color'
 import Button from '@/components/shared/ui/Button.vue'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
-import AddTeamNamePopup from '@/components/referee/popups/AddTeamNamePopup.vue'
+import SetTeamNamePopup from '@/components/referee/popups/SetTeamNamePopup.vue'
 import { useGameStore } from '@/store/gameStore'
 import { storeToRefs } from 'pinia'
 import TeamMachines from '@/components/referee/TeamMachines.vue'
 import TeamScore from '@/components/referee/TeamScore.vue'
 import TeamRobots from '@/components/referee/TeamRobots.vue'
 
+// props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 defineProps({
   color: {
     type: String as PropType<Color>,
@@ -56,6 +60,7 @@ const gameStore = useGameStore()
 const { phase } = storeToRefs(gameStore)
 </script>
 
+// STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
 @use '@/assets/global.scss';
 
@@ -63,7 +68,7 @@ const { phase } = storeToRefs(gameStore)
   height: 100% !important;
   padding: 10px !important;
   .team-name {
-    padding: 5px !important;
+    padding: 10px !important;
     color: black;
     flex-grow: 0 !important;
   }

@@ -4,9 +4,7 @@
     <template #reference>
       <div class="order-entity clickable">
         <img
-          :src="`/workpieces/${
-            orderStore.productByOrder(order)?.['workpiece_url']
-          }`"
+          :src="`/workpieces/${orderStore.fileNameByWorkpiece(order)}`"
           alt="Order img"
           draggable="false"
         />

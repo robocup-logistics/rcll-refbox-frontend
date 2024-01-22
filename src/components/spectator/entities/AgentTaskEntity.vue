@@ -3,32 +3,56 @@
   <svg class="svg">
     <defs>
       <marker
-        id="arrow"
+        :id="`arrow-${task.task_id}-${task.robot_id}`"
         markerWidth="10"
         markerHeight="10"
-        :refX="viewStore.squareDiameterPixels * 0.2"
+        :refX="squareDiameterPixels * -0.2"
         refY="3"
         orient="auto"
         markerUnits="strokeWidth"
       >
-        <path class="arrow-path" d="M0,0 L0,6 L9,3 z"></path>
+        <path class="arrow-path" d="M9,0 L9,6 0,3 z"></path>
       </marker>
     </defs>
-    <line
-      :class="['line', task.task_type == 'MOVE' ? 'arrow' : '']"
-      ref="line"
+    <path
+      :d="`M${waypointPos[0]} ${waypointPos[1]}, L${robotPos[0]} ${robotPos[1]}`"
+      :stroke-dasharray="
+        task.task_type == 'MOVE' ? `0 ${squareDiameterPixels / 2} 200%` : 'none'
+      "
+      :marker-start="
+        task.task_type == 'MOVE'
+          ? `url(#arrow-${task.task_id}-${task.robot_id})`
+          : 'none'
+      "
+      :id="`line-${task.task_id}-${task.robot_id}`"
+      class="line"
     />
+    <circle
+      r="5"
+      fill="black"
+      v-if="['RETRIEVE', 'DELIVER'].includes(task.task_type)"
+    >
+      <animateMotion
+        dur="2s"
+        repeatCount="indefinite"
+        :keyPoints="task.task_type == 'RETRIEVE' ? '0;1' : '1;0'"
+        keyTimes="0;1"
+      >
+        <mpath :href="`#line-${task.task_id}-${task.robot_id}`" />
+      </animateMotion>
+    </circle>
   </svg>
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import { ref, watch } from 'vue'
-import type { PropType, Ref } from 'vue'
+import { computed } from 'vue'
+import type { ComputedRef, PropType } from 'vue'
 import type AgentTask from '@/types/AgentTask'
-import { useViewStore } from '@/store/viewStore'
+import { useFieldStore } from '@/store/fieldStore'
 import Robot from '@/types/Robot'
+import { storeToRefs } from 'pinia'
 
 // define props  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const props = defineProps({
@@ -37,60 +61,27 @@ const props = defineProps({
     required: true,
   },
   robot: {
-    type: Object as PropType<Robot | null>,
+    type: Object as PropType<Robot>,
     required: true,
   },
 })
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const viewStore = useViewStore()
+const fieldStore = useFieldStore()
+const { squareDiameterPixels, positionOfRobot, positionOfWaypoint } =
+  storeToRefs(fieldStore)
 
-// draw arrow  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const line: Ref<SVGLineElement | null> = ref(null)
-function drawLine() {
-  if (line.value && props.robot) {
-    const robotPos = viewStore.positionOfRobot(props.robot)
-    const waypointPos = viewStore.positionOfWaypoint(
-      props.task.task_parameters[1]
-    )
-
-    // set the line position
-    line.value.setAttribute('x1', `${robotPos[0]}`)
-    line.value.setAttribute('y1', `${robotPos[1]}`)
-    line.value.setAttribute('x2', `${waypointPos[0]}`)
-    line.value.setAttribute('y2', `${waypointPos[1]}`)
-
-    // make the line end appear like it stops before its real end (only pointing
-    // at it)
-    line.value.setAttribute(
-      'stroke-dasharray',
-      `${line.value.getTotalLength() - viewStore.squareDiameterPixels / 3}`
-    )
-  }
-}
-
-// redraw arrow when window size, playing field size or the robot's position
-// changes and once initially after the line element has been created
-window.addEventListener('resize', () => drawLine())
-watch(
-  () => viewStore.squareDiameterPixels,
-  () => {
-    drawLine()
-  }
+// endpoints of line - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const robotPos: ComputedRef<[number, number]> = computed(
+  () => positionOfRobot.value(props.robot) || [0, 0]
 )
-watch(
-  () => props.robot,
-  () => {
-    drawLine()
-  },
-  { deep: true }
-)
-watch(
-  () => line.value,
-  () => {
-    drawLine()
-  },
-  { immediate: true }
+const waypointPos: ComputedRef<[number, number]> = computed(
+  () =>
+    positionOfWaypoint.value(
+      props.task.task_type == 'MOVE'
+        ? props.task.task_parameters.waypoint
+        : props.task.task_parameters.machine_id
+    ) || [0, 0]
 )
 </script>
 
@@ -110,10 +101,6 @@ watch(
 .line {
   stroke-width: 2px;
   stroke: global.$surfaceColor;
-
-  &.arrow {
-    marker-end: url(#arrow);
-  }
 }
 
 .arrow-path {

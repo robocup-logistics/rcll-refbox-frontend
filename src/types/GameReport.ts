@@ -1,29 +1,35 @@
-import type AwardedPoints from '@/types/AwardedPoints'
+import type Reward from '@/types/Reward'
 import type Order from '@/types/Order'
 import type Phase from '@/types/Phase'
 import type RingSpec from '@/types/RingSpec'
 import type State from '@/types/State'
-import AgentTask from '@/types/AgentTask'
+import type AgentTask from '@/types/AgentTask'
+import type Robot from '@/types/Robot'
+import { type MachineStatic, type MachineCurrent } from '@/types/Machine'
+import type Workpiece from '@/types/Workpiece'
+import type ShelfSlot from '@/types/ShelfSlot'
 
+// GAMEREPORT  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the GameReport type represents the game report format as stored in the
+// database
 export default interface GameReport {
-  _id: string // MongoDB ObjectId
-  report_version: number
+  _id: string // unique identifier (used for requests)
+  report_version: 2
   report_name: string
 
   // game
   config: Array<{
     path: string
     type: 'BOOL' | 'UINT' | 'STRING'
-    value: any
     is_list: boolean
-    list_value: any[]
+    value: any
   }>
   start_time: string // standard time string that can be used to create a Date
   end_time: string
+  game_end_time: number
   teams: [string, string]
-  points: AwardedPoints[]
+  points: Reward[]
   gamestate_history: Array<{
-    is_latest: boolean
     state: State
     phase: Phase
     game_time: number
@@ -31,20 +37,19 @@ export default interface GameReport {
     over_time: boolean
   }>
 
-  // orders
+  // orders & workpieces
   orders: Order[]
+  workpiece_history: Array<Workpiece & { start_time: number; end_time: number }>
 
   // machines
-  machine_history: any[] // TODO
-  machine_meta: any[] // TODO
-  machine_ss_shelf_slots: any[] // TODO
-  machines: any[] // TODO has other properties than Machine
+  machines: MachineStatic[]
+  machine_history: Array<MachineCurrent & { game_time: number }>
   ring_specs: RingSpec[]
+  shelf_slot_history: Array<ShelfSlot & { game_time: number }>
 
   // robots
-  robot_pose_history: any[] // TODO larger object
-  agent_task_history: AgentTask[]
-
-  // workpieces
-  workpiece_history: any[] // TODO
+  robot_history: Array<Robot & { game_time: number }>
+  agent_task_history: Array<
+    AgentTask & { start_time: number; end_time: number }
+  >
 }

@@ -1,14 +1,26 @@
+import Color from '@/types/Color'
+
+// ORDER - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the Order type is used to describe an order. Currently, an order consists of
+// a single product, which is why there is no extra product type. With a future
+// rulebook rewrite, orders may consist of multiple products and an extra type
+// will be needed
 export default interface Order {
-  activate_at: number
-  base_color: string // e.g. "BASE_RED"
-  cap_color: string // e.g. "CAP_BLACK"
+  id: number
+
+  activate_at: number // game time at which the order gets officially announced
   competitive: boolean
-  complexity: string // e.g. "C1" (seems to be C0 to C3)
-  delivery_gate: number // ? e.g. 3
-  delivery_period: [number, number] // e.g. ["0", "1280"] (seconds)
-  id: number // e.g. 1
-  quantity_delivered: [number, number] // e.g. ["0", "1"] (first cyan, then magenta)
+  complexity: string // e.g. "C1" - number = number of rings
+  delivery_period: [number, number] // game time
+  quantity_delivered: [number, number] // first cyan, then magenta
   quantity_requested: number // e.g. 1
+  unconfirmed_deliveries: Array<{
+    delivery_id?: number
+    game_time: number
+    team: Color
+  }>
+
+  base_color: string // e.g. "BASE_RED"
   ring_colors: string[] // e.g. ["RING_ORANGE"]
-  unconfirmed_deliveries: any[] // TODO, e.g. []
+  cap_color: string // e.g. "CAP_BLACK"
 }

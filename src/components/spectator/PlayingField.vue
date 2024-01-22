@@ -2,6 +2,7 @@
 <template>
   <div id="playingFieldWrapper" ref="playingFieldWrapper">
     <div id="playingFieldContent">
+      <!-- FIELD SQUARES WITH MACHINES ON THEM -->
       <div id="playingField" ref="playingField">
         <template v-for="vIndex in verticalFieldSize">
           <!-- negative x coordinates only if field is mirrored -->
@@ -22,26 +23,33 @@
           <template v-for="hIndex in horizontalFieldSize">
             <PlayingFieldSquare
               :zone="getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)"
-              :with-dot="vIndex != 1"
+              :with-dot="vIndex != 1 && (isFieldMirrored || hIndex != 1)"
             />
           </template>
         </template>
       </div>
 
-      <AgentTaskEntity
-        v-for="agentTask in agentTasks"
-        :task="agentTask"
-        :robot="
-          robotStore.robotByColorAndId(agentTask.team_color, agentTask.robot_id)
-        "
-      ></AgentTaskEntity>
-
-      <template v-for="robot in robots">
-        <RobotEntity :robot="robot"></RobotEntity>
+      <!-- AGENT TASKS -->
+      <template v-for="agentTask in agentTasks">
+        <AgentTaskEntity
+          v-if="
+            robotStore.robotByColorAndId(
+              agentTask.team_color,
+              agentTask.robot_id
+            ) != null
+          "
+          :task="agentTask"
+          :robot="
+            robotStore.robotByColorAndId(
+              agentTask.team_color,
+              agentTask.robot_id
+            ) as Robot
+          "
+        />
       </template>
-    </div>
-    <div style="color: white; max-height: 100px; overflow-y: scroll">
-      {{ orderStore.workpieces }}
+
+      <!-- ROBOTS -->
+      <RobotEntity v-for="robot in robots" :robot="robot" />
     </div>
   </div>
 </template>
@@ -50,17 +58,17 @@
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { storeToRefs } from 'pinia'
-import { useViewStore } from '@/store/viewStore'
+import { useFieldStore } from '@/store/fieldStore'
 import PlayingFieldSquare from '@/components/spectator/PlayingFieldSquare.vue'
 import { useRobotStore } from '@/store/robotStore'
 import RobotEntity from '@/components/spectator/entities/RobotEntity.vue'
 import type { Ref } from 'vue'
 import { ref, watch } from 'vue'
 import AgentTaskEntity from '@/components/spectator/entities/AgentTaskEntity.vue'
-import { useOrderStore } from '@/store/orderStore'
+import type Robot from '@/types/Robot'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const viewStore = useViewStore()
+const fieldStore = useFieldStore()
 const {
   isFieldMirrored,
   horizontalFieldSize,
@@ -70,11 +78,9 @@ const {
   fieldWrapperHeightPixels,
   fieldWidthPixels,
   fieldHeightPixels,
-} = storeToRefs(viewStore)
-
+} = storeToRefs(fieldStore)
 const robotStore = useRobotStore()
 const { robots, agentTasks } = storeToRefs(robotStore)
-const orderStore = useOrderStore()
 
 // zones - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function getZoneNameFor(x: number, y: number): string {

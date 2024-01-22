@@ -2,7 +2,7 @@
 <template>
   <div class="modal-bg" v-show="visible"></div>
   <div class="modal" v-show="visible">
-    <Popup :title="title" permanent>
+    <Popup :title="title" :icon="icon" permanent>
       <slot></slot>
     </Popup>
   </div>
@@ -19,6 +19,10 @@ defineProps({
   title: {
     type: String,
     required: true,
+  },
+  icon: {
+    type: String,
+    required: false,
   },
 })
 

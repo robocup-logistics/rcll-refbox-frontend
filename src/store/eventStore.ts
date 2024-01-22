@@ -1,57 +1,69 @@
 import { ref, type Ref, computed, watch, ComputedRef } from 'vue'
 import { defineStore } from 'pinia'
-
-import Color from '@/types/Color'
 import { useGameStore } from '@/store/gameStore'
-import GameEvent from '@/types/GameEvent'
+import type GameEvent from '@/types/GameEvent'
+import type Phase from '@/types/Phase'
+import type Color from '@/types/Color'
 
-// game store
+// EVENT STORE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// this store is used to manage game events that are currently just displayed in
+// form of a log spectator frontend. In contrast to the raw messages log, the
+// log of game events should only contain the most important information about
+// what is happening and be less detailed.
 export const useEventStore = defineStore('eventStore', () => {
   // USE OTHER STORES  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   const gameStore = useGameStore()
 
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // -> game events
   const gameEvents: Ref<GameEvent[]> = ref([])
 
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  const gameEventsFilteredBy: ComputedRef<
-    (filter: string | null) => GameEvent[]
-  > = computed(() => {
-    return (filter: string | null) => {
-      return filter
-        ? gameEvents.value.filter((gameEvent) => gameEvent.category == filter)
-        : gameEvents.value
-    }
-  })
-
-  // WATCH - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // create events as a response to situations in the game
+  // -> filtered game events
+  const filteredGameEvents: ComputedRef<(filter: string) => GameEvent[]> =
+    computed(() => {
+      return (filter: string) => {
+        switch (filter) {
+          case 'all':
+            return gameEvents.value
+          case 'game':
+            return gameEvents.value.filter((gameEvent) => !gameEvent.team)
+          case 'cyan':
+            return gameEvents.value.filter(
+              (gameEvent) => gameEvent.team == 'CYAN'
+            )
+          case 'magenta':
+            return gameEvents.value.filter(
+              (gameEvent) => gameEvent.team == 'MAGENTA'
+            )
+          default:
+            return gameEvents.value
+        }
+      }
+    })
 
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // create new event
-  function createEvent({
-    category,
+  // add a new event
+  function addEvent({
+    phase = gameStore.phase,
+    cont_time = gameStore.cont_time,
     icon = 'fa-question',
     msg,
     team = undefined,
-    linkedEl = undefined,
   }: {
-    category: 'game' | 'robot' | 'machine'
+    phase?: Phase
+    cont_time?: number
     icon: string
     msg: string
     team?: Color
-    linkedEl?: string
   }) {
-    const newEvent: GameEvent = {
-      phase: gameStore.phase,
-      cont_time: gameStore.cont_time,
-      category,
+    gameEvents.value.push({
+      phase,
+      cont_time,
       icon,
       msg,
       team,
-      linkedEl,
-    }
-    gameEvents.value.push(newEvent)
+    })
   }
 
   // reset this store
@@ -62,8 +74,8 @@ export const useEventStore = defineStore('eventStore', () => {
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   return {
     gameEvents,
-    createEvent,
-    gameEventsFilteredBy,
+    addEvent,
+    filteredGameEvents,
     reset,
   }
 })

@@ -1,8 +1,8 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <button
-    :class="['horizontal-flex', 'clickable', { primary: props.primary }]"
-    :disabled="props.disabled"
+    :class="['horizontal-flex', { clickable: !disabled }, { primary: primary }]"
+    :disabled="disabled"
     :type="submit ? 'submit' : undefined"
   >
     <template v-if="loading">
@@ -18,10 +18,8 @@
 
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
-// imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const props = defineProps({
+defineProps({
   icon: String,
   primary: Boolean,
   disabled: Boolean,
@@ -36,19 +34,26 @@ const props = defineProps({
 
 button {
   padding: 10px 15px;
-  border-radius: 8px;
+  border-radius: 12px;
   color: white;
   background-color: global.$lighterColor;
+  filter: drop-shadow(0px 1px 3px rgba(global.$bgColor, 0.8));
   flex-grow: 0 !important;
   flex-shrink: 0 !important;
   overflow-x: hidden !important;
   width: fit-content;
-  height: fit-content;
+
   /* for tab groups */
-  transition: background-color 00ms;
+  transition: background-color 400ms;
 
   &.primary {
     background-color: global.$accentColor;
+  }
+
+  &:disabled {
+    background-color: global.$lightestColor;
+    opacity: 0.3;
+    cursor: not-allowed;
   }
 }
 </style>

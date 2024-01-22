@@ -41,9 +41,11 @@ defineProps({
   border-radius: 8px;
   padding: 0 5px;
   background-image: linear-gradient(
-    global.$accentColor 0%,
-    global.$accentColorDarker 100%
+    100deg,
+    global.$accentColorDarker 0%,
+    global.$accentColor 100%
   );
+  color: white;
 
   display: inline-flex;
   gap: 10px;

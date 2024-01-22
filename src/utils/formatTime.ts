@@ -1,3 +1,6 @@
+// function to format a given time (number of seconds). By default, the time is
+// formatted in the usual MM:SS format or; with the 'verbal' option true, the
+// output is (M)Mm or (S)Ss instead.
 export default function formatTime(
   gameTimeArg: number | string,
   verbal: boolean = false

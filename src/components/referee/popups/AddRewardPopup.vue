@@ -1,14 +1,26 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Popup title="Add points">
-    <form
-      class="horizontal-flex"
-      style="align-items: stretch"
-      @submit.prevent="addPoints"
-    >
-      <Input type="text" ref="pointsAndReason" placeholder="points, reason" />
-      <Button icon="fa-square-plus" primary @click="addPoints">Add</Button>
-    </form>
+  <Popup title="Add reward">
+    <div class="horizontal-flex">
+      <Input
+        type="number"
+        ref="pointsInput"
+        placeholder="points"
+        v-model="points"
+        style="width: 100px"
+      />
+      <Input type="text" placeholder="reason" v-model="reason" />
+      <Button
+        icon="fa-square-plus"
+        primary
+        @click="addReward"
+        v-shortkey.once="(shortcuts.get('confirmPopup') as Shortcut).keys"
+        @shortkey="addReward()"
+        :disabled="!points || !reason"
+        >Add</Button
+      >
+    </div>
+    <!-- <div v-if="error" class="text-danger">Make sure to fill in both fields</div> -->
   </Popup>
 </template>
 
@@ -19,11 +31,12 @@ import Popup from '@/components/shared/ui/Popup.vue'
 import { ref, inject, onMounted, nextTick } from 'vue'
 import type { Ref, PropType } from 'vue'
 import { useGameStore } from '@/store/gameStore'
-import { useSocketStore } from '@/store/socketStore'
-import type AddPointsTeamOutMsg from '@/types/messages/outgoing/AddPointsTeamOutMsg'
 import Color from '@/types/Color'
 import Input from '@/components/shared/ui/Input.vue'
 import Button from '@/components/shared/ui/Button.vue'
+import Shortcut from '@/types/Shortcut'
+import { storeToRefs } from 'pinia'
+import { useKeyboardStore } from '@/store/keyboardStore'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const props = defineProps({
@@ -35,35 +48,31 @@ const props = defineProps({
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
-const socketStore = useSocketStore()
+const keyboardStore = useKeyboardStore()
+const { shortcuts } = storeToRefs(keyboardStore)
 
 // add points  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const pointsAndReason: Ref<typeof Input | null> = ref(null)
+const points: Ref<number | undefined> = ref()
+const reason: Ref<string | undefined> = ref()
 
-function addPoints() {
-  // Input Format: points, Reason
-  if (!pointsAndReason.value) return
-  const splitInput = pointsAndReason.value.getValue().split(/,(.+)/)
-  const points = parseInt(splitInput[0])
-  const reason = splitInput[1]
-
-  const msg: AddPointsTeamOutMsg = {
-    command: 'add_points_team',
-    points: points,
-    team_color: `${props.color}`,
-    game_time: gameStore.game_time,
-    phase: `${gameStore.phase}`,
-    reason: `${reason}`,
+function addReward() {
+  if (points.value && reason.value) {
+    gameStore.sendAddReward({
+      points: points.value,
+      team_color: props.color,
+      reason: reason.value,
+    })
+    togglePopup()
+  } else {
+    throw new Error('tried to add a reward without points or reason set')
   }
-
-  socketStore.SOCKET_SEND(msg)
-  togglePopup()
 }
 
 // focus input on open - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const pointsInput: Ref<typeof Input | null> = ref(null)
 onMounted(() => {
   nextTick(() => {
-    if (pointsAndReason.value) pointsAndReason.value.focus()
+    if (pointsInput.value) pointsInput.value.focus()
   })
 })
 

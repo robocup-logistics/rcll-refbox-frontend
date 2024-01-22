@@ -58,10 +58,12 @@ function updateScrolledState() {
 
 // function to scroll to the end of the container
 function scrollToEnd() {
-  if (container.value) {
-    container.value.scrollTop =
-      container.value.scrollHeight - container.value.clientHeight
-  }
+  setTimeout(() => {
+    if (container.value) {
+      container.value.scrollTop =
+        container.value.scrollHeight - container.value.clientHeight
+    }
+  }, 500)
 }
 
 // scroll to the end of the container whenever data changes
@@ -69,11 +71,13 @@ watch(
   () => props.watchData,
   () => {
     if (autoscroll.value) {
-      setTimeout(scrollToEnd, 500)
+      scrollToEnd()
     }
   },
   { deep: true, immediate: true }
 )
+
+defineExpose({ scrollToEnd })
 </script>
 
 // STYLE -----------------------------------------------------------------------

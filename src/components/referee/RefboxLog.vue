@@ -1,6 +1,7 @@
+// TEMPLATE --------------------------------------------------------------------
 <template>
-  <AutoScrollContainer :watch-data="messagesToDisplay" class="item refbox-log">
-    <div v-for="(msg, index) in messagesToDisplay" :key="index">
+  <AutoScrollContainer :watch-data="logMessages" class="flex-item refbox-log">
+    <div v-for="(msg, index) in logMessages" :key="index">
       <p v-if="msg.level === 'attention'" class="message text-danger">
         <font-awesome-icon icon="fa-triangle-exclamation" />
         {{ msg.text }}
@@ -20,16 +21,20 @@
   </AutoScrollContainer>
 </template>
 
+// SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
+// imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { storeToRefs } from 'pinia'
 import { useSocketStore } from '@/store/socketStore'
 import AutoScrollContainer from '@/components/shared/ui/AutoScrollContainer.vue'
 import '@/assets/global.scss'
 
+// use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const socketStore = useSocketStore()
-const { messagesToDisplay } = storeToRefs(socketStore)
+const { logMessages } = storeToRefs(socketStore)
 </script>
 
+// STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
 @use '@/assets/global.scss';
 

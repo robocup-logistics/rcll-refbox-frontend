@@ -20,16 +20,16 @@
 import { storeToRefs } from 'pinia'
 import Popup from '@/components/shared/ui/Popup.vue'
 import OrderEntity from '@/components/spectator/entities/OrderEntity.vue'
-import { useRuleStore } from '@/store/ruleStore'
+import { useGameStore } from '@/store/gameStore'
 import { useOrderStore } from '@/store/orderStore'
 import formatTime from '@/utils/formatTime'
 import OvertimeExplainable from '@/components/spectator/explainables/OvertimeExplainable.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const orderStore = useOrderStore()
-const ruleStore = useRuleStore()
+const gameStore = useGameStore()
 const { overtimeOrder } = storeToRefs(orderStore)
-const { OVERTIME_DURATION } = storeToRefs(ruleStore)
+const { OVERTIME_DURATION } = storeToRefs(gameStore)
 </script>
 
 // STYLE -----------------------------------------------------------------------

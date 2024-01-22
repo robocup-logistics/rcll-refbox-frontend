@@ -1,15 +1,10 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Popup title="Expired orders">
-    <div class="horizontal-flex">
-      <template v-for="order in expiredOrders">
-        <OrderEntity :order="order"></OrderEntity>
-      </template>
+  <Popup title="Expired orders" icon="fa-hourglass">
+    <ExpiredOrderExplainable />
+    <div class="horizontal-flex content-box">
+      <OrderEntity v-for="order in expiredOrders" :order="order"></OrderEntity>
     </div>
-    <p v-if="phase == 'PRODUCTION'">
-      Expired orders may still be fulfilled for a certain time span but reward
-      less points.
-    </p>
   </Popup>
 </template>
 
@@ -20,11 +15,9 @@ import { storeToRefs } from 'pinia'
 import Popup from '@/components/shared/ui/Popup.vue'
 import OrderEntity from '@/components/spectator/entities/OrderEntity.vue'
 import { useOrderStore } from '@/store/orderStore'
-import { useGameStore } from '@/store/gameStore'
+import ExpiredOrderExplainable from '@/components/spectator/explainables/ExpiredOrderExplainable.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const gameStore = useGameStore()
-const { phase } = storeToRefs(gameStore)
 const orderStore = useOrderStore()
 const { expiredOrders } = storeToRefs(orderStore)
 </script>

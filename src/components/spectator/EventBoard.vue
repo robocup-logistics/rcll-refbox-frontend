@@ -1,42 +1,50 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Accordion title="Events" id="eventBoard">
+  <Accordion horizontal title="Events" expanded-default id="eventBoard">
     <div class="vertical-flex">
-      <div class="events-header item transparent">
+      <div class="events-header flex-item transparent">
         <TabGroup
-          :tabs="['all', 'game', 'robots', 'machines']"
-          @active-changed="(active: string) => updateFilter(active)"
+          :tabs="['all', 'game', 'cyan', 'magenta']"
+          v-model:active="filter"
         >
           <template #all>
             <div class="horizontal-flex" title="Show all events">
               <font-awesome-icon icon="fa-list" />
             </div>
           </template>
-          <template #game
-            ><div class="horizontal-flex" title="Show game-related events">
+          <template #game>
+            <div class="horizontal-flex" title="Show game-related events">
               <font-awesome-icon icon="fa-dice" />
             </div>
           </template>
-          <template #robots
-            ><div class="horizontal-flex" title="Show robot events">
-              <font-awesome-icon icon="fa-robot" />
+          <template #cyan>
+            <div
+              class="horizontal-flex"
+              :title="`Show ${teamNameByColor('CYAN')} events`"
+            >
+              <font-awesome-icon icon="fa-people-group" class="CYAN-text" />
             </div>
           </template>
-          <template #machines
-            ><div class="horizontal-flex" title="Show machine events">
-              <font-awesome-icon icon="fa-gears" />
+          <template #magenta>
+            <div
+              class="horizontal-flex"
+              :title="`Show ${teamNameByColor('MAGENTA')} events`"
+            >
+              <font-awesome-icon icon="fa-people-group" class="MAGENTA-text" />
             </div>
           </template>
         </TabGroup>
       </div>
       <AutoScrollContainer
+        v-if="filteredGameEvents(filter).length"
         :watch-data="gameEvents"
-        class="item transparent events"
-        v-if="gameEventsFilteredBy(filter).length"
+        class="flex-item transparent events"
+        style="border-radius: 0"
+        ref="eventsLog"
       >
         <div class="vertical-flex">
-          <template v-for="gameEvent in gameEventsFilteredBy(filter)">
-            <div class="event item clickable">
+          <template v-for="gameEvent in filteredGameEvents(filter)">
+            <div class="event flex-item">
               <div class="top">
                 {{ formatTime(cont_time - gameEvent.cont_time, true) }} ago
               </div>
@@ -51,17 +59,14 @@
                 :icon="gameEvent.icon"
                 size="lg"
               />
-              <div class="link" v-if="gameEvent.linkedEl">
-                <font-awesome-icon icon="eye" />
-              </div>
               {{ gameEvent.msg }}
             </div>
           </template>
         </div>
       </AutoScrollContainer>
-      <div v-else class="item transparent">
-        <template v-if="filter == null">No events</template>
-        <template v-else>No events in category '{{ filter }}'</template>
+      <div v-else class="flex-item transparent">
+        <template v-if="filter == null">No events yet</template>
+        <template v-else>No events in selected category yet</template>
       </div>
     </div>
   </Accordion>
@@ -74,26 +79,30 @@ import TabGroup from '@/components/shared/ui/TabGroup.vue'
 import { useEventStore } from '@/store/eventStore'
 import { storeToRefs } from 'pinia'
 import AutoScrollContainer from '@/components/shared/ui/AutoScrollContainer.vue'
-import { type Ref, ref } from 'vue'
+import { type Ref, ref, watch } from 'vue'
 import { useGameStore } from '@/store/gameStore'
 import formatTime from '@/utils/formatTime'
 import Accordion from '@/components/shared/ui/Accordion.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
-const { cont_time } = storeToRefs(gameStore)
+const { cont_time, teamNameByColor } = storeToRefs(gameStore)
 const eventStore = useEventStore()
-const { gameEvents, gameEventsFilteredBy } = storeToRefs(eventStore)
+const { gameEvents, filteredGameEvents } = storeToRefs(eventStore)
 
 // fitler events by type - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const filter: Ref<null | string> = ref(null)
-function updateFilter(newFilter: string) {
-  if (newFilter == 'all') {
-    filter.value = null
-  } else {
-    filter.value = newFilter
+const filter: Ref<string> = ref('all')
+
+// scroll to bottom on filter change - - - - - - - - - - - - - - - - - - - - - -
+const eventsLog: Ref<typeof AutoScrollContainer | undefined> = ref()
+watch(
+  () => filter.value,
+  () => {
+    if (eventsLog.value) {
+      eventsLog.value.scrollToEnd()
+    }
   }
-}
+)
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -117,6 +126,10 @@ function updateFilter(newFilter: string) {
       position: relative;
       padding-left: 55px;
       padding-top: 20px;
+
+      &.upcoming {
+        opacity: 0.7;
+      }
 
       .left-bg {
         position: absolute;

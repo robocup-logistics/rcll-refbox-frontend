@@ -1,64 +1,55 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-
 import type { ComputedRef, Ref } from 'vue'
-import type MessageToDisplay from '@/types/messages/incoming/MessageToDisplay'
-import type AwardedPoints from '@/types/AwardedPoints'
-import type Machine from '@/types/Machine'
-import type Order from '@/types/Order'
-import type RingSpec from '@/types/RingSpec'
-import type Robot from '@/types/Robot'
+import type LogMessage from '@/types/messages/incoming/LogMessage'
 import type IncomingMessage from '@/types/messages/IncomingMessage'
 import type OutgoingMessage from '@/types/messages/OutgoingMessage'
-import type SetGamephaseOutMsg from '@/types/messages/outgoing/SetGamephaseOutMsg'
-import type SetGamestateOutMsg from '@/types/messages/outgoing/SetGamestateOutMsg'
-import type RandomizeFieldOutMsg from '@/types/messages/outgoing/RandomizeFieldOutMsg'
-import type SetRobotMaintenanceOutMsg from '@/types/messages/outgoing/RobotMainenanceOutMsg'
-import type Phase from '@/types/Phase'
-import type State from '@/types/State'
-import type ClipsMessage from '@/types/messages/incoming/ClipsMessage'
-
+import type AttentionMessage from '@/types/messages/incoming/AttentionMessage'
 import { useGameStore } from '@/store/gameStore'
 import { useMachineStore } from '@/store/machineStore'
 import { useOrderStore } from '@/store/orderStore'
 import { useRobotStore } from '@/store/robotStore'
-import { useReportStore } from '@/store/reportStore'
-import { useViewStore } from '@/store/viewStore'
-import AttentionMessage from '@/types/messages/incoming/AttentionMessage'
+import { useConfigStore } from '@/store/configStore'
+import { useAppStore } from '@/store/appStore'
 
-// main pinia store
+// SOCKET STORE  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the sockets store is used to establish and manage a connection to a websocket,
+// send socket messages and interact with socket messages received
 export const useSocketStore = defineStore('socketStore', () => {
-  // use other stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  const reportStore = useReportStore()
+  // USE OTHER STORES  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   const gameStore = useGameStore()
   const machineStore = useMachineStore()
   const orderStore = useOrderStore()
   const robotStore = useRobotStore()
-  const viewStore = useViewStore()
-
-  // CONSTS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  const DEFAULT_WS_URL: Ref<string> = ref('ws://localhost:1234')
+  const configStore = useConfigStore()
+  const appStore = useAppStore()
 
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // -> consts
+  const DEFAULT_WS_URL: Ref<string> = ref('ws://localhost:1234')
+
+  // -> socket & connection
   const socket: Ref<WebSocket | null> = ref(null)
   const attemptingConnection: Ref<boolean> = ref(false)
-  const messagesToDisplay: Ref<MessageToDisplay[]> = ref([])
+
+  // -> log
+  const logMessages: Ref<LogMessage[]> = ref([])
 
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // -> attention messages
   const attentionMessages: ComputedRef<AttentionMessage[]> = computed(
     () =>
-      messagesToDisplay.value.filter(
+      logMessages.value.filter(
         (msg) =>
           msg.level === 'attention' &&
-          gameStore.game_time >= msg['game_time'] &&
-          gameStore.game_time <=
-            msg['game_time'] + parseFloat(msg['time_to_display'])
+          gameStore.game_time >= msg.game_time &&
+          gameStore.game_time <= msg.game_time + parseFloat(msg.time_to_display)
       ) as AttentionMessage[]
   )
 
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // establish websocket connection
-  function connectToWebsocket(url: string) {
+  // -> establish websocket connection
+  function connectToWebsocket(url: string): void {
     attemptingConnection.value = true
     const newSocket = new WebSocket(url)
     setTimeout(() => {
@@ -69,71 +60,76 @@ export const useSocketStore = defineStore('socketStore', () => {
     }, 10000)
 
     // configure behaviour on open
-    newSocket.onopen = (e) => {
+    newSocket.onopen = (_e) => {
       // reset info from previous connection (also sets attemtingConnection to
       // false)
-      gameStore.resetAll()
+      appStore.resetAll()
 
       // set the socket as the new socket
       socket.value = newSocket
+      appStore.currentMode = 'socket'
+      console.log('setting new socket')
 
       // configure on message
       socket.value.onmessage = (e: { data: string }) => {
-        const msg: IncomingMessage | IncomingMessage[] = JSON.parse(e.data)
-        // first case: received message is an array of message objects
-        if (Array.isArray(msg)) {
-          const msgArr = <ClipsMessage[]>msg
-          if (msgArr.length) {
-            if (msgArr[0].type === 'machine-info') {
-              machineStore.setMachinesAtReconnect(msgArr as Machine[])
-            } else if (msgArr[0].type === 'robot-info') {
-              robotStore.setRobotsAtReconnect(msgArr as Robot[])
-            } else if (msgArr[0].type === 'ring-spec') {
-              machineStore.setringSpecs(msgArr as RingSpec[])
-            } else if (msgArr[0].type === 'order-info') {
-              orderStore.setOrders(msgArr as Order[])
-            } else if (msgArr[0].type === 'points') {
-              gameStore.awardedPoints = msgArr as AwardedPoints[]
-            } else if (msgArr[0].type === 'known-teams') {
-              // this array always contains a single message containing an array
-              // of known teams strings
-              gameStore.knownTeams = msgArr[0][
-                'known_teams'
-              ]?.sort() as string[]
-            } else {
-              console.log('Unknown message type! - Message array:')
-              console.log(msgArr)
+        try {
+          const msg: IncomingMessage = JSON.parse(e.data)
+
+          // messages with level 'clips' contain important data that we need to
+          // process further
+          if (msg.level == 'clips') {
+            // there are different types of 'clips' messages, each type has an
+            // associated function
+            switch (msg.type) {
+              case 'time-info':
+                gameStore.setTime(msg.content)
+                return
+              case 'gamestate':
+                gameStore.setGamestate(msg.content)
+                return
+              case 'known-teams':
+                gameStore.setKnownTeams(msg.content)
+                return
+              case 'points':
+                gameStore.addReward(msg.content)
+                return
+              case 'order':
+                orderStore.setOrder(msg.content)
+                return
+              case 'workpiece':
+                orderStore.setWorkpiece(msg.content)
+                return
+              case 'robot':
+                robotStore.setRobot(msg.content)
+                return
+              case 'agent-task':
+                robotStore.setAgentTask(msg.content)
+                return
+              case 'machine':
+                machineStore.setMachine(msg.content)
+                return
+              case 'ring-spec':
+                machineStore.setRingSpec(msg.content)
+                return
+              case 'confval':
+                configStore.setConfigValue(msg.content)
+                return
+              case 'shelf-slot':
+                machineStore.setShelfSlot(msg.content)
+                return
+              default:
+                console.log('UNKNOWN MESSAGE TYPE, msg:')
+                console.log(msg)
             }
           }
-        }
-        // other case: received message is a single message object
-        else {
-          const msgObj = <IncomingMessage>msg
-
-          // if the level of the message object is not 'clips' it is a message
-          // that is meant to be displayed (to the referee), so add it is
-          if (msgObj.level !== 'clips') {
-            messagesToDisplay.value.push(msgObj as MessageToDisplay)
+          // messages with a different level than 'clips' contain information we
+          // just want to print out in the logs
+          else {
+            logMessages.value.push(msg)
           }
-          // else process the messages as usual
-          else if (msgObj.type === 'gamestate') {
-            gameStore.setGamestateInformation(msgObj)
-          } else if (msgObj.type === 'machine-info') {
-            machineStore.setMachine(msgObj)
-          } else if (msgObj.type === 'robot-info') {
-            robotStore.setRobot(msgObj)
-          } else if (msgObj.type === 'agent-task') {
-            robotStore.setAgentTask(msgObj)
-          } else if (msgObj.type === 'order-count') {
-            orderStore.orderCount = msgObj.count
-          } else if (msgObj.type === 'order-info') {
-            orderStore.setOrder(msgObj)
-          } else if (msgObj.type === 'workpiece-info') {
-            orderStore.setWorkpiece(msgObj)
-          } else {
-            console.log('Unknown message type! - Message:')
-            console.log(msgObj)
-          }
+        } catch (err) {
+          console.error(JSON.parse(e.data))
+          console.error(err)
         }
       }
     }
@@ -141,6 +137,7 @@ export const useSocketStore = defineStore('socketStore', () => {
     // configure behaviour on close
     newSocket.onclose = (e) => {
       socket.value = null
+      console.log('Closing socket')
     }
 
     // configure on error
@@ -153,67 +150,33 @@ export const useSocketStore = defineStore('socketStore', () => {
     }
   }
 
-  // socket disconnect
-  function SOCKET_DISCONNECT() {
-    if (socket.value) {
-      socket.value.close()
-      console.log('Disconnect')
-    }
-  }
-
-  // socket send
-  function SOCKET_SEND(msg: OutgoingMessage) {
+  // -> send a message via websocket
+  // this method is used by other stores and not by components. If you are
+  // looking to implement a new message to send to the refbox, implement a
+  // method in the corresponding store that calls this method and call the new
+  // method in the corresponding store from a component
+  function sendMessage(msg: OutgoingMessage) {
     if (socket.value) {
       console.log('Sending ', msg)
       socket.value.send(JSON.stringify(msg))
     }
   }
 
-  // set phase by name
-  function setPhase(newPhase: Phase) {
-    const msg: SetGamephaseOutMsg = {
-      command: 'set_gamephase',
-      phase: `${newPhase}`,
-    }
-    SOCKET_SEND(msg)
-  }
-
-  // set game state
-  function setGameState(newGamestate: State) {
-    const msg: SetGamestateOutMsg = {
-      command: 'set_gamestate',
-      state: `${newGamestate}`,
-    }
-    SOCKET_SEND(msg)
-  }
-
-  // randomize field
-  function randomizeField() {
-    const msg: RandomizeFieldOutMsg = { command: 'randomize_field' }
-    SOCKET_SEND(msg)
-  }
-
-  function setRobotMaintenanceStatus(robot: Robot, maintenance: boolean) {
-    const msg: SetRobotMaintenanceOutMsg = {
-      command: 'set_robot_maintenance',
-      robot_number: robot.number,
-      team_color: robot['team_color'],
-      maintenance: maintenance,
-    }
-    SOCKET_SEND(msg)
-  }
-
-  function reset() {
-    // do not subscribe to messages of the previous socket anymore
+  // -> close the socket connection manually
+  function closeConnection() {
     if (socket.value) {
-      socket.value.onopen = null
-      socket.value.onmessage = null
+      console.log('close socket connection')
       socket.value.onclose = null
-      socket.value.onerror = null
+      socket.value.close()
+      socket.value = null
     }
-    socket.value = null
+  }
+
+  // -> reset this store
+  function reset() {
+    closeConnection()
     attemptingConnection.value = false
-    messagesToDisplay.value = []
+    logMessages.value = []
   }
 
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -221,15 +184,11 @@ export const useSocketStore = defineStore('socketStore', () => {
     DEFAULT_WS_URL,
     socket,
     attemptingConnection,
-    messagesToDisplay,
+    logMessages,
     attentionMessages,
     connectToWebsocket,
-    SOCKET_DISCONNECT,
-    SOCKET_SEND,
-    setPhase,
-    setGameState,
-    randomizeField,
-    setRobotMaintenanceStatus,
+    sendMessage,
+    closeConnection,
     reset,
   }
 })

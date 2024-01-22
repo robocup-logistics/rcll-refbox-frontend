@@ -1,20 +1,25 @@
+// TEMPLATE --------------------------------------------------------------------
 <template>
   <div class="orders">
-    <div v-for="order in orders" :key="order.id" class="order-wrapper">
+    <div
+      v-for="order in orders"
+      :key="order.id"
+      :class="[
+        'order-wrapper',
+        'flex-item',
+        activeDeliveryPeriod(order) ? '' : 'transparent',
+      ]"
+    >
       <div
         :class="[
-          'item horizontal-flex order',
-          activeDeliveryPeriod(order) ? '' : 'transparent',
+          'horizontal-flex',
+          'order',
+
           game_time >= order.activate_at ? 'active' : '',
         ]"
       >
         <!-- PRODUCT IMAGE -->
-        <img
-          :src="`/workpieces/${
-            orderStore.productByOrder(order)?.['workpiece_url']
-          }`"
-          alt="img"
-        />
+        <img :src="`/workpieces/${fileNameByWorkpiece(order)}`" alt="img" />
 
         <!-- ORDER INFO -->
         <div class="order-infos" style="text-align: left">
@@ -29,14 +34,14 @@
               :class="[
                 'form-check-input',
                 'CYAN',
-                order['quantity_delivered'][0] == 1 ? 'checked' : '',
+                order.quantity_delivered[0] == 1 ? 'checked' : '',
               ]"
             ></div>
             <div
               :class="[
                 'form-check-input',
                 'MAGENTA',
-                order['quantity_delivered'][1] == 1 ? 'checked' : '',
+                order.quantity_delivered[1] == 1 ? 'checked' : '',
               ]"
             ></div>
             <!-- competitive indicator -->
@@ -45,8 +50,8 @@
           <!-- TIME -->
           <div>
             <span>
-              {{ formatTime(order['delivery_period'][0]) }}-{{
-                formatTime(order['delivery_period'][1])
+              {{ formatTime(order.delivery_period[0]) }}-{{
+                formatTime(order.delivery_period[1])
               }}
             </span>
           </div>
@@ -60,27 +65,31 @@
   </div>
 </template>
 
+// SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
+// imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { storeToRefs } from 'pinia'
 import formatTime from '@/utils/formatTime'
 import { useGameStore } from '@/store/gameStore'
 import { useOrderStore } from '@/store/orderStore'
 import Order from '@/types/Order'
 
+// use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
 const orderStore = useOrderStore()
 const { game_time } = storeToRefs(gameStore)
-const { orders } = storeToRefs(orderStore)
+const { orders, fileNameByWorkpiece } = storeToRefs(orderStore)
 
-// check if current time is inside delivery period of order
+// check if current time is inside delivery period of order  - - - - - - - - - -
 function activeDeliveryPeriod(order: Order): boolean {
   return (
-    order['delivery_period'][0] <= game_time.value &&
-    order['delivery_period'][1] >= game_time.value
+    order.delivery_period[0] <= game_time.value &&
+    order.delivery_period[1] >= game_time.value
   )
 }
 </script>
 
+// STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
 @use '@/assets/global.scss';
 /* for years now, a major flaw in flexbox prevents flex containers to increase
@@ -97,9 +106,11 @@ this, we use flex-direction row which is supported and misuse writing-mode */
 
   .order-wrapper {
     flex-grow: 1;
+    width: fit-content;
     max-width: 300px;
     writing-mode: horizontal-tb;
     .order {
+      width: fit-content;
       height: 100%;
       opacity: 0.2;
       transition: opacity 1s ease-in-out;

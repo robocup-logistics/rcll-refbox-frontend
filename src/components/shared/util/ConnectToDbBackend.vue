@@ -1,129 +1,143 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <p>Connect to a game report provider</p>
-  <div class="horizontal-flex form-row">
-    <Input
-      ref="backendUrlInput"
-      type="url"
-      :value="backendUrl"
-      @input="(newUrl) => (backendUrl = newUrl)"
-      :placeholder="DEFAULT_BACKEND_URL"
-    />
-    <Button
-      icon="fa-link"
-      primary
-      @click="requestGameReportsList"
-      :loading="loadingReportsList"
-      >Connect</Button
-    >
-  </div>
-  <template class="report-selection" v-if="gameReportsList?.length">
-    <p>Select a game report:</p>
-    <div class="filter">
+  <div class="connect-to-db">
+    <!-- CONNECT TO BACKEND AND RETRIEVE LIST -->
+    <div class="horizontal-flex form-row">
       <Input
-        :value="filter"
-        @input="(newFilter) => applyFilter(newFilter)"
-        placeholder="filter by name or teams"
+        ref="backendUrlInput"
+        type="url"
+        v-model="backendUrl"
+        :placeholder="DEFAULT_BACKEND_URL"
       />
+      <Button
+        icon="fa-link"
+        primary
+        @click="requestGameReportsList"
+        :loading="loadingReportsList"
+        >Connect</Button
+      >
     </div>
-
-    <div
-      v-if="filteredGameReportsList.length"
-      v-for="reportItem in filteredGameReportsList"
-      class="report-item"
-    >
-      <div class="horizontal-flex">
-        <h2 style="flex-grow: 1">
-          {{
-            reportItem['report_name'].length
-              ? reportItem['report_name'].length
-              : 'Unnamed game'
-          }}
-        </h2>
-        <Button
-          primary
-          icon="fa-arrow-right"
-          @click="selectGameReport(reportItem._id)"
-        >
-          Select
-        </Button>
+    <!-- SELECT A REPORT FROM THE LIST -->
+    <template class="report-selection" v-if="gameReportsList?.length">
+      <p>Select a game report:</p>
+      <!-- FILTER -->
+      <div class="sticky">
+        <Input
+          v-model="filter"
+          placeholder="filter by name or teams"
+          clearable
+        />
       </div>
 
-      <div class="horizontal-flex">
+      <!-- REPORTS LIST -->
+      <div
+        v-if="filteredGameReportsList.length"
+        v-for="reportItem in filteredGameReportsList"
+        class="report-item"
+      >
+        <!-- -> name and select -->
         <div class="horizontal-flex">
-          <font-awesome-icon icon="fa-clock" />
-          <span>
+          <h1>
             {{
-              new Date(reportItem['start_time']).toLocaleString([], {
-                year: '2-digit',
-                month: 'numeric',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-              })
+              reportItem.report_name.length
+                ? reportItem.report_name.length
+                : 'Unnamed game'
             }}
-          </span>
+          </h1>
+          <Button
+            primary
+            icon="fa-arrow-right"
+            @click="selectGameReport(reportItem._id)"
+          >
+            Select
+          </Button>
         </div>
 
-        <div v-if="reportItem['end_time']" class="horizontal-flex inline">
-          <font-awesome-icon icon="fa-hourglass" />
-          <span>
-            {{
-              formatTime(
-                (new Date(reportItem['end_time']).getTime() -
-                  new Date(reportItem['start_time']).getTime()) /
-                  1000,
-                true
-              )
-            }}
-          </span>
-        </div>
-        <div v-else class="horizontal-flex inline text-warning">
-          <font-awesome-icon icon="fa-triangle-exclamation" />
-          <span>Aborted</span>
-        </div>
-      </div>
-      <div class="horizontal-flex">
-        <div
-          :class="[
-            'item',
-            pointsByTeam('CYAN', reportItem.points) >
-            pointsByTeam('MAGENTA', reportItem.points)
-              ? 'CYAN'
-              : '',
-          ]"
-          style="width: fit-content; padding: 5px"
-        >
-          <p>{{ reportItem['teams'][0] }}</p>
+        <!-- -> time -->
+        <div class="horizontal-flex">
           <div class="horizontal-flex">
-            <font-awesome-icon icon="fa-trophy" />
-            <span>{{ pointsByTeam('CYAN', reportItem.points) }}</span>
+            <font-awesome-icon icon="fa-clock" />
+            <span>
+              {{
+                new Date(reportItem.start_time).toLocaleString([], {
+                  year: '2-digit',
+                  month: 'numeric',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              }}
+            </span>
+          </div>
+          <div v-if="reportItem.end_time" class="horizontal-flex inline">
+            <font-awesome-icon icon="fa-hourglass" />
+            <span>
+              {{
+                formatTime(
+                  (new Date(reportItem.end_time).getTime() -
+                    new Date(reportItem.start_time).getTime()) /
+                    1000,
+                  true
+                )
+              }}
+            </span>
+          </div>
+          <div v-else class="horizontal-flex inline text-warning">
+            <font-awesome-icon icon="fa-triangle-exclamation" />
+            <span>Aborted</span>
           </div>
         </div>
-        <p>vs</p>
-        <div
-          :class="[
-            'item',
-            pointsByTeam('CYAN', reportItem.points) <
-            pointsByTeam('MAGENTA', reportItem.points)
-              ? 'MAGENTA'
-              : '',
-          ]"
-          style="width: fit-content; padding: 5px"
-        >
-          <p>{{ reportItem['teams'][1] }}</p>
-          <div class="horizontal-flex">
-            <font-awesome-icon icon="fa-trophy" />
-            <span>{{ pointsByTeam('MAGENTA', reportItem.points) }}</span>
+
+        <!-- -> scores -->
+        <div class="horizontal-flex">
+          <div
+            :class="[
+              'flex-item',
+              scoreByColor('CYAN', reportItem.points) >
+              scoreByColor('MAGENTA', reportItem.points)
+                ? 'CYAN'
+                : '',
+            ]"
+            style="width: fit-content; padding: 5px"
+          >
+            <p>{{ reportItem.teams[0] }}</p>
+            <div class="horizontal-flex">
+              <font-awesome-icon icon="fa-trophy" />
+              <span>{{ scoreByColor('CYAN', reportItem.points) }}</span>
+            </div>
+          </div>
+          <p>vs</p>
+          <div
+            :class="[
+              'flex-item',
+              scoreByColor('CYAN', reportItem.points) <
+              scoreByColor('MAGENTA', reportItem.points)
+                ? 'MAGENTA'
+                : '',
+            ]"
+            style="width: fit-content; padding: 5px"
+          >
+            <p>{{ reportItem.teams[1] }}</p>
+            <div class="horizontal-flex">
+              <font-awesome-icon icon="fa-trophy" />
+              <span>{{ scoreByColor('MAGENTA', reportItem.points) }}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <template v-else>
-      <p v-if="filter">No game reports matching your filter</p>
-      <p v-else>DB does not contain any game reports</p>
+
+      <!-- IF LIST IS EMPTY -->
+      <template v-else>
+        <p v-if="filter">No game reports matching your filter</p>
+        <p v-else>DB does not contain any valid game reports</p>
+      </template>
     </template>
-  </template>
+    <!-- INCOMPATIBLE REPORTS -->
+    <p v-if="incompatibleCount" class="text-warning">
+      <font-awesome-icon icon="fa-warning" /> {{ incompatibleCount }} reports
+      incompatible with the version of this web app have been found.
+    </p>
+  </div>
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
@@ -148,7 +162,6 @@ import GameReport from '@/types/GameReport'
 
 // define emits  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const emit = defineEmits<{
-  (e: 'scrollToTop'): void
   (e: 'connected'): void
 }>()
 
@@ -158,8 +171,9 @@ const {
   DEFAULT_BACKEND_URL,
   loadingReportsList,
   gameReportsList,
+  incompatibleCount,
   gameReport,
-  pointsByTeam,
+  scoreByColor,
 } = storeToRefs(reportStore)
 
 // request reports list  - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -168,22 +182,25 @@ async function requestGameReportsList() {
   void reportStore.requestGameReportsList(backendUrl.value)
 }
 
-// select report - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// filter reports  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const filter: Ref<string> = ref('')
 const filteredGameReportsList: ComputedRef<GameReport[]> = computed(() => {
-  console.log(gameReportsList.value)
   return gameReportsList.value.filter(
     (report) =>
-      report['report_name'].includes(filter.value) ||
-      report['teams'][0].includes(filter.value) ||
-      report['teams'][1].includes(filter.value)
+      report.report_name.includes(filter.value) ||
+      report.teams[0].includes(filter.value) ||
+      report.teams[1].includes(filter.value)
   )
 })
 const scrollToTop = inject('scrollToTop') as Function
-function applyFilter(newFilter: string) {
-  filter.value = newFilter
-  scrollToTop()
-}
+watch(
+  () => filter.value,
+  () => {
+    scrollToTop()
+  }
+)
+
+// select report - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 async function selectGameReport(reportId: string) {
   void reportStore.requestGameReport(backendUrl.value, reportId)
 }
@@ -211,15 +228,12 @@ watch(
 <style scoped lang="scss">
 @use '@/assets/global.scss';
 
-.filter {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-
-  /* to simulate some padding between the sticky search field and the reports */
-  background-color: global.$surfaceColor;
-  padding-bottom: 5px;
+.connect-to-db {
+  /* To fix weird flex errors in start menu */
+  display: grid;
+  gap: 10px;
 }
+
 .report-item {
   padding: 10px;
   border-radius: 8px;
@@ -227,5 +241,12 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  h1 {
+    flex-grow: 1;
+    font-size: 1.2rem;
+    text-decoration: underline;
+    text-decoration-color: global.$accentColor;
+  }
 }
 </style>

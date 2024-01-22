@@ -1,20 +1,29 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Popup title="Upcoming orders">
-    <div class="horizontal-flex">
-      <template v-for="order in upcomingOrders">
-        <div class="order">
+  <Popup title="Upcoming orders" icon="fa-hourglass">
+    <ActivatedOrderExplainable />
+    <template v-if="upcomingActivatedOrders.length">
+      <p>Activated orders (time until start of delivery period):</p>
+      <div class="horizontal-flex content-box">
+        <div class="order" v-for="order in upcomingActivatedOrders">
           <OrderEntity :order="order"></OrderEntity>
           <p v-if="phase == 'PRODUCTION'">
             {{ formatTime(order.delivery_period[0] - game_time) }}
           </p>
         </div>
-      </template>
-    </div>
-    <p v-if="phase == 'SETUP'">
-      The orders will spawn after each other during the production phase. Click
-      on an order to see when the order will be active.
-    </p>
+      </div>
+    </template>
+    <template v-if="upcomingNonActivatedOrders.length">
+      <p>Not yet activated orders (time until activation):</p>
+      <div class="horizontal-flex content-box">
+        <div class="order" v-for="order in upcomingNonActivatedOrders">
+          <OrderEntity :order="order"></OrderEntity>
+          <p v-if="phase == 'PRODUCTION'">
+            {{ formatTime(order.activate_at - game_time) }}
+          </p>
+        </div>
+      </div>
+    </template>
   </Popup>
 </template>
 
@@ -27,12 +36,14 @@ import OrderEntity from '@/components/spectator/entities/OrderEntity.vue'
 import { useOrderStore } from '@/store/orderStore'
 import formatTime from '@/utils/formatTime'
 import { useGameStore } from '@/store/gameStore'
+import ActivatedOrderExplainable from '@/components/spectator/explainables/ActivatedOrderExplainable.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
 const { game_time, phase } = storeToRefs(gameStore)
 const orderStore = useOrderStore()
-const { upcomingOrders } = storeToRefs(orderStore)
+const { upcomingActivatedOrders, upcomingNonActivatedOrders } =
+  storeToRefs(orderStore)
 </script>
 
 // STYLE -----------------------------------------------------------------------

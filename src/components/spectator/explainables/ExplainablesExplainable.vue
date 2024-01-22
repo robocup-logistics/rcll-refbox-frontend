@@ -2,8 +2,8 @@
 <template>
   <Explainable term="Explainables">
     <p>
-      Whenever you find some highlighted box with an info circle, you can click
-      on the latter to receive some additional context information in a popup.
+      Whenever you find a highlighted box with an info circle, you can click on
+      it to receive some additional explanatory information in a popup.
     </p>
   </Explainable>
 </template>

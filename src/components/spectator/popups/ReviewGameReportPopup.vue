@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Popup title="Review a previous game">
+  <Popup title="Review a game report" icon="fa-magnifying-glass">
     <ConnectToDbBackend @connected="(_e) => togglePopup()"></ConnectToDbBackend
   ></Popup>
 </template>

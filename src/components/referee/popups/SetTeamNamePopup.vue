@@ -1,6 +1,9 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Popup :title="`Add ${color} team name`">
+  <Popup
+    :title="`Set <span class='${color}-text'>${color}</span> team name`"
+    icon="fa-pen-nib"
+  >
     <div class="horizontal-flex known-teams">
       <template v-for="knownTeam in knownTeams">
         <Button
@@ -14,14 +17,17 @@
         </Button>
       </template>
     </div>
-    <form
-      class="horizontal-flex"
-      style="align-items: stretch"
-      @submit.prevent="setTeamName(input?.getValue())"
-    >
-      <Input ref="input" placeholder="Custom team name" :value="teamName" />
-      <Button icon="fa-check" primary submit>Confirm</Button>
-    </form>
+    <div class="horizontal-flex">
+      <Input ref="input" placeholder="Custom team name" v-model="teamName" />
+      <Button
+        icon="fa-check"
+        primary
+        @click="setTeamName(teamName)"
+        v-shortkey.once="(shortcuts.get('confirmPopup') as Shortcut).keys"
+        @shortkey="setTeamName(teamName)"
+        >Confirm</Button
+      >
+    </div>
   </Popup>
 </template>
 
@@ -32,12 +38,12 @@ import Popup from '@/components/shared/ui/Popup.vue'
 import { ref, inject, onMounted, nextTick } from 'vue'
 import type { Ref, PropType } from 'vue'
 import { useGameStore } from '@/store/gameStore'
-import { useSocketStore } from '@/store/socketStore'
 import Color from '@/types/Color'
 import Input from '@/components/shared/ui/Input.vue'
 import Button from '@/components/shared/ui/Button.vue'
 import { storeToRefs } from 'pinia'
-import SetTeamNameOutMsg from '@/types/messages/outgoing/SetTeamNameOutMsg'
+import { useKeyboardStore } from '@/store/keyboardStore'
+import Shortcut from '@/types/Shortcut'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const props = defineProps({
@@ -50,19 +56,15 @@ const props = defineProps({
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
 const { knownTeams, oppositeColor, teamNameByColor } = storeToRefs(gameStore)
-const socketStore = useSocketStore()
+const keyboardStore = useKeyboardStore()
+const { shortcuts } = storeToRefs(keyboardStore)
 
 // set team name - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const input: Ref<typeof Input | null> = ref(null)
 const teamName: Ref<string> = ref('')
 
 function setTeamName(name: string) {
-  const msg: SetTeamNameOutMsg = {
-    command: 'set_teamname',
-    color: props.color,
-    name,
-  }
-  socketStore.SOCKET_SEND(msg)
+  gameStore.sendSetTeamName({ color: props.color, name })
   togglePopup()
 }
 

@@ -1,9 +1,7 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <Popup title="Setup phase">
-    <div>
-      <SetupPhaseExplainable />
-    </div>
+    <SetupPhaseExplainable />
     <p>Duration: {{ formatTime(SETUP_DURATION) }}</p>
   </Popup>
 </template>
@@ -13,13 +11,13 @@
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { storeToRefs } from 'pinia'
 import Popup from '@/components/shared/ui/Popup.vue'
-import { useRuleStore } from '@/store/ruleStore'
+import { useGameStore } from '@/store/gameStore'
 import formatTime from '@/utils/formatTime'
 import SetupPhaseExplainable from '@/components/spectator/explainables/SetupPhaseExplainable.vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const ruleStore = useRuleStore()
-const { SETUP_DURATION } = storeToRefs(ruleStore)
+const gameStore = useGameStore()
+const { SETUP_DURATION } = storeToRefs(gameStore)
 </script>
 
 // STYLE -----------------------------------------------------------------------

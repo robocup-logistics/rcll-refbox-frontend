@@ -1,7 +1,7 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <div class="pill-button clickable">
-    <div class="pill item">
+    <div class="pill flex-item">
       <slot></slot>
     </div>
     <p>{{ description }}</p>

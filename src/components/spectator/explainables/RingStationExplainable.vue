@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Explainable term="Ring Station" icon="fa-gears">
+  <Explainable term="Ring Station">
     <p>
       <span> At a ring station, a robot can put a </span>
       <WorkpieceExplainable />

@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Explainable term="Base Station" icon="fa-gears">
+  <Explainable term="Base Station">
     <p>
       At a base station, a robot can request a base in the colors red, gray or
       black. The robot can specify which base should be delivered at which side

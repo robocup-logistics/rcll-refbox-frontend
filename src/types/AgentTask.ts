@@ -1,15 +1,14 @@
 import Color from '@/types/Color'
 
-export default interface AgentTask {
-  task_type: 'MOVE' | 'RETRIEVE' | 'DELIVER' | 'BUFFER' | 'EXPLORE_ZONE'
-  task_parameters: ({ machine_id: string } | { waypoint: string }) & {
-    machine_point?: string
-  }
+// AGENTTASK - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the AgentTask type represents an agent task. While, by concept, each robot
+// can have only one agent task at a time, we store it seperately because it can
+// come to overlaps and the information is also processed seperately in the
+// refbox
+type AgentTask = {
   task_id: number // unique per robot
   robot_id: number
   team_color: Color
-  start_time: number
-  end_time: number
   order_id: number
   processed: boolean
   workpiece_name: string
@@ -18,4 +17,22 @@ export default interface AgentTask {
   base_color: string
   ring_colors: string[]
   cap_color: string
-}
+} & (
+  | {
+      task_type: 'MOVE'
+      task_parameters: {
+        waypoint: string
+        machine_point: string | null
+      }
+    }
+  | {
+      task_type: 'DELIVER' | 'RETRIEVE'
+      task_parameters: {
+        machine_id: string
+        machine_point: string
+      }
+    }
+)
+// task types BUGGER and EXPLORE_ZONE might also be possible but got no details
+
+export default AgentTask

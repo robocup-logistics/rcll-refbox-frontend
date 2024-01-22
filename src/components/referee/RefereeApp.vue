@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div id="refereeView" class="vertical-flex" style="padding: 10px">
+  <div id="refereeApp" class="vertical-flex" style="padding: 10px">
     <!-- HEADER -->
     <div class="vertical-flex header">
       <div class="horizontal-flex">
@@ -32,12 +32,10 @@
     >
       <!-- Confirm Delivery Modal -->
       <ConfirmDeliveryPopup
-        v-for="unconfirmedDeliveryElement in unconfirmedOrder[
-          'unconfirmed_deliveries'
-        ]"
+        v-for="unconfirmedDelivery in unconfirmedOrder.unconfirmed_deliveries"
         :order="unconfirmedOrder"
-        :team="teamNameByColor(unconfirmedDeliveryElement.team)"
-        :color="unconfirmedDeliveryElement.team"
+        :team="teamNameByColor(unconfirmedDelivery.team)"
+        :color="unconfirmedDelivery.team"
         permanent
       />
       <!-- / End Confirm Delivery Modal -->
@@ -71,7 +69,7 @@ const { unconfirmedOrders } = storeToRefs(orderStore)
 <style scoped lang="scss">
 @use '@/assets/global.scss';
 
-#refereeView {
+#refereeApp {
   font-family: 'DejaVu Sans Mono', monospace;
   height: 100vh !important;
   max-height: 100vh !important;

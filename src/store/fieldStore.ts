@@ -1,58 +1,63 @@
 import { computed, ref } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
-import { defineStore, storeToRefs } from 'pinia'
+import { defineStore } from 'pinia'
 import type Robot from '@/types/Robot'
 import { useMachineStore } from '@/store/machineStore'
+import { useConfigStore } from '@/store/configStore'
+import type RandomizeFieldOutMsg from '@/types/messages/outgoing/RandomizeFieldOutMsg'
+import { useSocketStore } from '@/store/socketStore'
 
-export const useViewStore = defineStore('viewStore', () => {
+// FIELD STORE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the field store provides information about and interaction with the playing
+// field and its contents
+export const useFieldStore = defineStore('fieldStore', () => {
   // USE OTHER STORES  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   const machineStore = useMachineStore()
-  const { machines } = storeToRefs(machineStore)
+  const configStore = useConfigStore()
+  const socketStore = useSocketStore()
 
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // while there is no authentication required to send messages to the refbox
-  // (such as giving points), we need some method such as a hidden keyboard
-  // shortcut to prevent users from going into referee mode and doing such
-  // things. As soon as this keyboard shortcut is pressed, all options are
-  // unlocked and the user can switch to the referee mode.
-  const adminActivated: Ref<boolean> = ref(false)
-
-  // whether the referee view is active (only works with admin activated)
-  const refereeView: Ref<boolean> = ref(false)
-
-  // popup counter: current z-index for newly opened popups (gets higher with
-  // each popup toggle). Used because newly opened popups should be displayed
-  // above previously opened
-  const popupCounter: Ref<number> = ref(10)
-
-  // size of the playing field
-  const horizontalFieldSize: Ref<number> = ref(7)
-  const verticalFieldSize: Ref<number> = ref(8)
-  const isFieldMirrored: Ref<boolean> = ref(true)
-
-  // width and height of the field and its wrapper in pixels (updated by the UI)
+  // -> width and height of the field and its wrapper in pixels
+  // updated by event listeners in a component
   const fieldWrapperWidthPixels: Ref<number> = ref(0)
   const fieldWrapperHeightPixels: Ref<number> = ref(0)
   const fieldWidthPixels: Ref<number> = ref(0)
   const fieldHeightPixels: Ref<number> = ref(0)
 
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // -> config
+  const horizontalFieldSize: ComputedRef<number> = computed(
+    () => <number>configStore.gameConfig.get('/llsfrb/game/field/width')
+  )
+  const isFieldMirrored: ComputedRef<boolean> = computed(
+    () => <boolean>configStore.gameConfig.get('/llsfrb/game/field/mirrored')
+  )
+  const verticalFieldSize: ComputedRef<number> = computed(
+    () => <number>configStore.gameConfig.get('/llsfrb/game/field/height')
+  )
+
+  // -> full horizontal field size (in number of squares)
   const fullHorizontalFieldSize: ComputedRef<number> = computed(() =>
     isFieldMirrored.value
       ? horizontalFieldSize.value * 2
       : horizontalFieldSize.value
   )
+
+  // -> number of pixels of the horiontal or vertical diameter of a square
   const squareDiameterPixels: ComputedRef<number> = computed(
     () => fieldHeightPixels.value / verticalFieldSize.value
   )
 
+  // -> position of a waypoint (either field or machine)
   const positionOfWaypoint: ComputedRef<(el: String) => [number, number]> =
     computed(() => {
       return (el: String) => {
         // first check if the waypoint is a zone or a machine. We try to find a
         // machine with the name of the waypoint - if we cannot find one, we assume the waypoint is
         // a zone
-        const machine = machines.value.find((machine) => machine.name == el)
+        const machine = machineStore.machines.find(
+          (machine) => machine.name == el
+        )
         let zone
         if (machine) {
           zone = machine.zone
@@ -80,47 +85,46 @@ export const useViewStore = defineStore('viewStore', () => {
       }
     })
 
+  // -> position of a robot
   const positionOfRobot: ComputedRef<(robot: Robot) => [number, number]> =
     computed(() => {
       return (robot: Robot) => {
         return [
           fieldWidthPixels.value / 2 +
-            parseFloat(robot.pose[0]) * squareDiameterPixels.value,
-          fieldHeightPixels.value -
-            parseFloat(robot.pose[1]) * squareDiameterPixels.value,
+            robot.pose[0] * squareDiameterPixels.value,
+          fieldHeightPixels.value - robot.pose[1] * squareDiameterPixels.value,
         ]
       }
     })
 
-  // FUNCTIONS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // -> send a message to the refbox to randomize the field
+  function sendRandomizeField() {
+    const msg: RandomizeFieldOutMsg = { command: 'randomize_field' }
+    socketStore.sendMessage(msg)
+  }
+
+  // -> reset
   function reset() {
-    // do not change adminActivated and Referee view values because we want to
-    // preserve the current view and options when we call reset
-    popupCounter.value = 10
-    horizontalFieldSize.value = 7
-    verticalFieldSize.value = 8
-    isFieldMirrored.value = true
-    // do not change fieldWrapperWidthPixels, fieldWrapperHeightPixels,
+    // no need to change fieldWrapperWidthPixels, fieldWrapperHeightPixels,
     // fieldWidthPixels and fieldHeightPixels values because they are
     // automatically recomputed via event listeners
   }
 
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   return {
-    adminActivated,
-    refereeView,
-    popupCounter,
-    isFieldMirrored,
-    horizontalFieldSize,
-    verticalFieldSize,
-    fullHorizontalFieldSize,
     fieldWrapperWidthPixels,
     fieldWrapperHeightPixels,
     fieldWidthPixels,
     fieldHeightPixels,
+    horizontalFieldSize,
+    isFieldMirrored,
+    verticalFieldSize,
+    fullHorizontalFieldSize,
     squareDiameterPixels,
     positionOfWaypoint,
     positionOfRobot,
+    sendRandomizeField,
     reset,
   }
 })

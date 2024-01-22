@@ -1,5 +1,6 @@
+// TEMPLATE --------------------------------------------------------------------
 <template>
-  <div class="item transparent game-info">
+  <div class="flex-item transparent game-info">
     <div class="horizontal-flex phase-bar">
       <!-- PRE GAME -->
       <div
@@ -21,13 +22,13 @@
       >
         <div class="before"></div>
 
-        <div class="item transparent">
+        <div class="flex-item transparent">
           <p>Setup</p>
           <div v-if="phase == 'SETUP'" class="horizontal-flex">
             <span>
               {{ formatTime(game_time) }}
             </span>
-            <template v-if="gamestate == 'RUNNING'">
+            <template v-if="state == 'RUNNING'">
               <font-awesome-icon icon="fa-pause" />
             </template>
             <template v-else>
@@ -52,13 +53,13 @@
       >
         <div class="before"></div>
 
-        <div class="item transparent">
+        <div class="flex-item transparent">
           <p>Production</p>
           <div v-if="phase == 'PRODUCTION'" class="horizontal-flex">
             <span>
               {{ formatTime(game_time) }}
             </span>
-            <template v-if="gamestate == 'RUNNING'">
+            <template v-if="state == 'RUNNING'">
               <font-awesome-icon icon="fa-pause" />
             </template>
             <template v-else>
@@ -82,21 +83,21 @@
   </div>
 </template>
 
+// SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
+// imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { storeToRefs } from 'pinia'
 import formatTime from '@/utils/formatTime'
 import { useGameStore } from '@/store/gameStore'
-import { useSocketStore } from '@/store/socketStore'
 import Phase from '@/types/Phase'
-import { useRuleStore } from '@/store/ruleStore'
 import { ComputedRef, computed } from 'vue'
 
+// use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
-const ruleStore = useRuleStore()
-const socketStore = useSocketStore()
-const { phase, gamestate, game_time } = storeToRefs(gameStore)
-const { SETUP_DURATION, PRODUCTION_DURATION } = storeToRefs(ruleStore)
+const { phase, state, game_time, SETUP_DURATION, PRODUCTION_DURATION } =
+  storeToRefs(gameStore)
 
+// display progress  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const progress: ComputedRef<string> = computed(() => {
   function floatToPercentageString(progress: number): string {
     return Math.round(progress * 100).toString() + '%'
@@ -116,16 +117,15 @@ const progress: ComputedRef<string> = computed(() => {
 // RUNNING)
 function handlePhaseClick(newPhase: Phase) {
   if (newPhase == phase.value) {
-    socketStore.setGameState(
-      gamestate.value == 'RUNNING' ? 'PAUSED' : 'RUNNING'
-    )
+    gameStore.sendSetGamestate(state.value == 'RUNNING' ? 'PAUSED' : 'RUNNING')
   } else {
-    socketStore.setPhase(newPhase)
-    socketStore.setGameState('RUNNING')
+    gameStore.sendSetPhase(newPhase)
+    gameStore.sendSetGamestate('RUNNING')
   }
 }
 </script>
 
+// STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
 @use '@/assets/global.scss';
 .game-info {

@@ -1,27 +1,25 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div class="bg"></div>
   <div id="spectatorView">
     <div id="topBar">
       <ScoreBoard />
       <GameInfoBoard />
-
       <OrdersBoard v-if="['PRODUCTION', 'POST_GAME'].includes(phase)" />
-      <MenuBoard v-if="adminActivated" />
+      <MenuBoard v-if="advancedOptions" />
     </div>
     <div id="fieldAndEvents">
       <EventBoard />
       <PlayingField />
     </div>
   </div>
-  <FirstTimeDialog />
+  <WelcomeModal />
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import PlayingField from '@/components/spectator/PlayingField.vue'
-import FirstTimeDialog from '@/components/spectator/FirstTimeDialog.vue'
+import WelcomeModal from '@/components/spectator/WelcomeModal.vue'
 import EventBoard from '@/components/spectator/EventBoard.vue'
 import ScoreBoard from '@/components/spectator/ScoreBoard.vue'
 import GameInfoBoard from '@/components/spectator/GameInfoBoard.vue'
@@ -29,13 +27,13 @@ import OrdersBoard from '@/components/spectator/OrdersBoard.vue'
 import MenuBoard from '@/components/spectator/MenuBoard.vue'
 import { useGameStore } from '@/store/gameStore'
 import { storeToRefs } from 'pinia'
-import { useViewStore } from '@/store/viewStore'
+import { useAppStore } from '@/store/appStore'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
 const { phase } = storeToRefs(gameStore)
-const viewStore = useViewStore()
-const { adminActivated } = storeToRefs(viewStore)
+const appStore = useAppStore()
+const { advancedOptions } = storeToRefs(appStore)
 </script>
 
 // STYLE -----------------------------------------------------------------------

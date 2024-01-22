@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Popup title="Connect to live game">
+  <Popup title="Watch a game live" icon="fa-eye">
     <ConnectToWebsocket @connected="(_e) => togglePopup()"></ConnectToWebsocket>
   </Popup>
 </template>

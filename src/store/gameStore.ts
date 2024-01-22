@@ -1,60 +1,80 @@
-import { ref, computed, watch, ComputedRef } from 'vue'
+import { ref, computed, ComputedRef } from 'vue'
 import { defineStore } from 'pinia'
-
 import type { Ref } from 'vue'
-import type AwardedPoints from '@/types/AwardedPoints'
+import type Reward from '@/types/Reward'
 import type Gamestate from '@/types/Gamestate'
 import type Phase from '@/types/Phase'
 import type State from '@/types/State'
-import Color from '@/types/Color'
-import { useViewStore } from '@/store/viewStore'
+import type Color from '@/types/Color'
 import { useSocketStore } from '@/store/socketStore'
-import { useMachineStore } from '@/store/machineStore'
-import { useOrderStore } from '@/store/orderStore'
-import { useRobotStore } from '@/store/robotStore'
-import { useReportStore } from '@/store/reportStore'
 import { useEventStore } from '@/store/eventStore'
+import { useConfigStore } from '@/store/configStore'
+import type TimeInfo from '@/types/TimeInfo'
+import type KnownTeams from '@/types/KnownTeams'
+import type AddRewardOutMsg from '@/types/messages/outgoing/AddRewardOutMsg'
+import type SetTeamNameOutMsg from '@/types/messages/outgoing/SetTeamNameOutMsg'
+import type SetGamestateOutMsg from '@/types/messages/outgoing/SetGamestateOutMsg'
+import type SetGamephaseOutMsg from '@/types/messages/outgoing/SetGamephaseOutMsg'
 
-// game store
+// GAME STORE  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the game store is the central point of contact for the other stores. In
+// addition, it provides general information about and methods to manage the
+// game
 export const useGameStore = defineStore('gameStore', () => {
   // USE OTHER STORES  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   const eventStore = useEventStore()
-  const reportStore = useReportStore()
   const socketStore = useSocketStore()
-  const machineStore = useMachineStore()
-  const orderStore = useOrderStore()
-  const robotStore = useRobotStore()
-  const viewStore = useViewStore()
+  const configStore = useConfigStore()
 
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // known teams are fetched from the refbox at the beginning to be
-  // able to select them when choosing a team name
+  // -> known teams
+  // they are fetched from the refbox at the beginning to be able to select them
+  // when choosing a team name
   const knownTeams: Ref<string[]> = ref([])
 
-  // name of the current cyan and magenta team - use teamNameByColor to get the
-  // name instead of the direct reference in order to also get a placeholder
-  // string for not yet set team names
+  // -> name of the current cyan and magenta team
+  // use teamNameByColor to get the name instead of the direct reference in
+  // order to also get a placeholder string for not yet set team names
   const nameTeamCyan: Ref<string> = ref('')
   const nameTeamMagenta: Ref<string> = ref('')
 
-  // score and awarded points
-  const scoreCyan: Ref<number> = ref(0)
-  const scoreMagenta: Ref<number> = ref(0)
-  const awardedPoints: Ref<AwardedPoints[]> = ref([])
+  // -> rewards
+  const rewards: Ref<Reward[]> = ref([])
 
-  // game state
+  // -> game state
   const phase: Ref<Phase> = ref('PRE_GAME')
-  // overall time
+  const state: Ref<State> = ref('WAIT_START')
+
+  // -> overall time
   const cont_time: Ref<number> = ref(0)
-  // the time within in the current phase
+
+  // -> the time within in the current phase
   const game_time: Ref<number> = ref(0)
-  // the overtime boolean indicates whether a overtime is taking place. It is
-  // initially undefined and is set at when the overtime starts
+
+  // -> overtime
   const overtime: Ref<boolean> = ref(false)
-  const gamestate: Ref<State> = ref('WAIT_START')
 
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // other color
+  // -> config
+  const SETUP_DURATION: ComputedRef<number> = computed(
+    () => <number>configStore.gameConfig.get('/llsfrb/globals/setup_time')
+  )
+  const PRODUCTION_DURATION: ComputedRef<number> = computed(
+    () => <number>configStore.gameConfig.get('/llsfrb/globals/production_time')
+  )
+  const EXPLORATION_DURATION: ComputedRef<number> = computed(
+    () =>
+      <number>configStore.gameConfig.get('/llsfrb/game/field/exploration_time')
+  )
+  const OVERTIME_DURATION: ComputedRef<number> = computed(
+    () =>
+      <number>configStore.gameConfig.get('/llsfrb/globals/production_overtime')
+  )
+  const PHASES: ComputedRef<string[]> = computed(
+    () => <string[]>configStore.gameConfig.get('/llsfrb/globals/phases')
+  )
+
+  // -> other color
   const oppositeColor: ComputedRef<(color: Color) => Color> = computed(() => {
     return (color: Color) => {
       if (color == 'CYAN') {
@@ -67,224 +87,229 @@ export const useGameStore = defineStore('gameStore', () => {
     }
   })
 
-  // team name by color
+  // -> team name by color
   const teamNameByColor: ComputedRef<(color: Color) => string> = computed(
     () => {
       return (color: Color) => {
         if (color == 'CYAN') {
-          return nameTeamCyan.value ? nameTeamCyan.value : 'CYAN (tbd)'
+          return nameTeamCyan.value ? nameTeamCyan.value : 'CYAN'
         } else {
-          return nameTeamMagenta.value ? nameTeamMagenta.value : 'MAGENTA (tbd)'
+          return nameTeamMagenta.value ? nameTeamMagenta.value : 'MAGENTA'
         }
       }
     }
   )
 
-  // score by color
+  // -> score by color
   const scoreByColor: ComputedRef<(color: Color) => number> = computed(() => {
     return (color: Color) => {
-      if (color == 'CYAN') {
-        return scoreCyan.value
-      } else {
-        return scoreMagenta.value
-      }
+      return rewards.value
+        .filter((reward) => reward.team == color)
+        .reduce((acc, reward) => acc + reward.points, 0)
     }
   })
 
-  // awarded points by color
-  const awardedPointsByColor: ComputedRef<(color: Color) => AwardedPoints[]> =
-    computed(() => {
+  // -> rewards by color
+  const rewardsByColor: ComputedRef<(color: Color) => Reward[]> = computed(
+    () => {
       return (color: Color) =>
-        awardedPoints.value.filter(
-          (awardedPointsFi) => awardedPointsFi.team == color
-        )
-    })
+        rewards.value.filter((rewardFi) => rewardFi.team == color)
+    }
+  )
 
-  // awarded points by color and order
-  const awardedPointsByColorAndOrder: ComputedRef<
-    (color: Color, orderId: number) => AwardedPoints[]
+  // -> rewards by color and order
+  const rewardsByColorAndOrder: ComputedRef<
+    (color: Color, orderId: number) => Reward[]
   > = computed(() => {
     return (color: Color, orderId: number) =>
-      awardedPoints.value.filter(
-        (awardedPointsFi) =>
-          awardedPointsFi.team == color && awardedPointsFi.order == orderId
+      rewards.value.filter(
+        (rewardFi) => rewardFi.team == color && rewardFi.order == orderId
       )
   })
 
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // set gamestate information
-  function setGamestateInformation(gamestateArg: Gamestate) {
-    nameTeamCyan.value = gamestateArg.cyan
-    viewStore.verticalFieldSize = gamestateArg['field_height']
-    viewStore.isFieldMirrored = gamestateArg['field_mirrored']
-    viewStore.horizontalFieldSize = gamestateArg['field_width']
-    game_time.value = Math.trunc(gamestateArg['game_time'])
-    cont_time.value = Math.trunc(gamestateArg['cont_time'])
-    nameTeamMagenta.value = gamestateArg.magenta
-    overtime.value = gamestateArg['over_time']
-    phase.value = gamestateArg.phase
-    scoreCyan.value = parseInt(gamestateArg['points_cyan'])
-    scoreMagenta.value = parseInt(gamestateArg['points_magenta'])
-    gamestate.value = gamestateArg.state
+  // -> set known teams
+  function setKnownTeams(knownTeamsArg: KnownTeams) {
+    knownTeams.value = knownTeamsArg.known_teams.sort()
   }
 
-  // reset this store
+  // -> set time
+  function setTime(timeArg: TimeInfo) {
+    game_time.value = Math.trunc(timeArg.game_time)
+    cont_time.value = Math.trunc(timeArg.cont_time)
+  }
+
+  // -> set gamestate - during the update, check if we need to create events
+  function setGamestate(gamestateArg: Gamestate) {
+    // -> team names
+    if (!nameTeamCyan.value && gamestateArg.cyan) {
+      eventStore.addEvent({
+        icon: 'fa-people-group',
+        msg: `${gamestateArg.cyan} is playing CYAN`,
+        team: 'CYAN',
+      })
+    }
+    if (!nameTeamMagenta.value && gamestateArg.magenta) {
+      eventStore.addEvent({
+        icon: 'fa-people-group',
+        msg: `${gamestateArg.magenta} is playing MAGENTA`,
+        team: 'MAGENTA',
+      })
+    }
+    nameTeamCyan.value = gamestateArg.cyan
+    nameTeamMagenta.value = gamestateArg.magenta
+
+    // -> state (running/paused)
+    if (state.value == 'RUNNING' && gamestateArg.state == 'PAUSED') {
+      eventStore.addEvent({
+        icon: 'fa-pause',
+        msg: 'The game has been paused',
+      })
+    } else if (state.value == 'PAUSED' && gamestateArg.state == 'RUNNING') {
+      eventStore.addEvent({
+        icon: 'fa-play',
+        msg: 'The game has been resumed',
+      })
+    }
+    state.value = gamestateArg.state
+
+    // -> phase and overtime
+    if (phase.value != gamestateArg.phase) {
+      // create phase start events for SETUP and PRODUCTION phases
+      if (gamestateArg.phase == 'SETUP' || gamestateArg.phase == 'PRODUCTION') {
+        eventStore.addEvent({
+          icon: 'fa-arrow-right',
+          msg: `Phase ${gamestateArg.phase} has started`,
+        })
+      }
+      // create winner event when POST_GAME phase is entered
+      else if (gamestateArg.phase == 'POST_GAME') {
+        const winnerTeam =
+          scoreByColor.value('CYAN') > scoreByColor.value('MAGENTA')
+            ? 'CYAN'
+            : scoreByColor.value('CYAN') < scoreByColor.value('MAGENTA')
+            ? 'MAGENTA'
+            : undefined
+
+        eventStore.addEvent({
+          icon: 'fa-medal',
+          msg: winnerTeam
+            ? `${teamNameByColor.value(winnerTeam)} has won the game 🥳`
+            : 'The game ended with a tie',
+        })
+      }
+    }
+    overtime.value = gamestateArg.over_time
+    phase.value = gamestateArg.phase
+  }
+
+  // -> add a reward
+  function addReward(rewardArg: Reward) {
+    if (rewardArg.points > 0 && teamNameByColor.value(rewardArg.team) != '') {
+      eventStore.addEvent({
+        icon: 'fa-trophy',
+        msg: `${teamNameByColor.value(rewardArg.team)} received ${
+          rewardArg.points
+        } points`,
+        team: rewardArg.team,
+      })
+    }
+    rewards.value.push(rewardArg)
+  }
+
+  // -> send a websocket message to ...
+  // ---> ... set a team name
+  function sendSetTeamName({ color, name }: { color: Color; name: string }) {
+    const msg: SetTeamNameOutMsg = {
+      command: 'set_teamname',
+      color,
+      name,
+    }
+    socketStore.sendMessage(msg)
+  }
+
+  // ---> ... set the phase
+  function sendSetPhase(newPhase: Phase) {
+    const msg: SetGamephaseOutMsg = {
+      command: 'set_gamephase',
+      phase: `${newPhase}`,
+    }
+    socketStore.sendMessage(msg)
+  }
+
+  // ---> ... set the state
+  function sendSetGamestate(newState: State) {
+    const msg: SetGamestateOutMsg = {
+      command: 'set_gamestate',
+      state: `${newState}`,
+    }
+    socketStore.sendMessage(msg)
+  }
+
+  // ---> ... add a reward
+  function sendAddReward({
+    points,
+    team_color,
+    reason,
+  }: {
+    points: number
+    team_color: Color
+    reason: string
+  }) {
+    const msg: AddRewardOutMsg = {
+      command: 'add_points_team',
+      points,
+      team_color,
+      game_time: game_time.value,
+      phase: phase.value,
+      reason,
+    }
+
+    socketStore.sendMessage(msg)
+  }
+
+  // -> reset this store
   function reset() {
     knownTeams.value = []
     nameTeamCyan.value = ''
     nameTeamMagenta.value = ''
-    scoreCyan.value = 0
-    scoreMagenta.value = 0
-    awardedPoints.value = []
+    rewards.value = []
     phase.value = 'PRE_GAME'
     cont_time.value = 0
     game_time.value = 0
     overtime.value = false
-    gamestate.value = 'WAIT_START'
+    state.value = 'WAIT_START'
   }
-
-  // reset all stores
-  function resetAll() {
-    eventStore.reset()
-    reportStore.reset()
-    socketStore.reset()
-    reset()
-    machineStore.reset()
-    orderStore.reset()
-    robotStore.reset()
-    viewStore.reset()
-  }
-
-  // WATCH - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // -> CREATE GAME EVENTS IN RESPONSE TO STATE CHANGES
-  // watch team names to create an event when they are set
-  watch(
-    () => nameTeamCyan.value,
-    (newNameTeamCyan, _) => {
-      if (newNameTeamCyan) {
-        eventStore.createEvent({
-          category: 'game',
-          icon: 'fa-people-group',
-          msg: `${teamNameByColor.value('CYAN')} is playing CYAN`,
-          team: 'CYAN',
-        })
-      }
-    }
-  )
-  watch(
-    () => nameTeamMagenta.value,
-    (newNameTeamCyan, _) => {
-      if (newNameTeamCyan) {
-        eventStore.createEvent({
-          category: 'game',
-          icon: 'fa-people-group',
-          msg: `${teamNameByColor.value('MAGENTA')} is playing MAGENTA`,
-          team: 'MAGENTA',
-        })
-      }
-    }
-  )
-
-  // watch awarded points
-  watch(
-    () => awardedPoints.value,
-    (newAwardedPoints, prevAwardedPoints) => {
-      if (prevAwardedPoints && newAwardedPoints) {
-        for (
-          let i = prevAwardedPoints.length;
-          i < newAwardedPoints.length;
-          i++
-        ) {
-          const award = Array.from(newAwardedPoints)[i]
-          if (award.points > 0 && teamNameByColor.value(award.team) != '') {
-            eventStore.createEvent({
-              category: 'game',
-              icon: 'fa-trophy',
-              msg: `${teamNameByColor.value(award.team)} received ${
-                award.points
-              } points`,
-              team: award.team,
-            })
-          }
-        }
-      }
-    }
-  )
-
-  // watch game state (pausing and remusing)
-  watch(
-    () => gamestate.value,
-    (newState, prevState) => {
-      if (prevState == 'RUNNING' && newState == 'PAUSED') {
-        eventStore.createEvent({
-          category: 'game',
-          icon: 'fa-pause',
-          msg: 'The game has been paused',
-        })
-      } else if (prevState == 'PAUSED' && newState == 'RUNNING') {
-        eventStore.createEvent({
-          category: 'game',
-          icon: 'fa-play',
-          msg: 'The game has been resumed',
-        })
-      }
-    }
-  )
-
-  // watch the phase to create phase change and game end events
-  watch(
-    () => phase.value,
-    (newPhase, _) => {
-      if (newPhase) {
-        // create phase start events for SETUP and PRODUCTION phases
-        if (newPhase == 'SETUP' || newPhase == 'PRODUCTION') {
-          eventStore.createEvent({
-            category: 'game',
-            icon: 'fa-arrow-right',
-            msg: `Phase ${newPhase} has started`,
-          })
-        }
-        // create winner event when POST_GAME phase is entered
-        else if (newPhase == 'POST_GAME') {
-          const winnerTeam =
-            scoreByColor.value('CYAN') > scoreByColor.value('MAGENTA')
-              ? 'CYAN'
-              : scoreByColor.value('CYAN') < scoreByColor.value('MAGENTA')
-              ? 'MAGENTA'
-              : undefined
-
-          eventStore.createEvent({
-            category: 'game',
-            icon: 'fa-face-smile',
-            msg: winnerTeam
-              ? `${teamNameByColor.value(winnerTeam)} has won the game 🥳`
-              : 'The game ended with a tie',
-            team: winnerTeam,
-          })
-        }
-      }
-    },
-    { immediate: true }
-  )
 
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   return {
     nameTeamCyan,
     nameTeamMagenta,
     knownTeams,
-    awardedPoints,
+    rewards,
     phase,
     cont_time,
     game_time,
     overtime,
-    gamestate,
+    state,
+    SETUP_DURATION,
+    PRODUCTION_DURATION,
+    EXPLORATION_DURATION,
+    OVERTIME_DURATION,
+    PHASES,
     oppositeColor,
     teamNameByColor,
     scoreByColor,
-    awardedPointsByColor,
-    awardedPointsByColorAndOrder,
-    setGamestateInformation,
+    rewardsByColor,
+    rewardsByColorAndOrder,
+    setKnownTeams,
+    setTime,
+    setGamestate,
+    addReward,
+    sendSetTeamName,
+    sendSetPhase,
+    sendSetGamestate,
+    sendAddReward,
     reset,
-    resetAll,
   }
 })

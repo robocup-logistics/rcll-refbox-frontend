@@ -1,5 +1,7 @@
-import Color from '@/types/Color'
+import type Color from '@/types/Color'
 
+// CONFIRMDELIVERYOUTMSG - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// we send this message if we want to confirm a delivery
 export default interface ConfirmDeliveryOutMsg {
   command: 'confirm_delivery'
   correctness: boolean

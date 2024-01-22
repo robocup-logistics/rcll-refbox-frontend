@@ -1,7 +1,7 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <div class="horizontal-flex tab-group">
-    <template v-for="tab in props.tabs">
+    <template v-for="tab in tabs">
       <Button :primary="tab == active" @click="select(tab)">
         <slot :name="tab"></slot>
       </Button>
@@ -10,28 +10,43 @@
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends (string | number | boolean)">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import Button from '@/components/shared/ui/Button.vue'
-import { ref, type PropType, type Ref, watch } from 'vue'
+import { watch, type PropType, type Ref, onMounted } from 'vue'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const props = defineProps({
-  tabs: Array as PropType<string[]>,
+  tabs: {
+    type: Array as PropType<T[]>,
+    required: true,
+  },
+  defaultActive: {
+    type: [String, Number, Boolean] as PropType<T>,
+    required: false,
+  },
 })
 
 // emits - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const emit = defineEmits<{
-  (e: 'activeChanged', active: string): void
+  (e: 'activeChanged', active: T): void
 }>()
 
 // active tab  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const active: Ref<string | undefined> = ref(props.tabs?.[0])
+// -> the intended way to use this component is through v-model:active
+const active: Ref<T | undefined> = defineModel<T>('active')
 
-function select(tab: string): void {
+onMounted(() => {
+  if (props.defaultActive) {
+    active.value = props.defaultActive
+  }
+})
+
+function select(tab: T): void {
   active.value = tab
 }
 
+// -> alternatively, we can just listen to changes in the active value
 watch(
   () => active.value,
   () => {
@@ -40,9 +55,6 @@ watch(
     }
   }
 )
-
-// define expose - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-defineExpose({ active })
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -51,10 +63,5 @@ defineExpose({ active })
 .tab-group {
   align-items: stretch !important;
   padding-bottom: 5px;
-  border-radius: 8px;
-
-  Button {
-    height: 100%;
-  }
 }
 </style>

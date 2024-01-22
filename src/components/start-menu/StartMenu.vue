@@ -5,35 +5,29 @@
     <div class="menu">
       <img src="@/assets/robocupLogo.png" />
       <div class="modes">
-        <Popup title="Follow a live game" permanent>
-          <template v-if="adminActivated">
-            Select view:
-            <TabGroup
-              :tabs="['spectator', 'referee']"
-              @active-changed="(active: string) => updateViewSelection(active)"
-            >
-              <template #spectator>
-                <div class="horizontal-flex">
-                  <font-awesome-icon icon="fa-eye" />
-                  <span>Spectator</span>
-                </div>
-              </template>
-              <template #referee
-                ><div class="horizontal-flex">
-                  <font-awesome-icon icon="fa-user-tie" />
-                  <span>Referee</span>
-                </div></template
-              >
-            </TabGroup>
-          </template>
-
-          <ConnectToWebsocket></ConnectToWebsocket>
-
-          <p v-if="!adminActivated">Connection problems? Ask a supervisor!</p>
+        <Popup title="Watch a game live" icon="fa-eye" permanent>
+          <ConnectToWebsocket @connected="currentView = 'spectator'" />
+          <p v-if="!advancedOptions">Connection problems? Ask a supervisor!</p>
         </Popup>
 
-        <Popup title="Review a previous game" permanent v-if="adminActivated">
-          <ConnectToDbBackend></ConnectToDbBackend>
+        <Popup
+          v-if="advancedOptions"
+          title="Referee a game"
+          icon="fa-user-tie"
+          permanent
+        >
+          <ConnectToWebsocket
+            @connected="currentView = 'referee'"
+          ></ConnectToWebsocket>
+        </Popup>
+
+        <Popup
+          v-if="advancedOptions"
+          title="Review a game report"
+          icon="fa-magnifying-glass"
+          permanent
+        >
+          <ConnectToDbBackend @connected="currentView = 'spectator'" />
         </Popup>
       </div>
     </div>
@@ -43,25 +37,14 @@
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import { useViewStore } from '@/store/viewStore'
+import { useAppStore } from '@/store/appStore'
 import { storeToRefs } from 'pinia'
 import ConnectToWebsocket from '@/components/shared/util/ConnectToWebsocket.vue'
 import ConnectToDbBackend from '@/components/shared/util/ConnectToDbBackend.vue'
 import Popup from '@/components/shared/ui/Popup.vue'
-import TabGroup from '@/components/shared/ui/TabGroup.vue'
-
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const viewStore = useViewStore()
-const { adminActivated, refereeView } = storeToRefs(viewStore)
-
-// view selection  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-function updateViewSelection(newActive: string) {
-  if (newActive == 'referee') {
-    refereeView.value = true
-  } else if (newActive == 'spectator') {
-    refereeView.value = false
-  }
-}
+const appStore = useAppStore()
+const { advancedOptions, currentView } = storeToRefs(appStore)
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -114,7 +97,7 @@ function updateViewSelection(newActive: string) {
 
 @keyframes moveEffect {
   0% {
-    transform: translateX(0) rotate(0.05turn);
+    transform: translateX(0) rotate(-30deg);
   }
 
   100% {

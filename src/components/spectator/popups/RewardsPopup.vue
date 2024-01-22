@@ -1,47 +1,44 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Popup :title="'Score details for ' + teamName">
+  <Popup
+    :title="`Rewards of <span class='${team}-text'>${teamName}</span>`"
+    icon="fa-trophy"
+  >
     <template v-if="scoreByColor(team) == 0">
       <p>{{ teamName }} has not scored any points yet.</p>
     </template>
     <template v-else>
       <!-- ORDER TABS -->
       <TabGroup
-        :tabs="[
-          '0',
-          ...ordersDeliveredByTeam(teamName).map((order) => `${order.id}`),
-        ]"
+        :tabs="[0, ...ordersDeliveredByTeam(teamName).map((order) => order.id)]"
+        v-model:active="activeOrder"
         ref="tabGroup"
         class="order-tabs"
       >
-        <template #0>
-          <div class="item transparent">
+        <template #[0]>
+          <div class="flex-item transparent">
             <p>No order</p>
             <!-- sum of points related to this order -->
             <p>
               {{
-                awardedPointsByColorAndOrder(team, 0)
-                  .map((awardedPoints) => awardedPoints.points)
+                rewardsByColorAndOrder(team, 0)
+                  .map((reward) => reward.points)
                   .reduce((acc, cur) => acc + cur, 0)
               }}
             </p>
           </div></template
         >
-        <template
-          #[`${order.id}`]
-          v-for="order in ordersDeliveredByTeam(teamName)"
-        >
+        <template #[order.id] v-for="order in ordersDeliveredByTeam(teamName)">
           <div>
             <img
-              :src="`/workpieces/${
-                orderStore.productByOrder(order)?.['workpiece_url']
-              }`"
+              :src="`/workpieces/${orderStore.fileNameByWorkpiece(order)}`"
+              draggable="false"
             />
             <!-- sum of points related to this order -->
             <p>
               {{
-                awardedPointsByColorAndOrder(team, order.id)
-                  .map((awardedPoints) => awardedPoints.points)
+                rewardsByColorAndOrder(team, order.id)
+                  .map((reward) => reward.points)
                   .reduce((acc, cur) => acc + cur, 0)
               }}
             </p>
@@ -50,44 +47,42 @@
       </TabGroup>
 
       <!-- AWARDED POINTS LIST FOR SELECTED ORDER -->
-      <template v-if="tabGroup">
-        <p v-show="tabGroup.active == 0">
-          Awarded points not associated with an order:
-        </p>
-        <div
-          class="horizontal-flex"
-          v-show="tabGroup.active != 0 && orderById(parseInt(tabGroup.active))"
+
+      <p v-if="activeOrder == 0">
+        Awarded points not associated with an order:
+      </p>
+      <div
+        class="horizontal-flex"
+        v-else-if="activeOrder != 0 && orderById(activeOrder)"
+      >
+        <span>Awarded points for</span>
+        <PopupWrapper
+          popup-position="bottom"
+          style="width: max-content !important"
         >
-          <span>Awarded points for</span>
-          <PopupWrapper popup-position="bottom">
-            <template #reference>
-              <div class="item lighter horizontal-flex">
-                <span> Order {{ tabGroup.active }} </span>
+          <template #reference>
+            <div class="flex-item lighter horizontal-flex">
+              <div class="horizontal-flex">
+                <span> Order {{ activeOrder }} </span>
                 <font-awesome-icon class="clickable" icon="fa-info-circle" />
               </div>
-            </template>
-            <OrderPopup
-              :order="<Order>orderById(parseInt(tabGroup.active))"
-            ></OrderPopup>
-          </PopupWrapper>
-          <span>:</span>
-        </div>
-      </template>
-      <div class="awarded-points-list">
-        <template
-          v-for="awardedPoints in awardedPointsByColorAndOrder(
-            team,
-            tabGroup?.active
-          )"
-        >
-          <div class="awarded-points-points">
-            {{ awardedPoints.points }}
+            </div>
+          </template>
+          <OrderPopup :order="<Order>orderById(activeOrder)"></OrderPopup>
+        </PopupWrapper>
+        <span>:</span>
+      </div>
+
+      <div class="rewards-list">
+        <template v-for="reward in rewardsByColorAndOrder(team, activeOrder)">
+          <div :class="['reward-points', `${team}-bg`]">
+            {{ reward.points }}
           </div>
-          <div class="awarded-points-time">
-            <div>{{ formatTime(awardedPoints.game_time) }}</div>
+          <div>
+            {{ formatTime(reward.game_time) }}
           </div>
-          <div class="awarded-points-reason">
-            <div>{{ awardedPoints.reason }}</div>
+          <div>
+            {{ reward.reason }}
           </div>
         </template>
       </div>
@@ -120,17 +115,16 @@ defineProps({
     type: String as PropType<string>,
     required: true,
   },
-  color: String,
 })
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
-const { scoreByColor, awardedPointsByColorAndOrder } = storeToRefs(gameStore)
+const { scoreByColor, rewardsByColorAndOrder } = storeToRefs(gameStore)
 const orderStore = useOrderStore()
 const { ordersDeliveredByTeam, orderById } = storeToRefs(orderStore)
 
 // active tab  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const tabGroup: Ref<typeof TabGroup | undefined> = ref()
+const activeOrder: Ref<number> = ref(0)
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -147,7 +141,7 @@ const tabGroup: Ref<typeof TabGroup | undefined> = ref()
   }
 }
 
-.awarded-points-list {
+.rewards-list {
   display: grid;
   grid-template-columns: 35px 60px 1fr;
   gap: 10px;
@@ -159,11 +153,10 @@ const tabGroup: Ref<typeof TabGroup | undefined> = ref()
     height: fit-content;
     padding: 5px;
 
-    &.awarded-points-points {
+    &.reward-points {
       border-radius: 100%;
       text-align: center;
       color: black;
-      background-color: v-bind('color');
     }
   }
 }

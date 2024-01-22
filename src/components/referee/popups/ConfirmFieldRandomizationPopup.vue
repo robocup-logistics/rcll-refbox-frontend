@@ -1,23 +1,16 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Popup title="Confirm field randomization?">
+  <Popup title="Randomize field?" icon="fa-random">
     <div class="horizontal-flex" style="width: 100%">
+      <Button icon="fa-xmark" @click.prevent="togglePopup()"> Abort </Button>
       <Button
         primary
         icon="fa-check"
-        v-shortkey.once="['enter']"
+        v-shortkey.once="(shortcuts.get('confirmPopup') as Shortcut).keys"
         @click.prevent="confirmedRandomize()"
         @shortkey="confirmedRandomize()"
       >
         Yes
-      </Button>
-      <Button
-        icon="fa-xmark"
-        v-shortkey.once="['esc']"
-        @click.prevent="togglePopup()"
-        @shortkey="togglePopup()"
-      >
-        No
       </Button>
     </div>
   </Popup>
@@ -28,15 +21,20 @@
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import Popup from '@/components/shared/ui/Popup.vue'
 import { inject } from 'vue'
-import { useSocketStore } from '@/store/socketStore'
+import { useFieldStore } from '@/store/fieldStore'
 import Button from '@/components/shared/ui/Button.vue'
+import { useKeyboardStore } from '@/store/keyboardStore'
+import { storeToRefs } from 'pinia'
+import type Shortcut from '@/types/Shortcut'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const socketStore = useSocketStore()
+const fieldStore = useFieldStore()
+const keyboardStore = useKeyboardStore()
+const { shortcuts } = storeToRefs(keyboardStore)
 
 // confirm randomize - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function confirmedRandomize() {
-  socketStore.randomizeField()
+  fieldStore.sendRandomizeField()
   togglePopup()
 }
 
