@@ -205,16 +205,25 @@ export const useGameStore = defineStore('gameStore', () => {
 
   // -> add a reward
   function addReward(rewardArg: Reward) {
-    if (rewardArg.points > 0 && teamNameByColor.value(rewardArg.team) != '') {
+    const rewardExists = rewards.value.some(reward => {
+      return (
+        reward.game_time === rewardArg.game_time &&
+        reward.phase === rewardArg.phase &&
+        reward.points === rewardArg.points &&
+        reward.reason === rewardArg.reason &&
+        reward.team === rewardArg.team
+      );
+    });
+
+    // If the reward doesn't already exist, add it to the rewards array and log the event
+    if (!rewardExists && rewardArg.points > 0 && teamNameByColor.value(rewardArg.team) !== '') {
       eventStore.addEvent({
         icon: 'fa-trophy',
-        msg: `${teamNameByColor.value(rewardArg.team)} received ${
-          rewardArg.points
-        } points`,
+        msg: `${teamNameByColor.value(rewardArg.team)} received ${rewardArg.points} points`,
         team: rewardArg.team,
-      })
+      });
+      rewards.value.push(rewardArg);
     }
-    rewards.value.push(rewardArg)
   }
 
   // -> send a websocket message to ...
