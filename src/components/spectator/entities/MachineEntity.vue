@@ -92,7 +92,7 @@ watch(
         workpiece.holding == false && workpiece.at_machine == props.machine.name
     )
   },
-  { immediate: true }
+  { deep: true, immediate: true }
 )
 </script>
 

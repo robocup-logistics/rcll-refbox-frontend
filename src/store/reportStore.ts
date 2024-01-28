@@ -444,7 +444,8 @@ export const useReportStore = defineStore('reportStore', () => {
     () => activeAgentTasks.value,
     (newActiveAgentTasks, _) => {
       robotStore.agentTasks = newActiveAgentTasks
-    }
+    },
+    { deep: true }
   )
 
   // whenever the computed property `activeWorkpieces` changes, update the
@@ -453,7 +454,8 @@ export const useReportStore = defineStore('reportStore', () => {
     () => activeWorkpieces.value,
     (newWorkpieces, _) => {
       orderStore.workpieces = newWorkpieces
-    }
+    },
+    { deep: true }
   )
 
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

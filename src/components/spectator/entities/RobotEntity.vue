@@ -88,7 +88,7 @@ watch(
         workpiece.robot_holding == props.robot.number
     )
   },
-  { immediate: true }
+  { deep: true, immediate: true }
 )
 </script>
 
