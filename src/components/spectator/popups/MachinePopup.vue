@@ -180,7 +180,7 @@
         class="content-box horizontal-flex workpiece-box"
         v-if="workpiecesAtSlide.length"
       >
-        <p>in the payment slideeeeee:</p>
+        <p>in the payment slide:</p>
         <WorkpieceEntity
           v-for="workpiece in workpiecesAtSlide"
           :workpiece="workpiece"
