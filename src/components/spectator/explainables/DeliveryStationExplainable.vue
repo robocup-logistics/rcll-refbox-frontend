@@ -6,6 +6,9 @@
       <ProductExplainable />
       <span> in order to fulfill an order. </span>
     </p>
+    <p>
+      Also, any workpiece not fulfilling an order may be delivered to the station to remove it from the field.
+    </p>
   </Explainable>
 </template>
 
