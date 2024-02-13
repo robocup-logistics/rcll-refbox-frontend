@@ -1,55 +1,52 @@
+This is the main component - based on whether the advanced options are enabled,
+what preferred view is selected and whether we have a connection with a socket
+or a selected game report, one of the views is selected: • Start menu (only if
+we have no connection and no game report selected yet) • Spectator app to watch
+live games or review a game report • Referee app to control a live game. The
+code for the respective views/'apps' can be found in their corresponding
+subfolders.
+//TEMPLATE----------------------------------------------------------------------
 <template>
-  <div id="app">
-    <!-- referee view -->
-    <div id="refereeView" class="container-fluid" v-if="refereeView">
-      <AppHeader />
-      <AppBody />
-      <AppFooter />
-    </div>
-    <!-- spectator view -->
-    <div id="spectatorView" v-else>
-      <ScoreBoard />
-      <PlayingField />
-      <Player color="cyan" />
-      <Player color="magenta" />
-    </div>
+  <div
+    id="app"
+    v-shortkey="(shortcuts.get('toggleAdvancedOptions') as Shortcut).keys"
+    @shortkey.native="toggleOptions()"
+  >
+    <StartMenu v-if="currentView == 'start'" />
+    <RefereeApp v-else-if="currentView == 'referee'" />
+    <SpectatorApp v-else />
   </div>
 </template>
 
+// SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
-import { ref, Ref } from 'vue'
-import { useMainStore } from '@/store/mainStore'
+// imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+import { useAppStore } from '@/store/appStore'
+import { storeToRefs } from 'pinia'
+import StartMenu from '@/components/start-menu/StartMenu.vue'
+import RefereeApp from '@/components/referee/RefereeApp.vue'
+import SpectatorApp from './components/spectator/SpectatorApp.vue'
+import { useKeyboardStore } from './store/keyboardStore'
+import type Shortcut from '@/types/Shortcut'
 
-// referee components
-import AppHeader from '@/components/referee/AppHeader.vue'
-import AppBody from '@/components/referee/AppBody.vue'
-import AppFooter from '@/components/referee/AppFooter.vue'
+// use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const appStore = useAppStore()
+const { advancedOptions, currentView } = storeToRefs(appStore)
+const keyboardStore = useKeyboardStore()
+const { shortcuts } = storeToRefs(keyboardStore)
 
-// specator components
-import ScoreBoard from '@/components/spectator/ScoreBoard.vue'
-import PlayingField from '@/components/spectator/PlayingField.vue'
-import Player from '@/components/spectator/Player.vue'
-
-// variable whether the referee view or the spectator view is active
-const refereeView: Ref<boolean> = ref(true)
-
-// connect to websocket
-const mainStore = useMainStore()
-mainStore.connectToWebsocket()
-
-defineExpose({ refereeView })
+// toggle options  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+function toggleOptions() {
+  advancedOptions.value = !advancedOptions.value
+}
 </script>
 
+// STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
-#app {
-  #refereeView {
-    font-family: 'DejaVu Sans Mono', monospace;
-  }
+@use '@/assets/global.scss';
 
-  #spectatorView {
-    background-color: #252525;
-    height: 100vh;
-    width: 100vw;
-  }
+#app {
+  background-color: global.$bgColor;
+  overflow: hidden;
 }
 </style>

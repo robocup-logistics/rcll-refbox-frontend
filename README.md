@@ -1,67 +1,73 @@
 # rcll-refbox-frontend
 
-A web frontend for the RCLL RefBox
+A web frontend for the RoboCup Logistics League. Connect to the RCLL refbox and
+watch a game in progress with excitement or moderate the game as a referee. The
+frontend additionally offers the possibility to connect to a MongoDB backend to
+and analyze load game reports in the familiar interface but with extended
+possibilities like watching at the desired speed and jumping straight in to the
+interesting action.
 
 ## Requirements
 
-1. nodejs (node version 11.10.1 or above)
+- In order to referee or watch a game in progress, the [RCLL RefBox](https://github.com/robocup-logistics/rcll-refbox/wiki/Install) is required.
+- In order to load and analyze game reports stored in a MongoDB, the [MongoDB Backend](https://github.com/robocup-logistics/mongodb-backend) is required.
 
-   On fedora you may install it via
+## Usage
 
-   ```
-   dnf install nodejs
-   ```
-
-2. yarn
-
-   Install it globally via npm (should be automatically installed with nodejs)
-
-   ```
-   npm install --g yarn
-   ```
-
-3. the [rcll refbox](https://github.com/robocup-logistics/rcll-refbox/wiki/Install)
-
-   The latest master is required as the backend to this frontend got introduced in
-   [this pull request](https://github.com/robocup-logistics/rcll-refbox/pull/79).
-
-## Bugs and Limitations
-
-Report any issues you encounter on [github](https://github.com/carologistics/rcll-refbox-frontend/issues).
-
-## Docker setup
-
-You can get the docker image via:
+The most convenient way to get the frontend running is through docker.Simply get
+the docker image via
 
 ```
 docker pull quay.io/robocup-logistics/rcll-refbox-frontend
 ```
 
-Launch it by by specifying the port mapping that you prefer, here 4173 is chosen:
+and launch it by by specifying the port mapping that you prefer, e.g. `4173`:
 
 ```
 docker run -it -p 4173:80 quay.io/robocup-logistics/rcll-refbox-frontend
 ```
 
-## Project setup
+You may then access the frontend at `localhost:4173`.
 
-```
-yarn install
-yarn run build
-```
+> [!IMPORTANT]
+> By default, the application is restricted to watching live games only. If you
+> are an referee or want to review a game reports, you can unlock these options
+> by pressing the secret key combination `Ctrl` + `Alt` + `O`. In the referee
+> view, you will then find a `Help` option for instructions on how to referee a
+> game.
 
-### To run locally
+> [!NOTE]
+> Firefox currently has some issues with displaying vertical text. Eventhough a
+> workaround was applied, expect some weird padding and scrollbars. For the best
+> experience, use a web browser based on Chromium.
 
-```
-yarn run serve
-```
+## Get it running locally
 
-The frontend runs on [port 4173](http://localhost:4173) per default and connects
-via a tcp websocket on port 1234 (configurable in the refbox and via a button
-in the frontend).
+Follow these steps to get the frontend running locally instead
 
-In order to start a game through the frontend follow these steps:
+- [Download](https://nodejs.org/en/download/current) and install `Node.js`. For
+  most Linux versions, preferably install Node.js via your package manager
+  instead, see this command for Fedora:
 
-1. type in your team name on cyan (corresponds to old refbox `<f4>` -> `<cyan>` -> `<teamname>`)
-2. press the resume button in the middle (on startup this equivalents to pressing `<space>`)
-3. navigate through the phases using the clickable list or the arrow buttons
+  ```
+  dnf install nodejs
+  ```
+
+- Install `yarn` with npm (which should come preinstalled with Node.js)
+
+  ```
+  npm install --g yarn
+  ```
+
+- Install the dependencies, build and serve
+
+  ```
+  yarn install
+  yarn run build
+  yarn run serve test
+  ```
+
+## Encountered an issue?
+
+Please leave some Feedback on
+[GitHub](https://github.com/robocup-logistics/rcll-refbox/issues).

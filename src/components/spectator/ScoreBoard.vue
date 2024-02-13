@@ -1,94 +1,102 @@
+// TEMPLATE --------------------------------------------------------------------
 <template>
-  <div id="scoreBoard">
-    <div id="cyanSection" class="section player-section">
-      {{ nameTeamCyan }}
-      <br />
-      {{ scoreCyan }}
+  <Accordion horizontal title="Score" expanded-default id="scoreBoard">
+    <!-- TEAM NAMES SECTION -->
+    <div class="vertical-flex">
+      <div class="flex-item transparent">
+        <p class="team-name">
+          {{ teamNameByColor('CYAN') }}
+        </p>
+      </div>
+      <div class="flex-item transparent">
+        <p class="team-name">
+          {{ teamNameByColor('MAGENTA') }}
+        </p>
+      </div>
     </div>
-    <div class="section game-section">
-      {{ phase }}
-      <br />
-      <span v-if="gamestate == 'INIT'">
-        <font-awesome-icon icon="fa-solid fa-clock" />
-        LOADING...
-      </span>
-      <span v-else-if="gamestate == 'WAIT_START'">
-        <font-awesome-icon icon="fa-solid fa-check" />
-        READY TO START
-      </span>
-      <span v-else-if="gamestate == 'RUNNING'">
-        <font-awesome-icon icon="fa-solid fa-clock" />
-        {{ formattedGametime }}
-      </span>
-      <span v-else-if="gamestate == 'PAUSED'">
-        <font-awesome-icon icon="fa-solid fa-pause-circle" />
-        {{ formattedGametime }}
-      </span>
+
+    <!-- SCORES SECTION -->
+    <div class="vertical-flex">
+      <PopupWrapper popup-position="bottom" style="width: 100%">
+        <template #reference>
+          <div class="flex-item CYAN" style="height: 100%">
+            <div class="horizontal-flex team-score">
+              <div class="horizontal-flex">
+                <font-awesome-icon icon="fa-truck" />
+                <p>
+                  {{ ordersDeliveredByTeam(teamNameByColor('CYAN')).length }}
+                </p>
+                <font-awesome-icon icon="fa-trophy" />
+                <p>{{ scoreByColor('CYAN') }}</p>
+              </div>
+
+              <font-awesome-icon icon="fa-info-circle" />
+            </div>
+          </div>
+        </template>
+        <RewardsPopup team="CYAN" :teamName="teamNameByColor('CYAN')">
+        </RewardsPopup>
+      </PopupWrapper>
+
+      <PopupWrapper popup-position="bottom" style="width: 100%">
+        <template #reference>
+          <div class="flex-item MAGENTA" style="height: 100%">
+            <div class="horizontal-flex team-score">
+              <div class="horizontal-flex">
+                <font-awesome-icon icon="fa-truck" />
+                <p>
+                  {{ ordersDeliveredByTeam(teamNameByColor('MAGENTA')).length }}
+                </p>
+
+                <font-awesome-icon icon="fa-trophy" />
+                <p>{{ scoreByColor('MAGENTA') }}</p>
+              </div>
+
+              <font-awesome-icon icon="fa-info-circle" />
+            </div>
+          </div>
+        </template>
+        <RewardsPopup
+          team="MAGENTA"
+          :teamName="teamNameByColor('MAGENTA')"
+        ></RewardsPopup>
+      </PopupWrapper>
     </div>
-    <div id="magentaSection" class="section player-section">
-      {{ nameTeamMagenta }}
-      <br />
-      {{ scoreMagenta }}
-    </div>
-  </div>
+  </Accordion>
 </template>
 
+// SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
+// imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { storeToRefs } from 'pinia'
-import { useMainStore } from '@/store/mainStore'
+import { useGameStore } from '@/store/gameStore'
+import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
+import RewardsPopup from '@/components/spectator/popups/RewardsPopup.vue'
+import { useOrderStore } from '@/store/orderStore'
+import Accordion from '@/components/shared/ui/Accordion.vue'
 
-const mainStore = useMainStore()
-const {
-  phase,
-  gamestate,
-  formattedGametime,
-  nameTeamCyan,
-  nameTeamMagenta,
-  scoreCyan,
-  scoreMagenta,
-} = storeToRefs(mainStore)
+// use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const gameStore = useGameStore()
+const { teamNameByColor, scoreByColor } = storeToRefs(gameStore)
+
+const orderStore = useOrderStore()
+const { ordersDeliveredByTeam } = storeToRefs(orderStore)
 </script>
 
+// STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
 @use '@/assets/global.scss';
 
-$blur: 5px;
-
 #scoreBoard {
-  width: fit-content;
-  margin: 0 auto;
+  .team-name {
+    white-space: nowrap;
+    align-self: flex-end;
+  }
 
-  display: flex;
-  align-items: stretch;
-
-  .section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 20px;
-
-    &.game-section {
-      background-color: black;
-      box-shadow: 0 0 $blur 0 black;
-      text-align: center;
-    }
-
-    &.player-section {
-      color: black;
-      &#cyanSection {
-        background-color: global.$main-cyan-color;
-        box-shadow: 0 0 $blur 0 global.$main-cyan-color;
-        text-align: right;
-        border-bottom-left-radius: 10px;
-      }
-
-      &#magentaSection {
-        background-color: global.$main-magenta-color;
-        box-shadow: 0 0 $blur 0 global.$main-magenta-color;
-        text-align: left;
-        border-bottom-right-radius: 10px;
-      }
-    }
+  .team-score {
+    text-align: left;
+    justify-content: space-between;
+    width: 100%;
   }
 }
 </style>

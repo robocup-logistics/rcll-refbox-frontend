@@ -1,2 +1,212 @@
-$main-cyan-color: #0ff;
-$main-magenta-color: #f0f;
+@import '@/assets/variables.scss';
+
+* {
+  font-family: 'Lucida Console', 'Courier New', monospace;
+  box-sizing: border-box;
+
+  -webkit-user-select: none;
+  user-select: none;
+
+  text-transform: none;
+  font-size: 18px;
+
+  // scrollbars ...
+  // ... for firefox
+  scrollbar-color: $lightestColor transparent;
+
+  // ... for chromium/safari
+  ::-webkit-scrollbar {
+    height: 6px; // for vertical scrollbars!
+    width: 6px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: $lightestColor;
+    border-radius: 3px;
+
+    &:active {
+      background-color: $lighterColor;
+    }
+  }
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+button {
+  border: none;
+}
+
+a {
+  color: white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+p {
+  padding: unset;
+  margin: 0;
+  line-height: 1.3em;
+  overflow: hidden;
+}
+
+.uppercase {
+  text-transform: uppercase;
+  * {
+    text-transform: uppercase;
+  }
+}
+
+.clickable:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.form-row {
+  align-items: stretch;
+  > * {
+    flex-grow: 1;
+  }
+}
+
+.horizontal-flex {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+
+  max-width: 100%;
+  min-width: 0;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  &.inline {
+    display: inline-flex;
+  }
+
+  > .flex-item {
+    height: 100% !important;
+  }
+}
+
+.vertical-flex {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+
+  &.center {
+    justify-content: center;
+  }
+}
+
+.flex-item {
+  flex-grow: 1;
+  width: 100%;
+  height: fit-content;
+  border-radius: 8px;
+  padding: 0 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
+  color: white;
+  text-align: center;
+  background-color: $surfaceColor;
+  box-shadow: 0 0 6px 1px rgba($bgColor, 0.8);
+  overflow: hidden;
+
+  &.grow {
+    height: 100%;
+  }
+
+  &.transparent {
+    background-color: unset !important;
+    padding: 0 !important;
+    box-shadow: unset;
+  }
+
+  &.lighter {
+    background-color: $lighterColor;
+  }
+
+  &.CYAN {
+    color: black;
+    background-color: $cyanColor !important;
+  }
+
+  &.MAGENTA {
+    color: black;
+    background-color: $magentaColor !important;
+  }
+}
+
+.content-box {
+  border-radius: 8px;
+  border: 2px solid $bgColor;
+  background-color: rgba($bgColor, 0.5);
+  padding: 10px;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.CYAN-text {
+  color: $cyanColor !important;
+}
+
+.MAGENTA-text {
+  color: $magentaColor !important;
+}
+
+.CYAN-bg {
+  background-color: $cyanColor !important;
+}
+
+.MAGENTA-bg {
+  background-color: $magentaColor !important;
+}
+
+.text-subtle {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.text-danger {
+  color: red;
+}
+
+.text-warning {
+  color: orange;
+}
+
+.text-success {
+  color: rgb(10, 188, 10);
+}
+
+.highlight {
+  filter: drop-shadow(0 0 10px white);
+}

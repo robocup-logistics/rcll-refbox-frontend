@@ -1,128 +1,177 @@
-import { ref } from 'vue'
-import type { Ref } from 'vue'
+import { computed, ref } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 import { defineStore } from 'pinia'
+import type Order from '@/types/Order'
+import { useGameStore } from '@/store/gameStore'
+import { useConfigStore } from '@/store/configStore'
+import type Workpiece from '@/types/Workpiece'
+import type ConfirmDeliveryOutMsg from '@/types/messages/outgoing/ConfirmDeliveryOutMsg'
+import type Color from '@/types/Color'
+import { useSocketStore } from '@/store/socketStore'
 
+// ORDER STORE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the order store is used to store the orders and related information and
+// provide utility function related to orders. Currently it also serves the same
+// functionality for workpieces - it might make sense to source workpiece
+// relation information and functionality out into its own store at a later
+// date.
 export const useOrderStore = defineStore('orderStore', () => {
-  const allOrders: Ref<any[]> = ref([])
-  const products: Ref<any[]> = ref([])
-  const populated: Ref<boolean> = ref(false)
-  const ordersFlag: Ref<boolean> = ref(false)
-  const orderCount: Ref<number> = ref(9)
+  // USE OTHER STORES  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  const gameStore = useGameStore()
+  const configStore = useConfigStore()
+  const socketStore = useSocketStore()
 
-  // set orders array
-  function setOrdersArray(payload): void {
-    console.log('set orders array')
-    console.log(payload)
-    allOrders.value = payload
-    ordersFlag.value = true
-  }
+  // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  const orders: Ref<Order[]> = ref([])
+  const workpieces: Ref<Workpiece[]> = ref([])
 
-  // add order
-  function addOrder({ payload, index }): void {
-    console.log('adding order at index ' + index)
-    console.log(allOrders.value)
-    if (index === -1) {
-      allOrders.value.push(payload)
-    } else {
-      allOrders.value.splice(index, 1, payload)
-    }
-  }
+  // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // -> config
+  const MAX_NUMBER_OF_ORDERS: ComputedRef<number> = computed(
+    () => <number>configStore.gameConfig.get('/llsfrb/globals/number_of_orders')
+  )
 
-  // set orders at reconnect
-  function setOrdersAtReconnect(payload): void {
-    setOrdersArray(payload)
-    populateProducts()
-  }
+  // -> open orders
+  const openOrders: ComputedRef<Order[]> = computed(() =>
+    orders.value.filter(
+      (order) =>
+        gameStore.game_time >= order.delivery_period[0] - 1 &&
+        gameStore.game_time < order.delivery_period[1] + 1 &&
+        gameStore.phase == 'PRODUCTION'
+    )
+  )
 
-  // set order infos
-  function setOrderInfos(payload): void {
-    console.log('settings order info')
-    if (allOrders.value.length < orderCount.value) {
-      // check if there is already that order in the array so it doesn"t duplicate it
-      const index = allOrders.value.findIndex(
-        (order) => order.id === payload.id
-      )
-      if (index === -1) {
-        addOrder({ payload, index })
+  // -> upcoming orders
+  const upcomingOrders: ComputedRef<Order[]> = computed(() =>
+    orders.value.filter(
+      (order) =>
+        (['PRE_GAME', 'SETUP', 'EXPLORATION'].includes(gameStore.phase) ||
+          (gameStore.phase == 'PRODUCTION' &&
+            gameStore.game_time < order.delivery_period[0])) &&
+        order.delivery_period[0] < gameStore.PRODUCTION_DURATION
+    )
+  )
+
+  // -> upcoming acivated orders
+  const upcomingActivatedOrders: ComputedRef<Order[]> = computed(() =>
+    upcomingOrders.value.filter(
+      (order) => gameStore.game_time >= order.activate_at
+    )
+  )
+
+  // -> upcoming not yet activated orders
+  const upcomingNonActivatedOrders: ComputedRef<Order[]> = computed(() =>
+    upcomingOrders.value.filter(
+      (order) => gameStore.game_time < order.activate_at
+    )
+  )
+
+  // -> expired orders
+  const expiredOrders: ComputedRef<Order[]> = computed(() =>
+    orders.value.filter(
+      (order) =>
+        gameStore.phase == 'POST_GAME' ||
+        (gameStore.phase == 'PRODUCTION' &&
+          gameStore.game_time >= order.delivery_period[1])
+    )
+  )
+
+  // -> overtime order
+  const overtimeOrder: ComputedRef<Order | undefined> = computed(() =>
+    orders.value.find(
+      (order) => order.delivery_period[0] == gameStore.PRODUCTION_DURATION
+    )
+  )
+
+  // -> unconfirmed orders
+  const unconfirmedOrders: ComputedRef<Order[]> = computed(() =>
+    orders.value.filter((order) => order.unconfirmed_deliveries.length > 0)
+  )
+
+  // -> orders delivered by team
+  const ordersDeliveredByTeam: ComputedRef<(teamName: string) => Order[]> =
+    computed(() => {
+      return (teamName: String) => {
+        let index: number
+        if (teamName == gameStore.teamNameByColor('CYAN')) {
+          index = 0
+        } else if (teamName == gameStore.teamNameByColor('MAGENTA')) {
+          index = 1
+        } else {
+          throw new Error('team name not found')
+        }
+        return orders.value.filter(
+          (order) => order.quantity_delivered[index] >= 1
+        )
       }
-    } else {
-      const index = allOrders.value.findIndex(
-        (order) => order.id === payload.id
-      )
-      if (index !== -1) {
-        addOrder({ payload, index })
-      }
-    }
-    if (allOrders.value.length === orderCount.value) {
-      sortById(allOrders.value)
-      populateProducts()
-    }
-  }
-
-  // populate products
-  function populateProducts(): void {
-    if (allOrders.value && !populated.value) {
-      populateProductsArray(allOrders.value)
-      populated.value = true
-    }
-  }
-
-  /*
-    Populates the products array with the svg url
-    to the corresponding order to match the name of the svg in assets.
-    Format: products[{
-      "id": order.id
-      "product-img-url": 'c0_black_blue-orange_gray.svg' (name of the svg)
-    },]
-  */
-  function populateProductsArray(orders): void {
-    console.log('populating producst array')
-    console.log(orders)
-
-    // iterate through all orders
-    const newProducts: {
-      id: number
-      'product-img-url': string
-    }[] = []
-
-    orders.forEach((order) => {
-      const complexity = order.complexity.toLowerCase()
-      // fetched Information Format: base-color: "BASE_RED"
-      // split the string to extract: 'red, grey...'
-      let baseColor = order['base_color'].split('_')[1].toLowerCase()
-      // grey in fetched data / Gray in name of SVGs
-      if (baseColor === 'grey') {
-        baseColor = 'gray'
-      }
-      let capColor = order['cap_color'].split('_')[1].toLowerCase()
-      if (capColor === 'grey') {
-        capColor = 'gray'
-      }
-      let ringColors = ''
-      order['ring_colors'].forEach((color: string) => {
-        ringColors += color.split('_')[1].toLowerCase() + '-'
-      })
-
-      const newProduct: {
-        id: number
-        'product-img-url': string
-      } = {
-        id: order.id,
-        'product-img-url': `${complexity}_${baseColor}_${ringColors.substring(
-          0,
-          ringColors.length - 1
-        )}_${capColor}.svg`, // format: 'c0_black_blue-orange_gray.svg'
-      }
-
-      newProducts.push(newProduct)
     })
 
-    products.value = newProducts
+  // -> order by id
+  const orderById: ComputedRef<(orderId: number) => Order | undefined> =
+    computed(() => {
+      return (orderId: number) => orders.value.find(({ id }) => id === orderId)
+    })
+
+  // -> file name by workpiece
+  // note that the argument is not of type workpiece, other argument types (like
+  // order) are also okay as long as they have the three mentioned properties
+  const fileNameByWorkpiece: ComputedRef<
+    (workpiece: {
+      base_color: string
+      ring_colors: string[]
+      cap_color: string
+    }) => string
+  > = computed(() => {
+    return (workpiece: {
+      base_color: string
+      ring_colors: string[]
+      cap_color: string
+    }) => {
+      const parts = []
+      if (workpiece.base_color) parts.push(workpiece.base_color)
+      parts.push(...workpiece.ring_colors)
+      if (workpiece.cap_color) parts.push(workpiece.cap_color)
+      return `${parts.join('-')}.svg`
+    }
+  })
+
+  // -> color string by workpiece color
+  // get the color of a workpiece color (e.g. RING_BLUE -> blue)
+  const colorStringByWorkpieceColor: ComputedRef<
+    (workpieceColor: string) => string
+  > = computed(() => {
+    return (workpieceColor: string) => {
+      const colorString = workpieceColor.split('_')[1]
+      if (colorString) {
+        return colorString.toLowerCase()
+      } else {
+        console.error('Malformed workpiece color string: ' + workpieceColor)
+        return ''
+      }
+    }
+  })
+
+  // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // -> set one order
+  function setOrder(orderArg: Order): void {
+    const index = orders.value.findIndex((order) => order.id === orderArg.id)
+    // add the order to the array if it does not exist yet
+    if (index === -1 && orders.value.length < MAX_NUMBER_OF_ORDERS.value) {
+      orders.value.push(orderArg)
+      // if we have received all orders, sort them
+      if (orders.value.length === MAX_NUMBER_OF_ORDERS.value) {
+        sortOrdersById()
+      }
+    }
+    // if the order already exists, replace it
+    if (index !== -1) {
+      orders.value[index] = orderArg
+    }
   }
 
-  // sort by id
-  function sortById(orders): void {
-    orders.sort((order1, order2) => {
+  // -> sort orders by id
+  function sortOrdersById(): void {
+    orders.value.sort((order1, order2) => {
       if (order1.id < order2.id) {
         return -1
       }
@@ -134,18 +183,68 @@ export const useOrderStore = defineStore('orderStore', () => {
     })
   }
 
+  // -> set workpiece
+  function setWorkpiece(workpieceArg: Workpiece) {
+    // try to find a workpiece with the same name
+    const index = workpieces.value.findIndex(
+      (workpieceFi) => workpieceFi.name == workpieceArg.name
+    )
+    // if we have not found such a workpiece, add it as a new one
+    if (index === -1) {
+      workpieces.value.push(workpieceArg)
+    }
+    // else, replace the old workpiece with the same name
+    else {
+      workpieces.value[index] = workpieceArg
+    }
+  }
+
+  // -> send confirm delivery message
+  function sendConfirmDelivery({
+    color,
+    correctness,
+    delivery_id,
+    order_id,
+  }: {
+    color: Color
+    correctness: boolean
+    delivery_id: number
+    order_id: number
+  }) {
+    const msg: ConfirmDeliveryOutMsg = {
+      command: 'confirm_delivery',
+      color,
+      correctness,
+      delivery_id,
+      order_id,
+    }
+    socketStore.sendMessage(msg)
+  }
+
+  // -> reset
+  function reset() {
+    orders.value = []
+    workpieces.value = []
+  }
+
+  // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   return {
-    allOrders,
-    products,
-    populated,
-    ordersFlag,
-    orderCount,
-    setOrdersArray,
-    addOrder,
-    setOrdersAtReconnect,
-    setOrderInfos,
-    populateProducts,
-    populateProductsArray,
-    sortById,
+    orders,
+    workpieces,
+    openOrders,
+    upcomingOrders,
+    upcomingActivatedOrders,
+    upcomingNonActivatedOrders,
+    expiredOrders,
+    overtimeOrder,
+    unconfirmedOrders,
+    ordersDeliveredByTeam,
+    orderById,
+    fileNameByWorkpiece,
+    colorStringByWorkpieceColor,
+    setOrder,
+    setWorkpiece,
+    sendConfirmDelivery,
+    reset,
   }
 })

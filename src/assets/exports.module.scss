@@ -1,0 +1,11 @@
+@import '@/assets/variables.scss';
+
+:export {
+  accentColor: $accentColor;
+  cyanColor: $cyanColor;
+  magentaColor: $magentaColor;
+  RING_BLUE: $RING_BLUE;
+  RING_GREEN: $RING_GREEN;
+  RING_ORANGE: $RING_ORANGE;
+  RING_YELLOW: $RING_YELLOW;
+}
