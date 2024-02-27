@@ -8,6 +8,7 @@ import {
   faArrowLeft,
   faArrowRight,
   faArrowUpRightFromSquare,
+  faAtom,
   faBell,
   faBug,
   faBowlRice,
@@ -20,6 +21,7 @@ import {
   faCircle,
   faClock,
   faCoins,
+  faDatabase,
   faDice,
   faExclamationTriangle,
   faEye,
@@ -32,6 +34,8 @@ import {
   faGears,
   faGlobe,
   faHourglass,
+  faHouse,
+  faIndustry,
   faInfoCircle,
   faKeyboard,
   faKhanda,
@@ -60,6 +64,7 @@ import {
   faTrophy,
   faTruck,
   faUserTie,
+  faWalkieTalkie,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -71,6 +76,7 @@ library.add(
   faArrowLeft,
   faArrowRight,
   faArrowUpRightFromSquare,
+  faAtom,
   faBell,
   faBowlRice,
   faBug,
@@ -83,6 +89,7 @@ library.add(
   faCircle,
   faClock,
   faCoins,
+  faDatabase,
   faDice,
   faExclamationTriangle,
   faEye,
@@ -95,6 +102,8 @@ library.add(
   faGears,
   faGlobe,
   faHourglass,
+  faHouse,
+  faIndustry,
   faInfoCircle,
   faKeyboard,
   faKhanda,
@@ -123,6 +132,7 @@ library.add(
   faTrophy,
   faTruck,
   faUserTie,
+  faWalkieTalkie,
   faXmark
 )
 

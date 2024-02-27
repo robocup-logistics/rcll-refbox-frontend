@@ -10,6 +10,7 @@ import { useMachineStore } from '@/store/machineStore'
 import { useOrderStore } from '@/store/orderStore'
 import { useRobotStore } from '@/store/robotStore'
 import { useConfigStore } from '@/store/configStore'
+import { usePresetStore } from '@/store/presetStore'
 import { useAppStore } from '@/store/appStore'
 
 // SOCKET STORE  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -22,6 +23,7 @@ export const useSocketStore = defineStore('socketStore', () => {
   const orderStore = useOrderStore()
   const robotStore = useRobotStore()
   const configStore = useConfigStore()
+  const presetStore = usePresetStore()
   const appStore = useAppStore()
 
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -113,6 +115,9 @@ export const useSocketStore = defineStore('socketStore', () => {
                 return
               case 'confval':
                 configStore.setConfigValue(msg.content)
+                return
+              case 'cfg-preset':
+                presetStore.setConfigPreset(msg.content)
                 return
               case 'shelf-slot':
                 machineStore.setShelfSlot(msg.content)

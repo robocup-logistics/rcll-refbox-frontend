@@ -45,6 +45,14 @@
         </PopupWrapper>
         <PopupWrapper popup-position="bottom">
           <template #reference>
+            <PillButton description="Presets" title="Set Config Presets">
+              <font-awesome-icon icon="fa-gears" />
+            </PillButton>
+          </template>
+          <ConfigPresetsPopup />
+        </PopupWrapper>
+        <PopupWrapper popup-position="bottom">
+          <template #reference>
             <PillButton description="Field" title="Randomize Field">
               <font-awesome-icon icon="fa-random" />
             </PillButton>
@@ -74,6 +82,7 @@ import ConfirmFieldRandomizationPopup from '@/components/referee/popups/ConfirmF
 import HelpPopup from '@/components/referee/popups/HelpPopup.vue'
 import PillButton from '@/components/shared/ui/PillButton.vue'
 import GameConfigPopup from '@/components/referee/popups/GameConfigPopup.vue'
+import ConfigPresetsPopup from '@/components/referee/popups/ConfigPresetsPopup.vue'
 import { useSocketStore } from '@/store/socketStore'
 import { storeToRefs } from 'pinia'
 
