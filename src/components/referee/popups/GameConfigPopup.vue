@@ -12,7 +12,14 @@
       <Input v-model="filter" placeholder="filter by path" clearable />
     </div>
     <template v-for="[path, value] in filteredGameConfigValues">
-      <Accordion :title="path" class="content-box"> {{ value }}</Accordion>
+      <Accordion :title="`${path}: ${value}`" class="content-box">
+        <div class="config-row">
+          <!-- Input field for editing -->
+          <Input class="edit-field" type="text" v-model="editedValues[path]" placeholder="New Value" clearable />
+          <!-- Button to apply changes -->
+          <Button class="apply-button" primary @click="applyChanges(path)">Apply</Button>
+        </div>
+      </Accordion>
     </template>
   </Popup>
 </template>
@@ -25,6 +32,8 @@ import { useConfigStore } from '@/store/configStore'
 import { storeToRefs } from 'pinia'
 import Accordion from '@/components/shared/ui/Accordion.vue'
 import Input from '@/components/shared/ui/Input.vue'
+import Button from '@/components/shared/ui/Button.vue'
+import { useKeyboardStore } from '@/store/keyboardStore'
 import { type Ref, ref, type ComputedRef, computed, watch } from 'vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -33,6 +42,15 @@ const { gameConfig } = storeToRefs(configStore)
 
 // filter config paths - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const filter: Ref<string> = ref('')
+const editedValues = ref({});
+
+
+function applyChanges(path) {
+  console.log('editedValues:', editedValues); const newValue = editedValues._rawValue[path];
+  console.log('Applying changes for', path, 'with value:', newValue);
+  configStore.sendSetConfigValue({ path: path, value: newValue });
+}
+
 const filteredGameConfigValues: ComputedRef<[string, any][]> = computed(() =>
   [...gameConfig.value].filter(([path, _]) => path.includes(filter.value))
 )
@@ -56,5 +74,18 @@ watch(
   .accordion {
     padding: 0;
   }
+}
+.config-row {
+  display: flex;
+  align-items: center;
+}
+
+.edit-field {
+  flex: 1;
+  margin-right: 10px; // Adjust as needed
+}
+
+.apply-button {
+  margin-left: auto; // Align to the right
 }
 </style>
