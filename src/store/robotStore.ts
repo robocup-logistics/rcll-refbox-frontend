@@ -25,18 +25,18 @@ export const useRobotStore = defineStore('robotStore', () => {
   // -> config
   const MAX_NUMBER_OF_ROBOTS: ComputedRef<number> = computed(
     () =>
-      <number>configStore.gameConfig.get('/llsfrb/globals/max_robots_per_team')
+      <number>configStore.gameConfig.get('/llsfrb/globals/max-robots-per-team')
   )
   const MAX_MAINTENANCE_CYCLES: ComputedRef<number> = computed(
     () =>
       <number>(
-        configStore.gameConfig.get('/llsfrb/globals/maintenance_allowed_cycles')
+        configStore.gameConfig.get('/llsfrb/globals/maintenance-allowed-cycles')
       )
   )
   const MAINTENANCE_DURATION: ComputedRef<number> = computed(
     () =>
       <number>(
-        configStore.gameConfig.get('/llsfrb/globals/maintenance_allowed_time')
+        configStore.gameConfig.get('/llsfrb/globals/maintenance-allowed-time')
       )
   )
 

@@ -15,10 +15,10 @@ export const useConfigStore = defineStore('configStore', () => {
 
   // CONSTS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   const defaultGameConfig: Array<[string, any]> = [
-    ['/llsfrb/globals/setup_time', 300],
-    ['/llsfrb/globals/production_time', 1200],
-    ['/llsfrb/game/field/exploration_time', 180],
-    ['/llsfrb/globals/production_overtime', 300],
+    ['/llsfrb/globals/setup-time', 300],
+    ['/llsfrb/globals/production-time', 1200],
+    ['/llsfrb/game/exploration-time', 180],
+    ['/llsfrb/globals/production-overtime', 300],
     [
       '/llsfrb/globals/phases',
       ['PRE_GAME', 'SETUP', 'PRODUCTION', 'POST_GAME'],
@@ -26,10 +26,10 @@ export const useConfigStore = defineStore('configStore', () => {
     ['/llsfrb/game/field/height', 8],
     ['/llsfrb/game/field/mirrored', true],
     ['/llsfrb/game/field/width', 7],
-    ['/llsfrb/globals/number_of_orders', 11],
-    ['/llsfrb/globals/max_robots_per_team', 3],
-    ['/llsfrb/globals/maintenance_allowed_time', 120],
-    ['/llsfrb/globals/maintenance_allowed_cycles', 2],
+    ['/llsfrb/globals/number-of-orders', 11],
+    ['/llsfrb/globals/max-robots-per-team', 3],
+    ['/llsfrb/globals/maintenance-allowed-time', 120],
+    ['/llsfrb/globals/maintenance-allowed-cycles', 2],
   ]
 
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

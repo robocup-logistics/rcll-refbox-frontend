@@ -28,7 +28,7 @@ export const useOrderStore = defineStore('orderStore', () => {
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> config
   const MAX_NUMBER_OF_ORDERS: ComputedRef<number> = computed(
-    () => <number>configStore.gameConfig.get('/llsfrb/globals/number_of_orders')
+    () => <number>configStore.gameConfig.get('/llsfrb/globals/number-of-orders')
   )
 
   // -> open orders

@@ -57,18 +57,18 @@ export const useGameStore = defineStore('gameStore', () => {
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> config
   const SETUP_DURATION: ComputedRef<number> = computed(
-    () => <number>configStore.gameConfig.get('/llsfrb/globals/setup_time')
+    () => <number>configStore.gameConfig.get('/llsfrb/globals/setup-time')
   )
   const PRODUCTION_DURATION: ComputedRef<number> = computed(
-    () => <number>configStore.gameConfig.get('/llsfrb/globals/production_time')
+    () => <number>configStore.gameConfig.get('/llsfrb/globals/production-time')
   )
   const EXPLORATION_DURATION: ComputedRef<number> = computed(
     () =>
-      <number>configStore.gameConfig.get('/llsfrb/game/field/exploration_time')
+      <number>configStore.gameConfig.get('/llsfrb/game/exploration-time')
   )
   const OVERTIME_DURATION: ComputedRef<number> = computed(
     () =>
-      <number>configStore.gameConfig.get('/llsfrb/globals/production_overtime')
+      <number>configStore.gameConfig.get('/llsfrb/globals/production-overtime')
   )
   const PHASES: ComputedRef<string[]> = computed(
     () => <string[]>configStore.gameConfig.get('/llsfrb/globals/phases')
