@@ -11,6 +11,7 @@ import { useEventStore } from '@/store/eventStore'
 import { useConfigStore } from '@/store/configStore'
 import type TimeInfo from '@/types/TimeInfo'
 import type KnownTeams from '@/types/KnownTeams'
+import type ResetOutMsg from '@/types/messages/outgoing/ResetOutMsg'
 import type AddRewardOutMsg from '@/types/messages/outgoing/AddRewardOutMsg'
 import type SetTeamNameOutMsg from '@/types/messages/outgoing/SetTeamNameOutMsg'
 import type SetGamestateOutMsg from '@/types/messages/outgoing/SetGamestateOutMsg'
@@ -237,6 +238,14 @@ export const useGameStore = defineStore('gameStore', () => {
     socketStore.sendMessage(msg)
   }
 
+  // ---> ... reset the refbox
+  function sendReset() {
+    const msg: ResetOutMsg = {
+      command: 'reset'
+    }
+    socketStore.sendMessage(msg)
+  }
+
   // ---> ... set the phase
   function sendSetPhase(newPhase: Phase) {
     const msg: SetGamephaseOutMsg = {
@@ -316,6 +325,7 @@ export const useGameStore = defineStore('gameStore', () => {
     setGamestate,
     addReward,
     sendSetTeamName,
+    sendReset,
     sendSetPhase,
     sendSetGamestate,
     sendAddReward,

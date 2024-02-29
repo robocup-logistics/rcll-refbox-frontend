@@ -4,6 +4,15 @@
     <div class="content horizontal-flex">
       <img src="@/assets/robocupLogo.png" alt="Refbox Logo" />
       <div class="horizontal-flex">
+        <PopupWrapper popup-position="bottom">
+          <template #reference>
+            <PillButton description="Reset"
+                title="Restart the refbox, requires re-connect of frontend">
+              <font-awesome-icon icon="fa-arrow-rotate-left" />
+            </PillButton>
+          </template>
+          <ConfirmResetPopup />
+        </PopupWrapper>
         <PillButton
           description="Menu"
           title="Go back to the start menu"
@@ -81,6 +90,7 @@ import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import ConfirmFieldRandomizationPopup from '@/components/referee/popups/ConfirmFieldRandomizationPopup.vue'
 import HelpPopup from '@/components/referee/popups/HelpPopup.vue'
 import PillButton from '@/components/shared/ui/PillButton.vue'
+import ConfirmResetPopup from '@/components/referee/popups/ConfirmResetPopup.vue'
 import GameConfigPopup from '@/components/referee/popups/GameConfigPopup.vue'
 import ConfigPresetsPopup from '@/components/referee/popups/ConfigPresetsPopup.vue'
 import { useSocketStore } from '@/store/socketStore'

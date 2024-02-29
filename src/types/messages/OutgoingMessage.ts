@@ -6,6 +6,8 @@ import SetGamestateOutMsg from '@/types/messages/outgoing/SetGamestateOutMsg'
 import RandomizeFieldOutMsg from '@/types/messages/outgoing/RandomizeFieldOutMsg'
 import SetRobotMaintenanceOutMsg from '@/types/messages/outgoing/RobotMainenanceOutMsg'
 import SetConfigValueOutMsg from '@/types/messages/outgoing/SetConfigValueOutMsg'
+import SetConfigPresetOutMsg from '@/types/messages/outgoing/SetConfigPresetOutMsg'
+import ResetOutMsg from '@/types/messages/outgoing/ResetOutMsg'
 
 // OUTGOINGMESSAGE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // there are several messages that can be sent to the refbox via the socket
@@ -19,4 +21,6 @@ type OutgoingMessage =
   | RandomizeFieldOutMsg
   | SetRobotMaintenanceOutMsg
   | SetConfigValueOutMsg
+  | SetConfigPresetOutMsg
+  | ResetOutMsg
 export default OutgoingMessage
