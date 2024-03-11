@@ -64,7 +64,7 @@ Follow these steps to get the frontend running locally instead
   ```
   yarn install
   yarn run build
-  yarn run serve test
+  yarn run serve
   ```
 
 ## Encountered an issue?
