@@ -3,6 +3,7 @@ import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useMachineStore } from '@/store/machineStore'
 import { useConfigStore } from '@/store/configStore'
+import { usePresetStore } from '@/store/presetStore'
 import { useSocketStore } from '@/store/socketStore'
 import { useReportStore } from '@/store/reportStore'
 import { useEventStore } from '@/store/eventStore'
@@ -20,6 +21,7 @@ export const useAppStore = defineStore('appStore', () => {
   const machineStore = useMachineStore()
   const configStore = useConfigStore()
   const socketStore = useSocketStore()
+  const presetStore = usePresetStore()
   const reportStore = useReportStore()
   const eventStore = useEventStore()
   const gameStore = useGameStore()
@@ -66,6 +68,7 @@ export const useAppStore = defineStore('appStore', () => {
     reportStore.reset()
     socketStore.reset()
     configStore.reset()
+    presetStore.reset()
     eventStore.reset()
     gameStore.reset()
     machineStore.reset()

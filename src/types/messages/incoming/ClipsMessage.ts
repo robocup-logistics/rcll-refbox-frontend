@@ -9,6 +9,7 @@ import type Workpiece from '@/types/Workpiece'
 import type TimeInfo from '@/types/TimeInfo'
 import type KnownTeams from '@/types/KnownTeams'
 import type ConfigValue from '@/types/ConfigValue'
+import type ConfigPreset from '@/types/ConfigPreset'
 import type ShelfSlot from '@/types/ShelfSlot'
 
 // CLIPSMESSAGE  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -28,6 +29,7 @@ type ClipsMessage = {
   | { type: 'machine'; content: Machine }
   | { type: 'ring-spec'; content: RingSpec }
   | { type: 'confval'; content: ConfigValue }
+  | { type: 'cfg-preset'; content: ConfigPreset }
   | { type: 'shelf-slot'; content: ShelfSlot }
 )
 
