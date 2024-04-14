@@ -217,7 +217,7 @@ export const useGameStore = defineStore('gameStore', () => {
     });
 
     // If the reward doesn't already exist, add it to the rewards array and log the event
-    if (!rewardExists && rewardArg.points > 0 && teamNameByColor.value(rewardArg.team) !== '') {
+    if (!rewardExists && rewardArg.points !== 0 && teamNameByColor.value(rewardArg.team) !== '') {
       eventStore.addEvent({
         icon: 'fa-trophy',
         msg: `${teamNameByColor.value(rewardArg.team)} received ${rewardArg.points} points`,
