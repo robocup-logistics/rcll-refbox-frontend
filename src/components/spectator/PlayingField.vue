@@ -16,6 +16,11 @@
                   )
                 "
                 :with-dot="vIndex != 1 && hIndex != 1"
+                :isSelected="selectedSquare?.zone === getZoneNameFor(-(horizontalFieldSize - hIndex + 1), verticalFieldSize - vIndex + 1)"
+                :isTargeted="targetSquare?.zone === getZoneNameFor(-(horizontalFieldSize - hIndex + 1), verticalFieldSize - vIndex + 1)"
+
+                @square-selected="handleSquareSelected"
+                @square-targeted="handleSquareTargeted"
               />
             </template>
           </template>
@@ -24,6 +29,10 @@
             <PlayingFieldSquare
               :zone="getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)"
               :with-dot="vIndex != 1 && (isFieldMirrored || hIndex != 1)"
+              :isSelected="selectedSquare?.zone === getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)"
+              :isTargeted="targetSquare?.zone === getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)"
+              @square-selected="handleSquareSelected"
+              @square-targeted="handleSquareTargeted"
             />
           </template>
         </template>
@@ -58,6 +67,7 @@
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { storeToRefs } from 'pinia'
+import { useAppStore } from '@/store/appStore'
 import { useFieldStore } from '@/store/fieldStore'
 import PlayingFieldSquare from '@/components/spectator/PlayingFieldSquare.vue'
 import { useRobotStore } from '@/store/robotStore'
@@ -81,6 +91,8 @@ const {
 } = storeToRefs(fieldStore)
 const robotStore = useRobotStore()
 const { robots, agentTasks } = storeToRefs(robotStore)
+const appStore = useAppStore()
+const { advancedOptions, currentView } = storeToRefs(appStore)
 
 // zones - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function getZoneNameFor(x: number, y: number): string {
@@ -101,6 +113,46 @@ function getZoneNameFor(x: number, y: number): string {
   zone += y.toString()
 
   return zone
+}
+
+// handle drag-and-drop -  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Reactive references for selected and targeted squares
+const selectedSquare: Ref<PlayingFieldSquare | null> = ref(null);
+const targetSquare: Ref<PlayingFieldSquare | null> = ref(null);
+
+// Handle square selection
+const handleSquareSelected = (square: PlayingFieldSquare) => {
+  if(advancedOptions.value) {
+    console.log('advanced options');
+    selectedSquare.value = square;
+    selectedSquare.value.isSelected = true;
+  }
+}
+
+// Handle square targeting and finalize selection
+const handleSquareTargeted = (square: PlayingFieldSquare) => {
+  if(advancedOptions.value) {
+    targetSquare.value = square;
+    targetSquare.value.isSelected = false;
+    targetSquare.value.isTargeted = true;
+    if (selectedSquare.value && targetSquare.value) {
+      onSquaresSelected(selectedSquare.value, targetSquare.value);
+      // Reset selection after handling
+      selectedSquare.value = null;
+      targetSquare.value = null;
+    }
+  }
+}
+
+// Handle logic after squares are selected
+function onSquaresSelected(start: PlayingFieldSquare, end: PlayingFieldSquare) {
+  start.isSelected = false;
+  start.isTargeted = false;
+  end.isSelected = false;
+  end.isTargeted = false;
+  if(advancedOptions.value) {
+  fieldStore.sendSetMachinePose(start.zone, end.zone);
+  }
 }
 
 // observe and update size in store  - - - - - - - - - - - - - - - - - - - - - -
