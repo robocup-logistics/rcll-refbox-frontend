@@ -6,6 +6,8 @@ import { useMachineStore } from '@/store/machineStore'
 import { useConfigStore } from '@/store/configStore'
 import type RandomizeFieldOutMsg from '@/types/messages/outgoing/RandomizeFieldOutMsg'
 import { useSocketStore } from '@/store/socketStore'
+import type MachinePose from '@/types/MachinePose'
+import SetMachinePoseOutMsg from '@/types/messages/outgoing/SetMachinePoseOutMsg'
 
 // FIELD STORE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the field store provides information about and interaction with the playing
@@ -104,6 +106,30 @@ export const useFieldStore = defineStore('fieldStore', () => {
     socketStore.sendMessage(msg)
   }
 
+  // -> send a message to the websocket to set a config value
+  function sendSetMachinePose(start_zone: string,  target_zone: string) {
+    const machine = machineStore.machines.find(machine => machine.zone === start_zone);
+    if(machine) {
+      if(start_zone === target_zone) {
+        const msg: SetMachinePoseOutMsg = {
+          command: 'set_machine_pose',
+          name: machine.name,
+          rotation: (machine.rotation +45) % 360,
+          zone: target_zone
+        }
+        socketStore.sendMessage(msg)
+      } else {
+        const msg: SetMachinePoseOutMsg = {
+          command: 'set_machine_pose',
+          name: machine.name,
+          rotation: machine.rotation,
+          zone: target_zone
+        }
+        socketStore.sendMessage(msg)
+      }
+    }
+  }
+
   // -> reset
   function reset() {
     // no need to change fieldWrapperWidthPixels, fieldWrapperHeightPixels,
@@ -125,6 +151,7 @@ export const useFieldStore = defineStore('fieldStore', () => {
     positionOfWaypoint,
     positionOfRobot,
     sendRandomizeField,
+    sendSetMachinePose,
     reset,
   }
 })

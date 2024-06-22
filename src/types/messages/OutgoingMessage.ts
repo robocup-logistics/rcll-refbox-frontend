@@ -7,6 +7,7 @@ import RandomizeFieldOutMsg from '@/types/messages/outgoing/RandomizeFieldOutMsg
 import SetRobotMaintenanceOutMsg from '@/types/messages/outgoing/RobotMainenanceOutMsg'
 import SetConfigValueOutMsg from '@/types/messages/outgoing/SetConfigValueOutMsg'
 import SetConfigPresetOutMsg from '@/types/messages/outgoing/SetConfigPresetOutMsg'
+import SetMachinePoseOutMsg from '@/types/messages/outgoing/SetMachinePoseOutMsg'
 import ResetOutMsg from '@/types/messages/outgoing/ResetOutMsg'
 
 // OUTGOINGMESSAGE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -22,5 +23,6 @@ type OutgoingMessage =
   | SetRobotMaintenanceOutMsg
   | SetConfigValueOutMsg
   | SetConfigPresetOutMsg
+  | SetMachinePoseOutMsg
   | ResetOutMsg
 export default OutgoingMessage
