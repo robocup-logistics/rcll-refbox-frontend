@@ -3,7 +3,7 @@
   <div class="machine-entity-wrapper">
     <div class="machine-entity" :id="`machine-${machine.name}`">
       <div class="machine">
-        <PopupWrapper style="height: 100%; width: 100%">
+        <PopupWrapper :spectatorOnly="true" style="height: 100%; width: 100%">
           <template #reference>
             <div class="img-wrapper">
               <img
