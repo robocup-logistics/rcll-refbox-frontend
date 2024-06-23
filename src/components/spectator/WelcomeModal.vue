@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Modal title="Welcome" icon="fa-face-smile" ref="modal">
+  <Modal v-if="!advancedOptions" title="Welcome" icon="fa-face-smile" ref="modal">
     <div class="step-chooser">
       <div class="step-item" v-for="i in numberOfSteps" :key="i">
         <button
@@ -137,6 +137,7 @@ import RingStationExplainable from '@/components/spectator/explainables/RingStat
 import StorageStationExplainable from '@/components/spectator/explainables/StorageStationExplainable.vue'
 import type Shortcut from '@/types/Shortcut'
 import { useKeyboardStore } from '@/store/keyboardStore'
+import { useAppStore } from '@/store/appStore'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
@@ -144,6 +145,8 @@ const { SETUP_DURATION, PRODUCTION_DURATION, OVERTIME_DURATION } =
   storeToRefs(gameStore)
 const keyboardStore = useKeyboardStore()
 const { shortcuts } = storeToRefs(keyboardStore)
+const appStore = useAppStore()
+const { advancedOptions, currentView } = storeToRefs(appStore)
 
 // current step  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const step: Ref<number> = ref(1)
