@@ -77,7 +77,7 @@ const { phase } = storeToRefs(gameStore)
     width: 100%;
     display: grid;
     gap: 10px;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 250px 1fr;
 
     &.rtl {
       direction: rtl;
