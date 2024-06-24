@@ -5,39 +5,18 @@
     <div class="vertical-flex">
       <div class="flex-item transparent">
         <p class="team-name">
-          {{ teamNameByColor('CYAN') }}
+          {{ teamNameByColor('MAGENTA') }}
         </p>
       </div>
       <div class="flex-item transparent">
         <p class="team-name">
-          {{ teamNameByColor('MAGENTA') }}
+          {{ teamNameByColor('CYAN') }}
         </p>
       </div>
     </div>
 
     <!-- SCORES SECTION -->
     <div class="vertical-flex">
-      <PopupWrapper popup-position="bottom" style="width: 100%">
-        <template #reference>
-          <div class="flex-item CYAN" style="height: 100%">
-            <div class="horizontal-flex team-score">
-              <div class="horizontal-flex">
-                <font-awesome-icon icon="fa-truck" />
-                <p>
-                  {{ ordersDeliveredByTeam(teamNameByColor('CYAN')).length }}
-                </p>
-                <font-awesome-icon icon="fa-trophy" />
-                <p>{{ scoreByColor('CYAN') }}</p>
-              </div>
-
-              <font-awesome-icon icon="fa-info-circle" />
-            </div>
-          </div>
-        </template>
-        <RewardsPopup team="CYAN" :teamName="teamNameByColor('CYAN')">
-        </RewardsPopup>
-      </PopupWrapper>
-
       <PopupWrapper popup-position="bottom" style="width: 100%">
         <template #reference>
           <div class="flex-item MAGENTA" style="height: 100%">
@@ -60,6 +39,26 @@
           team="MAGENTA"
           :teamName="teamNameByColor('MAGENTA')"
         ></RewardsPopup>
+      </PopupWrapper>
+      <PopupWrapper popup-position="bottom" style="width: 100%">
+        <template #reference>
+          <div class="flex-item CYAN" style="height: 100%">
+            <div class="horizontal-flex team-score">
+              <div class="horizontal-flex">
+                <font-awesome-icon icon="fa-truck" />
+                <p>
+                  {{ ordersDeliveredByTeam(teamNameByColor('CYAN')).length }}
+                </p>
+                <font-awesome-icon icon="fa-trophy" />
+                <p>{{ scoreByColor('CYAN') }}</p>
+              </div>
+
+              <font-awesome-icon icon="fa-info-circle" />
+            </div>
+          </div>
+        </template>
+        <RewardsPopup team="CYAN" :teamName="teamNameByColor('CYAN')">
+        </RewardsPopup>
       </PopupWrapper>
     </div>
   </Accordion>
