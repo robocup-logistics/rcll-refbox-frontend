@@ -1,5 +1,9 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
+  <Modal v-if="showPopup" title="Welcome" icon="fa-face-smile" ref="modal">
+    <ConfirmSetMachinePosePopup @update:isConfirmed="handleConfirmation" />
+  </Modal>
+
   <div id="playingFieldWrapper" ref="playingFieldWrapper">
     <div id="playingFieldContent">
       <!-- FIELD SQUARES WITH MACHINES ON THEM -->
@@ -92,6 +96,9 @@ import RobotEntity from '@/components/spectator/entities/RobotEntity.vue'
 import type { Ref } from 'vue'
 import { ref, watch } from 'vue'
 import AgentTaskEntity from '@/components/spectator/entities/AgentTaskEntity.vue'
+
+import Modal from '@/components/shared/ui/Modal.vue'
+import ConfirmSetMachinePosePopup from '@/components/spectator/popups/ConfirmSetMachinePosePopup.vue'
 import type Robot from '@/types/Robot'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -110,6 +117,9 @@ const robotStore = useRobotStore()
 const { robots, agentTasks } = storeToRefs(robotStore)
 const appStore = useAppStore()
 const { advancedOptions, currentView } = storeToRefs(appStore)
+
+const isConfirmed = ref(false)
+const showPopup = ref(false)
 
 // zones - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function getZoneNameFor(x: number, y: number): string {
@@ -133,6 +143,12 @@ function getZoneNameFor(x: number, y: number): string {
 }
 
 // handle drag-and-drop -  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+function handleConfirmation(value: boolean) {
+  isConfirmed.value = value
+  showPopup.value = false
+}
+
 // Reactive references for selected and targeted squares
 const selectedSquare: Ref<PlayingFieldSquare | null> = ref(null)
 const targetSquare: Ref<PlayingFieldSquare | null> = ref(null)
@@ -140,7 +156,9 @@ const targetSquare: Ref<PlayingFieldSquare | null> = ref(null)
 // Handle square selection
 const handleSquareSelected = (square: PlayingFieldSquare) => {
   if (advancedOptions.value) {
-    console.log('advanced options')
+    if (!isConfirmed.value) {
+      showPopup.value = true
+    }
     selectedSquare.value = square
     selectedSquare.value.isSelected = true
   }
@@ -168,7 +186,9 @@ function onSquaresSelected(start: PlayingFieldSquare, end: PlayingFieldSquare) {
   end.isSelected = false
   end.isTargeted = false
   if (advancedOptions.value) {
-    fieldStore.sendSetMachinePose(start.zone, end.zone)
+    if (isConfirmed.value) {
+      fieldStore.sendSetMachinePose(start.zone, end.zone)
+    }
   }
 }
 
