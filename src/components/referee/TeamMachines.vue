@@ -69,9 +69,6 @@
           >
             {{ machine.state }}
           </span>
-          <div :class="`${color}-text`">
-            <span v-if="phase === 'SETUP'"> {{ machine.rotation }}° </span>
-          </div>
         </div>
       </template>
     </div>
