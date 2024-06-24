@@ -6,7 +6,10 @@
       min="0"
       :max="gameReport?.game_end_time"
       :value="cont_time"
-      @input="(e: Event) => reportStore.jumpTo(parseInt((e.target as HTMLInputElement).value))"
+      @input="
+        (e: Event) =>
+          reportStore.jumpTo(parseInt((e.target as HTMLInputElement).value))
+      "
     />
     <div class="horizontal-flex time-input">
       <span>Total time:</span>

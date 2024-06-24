@@ -1,6 +1,11 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <Modal v-if="!advancedOptions" title="Welcome" icon="fa-face-smile" ref="modal">
+  <Modal
+    v-if="!advancedOptions"
+    title="Welcome"
+    icon="fa-face-smile"
+    ref="modal"
+  >
     <div class="step-chooser">
       <div class="step-item" v-for="i in numberOfSteps" :key="i">
         <button

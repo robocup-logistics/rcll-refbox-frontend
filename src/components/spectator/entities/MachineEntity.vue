@@ -89,10 +89,11 @@ watch(
   (newWorkpieces, _) => {
     havingWorkpieces.value = newWorkpieces.filter(
       (workpiece) =>
-        workpiece.holding == false && workpiece.at_machine == props.machine.name
+        workpiece.holding == false &&
+        workpiece.at_machine == props.machine.name,
     )
   },
-  { deep: true, immediate: true }
+  { deep: true, immediate: true },
 )
 </script>
 

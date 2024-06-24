@@ -71,7 +71,7 @@ export const useReportStore = defineStore('reportStore', () => {
       ? gameReport.value?.agent_task_history.filter(
           (agentTask) =>
             gameStore.game_time >= agentTask.start_time &&
-            gameStore.game_time <= agentTask.end_time
+            gameStore.game_time <= agentTask.end_time,
         ) || []
       : []
   })
@@ -81,7 +81,7 @@ export const useReportStore = defineStore('reportStore', () => {
       ? gameReport.value?.workpiece_history.filter(
           (workpiece) =>
             gameStore.game_time >= workpiece.start_time &&
-            gameStore.game_time <= workpiece.end_time
+            gameStore.game_time <= workpiece.end_time,
         ) || []
       : []
   })
@@ -102,7 +102,7 @@ export const useReportStore = defineStore('reportStore', () => {
           new URLSearchParams({
             min_version: MIN_VERSION.value,
             max_version: MAX_VERSION.value,
-          })
+          }),
       )
       responseJSON = <{ reports: GameReport[]; incompatibleCount: number }>(
         await response.json()
@@ -111,11 +111,11 @@ export const useReportStore = defineStore('reportStore', () => {
       console.error(err)
       if (response && response.status != 200) {
         alert(
-          `Something went wrong. Response: ${response?.status} - ${response?.statusText}`
+          `Something went wrong. Response: ${response?.status} - ${response?.statusText}`,
         )
       } else {
         alert(
-          'Could not connect: Have you specified the right URL and made sure the game report provider is started?'
+          'Could not connect: Have you specified the right URL and made sure the game report provider is started?',
         )
       }
     } finally {
@@ -139,14 +139,14 @@ export const useReportStore = defineStore('reportStore', () => {
         `${baseUrl}/api/getReportById?` +
           new URLSearchParams({
             reportId,
-          })
+          }),
       )
       newGameReport = <GameReport>await response.json()
     } catch (err) {
       console.error(err)
       if (response && !response?.ok) {
         alert(
-          `Something went wrong. Response: ${response?.status} - ${response?.statusText}`
+          `Something went wrong. Response: ${response?.status} - ${response?.statusText}`,
         )
       } else {
         alert('Unknown connection error')
@@ -196,19 +196,19 @@ export const useReportStore = defineStore('reportStore', () => {
       configStore.setConfigValue({
         path: '/llsfrb/game/field/height',
         value: gameReport.value.config.find(
-          (cfg) => cfg.path == '/llsfrb/game/field/height'
+          (cfg) => cfg.path == '/llsfrb/game/field/height',
         )?.value,
       })
       configStore.setConfigValue({
         path: '/llsfrb/game/field/mirrored',
         value: gameReport.value.config.find(
-          (cfg) => cfg.path == '/llsfrb/game/field/mirrored'
+          (cfg) => cfg.path == '/llsfrb/game/field/mirrored',
         )?.value,
       })
       configStore.setConfigValue({
         path: '/llsfrb/game/field/width',
         value: gameReport.value.config.find(
-          (cfg) => cfg.path == '/llsfrb/game/field/width'
+          (cfg) => cfg.path == '/llsfrb/game/field/width',
         )?.value,
       })
 
@@ -335,7 +335,7 @@ export const useReportStore = defineStore('reportStore', () => {
           const newMachineCurrent =
             gameReport.value.machine_history[machineHistoryIndex.value]
           const machine = machineStore.machines.find(
-            (machineFi) => machineFi.name == newMachineCurrent.name
+            (machineFi) => machineFi.name == newMachineCurrent.name,
           )
           if (machine) {
             // we do not rewrite the whole machine object because the machine
@@ -369,11 +369,11 @@ export const useReportStore = defineStore('reportStore', () => {
               machine.order_id != 0
             ) {
               const order = orderStore.orders.find(
-                (order) => order.id == machine.order_id
+                (order) => order.id == machine.order_id,
               )
               if (!order) {
                 throw new Error(
-                  'order referenced in delivery station not found by id'
+                  'order referenced in delivery station not found by id',
                 )
               } else {
                 const orderDeliveredIndex = machine.team == 'CYAN' ? 0 : 1
@@ -382,7 +382,7 @@ export const useReportStore = defineStore('reportStore', () => {
             }
           } else {
             throw new Error(
-              'Machine in machine history array not found in machines store'
+              'Machine in machine history array not found in machines store',
             )
           }
           machineHistoryIndex.value += 1
@@ -396,7 +396,7 @@ export const useReportStore = defineStore('reportStore', () => {
             .game_time <= gameStore.game_time
         ) {
           machineStore.setShelfSlot(
-            gameReport.value.shelf_slot_history[shelfSlotHistoryIndex.value]
+            gameReport.value.shelf_slot_history[shelfSlotHistoryIndex.value],
           )
           shelfSlotHistoryIndex.value += 1
         }
@@ -408,7 +408,7 @@ export const useReportStore = defineStore('reportStore', () => {
             gameStore.game_time
         ) {
           robotStore.setRobot(
-            gameReport.value.robot_history[robotHistoryIndex.value]
+            gameReport.value.robot_history[robotHistoryIndex.value],
           )
           robotHistoryIndex.value += 1
         }
@@ -445,7 +445,7 @@ export const useReportStore = defineStore('reportStore', () => {
     (newActiveAgentTasks, _) => {
       robotStore.agentTasks = newActiveAgentTasks
     },
-    { deep: true }
+    { deep: true },
   )
 
   // whenever the computed property `activeWorkpieces` changes, update the
@@ -455,7 +455,7 @@ export const useReportStore = defineStore('reportStore', () => {
     (newWorkpieces, _) => {
       orderStore.workpieces = newWorkpieces
     },
-    { deep: true }
+    { deep: true },
   )
 
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

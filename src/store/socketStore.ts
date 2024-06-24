@@ -45,8 +45,9 @@ export const useSocketStore = defineStore('socketStore', () => {
         (msg) =>
           msg.level === 'attention' &&
           gameStore.game_time >= msg.game_time &&
-          gameStore.game_time <= msg.game_time + parseFloat(msg.time_to_display)
-      ) as AttentionMessage[]
+          gameStore.game_time <=
+            msg.game_time + parseFloat(msg.time_to_display),
+      ) as AttentionMessage[],
   )
 
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -148,7 +149,7 @@ export const useSocketStore = defineStore('socketStore', () => {
     // configure on error
     newSocket.onerror = (e) => {
       alert(
-        'Could not connect :/ Make sure the refbox is started and accessed via the right url!'
+        'Could not connect :/ Make sure the refbox is started and accessed via the right url!',
       )
       attemptingConnection.value = false
       console.error(e)

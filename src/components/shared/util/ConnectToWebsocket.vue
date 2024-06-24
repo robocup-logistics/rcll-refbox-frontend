@@ -58,7 +58,7 @@ function connectToWebsocket() {
       if (newSocket) {
         emit('connected')
       }
-    }
+    },
   )
 
   watch(
@@ -67,7 +67,7 @@ function connectToWebsocket() {
       if (!attempting) {
         loading.value = false
       }
-    }
+    },
   )
 }
 

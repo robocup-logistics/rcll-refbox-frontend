@@ -12,13 +12,24 @@
                 :zone="
                   getZoneNameFor(
                     -(horizontalFieldSize - hIndex + 1),
-                    verticalFieldSize - vIndex + 1
+                    verticalFieldSize - vIndex + 1,
                   )
                 "
                 :with-dot="vIndex != 1 && hIndex != 1"
-                :isSelected="selectedSquare?.zone === getZoneNameFor(-(horizontalFieldSize - hIndex + 1), verticalFieldSize - vIndex + 1)"
-                :isTargeted="targetSquare?.zone === getZoneNameFor(-(horizontalFieldSize - hIndex + 1), verticalFieldSize - vIndex + 1)"
-
+                :isSelected="
+                  selectedSquare?.zone ===
+                  getZoneNameFor(
+                    -(horizontalFieldSize - hIndex + 1),
+                    verticalFieldSize - vIndex + 1,
+                  )
+                "
+                :isTargeted="
+                  targetSquare?.zone ===
+                  getZoneNameFor(
+                    -(horizontalFieldSize - hIndex + 1),
+                    verticalFieldSize - vIndex + 1,
+                  )
+                "
                 @square-selected="handleSquareSelected"
                 @square-targeted="handleSquareTargeted"
               />
@@ -29,8 +40,14 @@
             <PlayingFieldSquare
               :zone="getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)"
               :with-dot="vIndex != 1 && (isFieldMirrored || hIndex != 1)"
-              :isSelected="selectedSquare?.zone === getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)"
-              :isTargeted="targetSquare?.zone === getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)"
+              :isSelected="
+                selectedSquare?.zone ===
+                getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)
+              "
+              :isTargeted="
+                targetSquare?.zone ===
+                getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)
+              "
               @square-selected="handleSquareSelected"
               @square-targeted="handleSquareTargeted"
             />
@@ -44,14 +61,14 @@
           v-if="
             robotStore.robotByColorAndId(
               agentTask.team_color,
-              agentTask.robot_id
+              agentTask.robot_id,
             ) != null
           "
           :task="agentTask"
           :robot="
             robotStore.robotByColorAndId(
               agentTask.team_color,
-              agentTask.robot_id
+              agentTask.robot_id,
             ) as Robot
           "
         />
@@ -117,41 +134,41 @@ function getZoneNameFor(x: number, y: number): string {
 
 // handle drag-and-drop -  - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Reactive references for selected and targeted squares
-const selectedSquare: Ref<PlayingFieldSquare | null> = ref(null);
-const targetSquare: Ref<PlayingFieldSquare | null> = ref(null);
+const selectedSquare: Ref<PlayingFieldSquare | null> = ref(null)
+const targetSquare: Ref<PlayingFieldSquare | null> = ref(null)
 
 // Handle square selection
 const handleSquareSelected = (square: PlayingFieldSquare) => {
-  if(advancedOptions.value) {
-    console.log('advanced options');
-    selectedSquare.value = square;
-    selectedSquare.value.isSelected = true;
+  if (advancedOptions.value) {
+    console.log('advanced options')
+    selectedSquare.value = square
+    selectedSquare.value.isSelected = true
   }
 }
 
 // Handle square targeting and finalize selection
 const handleSquareTargeted = (square: PlayingFieldSquare) => {
-  if(advancedOptions.value) {
-    targetSquare.value = square;
-    targetSquare.value.isSelected = false;
-    targetSquare.value.isTargeted = true;
+  if (advancedOptions.value) {
+    targetSquare.value = square
+    targetSquare.value.isSelected = false
+    targetSquare.value.isTargeted = true
     if (selectedSquare.value && targetSquare.value) {
-      onSquaresSelected(selectedSquare.value, targetSquare.value);
+      onSquaresSelected(selectedSquare.value, targetSquare.value)
       // Reset selection after handling
-      selectedSquare.value = null;
-      targetSquare.value = null;
+      selectedSquare.value = null
+      targetSquare.value = null
     }
   }
 }
 
 // Handle logic after squares are selected
 function onSquaresSelected(start: PlayingFieldSquare, end: PlayingFieldSquare) {
-  start.isSelected = false;
-  start.isTargeted = false;
-  end.isSelected = false;
-  end.isTargeted = false;
-  if(advancedOptions.value) {
-  fieldStore.sendSetMachinePose(start.zone, end.zone);
+  start.isSelected = false
+  start.isTargeted = false
+  end.isSelected = false
+  end.isTargeted = false
+  if (advancedOptions.value) {
+    fieldStore.sendSetMachinePose(start.zone, end.zone)
   }
 }
 

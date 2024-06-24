@@ -1,7 +1,12 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <div
-    :class="['playing-field-square', withDot ? 'with-dot' : '', isSelected ? 'selected' : '', isTargeted ? 'targeted' : '']"
+    :class="[
+      'playing-field-square',
+      withDot ? 'with-dot' : '',
+      isSelected ? 'selected' : '',
+      isTargeted ? 'targeted' : '',
+    ]"
     @mousedown="handleMouseDown"
     @mouseup="handleMouseUp"
   >
@@ -44,21 +49,27 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-});
+})
 
-const emit = defineEmits(['square-selected', 'square-targeted']);
+const emit = defineEmits(['square-selected', 'square-targeted'])
 
 // Reactive references for isSelected and isTargeted
-const isSelected = ref(props.isSelected);
-const isTargeted = ref(props.isTargeted);
+const isSelected = ref(props.isSelected)
+const isTargeted = ref(props.isTargeted)
 
 // Watch props to update reactive properties
-watch(() => props.isSelected, (newValue) => {
-  isSelected.value = newValue;
-});
-watch(() => props.isTargeted, (newValue) => {
-  isTargeted.value = newValue;
-});
+watch(
+  () => props.isSelected,
+  (newValue) => {
+    isSelected.value = newValue
+  },
+)
+watch(
+  () => props.isTargeted,
+  (newValue) => {
+    isTargeted.value = newValue
+  },
+)
 
 // associated machine  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const machine: ComputedRef<Machine | undefined> = computed(() => {
@@ -69,13 +80,13 @@ const machine: ComputedRef<Machine | undefined> = computed(() => {
 
 // Handle mouse down event to trigger square selection or targeting
 const handleMouseDown = () => {
-  emit('square-selected', { zone: props.zone, withDot: props.withDot });
-};
+  emit('square-selected', { zone: props.zone, withDot: props.withDot })
+}
 
 // Handle mouse up event to trigger square targeting
 const handleMouseUp = () => {
-  emit('square-targeted', { zone: props.zone, withDot: props.withDot });
-};
+  emit('square-targeted', { zone: props.zone, withDot: props.withDot })
+}
 </script>
 
 // STYLE -----------------------------------------------------------------------

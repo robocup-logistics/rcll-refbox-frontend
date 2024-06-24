@@ -101,7 +101,7 @@ watch(
     if (eventsLog.value) {
       eventsLog.value.scrollToEnd()
     }
-  }
+  },
 )
 </script>
 

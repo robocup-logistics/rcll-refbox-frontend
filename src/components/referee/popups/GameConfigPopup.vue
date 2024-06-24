@@ -15,9 +15,17 @@
       <Accordion :title="`${path}: ${value}`" class="content-box">
         <div class="config-row">
           <!-- Input field for editing -->
-          <Input class="edit-field" type="text" v-model="editedValues[path]" placeholder="New Value" clearable />
+          <Input
+            class="edit-field"
+            type="text"
+            v-model="editedValues[path]"
+            placeholder="New Value"
+            clearable
+          />
           <!-- Button to apply changes -->
-          <Button class="apply-button" primary @click="applyChanges(path)">Apply</Button>
+          <Button class="apply-button" primary @click="applyChanges(path)"
+            >Apply</Button
+          >
         </div>
       </Accordion>
     </template>
@@ -42,17 +50,17 @@ const { gameConfig } = storeToRefs(configStore)
 
 // filter config paths - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const filter: Ref<string> = ref('')
-const editedValues = ref({});
-
+const editedValues = ref({})
 
 function applyChanges(path) {
-  console.log('editedValues:', editedValues); const newValue = editedValues._rawValue[path];
-  console.log('Applying changes for', path, 'with value:', newValue);
-  configStore.sendSetConfigValue({ path: path, value: newValue });
+  console.log('editedValues:', editedValues)
+  const newValue = editedValues._rawValue[path]
+  console.log('Applying changes for', path, 'with value:', newValue)
+  configStore.sendSetConfigValue({ path: path, value: newValue })
 }
 
 const filteredGameConfigValues: ComputedRef<[string, any][]> = computed(() =>
-  [...gameConfig.value].filter(([path, _]) => path.includes(filter.value))
+  [...gameConfig.value].filter(([path, _]) => path.includes(filter.value)),
 )
 
 const popup: Ref<typeof Popup | undefined> = ref()
@@ -62,7 +70,7 @@ watch(
     if (popup.value) {
       popup.value.scrollToTop()
     }
-  }
+  },
 )
 </script>
 

@@ -1,7 +1,11 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <div class="popup-wrapper">
-    <div class="reference clickable" ref="reference" @click="!spectatorOnly || !advancedOptions ? togglePopup() : null">
+    <div
+      class="reference clickable"
+      ref="reference"
+      @click="!spectatorOnly || !advancedOptions ? togglePopup() : null"
+    >
       <slot name="reference"></slot>
     </div>
     <div
@@ -81,7 +85,7 @@ const { floatingStyles, middlewareData, placement } = useFloating(
       arrow({ element: floatingArrow }),
     ],
     whileElementsMounted: autoUpdate,
-  }
+  },
 )
 
 // -> correct z-index

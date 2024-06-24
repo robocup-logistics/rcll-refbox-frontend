@@ -25,19 +25,19 @@ export const useRobotStore = defineStore('robotStore', () => {
   // -> config
   const MAX_NUMBER_OF_ROBOTS: ComputedRef<number> = computed(
     () =>
-      <number>configStore.gameConfig.get('/llsfrb/globals/max-robots-per-team')
+      <number>configStore.gameConfig.get('/llsfrb/globals/max-robots-per-team'),
   )
   const MAX_MAINTENANCE_CYCLES: ComputedRef<number> = computed(
     () =>
       <number>(
         configStore.gameConfig.get('/llsfrb/globals/maintenance-allowed-cycles')
-      )
+      ),
   )
   const MAINTENANCE_DURATION: ComputedRef<number> = computed(
     () =>
       <number>(
         configStore.gameConfig.get('/llsfrb/globals/maintenance-allowed-time')
-      )
+      ),
   )
 
   // -> name by robot
@@ -60,7 +60,7 @@ export const useRobotStore = defineStore('robotStore', () => {
     return (color: Color, id: number) => {
       return (
         robots.value.find(
-          (robot) => robot.team_color == color && robot.number == id
+          (robot) => robot.team_color == color && robot.number == id,
         ) || null
       )
     }
@@ -73,7 +73,7 @@ export const useRobotStore = defineStore('robotStore', () => {
     const index = robots.value.findIndex(
       (robotFi) =>
         robotFi.team_color === robotArg.team_color &&
-        robotFi.number == robotArg.number
+        robotFi.number == robotArg.number,
     )
 
     // if we could find a robot, we replace it
@@ -156,7 +156,7 @@ export const useRobotStore = defineStore('robotStore', () => {
     // try to find an agent task that the robot that does the new agent task is
     // currently doing
     const index = agentTasks.value.findIndex(
-      (taskFi) => taskFi.robot_id == agentTask.robot_id
+      (taskFi) => taskFi.robot_id == agentTask.robot_id,
     )
 
     // check if we need to create an event
@@ -170,8 +170,8 @@ export const useRobotStore = defineStore('robotStore', () => {
           msg: `${nameByRobot.value(
             robotByColorAndId.value(
               agentTask.team_color,
-              agentTask.robot_id
-            ) as Robot
+              agentTask.robot_id,
+            ) as Robot,
           )} is delivering at ${agentTask.task_parameters.machine_id}`,
           team: agentTask.team_color,
         })
@@ -185,8 +185,8 @@ export const useRobotStore = defineStore('robotStore', () => {
           msg: `${nameByRobot.value(
             robotByColorAndId.value(
               agentTask.team_color,
-              agentTask.robot_id
-            ) as Robot
+              agentTask.robot_id,
+            ) as Robot,
           )} is retrieving at ${agentTask.task_parameters.machine_id}`,
           team: agentTask.team_color,
         })

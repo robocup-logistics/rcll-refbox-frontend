@@ -121,7 +121,7 @@
                 •
                 {{
                   formatTime(
-                    PRODUCTION_DURATION + OVERTIME_DURATION - game_time
+                    PRODUCTION_DURATION + OVERTIME_DURATION - game_time,
                   )
                 }}
                 remaining

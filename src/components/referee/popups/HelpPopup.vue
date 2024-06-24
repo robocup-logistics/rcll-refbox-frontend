@@ -92,7 +92,9 @@ const activeTab: Ref<string> = ref('Q&A')
     border-radius: 4px;
     padding: 0.3em 0.7em;
     border-bottom: 2px solid global.$lighterColor;
-    box-shadow: 0 1px 0px global.$bgColor, 0 0 0 2px global.$lightestColor inset;
+    box-shadow:
+      0 1px 0px global.$bgColor,
+      0 0 0 2px global.$lightestColor inset;
     background-color: global.$surfaceColor;
     text-transform: capitalize;
   }
