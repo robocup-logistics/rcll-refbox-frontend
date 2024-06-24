@@ -52,15 +52,17 @@ export const useSocketStore = defineStore('socketStore', () => {
 
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> establish websocket connection
-  function connectToWebsocket(url: string): void {
+  function connectToWebsocket(url: string, retry: boolean): void {
     attemptingConnection.value = true
     const newSocket = new WebSocket(url)
-    setTimeout(() => {
-      if (attemptingConnection.value) {
-        alert('Could not connect :/ Refbox does not respond!')
-      }
-      attemptingConnection.value = false
-    }, 10000)
+    if (!retry) {
+      setTimeout(() => {
+        if (attemptingConnection.value) {
+          alert('Could not connect :/ Refbox does not respond!')
+        }
+        attemptingConnection.value = false
+      }, 10000)
+    }
 
     // configure behaviour on open
     newSocket.onopen = (_e) => {
@@ -143,15 +145,23 @@ export const useSocketStore = defineStore('socketStore', () => {
     // configure behaviour on close
     newSocket.onclose = (e) => {
       socket.value = null
-      console.log('Closing socket')
+      if (retry) {
+        connectToWebsocket(DEFAULT_WS_URL.value, retry)
+      } else {
+        console.log('Closing socket')
+      }
     }
 
     // configure on error
     newSocket.onerror = (e) => {
-      alert(
-        'Could not connect :/ Make sure the refbox is started and accessed via the right url!',
-      )
-      attemptingConnection.value = false
+      if (retry) {
+        connectToWebsocket(DEFAULT_WS_URL.value, retry)
+      } else {
+        alert(
+          'Could not connect :/ Make sure the refbox is started and accessed via the right url!',
+        )
+        attemptingConnection.value = false
+      }
       console.error(e)
     }
   }
