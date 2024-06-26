@@ -26,8 +26,15 @@ export const useReportStore = defineStore('reportStore', () => {
   const configStore = useConfigStore()
 
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  const getBackendURL = () => {
+    const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:'
+    const host = window.location.hostname
+    const port = '8085'
+    return `${protocol}//${host}:${port}`
+  }
+
   // -> consts
-  const DEFAULT_BACKEND_URL: Ref<string> = ref('http://localhost:8085')
+  const DEFAULT_BACKEND_URL: Ref<string> = ref(getBackendURL())
   const MIN_VERSION: Ref<string> = ref('2')
   const MAX_VERSION: Ref<string> = ref('2')
 
