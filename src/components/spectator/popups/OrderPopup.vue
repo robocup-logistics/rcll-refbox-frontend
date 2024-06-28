@@ -22,12 +22,12 @@
           order.delivery_period[1] - game_time < 0 && phase == 'PRODUCTION'
         "
         class="text-danger"
-      >  
+      >
         <span>(</span>
-        <div class="horizontal-flex inline">
+        <span class="horizontal-flex inline">
           <span>{{ formatTime(game_time - order.delivery_period[1]) }}</span>
           <font-awesome-icon icon="fa-bell" />
-        </div>
+        </span>
         <span>)</span>
       </p>
     </div>
@@ -117,7 +117,11 @@
           </div>
         </div>
       </div>
-      <Accordion title="A note about order recipes" class="content-box" style="padding: 0">
+      <Accordion
+        title="A note about order recipes"
+        class="content-box"
+        style="padding: 0"
+      >
         These order recipes are only basic drafts of the required steps and do
         not include e.g. the acquisition of additional bases from the base
         station for payment. Teams can additionally choose to combine the

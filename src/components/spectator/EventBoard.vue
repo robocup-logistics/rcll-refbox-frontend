@@ -4,7 +4,7 @@
     <div class="vertical-flex">
       <div class="events-header flex-item transparent">
         <TabGroup
-          :tabs="['all', 'game', 'cyan', 'magenta']"
+          :tabs="['all', 'game', 'magenta', 'cyan']"
           v-model:active="filter"
         >
           <template #all>
@@ -17,20 +17,20 @@
               <font-awesome-icon icon="fa-dice" />
             </div>
           </template>
-          <template #cyan>
-            <div
-              class="horizontal-flex"
-              :title="`Show ${teamNameByColor('CYAN')} events`"
-            >
-              <font-awesome-icon icon="fa-people-group" class="CYAN-text" />
-            </div>
-          </template>
           <template #magenta>
             <div
               class="horizontal-flex"
               :title="`Show ${teamNameByColor('MAGENTA')} events`"
             >
               <font-awesome-icon icon="fa-people-group" class="MAGENTA-text" />
+            </div>
+          </template>
+          <template #cyan>
+            <div
+              class="horizontal-flex"
+              :title="`Show ${teamNameByColor('CYAN')} events`"
+            >
+              <font-awesome-icon icon="fa-people-group" class="CYAN-text" />
             </div>
           </template>
         </TabGroup>
@@ -101,7 +101,7 @@ watch(
     if (eventsLog.value) {
       eventsLog.value.scrollToEnd()
     }
-  }
+  },
 )
 </script>
 

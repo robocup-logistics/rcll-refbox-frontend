@@ -14,8 +14,8 @@
     </div>
     <!-- TEAMS -->
     <div class="teams">
-      <Team color="CYAN" :teamName="nameTeamCyan" />
       <Team color="MAGENTA" :teamName="nameTeamMagenta" />
+      <Team color="CYAN" :teamName="nameTeamCyan" />
     </div>
     <!-- FOOTER -->
     <div class="footer horizontal-flex">

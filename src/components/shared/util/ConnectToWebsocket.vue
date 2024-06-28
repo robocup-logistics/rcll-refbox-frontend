@@ -1,24 +1,32 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <div class="horizontal-flex form-row">
-    <Input
-      v-if="advancedOptions"
-      ref="input"
-      type="url"
-      v-model="websocketURL"
-      :placeholder="DEFAULT_WS_URL"
-    />
+    <div class="vertical-flex form-col">
+      <Input
+        v-if="advancedOptions"
+        ref="input"
+        type="url"
+        v-model="websocketURL"
+        :placeholder="DEFAULT_WS_URL"
+      />
+      <div class="horizontal-flex form-row">
+        <input type="checkbox" v-model="retry" />
+        <label>auto reconnect</label>
+      </div>
+    </div>
     <Button
       icon="fa-link"
       primary
       @click="connectToWebsocket"
       :loading="loading"
-      >Connect</Button
     >
+      Connect
+    </Button>
   </div>
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
+
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { ref, onMounted, nextTick, type Ref } from 'vue'
@@ -34,22 +42,25 @@ const emit = defineEmits<{
   (e: 'connected'): void
 }>()
 
-// use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Use stores
 const socketStore = useSocketStore()
 const { DEFAULT_WS_URL, attemptingConnection, socket } =
   storeToRefs(socketStore)
 const appStore = useAppStore()
 const { advancedOptions } = storeToRefs(appStore)
 
-// connect to websocket  - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Reactive variables
 const websocketURL: Ref<string> = ref(DEFAULT_WS_URL.value)
 const loading: Ref<boolean> = ref(false)
-function connectToWebsocket() {
-  console.log('connecting to websocket')
-  console.log(websocketURL)
+const retry: Ref<boolean> = ref(true) // Checkbox for retry option
+
+// Connect to websocket
+const connectToWebsocket = () => {
+  console.log('Connecting to websocket')
+  console.log(websocketURL.value)
 
   loading.value = true
-  socketStore.connectToWebsocket(websocketURL.value)
+  socketStore.connectToWebsocket(websocketURL.value, retry.value)
 
   watch(
     () => socket.value,
@@ -58,7 +69,7 @@ function connectToWebsocket() {
       if (newSocket) {
         emit('connected')
       }
-    }
+    },
   )
 
   watch(
@@ -67,11 +78,11 @@ function connectToWebsocket() {
       if (!attempting) {
         loading.value = false
       }
-    }
+    },
   )
 }
 
-// focus input on open - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Focus input on component mount
 const input: Ref<HTMLInputElement | null> = ref(null)
 onMounted(() => {
   nextTick(() => {

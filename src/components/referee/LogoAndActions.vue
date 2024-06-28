@@ -6,8 +6,10 @@
       <div class="horizontal-flex">
         <PopupWrapper popup-position="bottom">
           <template #reference>
-            <PillButton description="Reset"
-                title="Restart the refbox, requires re-connect of frontend">
+            <PillButton
+              description="Reset"
+              title="Restart the refbox, requires re-connect of frontend"
+            >
               <font-awesome-icon icon="fa-arrow-rotate-left" />
             </PillButton>
           </template>
@@ -70,6 +72,14 @@
         </PopupWrapper>
         <PopupWrapper popup-position="bottom">
           <template #reference>
+            <PillButton description="Instruct" title="Instruct Machines">
+              <font-awesome-icon icon="fa-walkie-talkie" />
+            </PillButton>
+          </template>
+          <InstructMachinePopup />
+        </PopupWrapper>
+        <PopupWrapper popup-position="bottom">
+          <template #reference>
             <PillButton description="help" title="Help">
               <font-awesome-icon icon="fa-question" />
             </PillButton>
@@ -92,6 +102,7 @@ import HelpPopup from '@/components/referee/popups/HelpPopup.vue'
 import PillButton from '@/components/shared/ui/PillButton.vue'
 import ConfirmResetPopup from '@/components/referee/popups/ConfirmResetPopup.vue'
 import GameConfigPopup from '@/components/referee/popups/GameConfigPopup.vue'
+import InstructMachinePopup from '@/components/referee/popups/InstructMachinePopup.vue'
 import ConfigPresetsPopup from '@/components/referee/popups/ConfigPresetsPopup.vue'
 import { useSocketStore } from '@/store/socketStore'
 import { storeToRefs } from 'pinia'

@@ -10,7 +10,7 @@
 </template>
 
 // SCRIPT ----------------------------------------------------------------------
-<script setup lang="ts" generic="T extends (string | number | boolean)">
+<script setup lang="ts" generic="T extends string | number | boolean">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import Button from '@/components/shared/ui/Button.vue'
 import { watch, type PropType, type Ref, onMounted } from 'vue'
@@ -53,7 +53,7 @@ watch(
     if (active.value) {
       emit('activeChanged', active.value)
     }
-  }
+  },
 )
 </script>
 

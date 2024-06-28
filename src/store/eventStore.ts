@@ -30,11 +30,11 @@ export const useEventStore = defineStore('eventStore', () => {
             return gameEvents.value.filter((gameEvent) => !gameEvent.team)
           case 'cyan':
             return gameEvents.value.filter(
-              (gameEvent) => gameEvent.team == 'CYAN'
+              (gameEvent) => gameEvent.team == 'CYAN',
             )
           case 'magenta':
             return gameEvents.value.filter(
-              (gameEvent) => gameEvent.team == 'MAGENTA'
+              (gameEvent) => gameEvent.team == 'MAGENTA',
             )
           default:
             return gameEvents.value

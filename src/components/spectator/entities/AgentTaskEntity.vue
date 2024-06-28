@@ -73,15 +73,15 @@ const { squareDiameterPixels, positionOfRobot, positionOfWaypoint } =
 
 // endpoints of line - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const robotPos: ComputedRef<[number, number]> = computed(
-  () => positionOfRobot.value(props.robot) || [0, 0]
+  () => positionOfRobot.value(props.robot) || [0, 0],
 )
 const waypointPos: ComputedRef<[number, number]> = computed(
   () =>
     positionOfWaypoint.value(
       props.task.task_type == 'MOVE'
         ? props.task.task_parameters.waypoint
-        : props.task.task_parameters.machine_id
-    ) || [0, 0]
+        : props.task.task_parameters.machine_id,
+    ) || [0, 0],
 )
 </script>
 

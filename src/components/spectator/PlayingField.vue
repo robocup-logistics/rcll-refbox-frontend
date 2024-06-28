@@ -1,5 +1,9 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
+  <Modal v-if="showPopup" title="Welcome" icon="fa-face-smile" ref="modal">
+    <ConfirmSetMachinePosePopup @update:isConfirmed="handleConfirmation" />
+  </Modal>
+
   <div id="playingFieldWrapper" ref="playingFieldWrapper">
     <div id="playingFieldContent">
       <!-- FIELD SQUARES WITH MACHINES ON THEM -->
@@ -12,10 +16,26 @@
                 :zone="
                   getZoneNameFor(
                     -(horizontalFieldSize - hIndex + 1),
-                    verticalFieldSize - vIndex + 1
+                    verticalFieldSize - vIndex + 1,
                   )
                 "
                 :with-dot="vIndex != 1 && hIndex != 1"
+                :isSelected="
+                  selectedSquare?.zone ===
+                  getZoneNameFor(
+                    -(horizontalFieldSize - hIndex + 1),
+                    verticalFieldSize - vIndex + 1,
+                  )
+                "
+                :isTargeted="
+                  targetSquare?.zone ===
+                  getZoneNameFor(
+                    -(horizontalFieldSize - hIndex + 1),
+                    verticalFieldSize - vIndex + 1,
+                  )
+                "
+                @square-selected="handleSquareSelected"
+                @square-targeted="handleSquareTargeted"
               />
             </template>
           </template>
@@ -24,6 +44,16 @@
             <PlayingFieldSquare
               :zone="getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)"
               :with-dot="vIndex != 1 && (isFieldMirrored || hIndex != 1)"
+              :isSelected="
+                selectedSquare?.zone ===
+                getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)
+              "
+              :isTargeted="
+                targetSquare?.zone ===
+                getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)
+              "
+              @square-selected="handleSquareSelected"
+              @square-targeted="handleSquareTargeted"
             />
           </template>
         </template>
@@ -35,14 +65,14 @@
           v-if="
             robotStore.robotByColorAndId(
               agentTask.team_color,
-              agentTask.robot_id
+              agentTask.robot_id,
             ) != null
           "
           :task="agentTask"
           :robot="
             robotStore.robotByColorAndId(
               agentTask.team_color,
-              agentTask.robot_id
+              agentTask.robot_id,
             ) as Robot
           "
         />
@@ -58,6 +88,7 @@
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import { storeToRefs } from 'pinia'
+import { useAppStore } from '@/store/appStore'
 import { useFieldStore } from '@/store/fieldStore'
 import PlayingFieldSquare from '@/components/spectator/PlayingFieldSquare.vue'
 import { useRobotStore } from '@/store/robotStore'
@@ -65,6 +96,9 @@ import RobotEntity from '@/components/spectator/entities/RobotEntity.vue'
 import type { Ref } from 'vue'
 import { ref, watch } from 'vue'
 import AgentTaskEntity from '@/components/spectator/entities/AgentTaskEntity.vue'
+
+import Modal from '@/components/shared/ui/Modal.vue'
+import ConfirmSetMachinePosePopup from '@/components/spectator/popups/ConfirmSetMachinePosePopup.vue'
 import type Robot from '@/types/Robot'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -81,6 +115,11 @@ const {
 } = storeToRefs(fieldStore)
 const robotStore = useRobotStore()
 const { robots, agentTasks } = storeToRefs(robotStore)
+const appStore = useAppStore()
+const { advancedOptions, currentView } = storeToRefs(appStore)
+
+const isConfirmed = ref(false)
+const showPopup = ref(false)
 
 // zones - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function getZoneNameFor(x: number, y: number): string {
@@ -101,6 +140,56 @@ function getZoneNameFor(x: number, y: number): string {
   zone += y.toString()
 
   return zone
+}
+
+// handle drag-and-drop -  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+function handleConfirmation(value: boolean) {
+  isConfirmed.value = value
+  showPopup.value = false
+}
+
+// Reactive references for selected and targeted squares
+const selectedSquare: Ref<PlayingFieldSquare | null> = ref(null)
+const targetSquare: Ref<PlayingFieldSquare | null> = ref(null)
+
+// Handle square selection
+const handleSquareSelected = (square: PlayingFieldSquare) => {
+  if (advancedOptions.value) {
+    if (!isConfirmed.value) {
+      showPopup.value = true
+    }
+    selectedSquare.value = square
+    selectedSquare.value.isSelected = true
+  }
+}
+
+// Handle square targeting and finalize selection
+const handleSquareTargeted = (square: PlayingFieldSquare) => {
+  if (advancedOptions.value) {
+    targetSquare.value = square
+    targetSquare.value.isSelected = false
+    targetSquare.value.isTargeted = true
+    if (selectedSquare.value && targetSquare.value) {
+      onSquaresSelected(selectedSquare.value, targetSquare.value)
+      // Reset selection after handling
+      selectedSquare.value = null
+      targetSquare.value = null
+    }
+  }
+}
+
+// Handle logic after squares are selected
+function onSquaresSelected(start: PlayingFieldSquare, end: PlayingFieldSquare) {
+  start.isSelected = false
+  start.isTargeted = false
+  end.isSelected = false
+  end.isTargeted = false
+  if (advancedOptions.value) {
+    if (isConfirmed.value) {
+      fieldStore.sendSetMachinePose(start.zone, end.zone)
+    }
+  }
 }
 
 // observe and update size in store  - - - - - - - - - - - - - - - - - - - - - -

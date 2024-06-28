@@ -14,10 +14,12 @@ export const usePresetStore = defineStore('presetStore', () => {
   // CONSTS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   const defaultConfigPresets: Set<ConfigPreset> = new Set([
     { category: 'challenges', preset: 'production' },
-  ]);
+  ])
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> game config
-  const configPresets: Ref<Set<ConfigPreset>> = ref(new Set(defaultConfigPresets))
+  const configPresets: Ref<Set<ConfigPreset>> = ref(
+    new Set(defaultConfigPresets),
+  )
 
   // FUNCTIONS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> set config value

@@ -18,7 +18,7 @@
     <!-- MACHINES/ROBOTS/SCORE -->
     <div
       v-if="phase != 'PRE_GAME'"
-      :class="['team-assets', color == 'MAGENTA' ? 'rtl' : '']"
+      :class="['team-assets', color == 'CYAN' ? 'rtl' : '']"
     >
       <TeamMachines :color="color" />
       <div class="vertical-flex">

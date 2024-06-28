@@ -49,7 +49,7 @@
         <div class="horizontal-flex content-box">
           <OrderEntity
             v-for="order in ordersDeliveredByTeam(
-              teamNameByColor(machine.team)
+              teamNameByColor(machine.team),
             )"
             :order="order"
           >
@@ -91,8 +91,15 @@
                 "
               >
                 <span
-                  :class="[(<RingSpec>ringSpecs.find((ringspec) => ringspec.color == ringColor))
-                .req_bases - (machine.bases_added - machine.bases_used) > 0 ? 'text-warning' : 'text-success']"
+                  :class="[
+                    (<RingSpec>(
+                      ringSpecs.find((ringspec) => ringspec.color == ringColor)
+                    )).req_bases -
+                      (machine.bases_added - machine.bases_used) >
+                    0
+                      ? 'text-warning'
+                      : 'text-success',
+                  ]"
                 >
                   {{ machine.bases_added - machine.bases_used }}
                 </span>
@@ -235,21 +242,22 @@ const { ordersDeliveredByTeam, fileNameByWorkpiece } = storeToRefs(orderStore)
 // workpieces  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const workpiecesAtInput: ComputedRef<Workpiece[]> = computed(
   () =>
-    props.workpieces?.filter((workpiece) => workpiece.at_side == 'INPUT') || []
+    props.workpieces?.filter((workpiece) => workpiece.at_side == 'INPUT') || [],
 )
 const workpiecesAtOutput: ComputedRef<Workpiece[]> = computed(
   () =>
-    props.workpieces?.filter((workpiece) => workpiece.at_side == 'OUTPUT') || []
+    props.workpieces?.filter((workpiece) => workpiece.at_side == 'OUTPUT') ||
+    [],
 )
 const workpiecesAtSlide: ComputedRef<Workpiece[]> = computed(
   () =>
-    props.workpieces?.filter((workpiece) => workpiece.at_side == 'SLIDE') || []
+    props.workpieces?.filter((workpiece) => workpiece.at_side == 'SLIDE') || [],
 )
 const workpiecesAtShelf: ComputedRef<Workpiece[]> = computed(
   () =>
     props.workpieces?.filter((workpiece) =>
-      ['LEFT', 'MIDDLE', 'RIGHT'].includes(workpiece.at_side)
-    ) || []
+      ['LEFT', 'MIDDLE', 'RIGHT'].includes(workpiece.at_side),
+    ) || [],
 )
 </script>
 
