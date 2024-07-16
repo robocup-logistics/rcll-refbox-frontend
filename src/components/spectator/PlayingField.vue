@@ -1,4 +1,5 @@
-// TEMPLATE --------------------------------------------------------------------
+s// TEMPLATE
+--------------------------------------------------------------------
 <template>
   <Modal v-if="showPopup" title="Welcome" icon="fa-face-smile" ref="modal">
     <ConfirmSetMachinePosePopup @update:isConfirmed="handleConfirmation" />
@@ -41,7 +42,7 @@
           <template v-for="hIndex in horizontalFieldSize">
             <PlayingFieldSquare
               :zone="getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)"
-              :with-dot="vIndex != 1 && (isFieldMirrored || hIndex != 1)"
+              :with-dot="vIndex != 1 && hIndex != 1"
               :isSelected="
                 selectedSquare?.zone ===
                 getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)
@@ -122,16 +123,12 @@ const showPopup = ref(false)
 // zones - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function getZoneNameFor(x: number, y: number): string {
   let zone = ''
-  if (isFieldMirrored.value) {
-    if (x < 0) {
-      zone += 'M_'
-    } else if (x > 0) {
-      zone += 'C_'
-    } else {
-      throw new Error('x coordinate of a field can not be zero')
-    }
-  } else {
+  if (x < 0) {
+    zone += 'M_'
+  } else if (x > 0) {
     zone += 'C_'
+  } else {
+    throw new Error('x coordinate of a field can not be zero')
   }
   zone += 'Z'
   zone += Math.abs(x).toString()

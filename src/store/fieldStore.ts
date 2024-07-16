@@ -39,10 +39,8 @@ export const useFieldStore = defineStore('fieldStore', () => {
   )
 
   // -> full horizontal field size (in number of squares)
-  const fullHorizontalFieldSize: ComputedRef<number> = computed(() =>
-    isFieldMirrored.value
-      ? horizontalFieldSize.value * 2
-      : horizontalFieldSize.value,
+  const fullHorizontalFieldSize: ComputedRef<number> = computed(
+    () => horizontalFieldSize.value * 2,
   )
 
   // -> number of pixels of the horiontal or vertical diameter of a square
@@ -73,9 +71,7 @@ export const useFieldStore = defineStore('fieldStore', () => {
             squareDiameterPixels.value / 2 -
             (parseInt(zoneArr[4]) - 1) * squareDiameterPixels.value,
         ]
-        if (isFieldMirrored.value) {
-          pos[0] += fieldWidthPixels.value / 2
-        }
+        pos[0] += fieldWidthPixels.value / 2
         if (zoneArr[0] == 'M') {
           pos[0] -= parseInt(zoneArr[3]) * squareDiameterPixels.value
         } else if (zoneArr[0] == 'C') {
