@@ -52,7 +52,7 @@ const { advancedOptions } = storeToRefs(appStore)
 // Reactive variables
 const websocketURL: Ref<string> = ref(DEFAULT_WS_URL.value)
 const loading: Ref<boolean> = ref(false)
-const retry: Ref<boolean> = ref(true) // Checkbox for retry option
+const retry: Ref<boolean> = ref(false) // Checkbox for retry option
 
 // Connect to websocket
 const connectToWebsocket = () => {
