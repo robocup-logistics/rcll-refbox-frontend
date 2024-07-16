@@ -10,34 +10,32 @@
       <div id="playingField" ref="playingField">
         <template v-for="vIndex in verticalFieldSize">
           <!-- negative x coordinates only if field is mirrored -->
-          <template v-if="isFieldMirrored">
-            <template v-for="hIndex in horizontalFieldSize">
-              <PlayingFieldSquare
-                :zone="
-                  getZoneNameFor(
-                    -(horizontalFieldSize - hIndex + 1),
-                    verticalFieldSize - vIndex + 1,
-                  )
-                "
-                :with-dot="vIndex != 1 && hIndex != 1"
-                :isSelected="
-                  selectedSquare?.zone ===
-                  getZoneNameFor(
-                    -(horizontalFieldSize - hIndex + 1),
-                    verticalFieldSize - vIndex + 1,
-                  )
-                "
-                :isTargeted="
-                  targetSquare?.zone ===
-                  getZoneNameFor(
-                    -(horizontalFieldSize - hIndex + 1),
-                    verticalFieldSize - vIndex + 1,
-                  )
-                "
-                @square-selected="handleSquareSelected"
-                @square-targeted="handleSquareTargeted"
-              />
-            </template>
+          <template v-for="hIndex in horizontalFieldSize">
+            <PlayingFieldSquare
+              :zone="
+                getZoneNameFor(
+                  -(horizontalFieldSize - hIndex + 1),
+                  verticalFieldSize - vIndex + 1,
+                )
+              "
+              :with-dot="vIndex != 1 && hIndex != 1"
+              :isSelected="
+                selectedSquare?.zone ===
+                getZoneNameFor(
+                  -(horizontalFieldSize - hIndex + 1),
+                  verticalFieldSize - vIndex + 1,
+                )
+              "
+              :isTargeted="
+                targetSquare?.zone ===
+                getZoneNameFor(
+                  -(horizontalFieldSize - hIndex + 1),
+                  verticalFieldSize - vIndex + 1,
+                )
+              "
+              @square-selected="handleSquareSelected"
+              @square-targeted="handleSquareTargeted"
+            />
           </template>
           <!-- positive x coordinates -->
           <template v-for="hIndex in horizontalFieldSize">
