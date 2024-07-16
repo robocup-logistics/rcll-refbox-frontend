@@ -28,7 +28,8 @@ export const useOrderStore = defineStore('orderStore', () => {
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> config
   const MAX_NUMBER_OF_ORDERS: ComputedRef<number> = computed(
-    () => <number>configStore.gameConfig.get('/llsfrb/globals/number-of-orders')
+    () =>
+      <number>configStore.gameConfig.get('/llsfrb/globals/number-of-orders'),
   )
 
   // -> open orders
@@ -37,8 +38,8 @@ export const useOrderStore = defineStore('orderStore', () => {
       (order) =>
         gameStore.game_time >= order.delivery_period[0] - 1 &&
         gameStore.game_time < order.delivery_period[1] + 1 &&
-        gameStore.phase == 'PRODUCTION'
-    )
+        gameStore.phase == 'PRODUCTION',
+    ),
   )
 
   // -> upcoming orders
@@ -48,22 +49,22 @@ export const useOrderStore = defineStore('orderStore', () => {
         (['PRE_GAME', 'SETUP', 'EXPLORATION'].includes(gameStore.phase) ||
           (gameStore.phase == 'PRODUCTION' &&
             gameStore.game_time < order.delivery_period[0])) &&
-        order.delivery_period[0] < gameStore.PRODUCTION_DURATION
-    )
+        order.delivery_period[0] < gameStore.PRODUCTION_DURATION,
+    ),
   )
 
   // -> upcoming acivated orders
   const upcomingActivatedOrders: ComputedRef<Order[]> = computed(() =>
     upcomingOrders.value.filter(
-      (order) => gameStore.game_time >= order.activate_at
-    )
+      (order) => gameStore.game_time >= order.activate_at,
+    ),
   )
 
   // -> upcoming not yet activated orders
   const upcomingNonActivatedOrders: ComputedRef<Order[]> = computed(() =>
     upcomingOrders.value.filter(
-      (order) => gameStore.game_time < order.activate_at
-    )
+      (order) => gameStore.game_time < order.activate_at,
+    ),
   )
 
   // -> expired orders
@@ -72,20 +73,20 @@ export const useOrderStore = defineStore('orderStore', () => {
       (order) =>
         gameStore.phase == 'POST_GAME' ||
         (gameStore.phase == 'PRODUCTION' &&
-          gameStore.game_time >= order.delivery_period[1])
-    )
+          gameStore.game_time >= order.delivery_period[1]),
+    ),
   )
 
   // -> overtime order
   const overtimeOrder: ComputedRef<Order | undefined> = computed(() =>
     orders.value.find(
-      (order) => order.delivery_period[0] == gameStore.PRODUCTION_DURATION
-    )
+      (order) => order.delivery_period[0] == gameStore.PRODUCTION_DURATION,
+    ),
   )
 
   // -> unconfirmed orders
   const unconfirmedOrders: ComputedRef<Order[]> = computed(() =>
-    orders.value.filter((order) => order.unconfirmed_deliveries.length > 0)
+    orders.value.filter((order) => order.unconfirmed_deliveries.length > 0),
   )
 
   // -> orders delivered by team
@@ -101,7 +102,7 @@ export const useOrderStore = defineStore('orderStore', () => {
           throw new Error('team name not found')
         }
         return orders.value.filter(
-          (order) => order.quantity_delivered[index] >= 1
+          (order) => order.quantity_delivered[index] >= 1,
         )
       }
     })
@@ -187,7 +188,7 @@ export const useOrderStore = defineStore('orderStore', () => {
   function setWorkpiece(workpieceArg: Workpiece) {
     // try to find a workpiece with the same name
     const index = workpieces.value.findIndex(
-      (workpieceFi) => workpieceFi.name == workpieceArg.name
+      (workpieceFi) => workpieceFi.name == workpieceArg.name,
     )
     // if we have not found such a workpiece, add it as a new one
     if (index === -1) {

@@ -28,7 +28,14 @@ export const useSocketStore = defineStore('socketStore', () => {
 
   // REFS  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> consts
-  const DEFAULT_WS_URL: Ref<string> = ref('ws://localhost:1234')
+  const getWebSocketURL = () => {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+    const host = window.location.hostname
+    const port = '1234'
+    return `${protocol}//${host}:${port}`
+  }
+
+  const DEFAULT_WS_URL: Ref<string> = ref(getWebSocketURL())
 
   // -> socket & connection
   const socket: Ref<WebSocket | null> = ref(null)
@@ -45,21 +52,24 @@ export const useSocketStore = defineStore('socketStore', () => {
         (msg) =>
           msg.level === 'attention' &&
           gameStore.game_time >= msg.game_time &&
-          gameStore.game_time <= msg.game_time + parseFloat(msg.time_to_display)
-      ) as AttentionMessage[]
+          gameStore.game_time <=
+            msg.game_time + parseFloat(msg.time_to_display),
+      ) as AttentionMessage[],
   )
 
   // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> establish websocket connection
-  function connectToWebsocket(url: string): void {
+  function connectToWebsocket(url: string, retry: boolean): void {
     attemptingConnection.value = true
     const newSocket = new WebSocket(url)
-    setTimeout(() => {
-      if (attemptingConnection.value) {
-        alert('Could not connect :/ Refbox does not respond!')
-      }
-      attemptingConnection.value = false
-    }, 10000)
+    if (!retry) {
+      setTimeout(() => {
+        if (attemptingConnection.value) {
+          alert('Could not connect :/ Refbox does not respond!')
+        }
+        attemptingConnection.value = false
+      }, 10000)
+    }
 
     // configure behaviour on open
     newSocket.onopen = (_e) => {
@@ -142,15 +152,23 @@ export const useSocketStore = defineStore('socketStore', () => {
     // configure behaviour on close
     newSocket.onclose = (e) => {
       socket.value = null
-      console.log('Closing socket')
+      if (retry) {
+        connectToWebsocket(DEFAULT_WS_URL.value, retry)
+      } else {
+        console.log('Closing socket')
+      }
     }
 
     // configure on error
     newSocket.onerror = (e) => {
-      alert(
-        'Could not connect :/ Make sure the refbox is started and accessed via the right url!'
-      )
-      attemptingConnection.value = false
+      if (retry) {
+        connectToWebsocket(DEFAULT_WS_URL.value, retry)
+      } else {
+        alert(
+          'Could not connect :/ Make sure the refbox is started and accessed via the right url!',
+        )
+        attemptingConnection.value = false
+      }
       console.error(e)
     }
   }

@@ -58,21 +58,20 @@ export const useGameStore = defineStore('gameStore', () => {
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> config
   const SETUP_DURATION: ComputedRef<number> = computed(
-    () => <number>configStore.gameConfig.get('/llsfrb/globals/setup-time')
+    () => <number>configStore.gameConfig.get('/llsfrb/globals/setup-time'),
   )
   const PRODUCTION_DURATION: ComputedRef<number> = computed(
-    () => <number>configStore.gameConfig.get('/llsfrb/globals/production-time')
+    () => <number>configStore.gameConfig.get('/llsfrb/globals/production-time'),
   )
   const EXPLORATION_DURATION: ComputedRef<number> = computed(
-    () =>
-      <number>configStore.gameConfig.get('/llsfrb/game/exploration-time')
+    () => <number>configStore.gameConfig.get('/llsfrb/game/exploration-time'),
   )
   const OVERTIME_DURATION: ComputedRef<number> = computed(
     () =>
-      <number>configStore.gameConfig.get('/llsfrb/globals/production-overtime')
+      <number>configStore.gameConfig.get('/llsfrb/globals/production-overtime'),
   )
   const PHASES: ComputedRef<string[]> = computed(
-    () => <string[]>configStore.gameConfig.get('/llsfrb/globals/phases')
+    () => <string[]>configStore.gameConfig.get('/llsfrb/globals/phases'),
   )
 
   // -> other color
@@ -98,7 +97,7 @@ export const useGameStore = defineStore('gameStore', () => {
           return nameTeamMagenta.value ? nameTeamMagenta.value : 'MAGENTA'
         }
       }
-    }
+    },
   )
 
   // -> score by color
@@ -115,7 +114,7 @@ export const useGameStore = defineStore('gameStore', () => {
     () => {
       return (color: Color) =>
         rewards.value.filter((rewardFi) => rewardFi.team == color)
-    }
+    },
   )
 
   // -> rewards by color and order
@@ -124,7 +123,7 @@ export const useGameStore = defineStore('gameStore', () => {
   > = computed(() => {
     return (color: Color, orderId: number) =>
       rewards.value.filter(
-        (rewardFi) => rewardFi.team == color && rewardFi.order == orderId
+        (rewardFi) => rewardFi.team == color && rewardFi.order == orderId,
       )
   })
 
@@ -189,8 +188,8 @@ export const useGameStore = defineStore('gameStore', () => {
           scoreByColor.value('CYAN') > scoreByColor.value('MAGENTA')
             ? 'CYAN'
             : scoreByColor.value('CYAN') < scoreByColor.value('MAGENTA')
-            ? 'MAGENTA'
-            : undefined
+              ? 'MAGENTA'
+              : undefined
 
         eventStore.addEvent({
           icon: 'fa-medal',
@@ -206,24 +205,28 @@ export const useGameStore = defineStore('gameStore', () => {
 
   // -> add a reward
   function addReward(rewardArg: Reward) {
-    const rewardExists = rewards.value.some(reward => {
+    const rewardExists = rewards.value.some((reward) => {
       return (
         reward.game_time === rewardArg.game_time &&
         reward.phase === rewardArg.phase &&
         reward.points === rewardArg.points &&
         reward.reason === rewardArg.reason &&
         reward.team === rewardArg.team
-      );
-    });
+      )
+    })
 
     // If the reward doesn't already exist, add it to the rewards array and log the event
-    if (!rewardExists && rewardArg.points !== 0 && teamNameByColor.value(rewardArg.team) !== '') {
+    if (
+      !rewardExists &&
+      rewardArg.points !== 0 &&
+      teamNameByColor.value(rewardArg.team) !== ''
+    ) {
       eventStore.addEvent({
         icon: 'fa-trophy',
         msg: `${teamNameByColor.value(rewardArg.team)} received ${rewardArg.points} points`,
         team: rewardArg.team,
-      });
-      rewards.value.push(rewardArg);
+      })
+      rewards.value.push(rewardArg)
     }
   }
 
@@ -241,7 +244,7 @@ export const useGameStore = defineStore('gameStore', () => {
   // ---> ... reset the refbox
   function sendReset() {
     const msg: ResetOutMsg = {
-      command: 'reset'
+      command: 'reset',
     }
     socketStore.sendMessage(msg)
   }

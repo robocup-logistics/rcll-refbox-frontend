@@ -74,7 +74,7 @@ watch(
       scrollToEnd()
     }
   },
-  { deep: true, immediate: true }
+  { deep: true, immediate: true },
 )
 
 defineExpose({ scrollToEnd })

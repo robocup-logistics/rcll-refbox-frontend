@@ -135,7 +135,7 @@ library.add(
   faTruck,
   faUserTie,
   faWalkieTalkie,
-  faXmark
+  faXmark,
 )
 
 // create the app

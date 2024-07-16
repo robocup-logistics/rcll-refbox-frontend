@@ -1,7 +1,11 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
   <div class="popup-wrapper">
-    <div class="reference clickable" ref="reference" @click="togglePopup">
+    <div
+      class="reference clickable"
+      ref="reference"
+      @click="!spectatorOnly || !advancedOptions ? togglePopup() : null"
+    >
       <slot name="reference"></slot>
     </div>
     <div
@@ -53,11 +57,16 @@ const props = defineProps({
     required: false,
     default: 'right',
   },
+  spectatorOnly: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const appStore = useAppStore()
 const { popupCounter } = storeToRefs(appStore)
+const { advancedOptions, currentView } = storeToRefs(appStore)
 
 // floating popup  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // -> setting up floating ui
@@ -76,7 +85,7 @@ const { floatingStyles, middlewareData, placement } = useFloating(
       arrow({ element: floatingArrow }),
     ],
     whileElementsMounted: autoUpdate,
-  }
+  },
 )
 
 // -> correct z-index

@@ -5,10 +5,10 @@
       'flex-item',
       'machines-container',
       'darker',
-      color == 'MAGENTA' ? 'rtl' : '',
+      color == 'CYAN' ? 'rtl' : '',
     ]"
   >
-    <div style="display: grid; grid-template-columns: 55px 1fr; gap: 20px">
+    <div class="machines-grid">
       <template v-for="machine in machinesByColor(color)">
         <div class="machine-left">
           <div
@@ -16,31 +16,12 @@
               machine.mtype === 'RS' && machine.current_ring_color
                 ? machine.current_ring_color
                 : machine.mtype === 'BS' && machine.current_base_color
-                ? machine.current_base_color
-                : '',
+                  ? machine.current_base_color
+                  : '',
             ]"
           >
-            <span>{{ machine.name }}</span>
+            <span class="machine-name">{{ machine.name }}</span>
           </div>
-          <div :class="['machine-pos', `${color}-text`]">
-            <span>{{ machine.zone }}</span>
-          </div>
-        </div>
-
-        <div class="machine-right">
-          <span
-            :class="[
-              'machine-state',
-              machine.state === 'READY-AT-OUTPUT' ||
-              machine.state === 'PROCESSING'
-                ? 'text-warning'
-                : machine.state === 'BROKEN' || machine.state === 'DOWN'
-                ? 'text-danger'
-                : '',
-            ]"
-          >
-            {{ machine.state }}
-          </span>
           <!-- If RS show additional Info -->
           <div v-if="machine.mtype === 'RS'" class="horizontal-flex">
             <div
@@ -63,9 +44,31 @@
               machine.bases_added - machine.bases_used
             }}</span>
           </div>
-          <div :class="`${color}-text`">
-            <span v-if="phase === 'SETUP'"> {{ machine.rotation }}° </span>
+        </div>
+
+        <div class="machine-middle">
+          <div :class="['machine-pos', `${color}-text`]">
+            <span>{{ machine.zone }}</span>
           </div>
+          <div :class="`${color}-text`">
+            <span> {{ machine.rotation }}° </span>
+          </div>
+        </div>
+
+        <div class="machine-right">
+          <span
+            :class="[
+              'machine-state',
+              machine.state === 'READY-AT-OUTPUT' ||
+              machine.state === 'PROCESSING'
+                ? 'text-warning'
+                : machine.state === 'BROKEN' || machine.state === 'DOWN'
+                  ? 'text-danger'
+                  : '',
+            ]"
+          >
+            {{ machine.state }}
+          </span>
         </div>
       </template>
     </div>
@@ -100,7 +103,7 @@ const ringColorCost: ComputedRef<(ringColor: string) => number> = computed(
   () => {
     return (ringColor: string) => {
       const ringSpec = ringSpecs.value.find(
-        (ringspec) => ringspec.color === ringColor
+        (ringspec) => ringspec.color === ringColor,
       )
       if (ringSpec) {
         return ringSpec.req_bases
@@ -108,7 +111,7 @@ const ringColorCost: ComputedRef<(ringColor: string) => number> = computed(
         return 0
       }
     }
-  }
+  },
 )
 </script>
 
@@ -127,7 +130,23 @@ const ringColorCost: ComputedRef<(ringColor: string) => number> = computed(
     direction: rtl !important;
   }
 
+  .machines-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
   .machine-left {
+    .machine-pos {
+      font-size: 0.8rem;
+    }
+    .machine-name {
+      white-space: nowrap; /* Prevent line break */
+      overflow: hidden; /* Hide overflow text */
+      text-overflow: ellipsis; /* Add ellipsis for overflow text */
+    }
+  }
+  .machine-middle {
     .machine-pos {
       font-size: 0.8rem;
     }

@@ -3,7 +3,7 @@
   <div class="machine-entity-wrapper">
     <div class="machine-entity" :id="`machine-${machine.name}`">
       <div class="machine">
-        <PopupWrapper style="height: 100%; width: 100%">
+        <PopupWrapper :spectatorOnly="true" style="height: 100%; width: 100%">
           <template #reference>
             <div class="img-wrapper">
               <img
@@ -89,10 +89,11 @@ watch(
   (newWorkpieces, _) => {
     havingWorkpieces.value = newWorkpieces.filter(
       (workpiece) =>
-        workpiece.holding == false && workpiece.at_machine == props.machine.name
+        workpiece.holding == false &&
+        workpiece.at_machine == props.machine.name,
     )
   },
-  { deep: true, immediate: true }
+  { deep: true, immediate: true },
 )
 </script>
 

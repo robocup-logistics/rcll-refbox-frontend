@@ -71,10 +71,10 @@ watch(
   () => agentTasks.value,
   (newAgentTasks, _) => {
     robotAgentTask.value = newAgentTasks.find(
-      (agentTask) => agentTask.robot_id == props.robot.number
+      (agentTask) => agentTask.robot_id == props.robot.number,
     )
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 // watch holding workpieces  - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -85,10 +85,10 @@ watch(
     holdingWorkpiece.value = newWorkpieces.find(
       (workpiece) =>
         workpiece.holding == true &&
-        workpiece.robot_holding == props.robot.number
+        workpiece.robot_holding == props.robot.number,
     )
   },
-  { deep: true, immediate: true }
+  { deep: true, immediate: true },
 )
 </script>
 

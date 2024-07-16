@@ -6,6 +6,8 @@ import { useMachineStore } from '@/store/machineStore'
 import { useConfigStore } from '@/store/configStore'
 import type RandomizeFieldOutMsg from '@/types/messages/outgoing/RandomizeFieldOutMsg'
 import { useSocketStore } from '@/store/socketStore'
+import type MachinePose from '@/types/MachinePose'
+import SetMachinePoseOutMsg from '@/types/messages/outgoing/SetMachinePoseOutMsg'
 
 // FIELD STORE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the field store provides information about and interaction with the playing
@@ -27,25 +29,25 @@ export const useFieldStore = defineStore('fieldStore', () => {
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> config
   const horizontalFieldSize: ComputedRef<number> = computed(
-    () => <number>configStore.gameConfig.get('/llsfrb/game/field/width')
+    () => <number>configStore.gameConfig.get('/llsfrb/game/field/width'),
   )
   const isFieldMirrored: ComputedRef<boolean> = computed(
-    () => <boolean>configStore.gameConfig.get('/llsfrb/game/field/mirrored')
+    () => <boolean>configStore.gameConfig.get('/llsfrb/game/field/mirrored'),
   )
   const verticalFieldSize: ComputedRef<number> = computed(
-    () => <number>configStore.gameConfig.get('/llsfrb/game/field/height')
+    () => <number>configStore.gameConfig.get('/llsfrb/game/field/height'),
   )
 
   // -> full horizontal field size (in number of squares)
   const fullHorizontalFieldSize: ComputedRef<number> = computed(() =>
     isFieldMirrored.value
       ? horizontalFieldSize.value * 2
-      : horizontalFieldSize.value
+      : horizontalFieldSize.value,
   )
 
   // -> number of pixels of the horiontal or vertical diameter of a square
   const squareDiameterPixels: ComputedRef<number> = computed(
-    () => fieldHeightPixels.value / verticalFieldSize.value
+    () => fieldHeightPixels.value / verticalFieldSize.value,
   )
 
   // -> position of a waypoint (either field or machine)
@@ -56,7 +58,7 @@ export const useFieldStore = defineStore('fieldStore', () => {
         // machine with the name of the waypoint - if we cannot find one, we assume the waypoint is
         // a zone
         const machine = machineStore.machines.find(
-          (machine) => machine.name == el
+          (machine) => machine.name == el,
         )
         let zone
         if (machine) {
@@ -104,6 +106,32 @@ export const useFieldStore = defineStore('fieldStore', () => {
     socketStore.sendMessage(msg)
   }
 
+  // -> send a message to the websocket to set a config value
+  function sendSetMachinePose(start_zone: string, target_zone: string) {
+    const machine = machineStore.machines.find(
+      (machine) => machine.zone === start_zone,
+    )
+    if (machine) {
+      if (start_zone === target_zone) {
+        const msg: SetMachinePoseOutMsg = {
+          command: 'set_machine_pose',
+          name: machine.name,
+          rotation: (machine.rotation + 45) % 360,
+          zone: target_zone,
+        }
+        socketStore.sendMessage(msg)
+      } else {
+        const msg: SetMachinePoseOutMsg = {
+          command: 'set_machine_pose',
+          name: machine.name,
+          rotation: machine.rotation,
+          zone: target_zone,
+        }
+        socketStore.sendMessage(msg)
+      }
+    }
+  }
+
   // -> reset
   function reset() {
     // no need to change fieldWrapperWidthPixels, fieldWrapperHeightPixels,
@@ -125,6 +153,7 @@ export const useFieldStore = defineStore('fieldStore', () => {
     positionOfWaypoint,
     positionOfRobot,
     sendRandomizeField,
+    sendSetMachinePose,
     reset,
   }
 })

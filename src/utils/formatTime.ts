@@ -3,7 +3,7 @@
 // output is (M)Mm or (S)Ss instead.
 export default function formatTime(
   gameTimeArg: number | string,
-  verbal: boolean = false
+  verbal: boolean = false,
 ): string {
   let gameTime: number
   if (typeof gameTimeArg === 'string') {

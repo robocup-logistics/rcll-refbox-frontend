@@ -35,21 +35,18 @@
       <span class="robot-maintenance-cycles">
         {{ robot.maintenance_cycles }}
       </span>
-      <template v-if="!robot.warning_sent">
-        <Button
-          v-if="robot.state === 'ACTIVE'"
-          icon="fa-robot"
-          title="Start maintenance"
-          @click="setRobotMaintenanceStatus(robot, true)"
-        ></Button>
-
-        <Button
-          v-else-if="robot.state === 'MAINTENANCE'"
-          icon="fa-robot"
-          title="End maintenance"
-          @click="setRobotMaintenanceStatus(robot, false)"
-        ></Button>
-      </template>
+      <Button
+        v-if="robot.state === 'ACTIVE'"
+        icon="fa-robot"
+        title="Start maintenance"
+        @click="setRobotMaintenanceStatus(robot, true)"
+      ></Button>
+      <Button
+        v-else-if="robot.state === 'MAINTENANCE'"
+        icon="fa-robot"
+        title="End maintenance"
+        @click="setRobotMaintenanceStatus(robot, false)"
+      ></Button>
     </div>
     <span v-else>No robots conneted</span>
   </div>

@@ -77,7 +77,7 @@
                   (new Date(reportItem.end_time).getTime() -
                     new Date(reportItem.start_time).getTime()) /
                     1000,
-                  true
+                  true,
                 )
               }}
             </span>
@@ -189,7 +189,7 @@ const filteredGameReportsList: ComputedRef<GameReport[]> = computed(() => {
     (report) =>
       report.report_name.includes(filter.value) ||
       report.teams[0].includes(filter.value) ||
-      report.teams[1].includes(filter.value)
+      report.teams[1].includes(filter.value),
   )
 })
 const scrollToTop = inject('scrollToTop') as Function
@@ -197,7 +197,7 @@ watch(
   () => filter.value,
   () => {
     scrollToTop()
-  }
+  },
 )
 
 // select report - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -220,7 +220,7 @@ watch(
     if (newReport && (!oldReport || oldReport != newReport)) {
       emit('connected')
     }
-  }
+  },
 )
 </script>
 

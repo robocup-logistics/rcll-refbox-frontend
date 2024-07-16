@@ -5,8 +5,19 @@ import type Machine from '@/types/Machine'
 import type RingSpec from '@/types/RingSpec'
 import type Color from '@/types/Color'
 import type ShelfSlot from '@/types/ShelfSlot'
+import { useSocketStore } from '@/store/socketStore'
 import { useConfigStore } from '@/store/configStore'
 
+import type InstructBS from '@/types/InstructBS'
+import InstructBSOutMsg from '@/types/messages/outgoing/InstructBSOutMsg'
+import type InstructCS from '@/types/InstructCS'
+import InstructCSOutMsg from '@/types/messages/outgoing/InstructCSOutMsg'
+import type InstructRS from '@/types/InstructRS'
+import InstructRSOutMsg from '@/types/messages/outgoing/InstructRSOutMsg'
+import type InstructDS from '@/types/InstructDS'
+import InstructDSOutMsg from '@/types/messages/outgoing/InstructDSOutMsg'
+import type InstructSS from '@/types/InstructSS'
+import InstructSSOutMsg from '@/types/messages/outgoing/InstructSSOutMsg'
 // MACHINE STORE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the machine stores stores the machines and related information and provides
 // methods to interact with them
@@ -16,13 +27,15 @@ export const useMachineStore = defineStore('machineStore', () => {
   const shelfSlots: Ref<ShelfSlot[]> = ref([])
   const ringSpecs: Ref<RingSpec[]> = ref([])
 
+  const socketStore = useSocketStore()
+
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> machines by color
   const machinesByColor: ComputedRef<(color: Color) => Machine[]> = computed(
     () => {
       return (color: Color) =>
         machines.value.filter((machine) => machine.team == color)
-    }
+    },
   )
 
   // -> payment by ring
@@ -30,7 +43,7 @@ export const useMachineStore = defineStore('machineStore', () => {
     computed(() => {
       return (ring: string) => {
         const ringSpec = ringSpecs.value.find(
-          (ringSpec) => ringSpec.color == ring
+          (ringSpec) => ringSpec.color == ring,
         )
         if (ringSpec) {
           return ringSpec.req_bases
@@ -71,7 +84,7 @@ export const useMachineStore = defineStore('machineStore', () => {
   function setMachine(machineArg: Machine): void {
     // try to find the machine
     const index = machines.value.findIndex(
-      (machine) => machine.name === machineArg.name
+      (machine) => machine.name === machineArg.name,
     )
 
     // if we have found a machine, replace it
@@ -106,7 +119,7 @@ export const useMachineStore = defineStore('machineStore', () => {
       (slotFi) =>
         slotFi.name == slotArg.name &&
         slotFi.shelf == slotArg.shelf &&
-        slotFi.slot == slotArg.slot
+        slotFi.slot == slotArg.slot,
     )
 
     // if we have found a shelf slot, replace it
@@ -123,7 +136,7 @@ export const useMachineStore = defineStore('machineStore', () => {
   function setRingSpec(ringSpecArg: RingSpec): void {
     // try to find the shelf slot
     const index = ringSpecs.value.findIndex(
-      (ringSpecFi) => ringSpecFi.color == ringSpecArg.color
+      (ringSpecFi) => ringSpecFi.color == ringSpecArg.color,
     )
 
     // if we have found a shelf slot, replace it
@@ -134,6 +147,70 @@ export const useMachineStore = defineStore('machineStore', () => {
     else {
       ringSpecs.value.push(ringSpecArg)
     }
+  }
+
+  function sendInstructBS({
+    team_name,
+    machine,
+    side,
+    base_color,
+  }: InstructBS) {
+    const msg: InstructBSOutMsg = {
+      command: 'instruct_bs',
+      team_name,
+      machine,
+      side,
+      base_color,
+    }
+    socketStore.sendMessage(msg)
+  }
+
+  function sendInstructCS({ team_name, machine, operation }: InstructCS) {
+    const msg: InstructCSOutMsg = {
+      command: 'instruct_cs',
+      team_name,
+      machine,
+      operation,
+    }
+    socketStore.sendMessage(msg)
+  }
+
+  function sendInstructRS({ team_name, machine, ring_color }: InstructRS) {
+    const msg: InstructRSOutMsg = {
+      command: 'instruct_rs',
+      team_name,
+      machine,
+      ring_color,
+    }
+    socketStore.sendMessage(msg)
+  }
+
+  function sendInstructDS({ team_name, machine, order }: InstructDS) {
+    const msg: InstructDSOutMsg = {
+      command: 'instruct_ds',
+      team_name,
+      machine,
+      order,
+    }
+    socketStore.sendMessage(msg)
+  }
+
+  function sendInstructSS({
+    team_name,
+    machine,
+    operation,
+    shelf,
+    slot,
+  }: InstructSS) {
+    const msg: InstructSSOutMsg = {
+      command: 'instruct_ss',
+      team_name,
+      machine,
+      operation,
+      shelf,
+      slot,
+    }
+    socketStore.sendMessage(msg)
   }
 
   // -> reset
@@ -154,6 +231,11 @@ export const useMachineStore = defineStore('machineStore', () => {
     setMachine,
     setShelfSlot,
     setRingSpec,
+    sendInstructBS,
+    sendInstructRS,
+    sendInstructCS,
+    sendInstructDS,
+    sendInstructSS,
     reset,
   }
 })
