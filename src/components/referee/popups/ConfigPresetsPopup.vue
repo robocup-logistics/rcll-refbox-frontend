@@ -62,6 +62,11 @@
             :options="['ground truth', 'no ground truth']"
             v-model="groundTruthValues['production']"
           />
+          <Select
+            class="selector-field"
+            :options="['with DS', 'without DS']"
+            v-model="withDsValues['production']"
+          />
           <Button
             class="apply-button"
             primary
@@ -117,6 +122,7 @@ const selection = ref<{ [key: string]: string }>({
   production: 'c3',
 })
 const groundTruthValues = ref<{ [key: string]: string }>({})
+const withDsValues = ref<{ [key: string]: string }>({})
 // Define a method to capitalize the first letter of a string
 const capitalizeFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
@@ -166,23 +172,34 @@ function applyChanges(category) {
     })
   } else if (category === 'production') {
     const currGroundTruth = groundTruthValues._rawValue[category]
-    if (currGroundTruth === undefined) {
-      console.log('Ignoring due to undefined selection of ground truth option')
-    } else if (currGroundTruth === 'ground truth') {
-      presetStore.sendSetConfigPreset({
-        category: 'challenges/prod',
-        preset: currSelection,
-      })
-    } else if (currGroundTruth === 'no ground truth') {
-      presetStore.sendSetConfigPreset({
-        category: 'challenges/prod',
-        preset: currSelection,
-      })
+    const currWithDs = withDsValues._rawValue[category]
+    if (currWithDs === undefined) {
+      console.log('Ignoring due to undefined selection of DS option')
     } else {
-      console.log(
-        'Ignoring due to unknown ground truth selection',
-        currGroundTruth,
-      )
+      var suffix = ''
+      if (currWithDs === 'with DS') {
+        suffix = '_ds'
+      }
+      if (currGroundTruth === undefined) {
+        console.log(
+          'Ignoring due to undefined selection of ground truth option',
+        )
+      } else if (currGroundTruth === 'ground truth') {
+        presetStore.sendSetConfigPreset({
+          category: 'challenges/prod',
+          preset: currSelection + suffix,
+        })
+      } else if (currGroundTruth === 'no ground truth') {
+        presetStore.sendSetConfigPreset({
+          category: 'challenges/prod',
+          preset: currSelection + suffix,
+        })
+      } else {
+        console.log(
+          'Ignoring due to unknown ground truth selection',
+          currGroundTruth,
+        )
+      }
     }
   } else {
     presetStore.sendSetConfigPreset({
