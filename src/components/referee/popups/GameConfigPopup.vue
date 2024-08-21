@@ -42,6 +42,7 @@ import Accordion from '@/components/shared/ui/Accordion.vue'
 import Input from '@/components/shared/ui/Input.vue'
 import Button from '@/components/shared/ui/Button.vue'
 import { useKeyboardStore } from '@/store/keyboardStore'
+import fuzzysort from 'fuzzysort';
 import { type Ref, ref, type ComputedRef, computed, watch } from 'vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -59,9 +60,14 @@ function applyChanges(path) {
   configStore.sendSetConfigValue({ path: path, value: newValue })
 }
 
-const filteredGameConfigValues: ComputedRef<[string, any][]> = computed(() =>
-  [...gameConfig.value].filter(([path, _]) => path.includes(filter.value)),
-)
+const filteredGameConfigValues = computed(() => {
+  // Ensure there is a filter value; otherwise, return all entries
+  if (!filter.value.trim()) return [...gameConfig.value];
+
+  // Use fuzzysort to find matches, flatten results, and map them back to the original [key, value] format
+  return fuzzysort.go(filter.value, [...gameConfig.value], { key: pair => pair[0] })
+    .map(result => result.obj);
+});
 
 const popup: Ref<typeof Popup | undefined> = ref()
 watch(
