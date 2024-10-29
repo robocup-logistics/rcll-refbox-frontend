@@ -118,20 +118,25 @@ export const useOrderStore = defineStore('orderStore', () => {
   // order) are also okay as long as they have the three mentioned properties
   const fileNameByWorkpiece: ComputedRef<
     (workpiece: {
-      base_color: string
-      ring_colors: string[]
-      cap_color: string
+      base_color: string | null
+      ring_colors: string[] | null
+      cap_color: string | null
     }) => string
   > = computed(() => {
     return (workpiece: {
-      base_color: string
-      ring_colors: string[]
-      cap_color: string
+      base_color: string | null
+      ring_colors: string[] | null
+      cap_color: string | null
     }) => {
+      if (!workpiece.base_color && (!workpiece.ring_colors || workpiece.ring_colors.length === 0) && !workpiece.cap_color) {
+        return "BASE_ANY.svg"
+      }
+
       const parts = []
       if (workpiece.base_color) parts.push(workpiece.base_color)
-      parts.push(...workpiece.ring_colors)
+      if (workpiece.ring_colors) parts.push(...workpiece.ring_colors)
       if (workpiece.cap_color) parts.push(workpiece.cap_color)
+
       return `${parts.join('-')}.svg`
     }
   })
