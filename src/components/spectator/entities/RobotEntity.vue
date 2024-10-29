@@ -4,17 +4,19 @@
     <div class="robot">
       <PopupWrapper>
         <template #reference>
-          <img
-            :src="`/robots/robot-${robot.team_color}.svg`"
-            class="clickable"
-            draggable="false"
-          />
-          <font-awesome-icon icon="fa-info-circle" class="info" />
-          <WorkpieceEntity
-            v-if="holdingWorkpiece"
-            :workpiece="holdingWorkpiece"
-            class="workpiece"
-          />
+          <div class="robot-container">
+            <img
+              :src="`/robots/robot-${robot.team_color}.svg`"
+              class="clickable"
+              draggable="false"
+            />
+            <font-awesome-icon icon="fa-info-circle" class="info" />
+            <WorkpieceEntity
+              v-if="holdingWorkpiece"
+              :workpiece="holdingWorkpiece"
+              class="workpiece"
+            />
+            </div>
         </template>
         <RobotPopup
           :robot="robot"
@@ -113,10 +115,16 @@ watch(
   );
 
   .robot {
+    .robot-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transform: rotate(calc((v-bind('robot.pose[2]') + 90) * 1deg));
+    }
+
     img {
       height: 100%;
       width: 100%;
-      transform: rotate(calc((v-bind('robot.pose[2]') + 90) * 1deg));
     }
 
     .info {
@@ -131,9 +139,9 @@ watch(
 
     .workpiece {
       position: absolute;
-      top: 120%;
-      left: 50%;
-      --add-transform: rotate(calc((v-bind('robot.pose[2]')) * -1deg));
+      top: 0;
+      right: 0;
+      --add-transform: translateX(100%) translateY(100%) rotate(calc((v-bind('robot.pose[2]')) * -1deg - 90deg));
     }
   }
 }
