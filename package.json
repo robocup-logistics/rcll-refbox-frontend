@@ -13,7 +13,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/vue-fontawesome": "^3.0.3",
-    "axios": "^1.4.0",
+    "axios": "^1.7.4",
     "fuzzysort": "^3.0.2",
     "jquery": "^3.5.1",
     "mongodb": "^6.1.0",
