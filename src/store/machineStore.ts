@@ -18,6 +18,10 @@ import type InstructDS from '@/types/InstructDS'
 import InstructDSOutMsg from '@/types/messages/outgoing/InstructDSOutMsg'
 import type InstructSS from '@/types/InstructSS'
 import InstructSSOutMsg from '@/types/messages/outgoing/InstructSSOutMsg'
+import MachineWorkStatus from '@/types/MachineWorkStatus'
+import SetMachineWorkStatusOutMsg from '@/types/messages/outgoing/SetMachineWorkStatusOutmsg'
+import BreakMachine from '@/types/BreakMachine'
+import BreakMachineOutMsg from '@/types/messages/outgoing/BreakMachineOutMsg'
 // MACHINE STORE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the machine stores stores the machines and related information and provides
 // methods to interact with them
@@ -213,11 +217,29 @@ export const useMachineStore = defineStore('machineStore', () => {
     socketStore.sendMessage(msg)
   }
 
+  function sendBreakMachine({ machine }: BreakMachine) {
+    const msg: BreakMachineOutMsg = {
+      command: 'break_machine',
+      machine,
+    }
+    socketStore.sendMessage(msg)
+  }
+
   // -> reset
   function reset() {
     machines.value = []
     shelfSlots.value = []
     ringSpecs.value = []
+  }
+
+  function setMachineWorkStatus({ name, busy, ready }: MachineWorkStatus) {
+    const msg: SetMachineWorkStatusOutMsg = {
+      command: 'set_machine_work_status',
+      name,
+      busy,
+      ready,
+    }
+    socketStore.sendMessage(msg)
   }
 
   // EXPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -236,6 +258,8 @@ export const useMachineStore = defineStore('machineStore', () => {
     sendInstructCS,
     sendInstructDS,
     sendInstructSS,
+    sendBreakMachine,
+    setMachineWorkStatus,
     reset,
   }
 })

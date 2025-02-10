@@ -67,7 +67,19 @@
                   : '',
             ]"
           >
-            {{ machine.state }}
+            <!-- {{ machine.state }} -->
+            <PopupWrapper>
+              <template #reference>
+                <Button
+                  primary
+                  title="hotfix"
+                  style="padding: 2px 5px; font-size: 0.7rem"
+                >
+                  {{ machine.state }}
+                </Button>
+              </template>
+              <SetMachineWorkStatusPopup :asPopup="true" :name="machine.name" />
+            </PopupWrapper>
           </span>
         </div>
       </template>
@@ -83,6 +95,9 @@ import { useGameStore } from '@/store/gameStore'
 import { useMachineStore } from '@/store/machineStore'
 import { ComputedRef, PropType, computed } from 'vue'
 import Color from '@/types/Color'
+import SetMachineWorkStatusPopup from '@/components/referee/popups/SetMachineWorkStatusPopup.vue'
+import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
+import Button from '@/components/shared/ui/Button.vue'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 defineProps({
