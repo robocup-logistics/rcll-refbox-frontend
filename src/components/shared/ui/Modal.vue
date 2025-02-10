@@ -1,10 +1,12 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div class="modal-bg" v-show="visible"></div>
-  <div class="modal" v-show="visible">
-    <Popup :title="title" :icon="icon" permanent>
-      <slot></slot>
-    </Popup>
+  <div v-show="visible">
+    <div class="modal-bg" v-show="visible"></div>
+    <div class="modal" v-show="visible">
+      <Popup :title="title" :icon="icon" permanent>
+        <slot></slot>
+      </Popup>
+    </div>
   </div>
 </template>
 
