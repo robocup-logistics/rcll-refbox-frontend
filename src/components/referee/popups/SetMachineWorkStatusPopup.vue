@@ -148,10 +148,10 @@ function applyWorkStatus() {
     throw new Error('tried to set a work state without busy or ready set.')
   }
   if (mode.value !== undefined && mode.value !== null) {
-    configStore.sendSetConfigValue(
-      `/llsfrb/mps/stations/${props.name}/connection`,
-      mode.value,
-    )
+    configStore.sendSetConfigValue({
+      path: `/llsfrb/mps/stations/${props.name}/connection`,
+      value: mode.value,
+    })
   }
 }
 
