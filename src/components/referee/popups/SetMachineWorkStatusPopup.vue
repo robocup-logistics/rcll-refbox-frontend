@@ -69,7 +69,7 @@
             primary
             :style="{ backgroundColor: 'grey' }"
             @click="toggleModal()"
-            >Apbort</Button
+            >Abort</Button
           >
           <Button icon="fa-square-plus" primary @click="applyWorkStatus()"
             >Apply</Button
