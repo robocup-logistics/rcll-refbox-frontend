@@ -183,24 +183,41 @@ const ringColorCost: ComputedRef<(ringColor: string) => number> = computed(
 }
 
 .BASE_BLACK {
-  background-color: black !important;
+  text-decoration-color: black !important;
 }
+
 .BASE_RED {
-  background-color: rgb(228, 44, 44) !important;
+  text-decoration-color: rgb(228, 44, 44) !important;
 }
+
 .BASE_SILVER {
-  background-color: silver !important;
+  text-decoration-color: silver !important;
 }
+
 .RING_ORANGE {
-  background-color: orangered !important;
+  text-decoration-color: #ffa500 !important;
 }
+
 .RING_GREEN {
-  background-color: green;
+  text-decoration-color: green !important;
 }
+
 .RING_BLUE {
-  background-color: rgba(0, 0, 255, 0.651) !important;
+  text-decoration-color: rgba(0, 0, 255, 0.651) !important;
 }
+
 .RING_YELLOW {
-  background-color: rgba(255, 255, 0, 0.685) !important;
+  text-decoration-color: rgba(255, 255, 0, 0.685) !important;
+}
+
+.BASE_BLACK,
+.BASE_RED,
+.BASE_SILVER,
+.RING_ORANGE,
+.RING_GREEN,
+.RING_BLUE,
+.RING_YELLOW {
+  text-decoration: underline;
+  text-decoration-thickness: 5px;
 }
 </style>
