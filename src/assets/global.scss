@@ -1,4 +1,5 @@
-@import '@/assets/variables.scss';
+@forward '@/assets/variables.scss';
+@use '@/assets/variables.scss' as global;
 
 * {
   font-family: 'Lucida Console', 'Courier New', monospace;
@@ -12,7 +13,7 @@
 
   // scrollbars ...
   // ... for firefox
-  scrollbar-color: $lightestColor transparent;
+  scrollbar-color: global.$lightestColor transparent;
 
   // ... for chromium/safari
   ::-webkit-scrollbar {
@@ -22,11 +23,11 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: $lightestColor;
+    background-color: global.$lightestColor;
     border-radius: 3px;
 
     &:active {
-      background-color: $lighterColor;
+      background-color: global.$lighterColor;
     }
   }
 }
@@ -132,8 +133,8 @@ p {
 
   color: white;
   text-align: center;
-  background-color: $surfaceColor;
-  box-shadow: 0 0 6px 1px rgba($bgColor, 0.8);
+  background-color: global.$surfaceColor;
+  box-shadow: 0 0 6px 1px rgba(global.$bgColor, 0.8);
   overflow: hidden;
 
   &.grow {
@@ -147,24 +148,24 @@ p {
   }
 
   &.lighter {
-    background-color: $lighterColor;
+    background-color: global.$lighterColor;
   }
 
   &.CYAN {
     color: black;
-    background-color: $cyanColor !important;
+    background-color: global.$cyanColor !important;
   }
 
   &.MAGENTA {
     color: black;
-    background-color: $magentaColor !important;
+    background-color: global.$magentaColor !important;
   }
 }
 
 .content-box {
   border-radius: 8px;
-  border: 2px solid $bgColor;
-  background-color: rgba($bgColor, 0.5);
+  border: 2px solid global.$bgColor;
+  background-color: rgba(global.$bgColor, 0.5);
   padding: 10px;
 }
 
@@ -175,19 +176,19 @@ p {
 }
 
 .CYAN-text {
-  color: $cyanColor !important;
+  color: global.$cyanColor !important;
 }
 
 .MAGENTA-text {
-  color: $magentaColor !important;
+  color: global.$magentaColor !important;
 }
 
 .CYAN-bg {
-  background-color: $cyanColor !important;
+  background-color: global.$cyanColor !important;
 }
 
 .MAGENTA-bg {
-  background-color: $magentaColor !important;
+  background-color: global.$magentaColor !important;
 }
 
 .text-subtle {

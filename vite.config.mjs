@@ -4,6 +4,13 @@ import * as path from 'path'
 
 export default defineConfig({
   plugins: [vue()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler', // or "modern"
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(

@@ -40,6 +40,17 @@
       />
       <!-- / End Confirm Delivery Modal -->
     </template>
+
+    <template
+      v-for="machine in machines.filter((m) => m.referee_required)"
+      :key="machine.name"
+    >
+      <SetMachineWorkStatusPopup
+        :asPopup="false"
+        :name="machine.name"
+        permanent
+      />
+    </template>
   </div>
 </template>
 
@@ -52,16 +63,20 @@ import AttentionMessages from '@/components/referee/AttentionMessages.vue'
 import Orders from '@/components/referee/Orders.vue'
 import { storeToRefs } from 'pinia'
 import { useGameStore } from '@/store/gameStore'
+import { useMachineStore } from '@/store/machineStore'
 import RefboxLog from '@/components/referee/RefboxLog.vue'
 import Team from '@/components/referee/Team.vue'
 import ConfirmDeliveryPopup from '@/components/referee/popups/ConfirmDeliveryPopup.vue'
+import SetMachineWorkStatusPopup from '@/components/referee/popups/SetMachineWorkStatusPopup.vue'
 import { useOrderStore } from '@/store/orderStore'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const gameStore = useGameStore()
 const orderStore = useOrderStore()
+const machineStore = useMachineStore()
 const { phase, nameTeamCyan, nameTeamMagenta, teamNameByColor } =
   storeToRefs(gameStore)
+const { machines } = storeToRefs(machineStore)
 const { unconfirmedOrders } = storeToRefs(orderStore)
 </script>
 

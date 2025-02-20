@@ -42,6 +42,10 @@ export type MachineStatic = {
 // changes regularly
 export type MachineCurrent = {
   name: string
+  busy: 'WAIT' | 'FALSE' | 'TRUE'
+  ready: boolean
+  referee_required: boolean
+  broken_reason: string
   state:
     | 'IDLE'
     | 'WAIT-IDLE'

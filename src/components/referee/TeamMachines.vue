@@ -67,7 +67,19 @@
                   : '',
             ]"
           >
-            {{ machine.state }}
+            <!-- {{ machine.state }} -->
+            <PopupWrapper>
+              <template #reference>
+                <Button
+                  primary
+                  title="hotfix"
+                  style="padding: 2px 5px; font-size: 0.7rem"
+                >
+                  {{ machine.state }}
+                </Button>
+              </template>
+              <SetMachineWorkStatusPopup :asPopup="true" :name="machine.name" />
+            </PopupWrapper>
           </span>
         </div>
       </template>
@@ -83,6 +95,9 @@ import { useGameStore } from '@/store/gameStore'
 import { useMachineStore } from '@/store/machineStore'
 import { ComputedRef, PropType, computed } from 'vue'
 import Color from '@/types/Color'
+import SetMachineWorkStatusPopup from '@/components/referee/popups/SetMachineWorkStatusPopup.vue'
+import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
+import Button from '@/components/shared/ui/Button.vue'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 defineProps({
@@ -168,24 +183,41 @@ const ringColorCost: ComputedRef<(ringColor: string) => number> = computed(
 }
 
 .BASE_BLACK {
-  background-color: black !important;
+  text-decoration-color: black !important;
 }
+
 .BASE_RED {
-  background-color: rgb(228, 44, 44) !important;
+  text-decoration-color: rgb(228, 44, 44) !important;
 }
+
 .BASE_SILVER {
-  background-color: silver !important;
+  text-decoration-color: silver !important;
 }
+
 .RING_ORANGE {
-  background-color: orangered !important;
+  text-decoration-color: #ffa500 !important;
 }
+
 .RING_GREEN {
-  background-color: green;
+  text-decoration-color: green !important;
 }
+
 .RING_BLUE {
-  background-color: rgba(0, 0, 255, 0.651) !important;
+  text-decoration-color: rgba(0, 0, 255, 0.651) !important;
 }
+
 .RING_YELLOW {
-  background-color: rgba(255, 255, 0, 0.685) !important;
+  text-decoration-color: rgba(255, 255, 0, 0.685) !important;
+}
+
+.BASE_BLACK,
+.BASE_RED,
+.BASE_SILVER,
+.RING_ORANGE,
+.RING_GREEN,
+.RING_BLUE,
+.RING_YELLOW {
+  text-decoration: underline;
+  text-decoration-thickness: 5px;
 }
 </style>

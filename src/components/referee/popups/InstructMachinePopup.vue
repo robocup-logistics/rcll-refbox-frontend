@@ -201,7 +201,7 @@ function instruct() {
     })
   }
   if (selectedMachineType.value === 'SS') {
-    machineStore.sendInstructBS({
+    machineStore.sendInstructSS({
       team_name: team_name.value,
       machine: selection.value['machine'],
       operation: selection.value['ss-op'],

@@ -224,7 +224,7 @@ const defaultIcon = 'fa-khanda'
 //const tabs = Array.from(new Set(Array.from(configPresets._rawValue).map(preset => preset.category)));
 const tabs = Array.from(
   new Set(
-    Array.from(configPresets._rawValue)
+    Array.from(configPresets.value)
       .filter((preset) => preset.category !== '') // Exclude entries where category is empty
       .map((preset) => {
         const category = preset.category.startsWith('challenges/')
