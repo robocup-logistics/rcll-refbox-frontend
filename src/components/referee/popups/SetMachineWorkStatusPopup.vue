@@ -12,6 +12,19 @@
       <div>
         <table class="status-table">
           <thead>
+            <tr
+              v-if="
+                machine &&
+                machine.broken_reason &&
+                machine.broken_reason.trim() !== ''
+              "
+            >
+              <th colspan="3" class="broken-reason-header">
+                <font-awesome-icon icon="fa-triangle-exclamation" />
+                {{ machine.broken_reason }}
+                <font-awesome-icon icon="fa-triangle-exclamation" />
+              </th>
+            </tr>
             <tr>
               <th>Status</th>
               <th>Current</th>

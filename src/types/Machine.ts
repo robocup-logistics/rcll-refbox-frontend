@@ -45,6 +45,7 @@ export type MachineCurrent = {
   busy: 'WAIT' | 'FALSE' | 'TRUE'
   ready: boolean
   referee_required: boolean
+  broken_reason: string
   state:
     | 'IDLE'
     | 'WAIT-IDLE'
