@@ -71,6 +71,28 @@
                 />
               </td>
             </tr>
+            <tr v-if="machine && machine.mtype == 'RS'">
+              <td>Bases used</td>
+              <td>{{ machine.bases_used }}</td>
+              <td></td>
+            </tr>
+            <tr v-if="machine && machine.mtype == 'RS'">
+              <td>Bases added</td>
+              <td>{{ machine.bases_added }}</td>
+              <td>
+                <Button
+                  primary
+                  style="
+                    padding: 5px 8px;
+                    font-size: 0.8rem !important;
+                    width: auto;
+                  "
+                  @click="increasePayCount()"
+                >
+                  Increase
+                </Button>
+              </td>
+            </tr>
           </tbody>
         </table>
         <div>state: {{ machine.state }}</div>
@@ -78,17 +100,13 @@
         <div class="button-row">
           <Button
             v-if="!asPopup"
-            icon="fa-square-plus"
             primary
             :style="{ backgroundColor: 'grey' }"
             @click="toggleModal()"
             >Abort</Button
           >
-          <Button icon="fa-square-plus" primary @click="applyWorkStatus()"
-            >Apply</Button
-          >
+          <Button primary @click="applyWorkStatus()">Apply</Button>
           <Button
-            icon="fa-square-plus"
             primary
             :style="{ backgroundColor: 'red' }"
             @click="breakMachine()"
@@ -166,6 +184,10 @@ function applyWorkStatus() {
       value: mode.value,
     })
   }
+}
+
+function increasePayCount() {
+  machineStore.sendAddPaymentRS(props.name)
 }
 
 function breakMachine() {

@@ -18,8 +18,9 @@ import type InstructDS from '@/types/InstructDS'
 import InstructDSOutMsg from '@/types/messages/outgoing/InstructDSOutMsg'
 import type InstructSS from '@/types/InstructSS'
 import InstructSSOutMsg from '@/types/messages/outgoing/InstructSSOutMsg'
+import AddPaymentRSOutMsg from '@/types/messages/outgoing/AddPaymentRSOutMsg'
 import MachineWorkStatus from '@/types/MachineWorkStatus'
-import SetMachineWorkStatusOutMsg from '@/types/messages/outgoing/SetMachineWorkStatusOutmsg'
+import SetMachineWorkStatusOutMsg from '@/types/messages/outgoing/SetMachineWorkStatusOutMsg'
 import BreakMachine from '@/types/BreakMachine'
 import BreakMachineOutMsg from '@/types/messages/outgoing/BreakMachineOutMsg'
 // MACHINE STORE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -217,6 +218,14 @@ export const useMachineStore = defineStore('machineStore', () => {
     socketStore.sendMessage(msg)
   }
 
+  function sendAddPaymentRS(machine_name: string) {
+    const msg: AddPaymentRSOutMsg = {
+      command: 'add_payment_rs',
+      machine: machine_name,
+    }
+    socketStore.sendMessage(msg)
+  }
+
   function sendBreakMachine({ machine }: BreakMachine) {
     const msg: BreakMachineOutMsg = {
       command: 'break_machine',
@@ -258,6 +267,7 @@ export const useMachineStore = defineStore('machineStore', () => {
     sendInstructCS,
     sendInstructDS,
     sendInstructSS,
+    sendAddPaymentRS,
     sendBreakMachine,
     setMachineWorkStatus,
     reset,
