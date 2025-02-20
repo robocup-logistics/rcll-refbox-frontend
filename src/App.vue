@@ -43,7 +43,7 @@ function toggleOptions() {
 
 // STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
-@use '@/assets/global.scss';
+@use '@/assets/global.scss' as global;
 
 #app {
   background-color: global.$bgColor;
