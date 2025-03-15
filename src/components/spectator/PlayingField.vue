@@ -6,7 +6,10 @@ s// TEMPLATE
   </Modal>
 
   <div id="playingFieldWrapper" ref="playingFieldWrapper">
-    <div id="playingFieldContent">
+    <div
+      id="playingFieldContent"
+      :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
+    >
       <!-- FIELD SQUARES WITH MACHINES ON THEM -->
       <div id="playingField" ref="playingField">
         <template v-for="vIndex in verticalFieldSize">
@@ -111,6 +114,8 @@ const {
   fieldWrapperHeightPixels,
   fieldWidthPixels,
   fieldHeightPixels,
+  isMirroredX,
+  isMirroredY,
 } = storeToRefs(fieldStore)
 const robotStore = useRobotStore()
 const { robots, agentTasks } = storeToRefs(robotStore)
@@ -119,7 +124,6 @@ const { advancedOptions, currentView } = storeToRefs(appStore)
 
 const isConfirmed = ref(false)
 const showPopup = ref(false)
-
 // zones - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function getZoneNameFor(x: number, y: number): string {
   let zone = ''
@@ -215,6 +219,15 @@ watch(playingField, (newPlayingField, _) => {
 // STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
 @use '@/assets/global.scss';
+.mirroredX {
+  transform: scaleY(-1);
+}
+.mirroredY {
+  transform: scaleX(-1);
+}
+.mirroredY.mirroredX {
+  transform: scale(-1, -1);
+}
 #playingFieldWrapper {
   width: 100%;
   height: 100%;

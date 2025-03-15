@@ -25,6 +25,8 @@ export const useFieldStore = defineStore('fieldStore', () => {
   const fieldWrapperHeightPixels: Ref<number> = ref(0)
   const fieldWidthPixels: Ref<number> = ref(0)
   const fieldHeightPixels: Ref<number> = ref(0)
+  const isMirroredX: Ref<boolean> = ref(false)
+  const isMirroredY: Ref<boolean> = ref(false)
 
   // COMPUTED  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // -> config
@@ -151,5 +153,7 @@ export const useFieldStore = defineStore('fieldStore', () => {
     sendRandomizeField,
     sendSetMachinePose,
     reset,
+    isMirroredX,
+    isMirroredY,
   }
 })

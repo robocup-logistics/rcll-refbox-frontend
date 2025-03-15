@@ -11,6 +11,20 @@
         <font-awesome-icon icon="fa-arrow-left"
       /></PillButton>
       <PillButton
+        description="MirrorX"
+        title="MirrorX"
+        @click="isMirroredX = !isMirroredX"
+      >
+        <font-awesome-icon icon="fa-camera-rotate"
+      /></PillButton>
+      <PillButton
+        description="MirrorY"
+        title="MirrorY"
+        @click="isMirroredY = !isMirroredY"
+      >
+        <font-awesome-icon icon="fa-camera-rotate"
+      /></PillButton>
+      <PillButton
         description="Referee"
         v-if="socket"
         title="Switch to referee mode"
@@ -49,6 +63,7 @@ import { storeToRefs } from 'pinia'
 import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import PillButton from '@/components/shared/ui/PillButton.vue'
 import { useSocketStore } from '@/store/socketStore'
+import { useFieldStore } from '@/store/fieldStore'
 import ReviewGameReportPopup from '@/components/spectator/popups/ReviewGameReportPopup.vue'
 import WatchGameLivePopup from '@/components/spectator/popups/WatchGameLivePopup.vue'
 import { useAppStore } from '@/store/appStore'
@@ -57,6 +72,8 @@ import Accordion from '@/components/shared/ui/Accordion.vue'
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const socketStore = useSocketStore()
 const { socket } = storeToRefs(socketStore)
+const fieldStore = useFieldStore()
+const { isMirroredX, isMirroredY } = storeToRefs(fieldStore)
 const appStore = useAppStore()
 const { currentView } = storeToRefs(appStore)
 </script>
