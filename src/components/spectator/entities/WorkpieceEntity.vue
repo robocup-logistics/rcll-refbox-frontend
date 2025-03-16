@@ -2,7 +2,10 @@ Workpiece entities are displayed right on the playing field as well as in the
 popups of the entities (robots or machines) that currently hold them............
 //TEMPLATE ---------------------------------------------------------------------
 <template>
-  <PopupWrapper v-if="clickable">
+  <PopupWrapper
+    v-if="clickable"
+    :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
+  >
     <template #reference>
       <div class="workpiece-entity clickable">
         <img
@@ -51,12 +54,22 @@ defineProps({
 const orderStore = useOrderStore()
 const { fileNameByWorkpiece } = storeToRefs(orderStore)
 const fieldStore = useFieldStore()
-const { squareDiameterPixels } = storeToRefs(fieldStore)
+const { squareDiameterPixels, isMirroredX, isMirroredY } =
+  storeToRefs(fieldStore)
 </script>
 
 // STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
 @use '@/assets/global.scss';
+.mirroredX {
+  transform: scaleY(-1);
+}
+.mirroredY {
+  transform: scaleX(-1);
+}
+.mirroredY.mirroredX {
+  transform: scale(-1, -1);
+}
 .workpiece-entity {
   transform: translate(-50%, -50%) var(--add-transform);
 
