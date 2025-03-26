@@ -11,20 +11,6 @@
         <font-awesome-icon icon="fa-arrow-left"
       /></PillButton>
       <PillButton
-        description="MirrorX"
-        title="MirrorX"
-        @click="isMirroredX = !isMirroredX"
-      >
-        <font-awesome-icon icon="fa-camera-rotate"
-      /></PillButton>
-      <PillButton
-        description="MirrorY"
-        title="MirrorY"
-        @click="isMirroredY = !isMirroredY"
-      >
-        <font-awesome-icon icon="fa-camera-rotate"
-      /></PillButton>
-      <PillButton
         description="Referee"
         v-if="socket"
         title="Switch to referee mode"
@@ -33,6 +19,14 @@
         <font-awesome-icon icon="fa-user-tie"
       /></PillButton>
 
+      <PillButton
+        description="MirrorX"
+        title="MirrorX"
+        :class="{ invertedButton: isMirroredX }"
+        @click="isMirroredX = !isMirroredX"
+      >
+        <font-awesome-icon icon="fa-camera-rotate"
+      /></PillButton>
       <!-- CONNECT TO A LIVE GAME -->
       <PopupWrapper popup-position="bottom">
         <template #reference>
@@ -52,6 +46,15 @@
         </template>
         <ReviewGameReportPopup></ReviewGameReportPopup>
       </PopupWrapper>
+
+      <PillButton
+        description="MirrorY"
+        title="MirrorY"
+        :class="{ invertedButton: isMirroredY }"
+        @click="isMirroredY = !isMirroredY"
+      >
+        <font-awesome-icon icon="fa-camera-rotate"
+      /></PillButton>
     </div>
   </Accordion>
 </template>
@@ -85,7 +88,7 @@ const { currentView } = storeToRefs(appStore)
   .menu {
     width: unset;
     display: inline-grid;
-    grid-template-columns: 50px 50px;
+    grid-template-columns: 50px 50px 50px;
     gap: 10px;
   }
 }
