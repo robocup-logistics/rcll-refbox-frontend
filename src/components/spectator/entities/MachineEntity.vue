@@ -3,7 +3,7 @@
   <div class="machine-entity-wrapper">
     <div class="machine-entity" :id="`machine-${machine.name}`">
       <div class="machine">
-        <PopupWrapper :spectatorOnly="true" style="height: 100%; width: 100%">
+        <PopupWrapper :spectatorOnly="inEditMode" style="height: 100%; width: 100%">
           <template #reference>
             <div class="img-wrapper">
               <img
@@ -39,6 +39,7 @@ import PopupWrapper from '@/components/shared/ui/PopupWrapper.vue'
 import { useEventStore } from '@/store/eventStore'
 import Workpiece from '@/types/Workpiece'
 import { useOrderStore } from '@/store/orderStore'
+import { useFieldStore } from '@/store/fieldStore'
 import { storeToRefs } from 'pinia'
 import WorkpieceEntity from '@/components/spectator/entities/WorkpieceEntity.vue'
 
@@ -54,6 +55,9 @@ const props = defineProps({
 const eventStore = useEventStore()
 const orderStore = useOrderStore()
 const { workpieces } = storeToRefs(orderStore)
+
+const fieldStore = useFieldStore()
+const { inEditMode } = storeToRefs(fieldStore)
 
 // get file name - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function getMachineFileName(): string {

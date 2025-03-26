@@ -27,6 +27,7 @@ import StartMenu from '@/components/start-menu/StartMenu.vue'
 import RefereeApp from '@/components/referee/RefereeApp.vue'
 import SpectatorApp from './components/spectator/SpectatorApp.vue'
 import { useKeyboardStore } from './store/keyboardStore'
+import { useFieldStore } from '@/store/fieldStore'
 import type Shortcut from '@/types/Shortcut'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -34,10 +35,15 @@ const appStore = useAppStore()
 const { advancedOptions, currentView } = storeToRefs(appStore)
 const keyboardStore = useKeyboardStore()
 const { shortcuts } = storeToRefs(keyboardStore)
+const fieldStore = useFieldStore()
+const { inEditMode } = storeToRefs(fieldStore)
 
 // toggle options  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function toggleOptions() {
   advancedOptions.value = !advancedOptions.value
+  if(!advancedOptions.value) {
+      inEditMode.value = false
+  }
 }
 </script>
 

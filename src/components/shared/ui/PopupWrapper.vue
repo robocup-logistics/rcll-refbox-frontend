@@ -112,6 +112,9 @@ function togglePopup() {
   popupOpen.value = !popupOpen.value
 }
 
+defineExpose({
+  togglePopup
+})
 provide('togglePopup', togglePopup)
 </script>
 
