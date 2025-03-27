@@ -5,18 +5,23 @@
       <PopupWrapper>
         <template #reference>
           <div class="robot-container">
-            <img
-              :src="`/robots/robot-${robot.team_color}.svg`"
-              class="clickable"
-              draggable="false"
-            />
-            <font-awesome-icon icon="fa-info-circle" class="info" />
-            <WorkpieceEntity
-              v-if="holdingWorkpiece"
-              :workpiece="holdingWorkpiece"
-              class="workpiece"
-            />
+            <div class="robot-rotate">
+              <img :src="`/robots/robot-${robot.team_color}${robot.number}.svg`"
+                class="clickable robot-img"
+                draggable="false"/>
+              <div class="workpiece-wrapper" v-if="holdingWorkpiece">
+                <WorkpieceEntity
+                  :workpiece="holdingWorkpiece"
+                  class="workpiece"/>
+              </div>
+              <div class="robot-number-wrapper">
+                <img :src="`/robots/robot-${robot.team_color}${robot.number}Nc.svg`"
+                  class="robot-number"
+                  draggable="false"/>
+                  </div>
             </div>
+            <font-awesome-icon icon="fa-info-circle" class="info" />
+          </div>
         </template>
         <RobotPopup
           :robot="robot"
@@ -119,10 +124,21 @@ watch(
         position: absolute;
         width: 100%;
         height: 100%;
+    }
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    .robot-rotate {
         transform: rotate(calc((v-bind('robot.pose[2]') + 90) * 1deg));
+        /* animation: spin 2s linear infinite; */
     }
 
-    img {
+    .robot-img {
       height: 100%;
       width: 100%;
     }
@@ -135,13 +151,34 @@ watch(
       color: white;
       background-color: global.$surfaceColor;
       border-radius: 100%;
+
     }
 
-    .workpiece {
+    .workpiece-wrapper {
       position: absolute;
-      top: 0;
-      right: 0;
-      --add-transform: translateX(100%) translateY(100%) rotate(calc((v-bind('robot.pose[2]')) * -1deg - 90deg));
+      top: 23%;
+      left: 70%;
+    }
+    /* Optional: offset the workpiece inside the wrapper to set its orbit radius */
+    .workpiece {
+      transform: rotate(calc((v-bind('robot.pose[2]') + 90) * -1deg));
+    }
+    .robot-number-wrapper {
+      width: 100%;
+      heigth: 100%;
+    }
+
+    .robot-number {
+      position: absolute;
+      top: 20%;
+      left: 15%;
+      aspect: 1;
+      width: 45%;
+      height: 45%;
+      transform-origin: center center;
+
+      /* animation: spins 2s linear infinite; */
+      transform: rotate(calc((v-bind('robot.pose[2]') + 180) * -1deg));
     }
   }
 }
