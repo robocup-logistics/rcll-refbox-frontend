@@ -36,6 +36,9 @@ defineProps({
     font-size: 13px;
     text-transform: uppercase;
   }
+  &.invertedButton .pill{
+    filter: invert(100%);
+  }
   .pill {
     width: 100%;
     height: 26px;

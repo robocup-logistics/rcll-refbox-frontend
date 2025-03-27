@@ -11,20 +11,6 @@
         <font-awesome-icon icon="fa-arrow-left"
       /></PillButton>
       <PillButton
-        description="MirrorX"
-        title="MirrorX"
-        @click="isMirroredX = !isMirroredX"
-      >
-        <font-awesome-icon icon="fa-camera-rotate"
-      /></PillButton>
-      <PillButton
-        description="MirrorY"
-        title="MirrorY"
-        @click="isMirroredY = !isMirroredY"
-      >
-        <font-awesome-icon icon="fa-camera-rotate"
-      /></PillButton>
-      <PillButton
         description="Referee"
         v-if="socket"
         title="Switch to referee mode"
@@ -33,6 +19,27 @@
         <font-awesome-icon icon="fa-user-tie"
       /></PillButton>
 
+      <PillButton
+        description="MirrorX"
+        title="MirrorX"
+        :class="{ invertedButton: isMirroredX }"
+        @click="isMirroredX = !isMirroredX"
+      >
+        <font-awesome-icon icon="fa-camera-rotate"
+      /></PillButton>
+      <PopupWrapper popup-position="bottom" ref="posePopup">
+        <template #reference>
+          <PillButton
+            description="Edit Field"
+            title="Field"
+            :class="{ invertedButton: inEditMode }"
+            @click="handleEditClick"
+          >
+            <font-awesome-icon icon="fa-pencil"/>
+          </PillButton>
+        </template>
+        <ConfirmSetMachinePosePopup/>
+      </PopupWrapper>
       <!-- CONNECT TO A LIVE GAME -->
       <PopupWrapper popup-position="bottom">
         <template #reference>
@@ -52,6 +59,15 @@
         </template>
         <ReviewGameReportPopup></ReviewGameReportPopup>
       </PopupWrapper>
+
+      <PillButton
+        description="MirrorY"
+        title="MirrorY"
+        :class="{ invertedButton: isMirroredY }"
+        @click="isMirroredY = !isMirroredY"
+      >
+        <font-awesome-icon icon="fa-camera-rotate"
+      /></PillButton>
     </div>
   </Accordion>
 </template>
@@ -66,6 +82,7 @@ import { useSocketStore } from '@/store/socketStore'
 import { useFieldStore } from '@/store/fieldStore'
 import ReviewGameReportPopup from '@/components/spectator/popups/ReviewGameReportPopup.vue'
 import WatchGameLivePopup from '@/components/spectator/popups/WatchGameLivePopup.vue'
+import ConfirmSetMachinePosePopup from '@/components/spectator/popups/ConfirmSetMachinePosePopup.vue'
 import { useAppStore } from '@/store/appStore'
 import Accordion from '@/components/shared/ui/Accordion.vue'
 
@@ -73,9 +90,20 @@ import Accordion from '@/components/shared/ui/Accordion.vue'
 const socketStore = useSocketStore()
 const { socket } = storeToRefs(socketStore)
 const fieldStore = useFieldStore()
-const { isMirroredX, isMirroredY } = storeToRefs(fieldStore)
+const { isMirroredX, isMirroredY, inEditMode } = storeToRefs(fieldStore)
 const appStore = useAppStore()
 const { currentView } = storeToRefs(appStore)
+
+import { ref } from 'vue'
+const posePopup = ref()
+
+// Not show the pop when in Editmode just exit Editmode
+function handleEditClick() {
+  if (inEditMode.value) {
+    inEditMode.value = false
+    posePopup.value?.togglePopup()
+  }
+}
 </script>
 
 // STYLE -----------------------------------------------------------------------
@@ -85,7 +113,7 @@ const { currentView } = storeToRefs(appStore)
   .menu {
     width: unset;
     display: inline-grid;
-    grid-template-columns: 50px 50px;
+    grid-template-columns: 50px 50px 50px 50px;
     gap: 10px;
   }
 }
