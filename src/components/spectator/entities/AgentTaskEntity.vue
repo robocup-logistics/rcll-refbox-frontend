@@ -15,7 +15,7 @@
       </marker>
     </defs>
     <path
-      :d="`M${waypointPos[0]} ${waypointPos[1]}, L${robotPos[0]} ${robotPos[1]}`"
+      :d="`M${waypointPos[0]} ${waypointPos[1]} L${robotPos[0]} ${robotPos[1]}`"
       :stroke-dasharray="
         task.task_type == 'MOVE' ? `0 ${squareDiameterPixels / 2} 200%` : 'none'
       "
