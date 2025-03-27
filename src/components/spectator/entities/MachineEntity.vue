@@ -2,24 +2,33 @@
 <template>
   <div class="machine-entity-wrapper">
     <div class="machine-entity" :id="`machine-${machine.name}`">
-      <div class="machine"
-            >
-        <PopupWrapper :spectatorOnly="inEditMode" style="height: 100%; width: 100%">
+      <div class="machine">
+        <PopupWrapper
+          :spectatorOnly="inEditMode"
+          style="height: 100%; width: 100%"
+        >
           <template #reference>
-            <div class="img-wrapper"
+            <div
+              class="img-wrapper"
               :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
-                 >
+            >
               <img
                 :src="`/machines/${getMachineFileName()}`"
                 class="clickable"
                 draggable="false"
               />
-              <font-awesome-icon icon="fa-info-circle" class="info"
-              :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
-                                 />
+              <font-awesome-icon
+                icon="fa-info-circle"
+                class="info"
+                :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
+              />
               <WorkpieceEntity
                 v-for="workpiece in havingWorkpieces"
-                :class="['workpiece', workpiece.at_side]"
+                :class="[
+                  'workpiece',
+                  workpiece.at_side,
+                  { mirroredX: isMirroredX, mirroredY: isMirroredY },
+                ]"
                 :workpiece="workpiece"
               />
             </div>
@@ -62,7 +71,7 @@ const orderStore = useOrderStore()
 const { workpieces } = storeToRefs(orderStore)
 
 const fieldStore = useFieldStore()
-const { inEditMode, isMirroredX, isMirroredY} = storeToRefs(fieldStore)
+const { inEditMode, isMirroredX, isMirroredY } = storeToRefs(fieldStore)
 
 // get file name - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function getMachineFileName(): string {

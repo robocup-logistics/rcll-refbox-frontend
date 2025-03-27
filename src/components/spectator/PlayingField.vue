@@ -108,9 +108,11 @@ s// TEMPLATE
       </template>
 
       <!-- ROBOTS -->
-      <RobotEntity v-for="robot in robots" :robot="robot"
-          :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
-                   />
+      <RobotEntity
+        v-for="robot in robots"
+        :robot="robot"
+        :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
+      />
     </div>
   </div>
 </template>
@@ -125,7 +127,7 @@ import PlayingFieldSquare from '@/components/spectator/PlayingFieldSquare.vue'
 import { useRobotStore } from '@/store/robotStore'
 import RobotEntity from '@/components/spectator/entities/RobotEntity.vue'
 import type { Ref } from 'vue'
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed } from 'vue'
 import AgentTaskEntity from '@/components/spectator/entities/AgentTaskEntity.vue'
 
 import Modal from '@/components/shared/ui/Modal.vue'
@@ -152,12 +154,18 @@ const appStore = useAppStore()
 const { advancedOptions, currentView } = storeToRefs(appStore)
 
 const computedVIndices = computed(() => {
-  const indices = Array.from({ length: verticalFieldSize.value }, (_, i) => i + 1);
-  return isMirroredX.value ? indices.reverse() : indices;
-});
+  const indices = Array.from(
+    { length: verticalFieldSize.value },
+    (_, i) => i + 1,
+  )
+  return isMirroredX.value ? indices.reverse() : indices
+})
 
 const computedHIndices = computed(() => {
-  const indices = Array.from({ length: horizontalFieldSize.value }, (_, i) => i + 1)
+  const indices = Array.from(
+    { length: horizontalFieldSize.value },
+    (_, i) => i + 1,
+  )
   return isMirroredY.value ? indices.reverse() : indices
 })
 
@@ -184,9 +192,8 @@ const targetSquare: Ref<PlayingFieldSquare | null> = ref(null)
 
 // Handle square selection
 const handleSquareSelected = (square: PlayingFieldSquare) => {
-  console.log(computedHIndices);
   if (!inEditMode.value) {
-      return
+    return
   }
   if (advancedOptions.value) {
     selectedSquare.value = square
@@ -197,7 +204,7 @@ const handleSquareSelected = (square: PlayingFieldSquare) => {
 // Handle square targeting and finalize selection
 const handleSquareTargeted = (square: PlayingFieldSquare) => {
   if (!inEditMode.value) {
-      return
+    return
   }
   if (advancedOptions.value) {
     targetSquare.value = square

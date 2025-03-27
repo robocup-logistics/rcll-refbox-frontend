@@ -128,8 +128,12 @@ export const useOrderStore = defineStore('orderStore', () => {
       ring_colors: string[] | null
       cap_color: string | null
     }) => {
-      if (!workpiece.base_color && (!workpiece.ring_colors || workpiece.ring_colors.length === 0) && !workpiece.cap_color) {
-        return "BASE_ANY.svg"
+      if (
+        !workpiece.base_color &&
+        (!workpiece.ring_colors || workpiece.ring_colors.length === 0) &&
+        !workpiece.cap_color
+      ) {
+        return 'BASE_ANY.svg'
       }
 
       const parts = []

@@ -35,10 +35,10 @@
             :class="{ invertedButton: inEditMode }"
             @click="handleEditClick"
           >
-            <font-awesome-icon icon="fa-pencil"/>
+            <font-awesome-icon icon="fa-pencil" />
           </PillButton>
         </template>
-        <ConfirmSetMachinePosePopup/>
+        <ConfirmSetMachinePosePopup />
       </PopupWrapper>
       <!-- CONNECT TO A LIVE GAME -->
       <PopupWrapper popup-position="bottom">

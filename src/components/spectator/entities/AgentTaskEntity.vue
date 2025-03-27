@@ -68,23 +68,24 @@ const props = defineProps({
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const fieldStore = useFieldStore()
-const { squareDiameterPixels,
+const {
+  squareDiameterPixels,
   positionOfRobot,
   positionOfWaypoint,
   fieldHeightPixels,
   fieldWidthPixels,
   isMirroredX,
-  isMirroredY } = storeToRefs(fieldStore)
+  isMirroredY,
+} = storeToRefs(fieldStore)
 
 // endpoints of line - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const robotPos: ComputedRef<[number, number]> = computed(
-  () => {
-    const [x, y] = realRobotPos.value;
-    return [
-      isMirroredY.value ? fieldWidthPixels.value - x : x,
-      isMirroredX.value ? fieldHeightPixels.value - y : y
-    ];
-});
+const robotPos: ComputedRef<[number, number]> = computed(() => {
+  const [x, y] = realRobotPos.value
+  return [
+    isMirroredY.value ? fieldWidthPixels.value - x : x,
+    isMirroredX.value ? fieldHeightPixels.value - y : y,
+  ]
+})
 
 const realRobotPos: ComputedRef<[number, number]> = computed(
   () => positionOfRobot.value(props.robot) || [0, 0],
@@ -99,12 +100,12 @@ const realWaypointPos: ComputedRef<[number, number]> = computed(
     ) || [0, 0],
 )
 const waypointPos: ComputedRef<[number, number]> = computed(() => {
-  const [x, y] = realWaypointPos.value;
+  const [x, y] = realWaypointPos.value
   return [
     isMirroredY.value ? fieldWidthPixels.value - x : x,
-    isMirroredX.value ? fieldHeightPixels.value - y : y
-  ];
-});
+    isMirroredX.value ? fieldHeightPixels.value - y : y,
+  ]
+})
 </script>
 
 // STYLE -----------------------------------------------------------------------

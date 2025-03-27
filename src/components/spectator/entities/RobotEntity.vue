@@ -1,26 +1,33 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div class="robot-entity" :id="`robot-${robot.team_color}-${robot.number}`"
-       :style="{ '--robot-rotation': `${computedRotation}` }"
-       >
+  <div
+    class="robot-entity"
+    :id="`robot-${robot.team_color}-${robot.number}`"
+    :style="{ '--robot-rotation': `${computedRotation}` }"
+  >
     <div class="robot">
       <PopupWrapper>
         <template #reference>
           <div class="robot-container">
             <div class="robot-rotate">
-              <img :src="`/robots/robot-${robot.team_color}${robot.number}.svg`"
+              <img
+                :src="`/robots/robot-${robot.team_color}${robot.number}.svg`"
                 class="clickable robot-img"
-                draggable="false"/>
+                draggable="false"
+              />
               <div class="workpiece-wrapper" v-if="holdingWorkpiece">
                 <WorkpieceEntity
                   :workpiece="holdingWorkpiece"
-                  class="workpiece"/>
+                  class="workpiece"
+                />
               </div>
               <div class="robot-number-wrapper">
-                <img :src="`/robots/robot-${robot.team_color}${robot.number}Nc.svg`"
+                <img
+                  :src="`/robots/robot-${robot.team_color}${robot.number}Nc.svg`"
                   class="robot-number"
-                  draggable="false"/>
-                  </div>
+                  draggable="false"
+                />
+              </div>
             </div>
             <font-awesome-icon icon="fa-info-circle" class="info" />
           </div>
@@ -38,7 +45,7 @@
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import { ref, watch, type PropType, type Ref, computed} from 'vue'
+import { ref, watch, type PropType, type Ref, computed } from 'vue'
 import type Robot from '@/types/Robot'
 import { storeToRefs } from 'pinia'
 import { useFieldStore } from '@/store/fieldStore'
@@ -72,7 +79,7 @@ const {
   fieldHeightPixels,
   squareDiameterPixels,
   isMirroredX,
-  isMirroredY
+  isMirroredY,
 } = storeToRefs(fieldStore)
 const configStore = useConfigStore()
 
@@ -89,20 +96,20 @@ watch(
 )
 
 const computedRotation: ComputedRef<number> = computed(() => {
-  const baseAngle = props.robot.pose[2] + 90;
+  const baseAngle = props.robot.pose[2] + 90
   if (isMirroredX.value && isMirroredY.value) {
     // When both axes are mirrored, it's equivalent to a 180° rotation of the base.
     // (baseAngle + 180) mod 360 is the same as (robot.pose[2] - 90)
-    return props.robot.pose[2] - 90;
+    return props.robot.pose[2] - 90
   } else if (isMirroredY.value) {
     // Horizontal flip (mirror on Y axis): reflects the angle over a vertical line.
-    return 180 - baseAngle;
+    return 180 - baseAngle
   } else if (isMirroredX.value) {
     // Vertical flip (mirror on X axis): reflects the angle over a horizontal line.
-    return -baseAngle;
+    return -baseAngle
   }
-  return baseAngle;
-});
+  return baseAngle
+})
 
 // watch holding workpieces  - - - - - - - - - - - - - - - - - - - - - - - - - -
 const holdingWorkpiece: Ref<Workpiece | undefined> = ref(undefined)
@@ -131,21 +138,23 @@ watch(
   // Default: position relative to left and bottom
   left: calc(
     (v-bind('fieldWidthPixels') / 2 * 1px) +
-      (v-bind('robot.pose[0]') *
-        (v-bind('fieldWidthPixels') / v-bind('fullHorizontalFieldSize')) * 1px)
-      - (v-bind('squareDiameterPixels') * 0.3) * 1px
+      (
+        v-bind('robot.pose[0]') *
+          (v-bind('fieldWidthPixels') / v-bind('fullHorizontalFieldSize')) * 1px
+      ) -
+      (v-bind('squareDiameterPixels') * 0.3) * 1px
   );
   bottom: calc(
     v-bind('robot.pose[1]') *
-      (v-bind('fieldHeightPixels') / v-bind('verticalFieldSize')) * 1px
-    - (v-bind('squareDiameterPixels') * 0.3) * 1px
+      (v-bind('fieldHeightPixels') / v-bind('verticalFieldSize')) * 1px -
+      (v-bind('squareDiameterPixels') * 0.3) * 1px
   );
 
   .robot {
     .robot-container {
-        position: absolute;
-        width: 100%;
-        height: 100%;
+      position: absolute;
+      width: 100%;
+      height: 100%;
     }
 
     .robot-rotate {
@@ -165,7 +174,6 @@ watch(
       color: white;
       background-color: global.$surfaceColor;
       border-radius: 100%;
-
     }
 
     .workpiece-wrapper {
@@ -191,7 +199,7 @@ watch(
       transform-origin: center center;
 
       /* animation: spins 2s linear infinite; */
-      transform: rotate(calc((var(--robot-rotation) + 90)* -1deg));
+      transform: rotate(calc((var(--robot-rotation) + 90) * -1deg));
     }
   }
 }
@@ -201,9 +209,11 @@ watch(
   left: auto; // disable left
   right: calc(
     (v-bind('fieldWidthPixels') / 2 * 1px) +
-      (v-bind('robot.pose[0]') *
-        (v-bind('fieldWidthPixels') / v-bind('fullHorizontalFieldSize')) * 1px)
-      - (v-bind('squareDiameterPixels') * 0.3) * 1px
+      (
+        v-bind('robot.pose[0]') *
+          (v-bind('fieldWidthPixels') / v-bind('fullHorizontalFieldSize')) * 1px
+      ) -
+      (v-bind('squareDiameterPixels') * 0.3) * 1px
   );
 }
 
@@ -211,10 +221,14 @@ watch(
 .robot-entity.mirroredX {
   top: auto; // disable bottom
   bottom: calc(
-    (v-bind('fieldHeightPixels') - (v-bind('robot.pose[1]') *
-      (v-bind('fieldHeightPixels') / v-bind('verticalFieldSize')))) * 1px
-    - (v-bind('squareDiameterPixels') * 0.3) * 1px
+    (
+        v-bind('fieldHeightPixels') -
+          (
+            v-bind('robot.pose[1]') *
+              (v-bind('fieldHeightPixels') / v-bind('verticalFieldSize'))
+          )
+      ) *
+      1px - (v-bind('squareDiameterPixels') * 0.3) * 1px
   );
 }
-
 </style>
