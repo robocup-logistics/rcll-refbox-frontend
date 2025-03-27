@@ -1,6 +1,8 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div class="robot-entity" :id="`robot-${robot.team_color}-${robot.number}`">
+  <div class="robot-entity" :id="`robot-${robot.team_color}-${robot.number}`"
+       :style="{ '--robot-rotation': `${computedRotation}` }"
+       >
     <div class="robot">
       <PopupWrapper>
         <template #reference>
@@ -36,7 +38,7 @@
 // SCRIPT ----------------------------------------------------------------------
 <script setup lang="ts">
 // imports - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-import { ref, watch, type PropType, type Ref } from 'vue'
+import { ref, watch, type PropType, type Ref, computed} from 'vue'
 import type Robot from '@/types/Robot'
 import { storeToRefs } from 'pinia'
 import { useFieldStore } from '@/store/fieldStore'
@@ -69,6 +71,8 @@ const {
   fieldWidthPixels,
   fieldHeightPixels,
   squareDiameterPixels,
+  isMirroredX,
+  isMirroredY
 } = storeToRefs(fieldStore)
 const configStore = useConfigStore()
 
@@ -83,6 +87,22 @@ watch(
   },
   { immediate: true },
 )
+
+const computedRotation: ComputedRef<number> = computed(() => {
+  const baseAngle = props.robot.pose[2] + 90;
+  if (isMirroredX.value && isMirroredY.value) {
+    // When both axes are mirrored, it's equivalent to a 180° rotation of the base.
+    // (baseAngle + 180) mod 360 is the same as (robot.pose[2] - 90)
+    return props.robot.pose[2] - 90;
+  } else if (isMirroredY.value) {
+    // Horizontal flip (mirror on Y axis): reflects the angle over a vertical line.
+    return 180 - baseAngle;
+  } else if (isMirroredX.value) {
+    // Vertical flip (mirror on X axis): reflects the angle over a horizontal line.
+    return -baseAngle;
+  }
+  return baseAngle;
+});
 
 // watch holding workpieces  - - - - - - - - - - - - - - - - - - - - - - - - - -
 const holdingWorkpiece: Ref<Workpiece | undefined> = ref(undefined)
@@ -107,16 +127,18 @@ watch(
   position: absolute;
   width: calc((v-bind('squareDiameterPixels') * 0.6) * 1px);
   height: calc((v-bind('squareDiameterPixels') * 0.6) * 1px);
+
+  // Default: position relative to left and bottom
   left: calc(
     (v-bind('fieldWidthPixels') / 2 * 1px) +
-      (
-        v-bind('robot.pose[0]') *
-          v-bind('fieldWidthPixels / fullHorizontalFieldSize') * 1px
-      ) - (v-bind('squareDiameterPixels') * 0.3) * 1px
+      (v-bind('robot.pose[0]') *
+        (v-bind('fieldWidthPixels') / v-bind('fullHorizontalFieldSize')) * 1px)
+      - (v-bind('squareDiameterPixels') * 0.3) * 1px
   );
   bottom: calc(
-    v-bind('robot.pose[1]') * v-bind('fieldHeightPixels / verticalFieldSize') *
-      1px - (v-bind('squareDiameterPixels') * 0.3) * 1px
+    v-bind('robot.pose[1]') *
+      (v-bind('fieldHeightPixels') / v-bind('verticalFieldSize')) * 1px
+    - (v-bind('squareDiameterPixels') * 0.3) * 1px
   );
 
   .robot {
@@ -125,17 +147,9 @@ watch(
         width: 100%;
         height: 100%;
     }
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
+
     .robot-rotate {
-        transform: rotate(calc((v-bind('robot.pose[2]') + 90) * 1deg));
-        /* animation: spin 2s linear infinite; */
+      transform: rotate(calc(var(--robot-rotation) * 1deg));
     }
 
     .robot-img {
@@ -161,7 +175,7 @@ watch(
     }
     /* Optional: offset the workpiece inside the wrapper to set its orbit radius */
     .workpiece {
-      transform: rotate(calc((v-bind('robot.pose[2]') + 90) * -1deg));
+      transform: rotate(calc(var(--robot-rotation) * -1deg));
     }
     .robot-number-wrapper {
       width: 100%;
@@ -172,14 +186,35 @@ watch(
       position: absolute;
       top: 20%;
       left: 15%;
-      aspect: 1;
       width: 45%;
       height: 45%;
       transform-origin: center center;
 
       /* animation: spins 2s linear infinite; */
-      transform: rotate(calc((v-bind('robot.pose[2]') + 180) * -1deg));
+      transform: rotate(calc((var(--robot-rotation) + 90)* -1deg));
     }
   }
 }
+
+// When mirroring horizontally (i.e. isMirroredY), we want to use the right property instead of left.
+.robot-entity.mirroredY {
+  left: auto; // disable left
+  right: calc(
+    (v-bind('fieldWidthPixels') / 2 * 1px) +
+      (v-bind('robot.pose[0]') *
+        (v-bind('fieldWidthPixels') / v-bind('fullHorizontalFieldSize')) * 1px)
+      - (v-bind('squareDiameterPixels') * 0.3) * 1px
+  );
+}
+
+// When mirroring vertically (i.e. isMirroredX), we want to use the top property instead of bottom.
+.robot-entity.mirroredX {
+  top: auto; // disable bottom
+  bottom: calc(
+    (v-bind('fieldHeightPixels') - (v-bind('robot.pose[1]') *
+      (v-bind('fieldHeightPixels') / v-bind('verticalFieldSize')))) * 1px
+    - (v-bind('squareDiameterPixels') * 0.3) * 1px
+  );
+}
+
 </style>
