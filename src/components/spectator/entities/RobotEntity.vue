@@ -6,7 +6,7 @@
         <template #reference>
           <div class="robot-container">
             <img
-              :src="`/robots/robot-${robot.team_color}.svg`"
+              :src="`/robots/robot-${robot.team_color}${robot.number}.svg`"
               class="clickable"
               draggable="false"
             />
@@ -135,6 +135,8 @@ watch(
       color: white;
       background-color: global.$surfaceColor;
       border-radius: 100%;
+
+      transform: rotate(calc((v-bind('robot.pose[2]') + 90) * -1deg));
     }
 
     .workpiece {
