@@ -35,12 +35,12 @@ const { shortcuts } = storeToRefs(keyboardStore)
 // confirm choice- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function confirmChange() {
-    fieldStore.inEditMode = true
-    togglePopup()
+  fieldStore.inEditMode = true
+  togglePopup()
 }
 
 function abortChange() {
-    togglePopup()
+  togglePopup()
 }
 
 // popup - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

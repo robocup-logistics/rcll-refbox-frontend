@@ -114,6 +114,20 @@ const handleMouseUp = () => {
       transform: translate(-50%, -50%);
     }
   }
+  &.mirroredX {
+    &:after {
+      top: auto; // disable top
+      bottom: 0; // use bottom instead
+    }
+  }
+
+  // When mirrored along the Y axis, put the dot at the right instead
+  &.mirroredY {
+    &:after {
+      left: auto; // disable left
+      right: 0; // use right instead
+    }
+  }
 
   &.selected {
     border: 2px solid blue; // Highlight selected square

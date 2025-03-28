@@ -113,7 +113,7 @@ function togglePopup() {
 }
 
 defineExpose({
-  togglePopup
+  togglePopup,
 })
 provide('togglePopup', togglePopup)
 </script>

@@ -8,9 +8,9 @@ s// TEMPLATE
     >
       <!-- FIELD SQUARES WITH MACHINES ON THEM -->
       <div id="playingField" ref="playingField">
-        <template v-for="vIndex in verticalFieldSize">
+        <template v-for="vIndex in computedVIndices">
           <!-- negative x coordinates only if field is mirrored -->
-          <template v-for="hIndex in horizontalFieldSize">
+          <template v-for="hIndex in computedHIndices" v-if="!isMirroredY">
             <PlayingFieldSquare
               :zone="
                 getZoneNameFor(
@@ -19,6 +19,7 @@ s// TEMPLATE
                 )
               "
               :with-dot="vIndex != 1 && hIndex != 1"
+              :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
               :isSelected="
                 selectedSquare?.zone ===
                 getZoneNameFor(
@@ -38,10 +39,11 @@ s// TEMPLATE
             />
           </template>
           <!-- positive x coordinates -->
-          <template v-for="hIndex in horizontalFieldSize">
+          <template v-for="hIndex in computedHIndices">
             <PlayingFieldSquare
               :zone="getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)"
               :with-dot="vIndex != 1 && hIndex != 1"
+              :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
               :isSelected="
                 selectedSquare?.zone ===
                 getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)
@@ -49,6 +51,35 @@ s// TEMPLATE
               :isTargeted="
                 targetSquare?.zone ===
                 getZoneNameFor(hIndex, verticalFieldSize - vIndex + 1)
+              "
+              @square-selected="handleSquareSelected"
+              @square-targeted="handleSquareTargeted"
+            />
+          </template>
+
+          <template v-for="hIndex in computedHIndices" v-if="isMirroredY">
+            <PlayingFieldSquare
+              :zone="
+                getZoneNameFor(
+                  -(horizontalFieldSize - hIndex + 1),
+                  verticalFieldSize - vIndex + 1,
+                )
+              "
+              :with-dot="vIndex != 1 && hIndex != 1"
+              :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
+              :isSelected="
+                selectedSquare?.zone ===
+                getZoneNameFor(
+                  -(horizontalFieldSize - hIndex + 1),
+                  verticalFieldSize - vIndex + 1,
+                )
+              "
+              :isTargeted="
+                targetSquare?.zone ===
+                getZoneNameFor(
+                  -(horizontalFieldSize - hIndex + 1),
+                  verticalFieldSize - vIndex + 1,
+                )
               "
               @square-selected="handleSquareSelected"
               @square-targeted="handleSquareTargeted"
@@ -77,7 +108,11 @@ s// TEMPLATE
       </template>
 
       <!-- ROBOTS -->
-      <RobotEntity v-for="robot in robots" :robot="robot" />
+      <RobotEntity
+        v-for="robot in robots"
+        :robot="robot"
+        :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
+      />
     </div>
   </div>
 </template>
@@ -92,7 +127,7 @@ import PlayingFieldSquare from '@/components/spectator/PlayingFieldSquare.vue'
 import { useRobotStore } from '@/store/robotStore'
 import RobotEntity from '@/components/spectator/entities/RobotEntity.vue'
 import type { Ref } from 'vue'
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import AgentTaskEntity from '@/components/spectator/entities/AgentTaskEntity.vue'
 
 import Modal from '@/components/shared/ui/Modal.vue'
@@ -118,6 +153,22 @@ const { robots, agentTasks } = storeToRefs(robotStore)
 const appStore = useAppStore()
 const { advancedOptions, currentView } = storeToRefs(appStore)
 
+const computedVIndices = computed(() => {
+  const indices = Array.from(
+    { length: verticalFieldSize.value },
+    (_, i) => i + 1,
+  )
+  return isMirroredX.value ? indices.reverse() : indices
+})
+
+const computedHIndices = computed(() => {
+  const indices = Array.from(
+    { length: horizontalFieldSize.value },
+    (_, i) => i + 1,
+  )
+  return isMirroredY.value ? indices.reverse() : indices
+})
+
 // zones - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function getZoneNameFor(x: number, y: number): string {
   let zone = ''
@@ -142,7 +193,7 @@ const targetSquare: Ref<PlayingFieldSquare | null> = ref(null)
 // Handle square selection
 const handleSquareSelected = (square: PlayingFieldSquare) => {
   if (!inEditMode.value) {
-      return
+    return
   }
   if (advancedOptions.value) {
     selectedSquare.value = square
@@ -153,7 +204,7 @@ const handleSquareSelected = (square: PlayingFieldSquare) => {
 // Handle square targeting and finalize selection
 const handleSquareTargeted = (square: PlayingFieldSquare) => {
   if (!inEditMode.value) {
-      return
+    return
   }
   if (advancedOptions.value) {
     targetSquare.value = square
@@ -209,15 +260,6 @@ watch(playingField, (newPlayingField, _) => {
 // STYLE -----------------------------------------------------------------------
 <style scoped lang="scss">
 @use '@/assets/global.scss';
-.mirroredX {
-  transform: scaleY(-1);
-}
-.mirroredY {
-  transform: scaleX(-1);
-}
-.mirroredY.mirroredX {
-  transform: scale(-1, -1);
-}
 #playingFieldWrapper {
   width: 100%;
   height: 100%;

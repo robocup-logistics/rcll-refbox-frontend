@@ -42,8 +42,8 @@ const { inEditMode } = storeToRefs(fieldStore)
 // toggle options  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 function toggleOptions() {
   advancedOptions.value = !advancedOptions.value
-  if(!advancedOptions.value) {
-      inEditMode.value = false
+  if (!advancedOptions.value) {
+    inEditMode.value = false
   }
   // Save the current advancedOptions value to localStorage
   localStorage.setItem('advancedOptions', JSON.stringify(advancedOptions.value))
