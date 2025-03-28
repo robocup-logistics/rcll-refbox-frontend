@@ -181,8 +181,8 @@ watch(
 
       .workpiece {
         position: absolute;
-        top: 50%;
-        left: 50%;
+        top: 20%;
+        left: 30%;
         --add-transform: rotate(
           calc((v-bind('machine?.rotation') - 90) * 1deg)
         );
@@ -207,6 +207,15 @@ watch(
         &.RIGHT {
           --add-transform: translate(80%, -50%)
             rotate(calc((v-bind('machine?.rotation') - 90) * 1deg));
+        }
+        &.mirroredX {
+            transform: var(--add-transform) scaleY(-1);
+        }
+        &.mirroredY {
+            transform: var(--add-transform) scaleX(-1);
+        }
+        &.mirroredY.mirroredX {
+            transform: var(--add-transform) scale(-1);
         }
         transform: var(--add-transform);
       }
