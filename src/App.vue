@@ -29,6 +29,7 @@ import SpectatorApp from './components/spectator/SpectatorApp.vue'
 import { useKeyboardStore } from './store/keyboardStore'
 import { useFieldStore } from '@/store/fieldStore'
 import type Shortcut from '@/types/Shortcut'
+import { onMounted } from 'vue'
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const appStore = useAppStore()
@@ -44,7 +45,16 @@ function toggleOptions() {
   if(!advancedOptions.value) {
       inEditMode.value = false
   }
+  // Save the current advancedOptions value to localStorage
+  localStorage.setItem('advancedOptions', JSON.stringify(advancedOptions.value))
 }
+
+onMounted(() => {
+  const savedAdvancedOptions = localStorage.getItem('advancedOptions')
+  if (savedAdvancedOptions !== null) {
+    advancedOptions.value = JSON.parse(savedAdvancedOptions)
+  }
+})
 </script>
 
 // STYLE -----------------------------------------------------------------------
