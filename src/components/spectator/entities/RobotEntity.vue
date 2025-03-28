@@ -119,7 +119,8 @@ watch(
     holdingWorkpiece.value = newWorkpieces.find(
       (workpiece) =>
         workpiece.holding == true &&
-        workpiece.robot_holding == props.robot.number,
+        workpiece.robot_holding == props.robot.number &&
+        workpiece.team == props.robot.team_color,
     )
   },
   { deep: true, immediate: true },
@@ -141,8 +142,7 @@ watch(
       (
         v-bind('robot.pose[0]') *
           (v-bind('fieldWidthPixels') / v-bind('fullHorizontalFieldSize')) * 1px
-      ) -
-      (v-bind('squareDiameterPixels') * 0.3) * 1px
+      ) - (v-bind('squareDiameterPixels') * 0.3) * 1px
   );
   bottom: calc(
     v-bind('robot.pose[1]') *
@@ -212,8 +212,7 @@ watch(
       (
         v-bind('robot.pose[0]') *
           (v-bind('fieldWidthPixels') / v-bind('fullHorizontalFieldSize')) * 1px
-      ) -
-      (v-bind('squareDiameterPixels') * 0.3) * 1px
+      ) - (v-bind('squareDiameterPixels') * 0.3) * 1px
   );
 }
 
@@ -227,8 +226,7 @@ watch(
             v-bind('robot.pose[1]') *
               (v-bind('fieldHeightPixels') / v-bind('verticalFieldSize'))
           )
-      ) *
-      1px - (v-bind('squareDiameterPixels') * 0.3) * 1px
+      ) * 1px - (v-bind('squareDiameterPixels') * 0.3) * 1px
   );
 }
 </style>
