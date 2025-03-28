@@ -10,17 +10,15 @@
           <template #reference>
             <div
               class="img-wrapper"
-              :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
-            >
-              <img
-                :src="`/machines/${getMachineFileName()}`"
+              :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }">
+              <img :src="`/machines/${getMachineFileName()}`"
                 class="clickable"
                 draggable="false"
               />
               <font-awesome-icon
                 icon="fa-info-circle"
-                class="info"
                 :class="{ mirroredX: isMirroredX, mirroredY: isMirroredY }"
+                class="info"
               />
               <WorkpieceEntity
                 v-for="workpiece in havingWorkpieces"
@@ -132,26 +130,53 @@ watch(
     height: 80%;
     width: 80%;
 
+    .img-wrapper.mirroredX {
+      /* Mirror horizontally using scaleX(-1) */
+      transform: scaleY(-1) rotate(calc((v-bind('machine?.rotation') - 90) * -1deg));
+    }
+
+    .img-wrapper.mirroredY {
+      /* Mirror vertically using scaleY(-1) */
+      transform: scaleX(-1) rotate(calc((v-bind('machine?.rotation') - 90) * -1deg));
+    }
+
+    .img-wrapper.mirroredX.mirroredY {
+      /* Both mirrors: equivalent to scale(-1) which flips both axes */
+      transform: rotate(calc((v-bind('machine?.rotation') - 90) * -1deg)) scale(-1);
+    }
+
     .img-wrapper {
       height: 100%;
       width: 100%;
       transform: rotate(calc((v-bind('machine?.rotation') - 90) * -1deg));
+
       img {
         height: 100%;
         width: 100%;
 
-        transition: all 400ms;
+        /* transition: all 400ms; */
       }
 
       .info {
         position: absolute;
         top: 20%;
         right: -10%;
-        transform: rotate(calc((v-bind('machine?.rotation') - 90) * 1deg));
+        --add-transform: rotate(calc((v-bind('machine?.rotation') - 90) * 1deg));
 
+        transform: var(--add-transform);
         color: white;
         background-color: global.$surfaceColor;
         border-radius: 100%;
+
+        &.mirroredX {
+            transform: var(--add-transform) scaleY(-1);
+        }
+        &.mirroredY {
+            transform: var(--add-transform) scaleX(-1);
+        }
+        &.mirroredY.mirroredX {
+            transform: var(--add-transform) scale(-1);
+        }
       }
 
       .workpiece {
@@ -183,18 +208,16 @@ watch(
           --add-transform: translate(80%, -50%)
             rotate(calc((v-bind('machine?.rotation') - 90) * 1deg));
         }
+        transform: var(--add-transform);
       }
     }
   }
 }
 
-.mirroredX {
-  transform: scaleY(-1);
-}
 .mirroredY {
-  transform: scaleX(-1);
+  /* transform: scaleX(-1); */
 }
 .mirroredY.mirroredX {
-  transform: scale(-1, -1);
+  /* transform: scale(-1, -1); */
 }
 </style>
