@@ -6,6 +6,7 @@
       <GameInfoBoard />
       <OrdersBoard v-if="['PRODUCTION', 'POST_GAME'].includes(phase)" />
       <MenuBoard v-if="advancedOptions" />
+      <KpiBoard v-if="advancedOptions" /> 
     </div>
     <div id="fieldAndEvents">
       <EventBoard />
@@ -25,6 +26,7 @@ import ScoreBoard from '@/components/spectator/ScoreBoard.vue'
 import GameInfoBoard from '@/components/spectator/GameInfoBoard.vue'
 import OrdersBoard from '@/components/spectator/OrdersBoard.vue'
 import MenuBoard from '@/components/spectator/MenuBoard.vue'
+import KpiBoard from '@/components/spectator/KpiBoard.vue'
 import { useGameStore } from '@/store/gameStore'
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '@/store/appStore'

@@ -1,6 +1,6 @@
 // TEMPLATE --------------------------------------------------------------------
 <template>
-  <div class="popup">
+  <div class="popup" :class="customClass">
     <!-- we wrap the shortcut logic in a conditional div to allow modals to
     define their own escape shortcuts (togglePopup does not work for them)-->
     <div
@@ -37,7 +37,7 @@ import { storeToRefs } from 'pinia'
 import { type Ref, inject, ref, provide } from 'vue'
 
 // props - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-defineProps({
+const props = defineProps({
   title: String,
   permanent: {
     type: Boolean, // whether the popup should be closable
@@ -45,6 +45,10 @@ defineProps({
   },
   icon: {
     type: String, // font-awesome name
+    required: false,
+  },
+  customClass: {
+    type: String, // custom class for styling
     required: false,
   },
 })

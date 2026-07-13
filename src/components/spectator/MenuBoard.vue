@@ -68,6 +68,8 @@
       >
         <font-awesome-icon icon="fa-camera-rotate"
       /></PillButton>
+
+    
     </div>
   </Accordion>
 </template>
@@ -83,8 +85,10 @@ import { useFieldStore } from '@/store/fieldStore'
 import ReviewGameReportPopup from '@/components/spectator/popups/ReviewGameReportPopup.vue'
 import WatchGameLivePopup from '@/components/spectator/popups/WatchGameLivePopup.vue'
 import ConfirmSetMachinePosePopup from '@/components/spectator/popups/ConfirmSetMachinePosePopup.vue'
+import KPIPopup from '@/components/spectator/popups/KPIPopup.vue'
 import { useAppStore } from '@/store/appStore'
 import Accordion from '@/components/shared/ui/Accordion.vue'
+
 
 // use stores  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const socketStore = useSocketStore()
@@ -113,7 +117,7 @@ function handleEditClick() {
   .menu {
     width: unset;
     display: inline-grid;
-    grid-template-columns: 50px 50px 50px 50px;
+    grid-template-columns: 50px 50px 50px;
     gap: 10px;
   }
 }

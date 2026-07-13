@@ -42,10 +42,16 @@ export const useReportStore = defineStore('reportStore', () => {
   const gameSpeed: Ref<number> = ref(1)
 
   // -> selecting a report
+  const loadingTransformation: Ref<boolean> = ref(false)
+  const loadingOCEL: Ref<boolean> = ref(false)
+  const loadingKPIs: Ref<boolean> = ref(false)
+  const loadingCSVs: Ref<boolean> = ref(false)
   const loadingReportsList: Ref<boolean> = ref(false)
   const gameReportsList: Ref<GameReport[]> = ref([])
   const incompatibleCount: Ref<number> = ref(0)
   const loadingReport: Ref<boolean> = ref(false)
+  const kpiData: Ref<any> = ref(null)
+  const averages: Ref<any> = ref(null)
 
   // -> current game
   const gameReport: Ref<GameReport | undefined> = ref(undefined)
@@ -93,12 +99,6 @@ export const useReportStore = defineStore('reportStore', () => {
       : []
   })
 
-  // METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // -> request game reports list
-  // the first step in getting a game report is to retrieve the list of game
-  // reports. Therefore, a request is sent to the backend, mentioning the
-  // supported game report versions, and a list of these game reports is
-  // returned
   async function requestGameReportsList(baseUrl: string) {
     loadingReportsList.value = true
     gameReportsList.value = []
@@ -114,6 +114,7 @@ export const useReportStore = defineStore('reportStore', () => {
       responseJSON = <{ reports: GameReport[]; incompatibleCount: number }>(
         await response.json()
       )
+
     } catch (err) {
       console.error(err)
       if (response && response.status != 200) {
@@ -428,6 +429,299 @@ export const useReportStore = defineStore('reportStore', () => {
       throw new Error('requested game step but no game report is available!')
     }
   }
+  
+async function requestTransformation() {
+  loadingTransformation.value = true
+  try {
+    const response = await fetch(
+      `${DEFAULT_BACKEND_URL.value}/api/transform`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
+
+    if (!response.ok) {
+      throw new Error(`Serverfehler: ${response.statusText}`)
+    }
+
+    const result = await response.json()
+
+    return result
+  } catch (err) {
+    console.error('Fehler bei OCEL transformation:', err)
+    throw err
+  } finally {
+    loadingTransformation.value = false
+  }
+}
+
+async function requestOCEL() {
+  loadingOCEL.value = true
+  try {
+    const response = await fetch(
+      `${DEFAULT_BACKEND_URL.value}/api/generateOCEL`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
+
+    if (!response.ok) {
+      throw new Error(`Serverfehler: ${response.statusText}`)
+    }
+
+    const result = await response.json()
+    return result
+  } catch (err) {
+    console.error('Fehler bei OCEL transformation:', err)
+    throw err
+  } finally {
+    loadingOCEL.value = false
+  }
+}
+
+async function requestCSVs() {
+  loadingCSVs.value = true
+  try {    
+    const response = await fetch(
+      `${DEFAULT_BACKEND_URL.value}/api/generateCalculations`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
+
+    let result
+    try {
+      result = await response.json()
+    } catch (parseError) {
+      console.error(' Konnte Response nicht parsen:', parseError)
+      const text = await response.text()
+      throw new Error(`Backend-Fehler (${response.status}): ${text}`)
+    }
+
+    if (!response.ok) {
+      let errorMessage = 
+        result?.message || 
+        result?.error || 
+        result?.detail || 
+        result?.msg ||
+        `Serverfehler: ${response.statusText} (${response.status})`
+      
+      if (errorMessage.length > 500) {
+        const importantErrorMatch = errorMessage.match(/(ValueError|KeyError|FileNotFoundError|TypeError|AttributeError):\s*([^\n]+)/)
+        if (importantErrorMatch) {
+          errorMessage = `${importantErrorMatch[1]}: ${importantErrorMatch[2]}`
+        } else {
+          errorMessage = errorMessage.substring(0, 200) + '...'
+        }
+      }
+      
+      console.error('backend-fehler:', {
+        status: response.status,
+        statusText: response.statusText,
+        message: errorMessage,
+        fullResponse: result
+      })
+      
+      throw new Error(errorMessage)
+    }
+    return result
+  } catch (err) {
+    console.error('fehler bei csv berechnung', err)
+    throw err
+  } finally {
+    loadingCSVs.value = false
+  }
+}
+
+async function requestKPIs() {
+  loadingKPIs.value = true
+  try {
+
+    const response = await fetch(
+      `${DEFAULT_BACKEND_URL.value}/api/deriveKPIs`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
+
+    let result
+    try {
+      result = await response.json()
+    } catch (parseError) {
+      const text = await response.text()
+      throw new Error(`Backend-Fehler (${response.status}): ${text}`)
+    }
+
+    if (!response.ok) {
+      let errorMessage = 
+        result?.message || 
+        result?.error || 
+        result?.detail || 
+        result?.msg ||
+        `Serverfehler: ${response.statusText} (${response.status})`
+      
+      if (errorMessage.length > 500) {
+        const importantErrorMatch = errorMessage.match(/(ValueError|KeyError|FileNotFoundError|TypeError|AttributeError):\s*([^\n]+)/)
+        if (importantErrorMatch) {
+          errorMessage = `${importantErrorMatch[1]}: ${importantErrorMatch[2]}`
+        } else {
+          errorMessage = errorMessage.substring(0, 200) + '...'
+        }
+      }
+      
+      console.error('backend-fehler:', {
+        status: response.status,
+        statusText: response.statusText,
+        message: errorMessage,
+        fullResponse: result
+      })
+      
+      throw new Error(errorMessage)
+    }
+
+    kpiData.value = result
+    return result
+  } catch (err) {
+    throw err
+  } finally {
+    loadingKPIs.value = false
+  }
+}
+
+async function getAllKPIs() {
+  loadingKPIs.value = true
+  try {
+
+    const response = await fetch(
+      `${DEFAULT_BACKEND_URL.value}/api/getAllKPIs/`,
+      {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
+
+    if (!response.ok) {
+      let errorMessage = `Serverfehler: ${response.statusText} (${response.status})`
+      
+      try {
+        const errorResult = await response.json()
+        errorMessage = 
+          errorResult?.message || 
+          errorResult?.error || 
+          errorResult?.detail || 
+          errorMessage
+      } catch {
+        const text = await response.text()
+        errorMessage = text || errorMessage
+      }
+      
+      throw new Error(errorMessage)
+    }
+
+    const result = await response.json()
+
+    return result
+  } catch (err) {
+    throw err
+  } finally {
+    loadingKPIs.value = false
+  }
+}
+
+async function getKPIs(gameId?: string) {
+  loadingKPIs.value = true
+  try {
+    const id = gameId || gameReport.value?._id
+
+    if (!id) {
+      throw new Error('Keine Game ID verfügbar')
+    }
+
+    const response = await fetch(
+      `${DEFAULT_BACKEND_URL.value}/api/getKPIs?` +
+        new URLSearchParams({
+          game_id: id, 
+        }),
+      {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
+
+    let result
+    try {
+      result = await response.json()
+    } catch (parseError) {
+      console.error('konnte response nicht parsen', parseError)
+      const text = await response.text()
+      throw new Error(`Backend-Fehler (${response.status}): ${text}`)
+    }
+
+    if (!response.ok) {
+      let errorMessage = 
+        result?.message || 
+        result?.error || 
+        result?.detail || 
+        result?.msg ||
+        `Serverfehler: ${response.statusText} (${response.status})`
+      
+      if (errorMessage.length > 500) {
+        const importantErrorMatch = errorMessage.match(/(ValueError|KeyError|FileNotFoundError|TypeError|AttributeError):\s*([^\n]+)/)
+        if (importantErrorMatch) {
+          errorMessage = `${importantErrorMatch[1]}: ${importantErrorMatch[2]}`
+        } else {
+          errorMessage = errorMessage.substring(0, 200) + '...'
+        }
+      }
+      
+      console.error('backend-fehler:', {
+        status: response.status,
+        statusText: response.statusText,
+        message: errorMessage,
+        fullResponse: result
+      })
+      
+      throw new Error(errorMessage)
+    }
+    
+    kpiData.value = result
+    return result
+  } catch (err) {
+    console.error('fehler beim abrufen der kpis', err)
+    throw err
+  } finally {
+    loadingKPIs.value = false
+  }
+}
+
+async function loadGlobalAverages() {
+  try {
+    const response = await fetch(
+      `${DEFAULT_BACKEND_URL.value}/api/getKPIAverages`,
+      { method: 'GET', headers: { 'Content-Type': 'application/json' } },
+    )
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      throw new Error(
+        errorText ||
+          `Serverfehler: ${response.statusText} (${response.status})`,
+      )
+    }
+
+    const result = await response.json()
+    averages.value = result
+    return result
+  } catch (err) {
+    console.error('fehler beim laden der kpi durchschnitte', err)
+    throw err
+  }
+}
+
 
   // -> reset this store
   function reset() {
@@ -471,14 +765,27 @@ export const useReportStore = defineStore('reportStore', () => {
     loadingReportsList,
     gameReportsList,
     incompatibleCount,
+    loadingOCEL,
+    loadingTransformation,
+    loadingKPIs,
+    loadingCSVs,
     loadingReport,
     gameReport,
     gameSpeed,
     scoreByColor,
+    kpiData,
     requestGameReportsList,
     requestGameReport,
     runGame,
     jumpTo,
     reset,
+    requestOCEL,
+    requestTransformation,
+    requestCSVs,
+    requestKPIs,
+    getKPIs,
+    getAllKPIs,
+    loadGlobalAverages,
+    averages,
   }
 })

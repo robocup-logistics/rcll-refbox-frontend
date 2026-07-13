@@ -13,7 +13,10 @@ import {
   faBell,
   faBug,
   faBowlRice,
+  faCalculator,
   faCameraRotate,
+  faChartBar,
+  faChartLine,
   faCheck,
   faChevronDown,
   faChevronLeft,
@@ -46,6 +49,7 @@ import {
   faLock,
   faMagnifyingGlass,
   faMedal,
+  faMicroscope,
   faPencil,
   faPenNib,
   faPlay,
@@ -56,6 +60,7 @@ import {
   faPlayCircle,
   faQuestion,
   faRandom,
+  faRightLeft,
   faRobot,
   faRotateRight,
   faUnlink,
@@ -71,8 +76,13 @@ import {
   faWalkieTalkie,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
+
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import * as vueshortkey from 'vue3-shortkey'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+import 'vuetify/styles'
 
 // use fontawesome icons
 library.add(
@@ -85,7 +95,10 @@ library.add(
   faBell,
   faBowlRice,
   faBug,
+  faCalculator,
   faCameraRotate,
+  faChartBar,
+  faChartLine,
   faCheck,
   faChevronDown,
   faChevronLeft,
@@ -118,6 +131,7 @@ library.add(
   faLock,
   faMagnifyingGlass,
   faMedal,
+  faMicroscope,
   faPencil,
   faPenNib,
   faPlay,
@@ -128,6 +142,7 @@ library.add(
   faPlayCircle,
   faQuestion,
   faRandom,
+  faRightLeft,
   faRobot,
   faRotateRight,
   faUnlink,
@@ -144,9 +159,18 @@ library.add(
   faXmark,
 )
 
-// create the app
 const app = createApp(App)
+
+const vuetify = createVuetify({
+  components,
+  directives,
+  theme: {
+    defaultTheme: 'dark', 
+  },
+})
+
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(createPinia())
+app.use(vuetify) 
 app.use(vueshortkey)
 app.mount('#app')

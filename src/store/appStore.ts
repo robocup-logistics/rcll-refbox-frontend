@@ -46,7 +46,7 @@ export const useAppStore = defineStore('appStore', () => {
   // options. While we could check for an active socket or a stored game report,
   // we might also want to support the socket view when there is no active
   // socket because the connection was temporarily lost
-  const currentView: Ref<'start' | 'spectator' | 'referee'> = ref('start')
+  const currentView: Ref<'start' | 'spectator' | 'referee' | 'analyze' | 'kpi-details' | 'statistics'> = ref('start')
   const currentMode: Ref<'socket' | 'gameReport'> = ref('socket')
 
   // -> popup counter

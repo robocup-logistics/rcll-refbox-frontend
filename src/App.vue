@@ -14,6 +14,9 @@ subfolders.
   >
     <StartMenu v-if="currentView == 'start'" />
     <RefereeApp v-else-if="currentView == 'referee'" />
+    <AnalyzeApp v-else-if="currentView == 'analyze'" />
+    <KPIDetailsApp v-else-if="currentView == 'kpi-details'" />
+    <StatisticsApp v-else-if="currentView == 'statistics'" />
     <SpectatorApp v-else />
   </div>
 </template>
@@ -26,6 +29,9 @@ import { storeToRefs } from 'pinia'
 import StartMenu from '@/components/start-menu/StartMenu.vue'
 import RefereeApp from '@/components/referee/RefereeApp.vue'
 import SpectatorApp from './components/spectator/SpectatorApp.vue'
+import AnalyzeApp from './components/spectator/AnalyzeApp.vue'
+import KPIDetailsApp from './components/spectator/KPIDetailsApp.vue'
+import StatisticsApp from './components/spectator/StatisticsApp.vue'
 import { useKeyboardStore } from './store/keyboardStore'
 import { useFieldStore } from '@/store/fieldStore'
 import type Shortcut from '@/types/Shortcut'

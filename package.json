@@ -13,13 +13,18 @@
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/vue-fontawesome": "^3.0.3",
+    "@sgratzl/chartjs-chart-boxplot": "^4.4.5",
     "axios": "^1.7.4",
+    "chart.js": "^4.5.1",
     "fuzzysort": "^3.0.2",
     "jquery": "^3.5.1",
     "mongodb": "^6.1.0",
+    "papaparse": "^5.5.3",
     "pinia": "^2.1.7",
     "vue": "^3.4.14",
-    "vue3-shortkey": "^4.0.0"
+    "vue-chartjs": "^5.3.3",
+    "vue3-shortkey": "^4.0.0",
+    "vuetify": "^3.11.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.13.1",
@@ -31,6 +36,7 @@
     "sass": "^1.85.0",
     "typescript": "^5.5.2",
     "vite": "^5.4.12",
+    "vite-plugin-vuetify": "^2.1.2",
     "vue-eslint-parser": "^9.4.0"
   },
   "browserslist": [

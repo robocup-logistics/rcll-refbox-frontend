@@ -1,9 +1,14 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import vuetify from 'vite-plugin-vuetify'
 import * as path from 'path'
+import { fileURLToPath } from 'url'
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    vuetify({ autoImport: true }),  // ← Vuetify Plugin hinzufügen
+  ],
   css: {
     preprocessorOptions: {
       scss: {
@@ -14,7 +19,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(
-        path.dirname(new URL(import.meta.url).pathname),
+        path.dirname(fileURLToPath(import.meta.url)),
         './src',
       ),
     },
